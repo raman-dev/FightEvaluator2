@@ -1,6 +1,7 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
-app = FastAPI()
+# app = FastAPI()
 
 """
     fastapi implements openapi
@@ -26,32 +27,32 @@ app = FastAPI()
     async is only necessary if the function awaits on something 
     like a 3rd party library 
 """
-@app.get("/")
-async def root():
-    return {"message" : "Hello World"}
+# @app.get("/")
+# async def root():
+#     return {"message" : "Hello World"}
 
-@app.get("/example")
-async def example():
-    return {"message": "Example get path"}
+# @app.get("/example")
+# async def example():
+#     return {"message": "Example get path"}
 
 # @app.get("/items/{item_id}")
 # async def read_item(item_id):
 #     return {"item_id":item_id}
 # can also make arguements typed
-@app.get("/items/{item_id}")
-async def read_item(item_id: int):
-    return {"item_id":item_id}
+# @app.get("/items/{item_id}")
+# async def read_item(item_id: int):
+#     return {"item_id":item_id}
 
 """
     order matters paths are matched top down
-"""
-@app.get("/users/about")
-async def about_user():
-    return {"userData":"data0"}
+# """
+# @app.get("/users/about")
+# async def about_user():
+#     return {"userData":"data0"}
 
-@app.get("/users/{user_id}")
-async def read_user(user_id: str):
-    return {"user_id":user_id}
+# @app.get("/users/{user_id}")
+# async def read_user(user_id: str):
+#     return {"user_id":user_id}
 
 """
 
@@ -59,4 +60,16 @@ async def read_user(user_id: str):
 
 """
 
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+
+app = FastAPI()
+
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
 

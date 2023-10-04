@@ -4,40 +4,86 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css">
     </head>
-    <body>
-
-        <h1> 
-            Hello World!
-        </h1>
-
-        <div style="display: flex; flex-direction: row;">
-            <ul>a</ul>
-            <ul>b</ul>
+    <body data-bs-theme="dark">
+        <div class="border container-fluid">
+            <!--
+                
+                |    fighter a  |     fighter b    |
+                attrib 0     a.value 0   | b.value 0
+                attrib 1     a.value 1   | b.value 1
+                attrib 2     a.value 2   | b.value 2
+                   .
+                   .
+                   .
+                attrib n     a.value n  | b.value n
+            -->
+            <!--nine row table -->
+            <table class="table">
+                <thead class="border">
+                    <tr class="border">
+                        <th class="col-4"></th>
+                        <th class="col-4">fighter a</th>
+                        <th class="col-4">fighter b</th>
+                    </tr>   
+                </thead> 
+                <tr> 
+                    <th>attrib 0</th>
+                    <td>a.value 0</td>
+                    <td>b.value 0 </td>
+                </tr>
+                <tr> 
+                    <th>attrib 1</th>
+                    <td>a.value 1</td>
+                    <td>b.value 1 </td>
+                </tr>
+                <tr> 
+                    <th>attrib 2</th>
+                    <td>a.value 2</td>
+                    <td>b.value 2 </td>
+                </tr>
+                <tr> 
+                    <th>attrib 3</th>
+                    <td>a.value 3</td>
+                    <td>b.value 3 </td>
+                </tr>
+                <tr> 
+                    <th>attrib 4</th>
+                    <td>a.value 4</td>
+                    <td>b.value 4</td>
+                </tr>
+            </table>
         </div>
         <script>
             /*
             
                 Promise takes a normal function as an argument
             */
-           let normalFunction = () => {
-             setTimeout(()=>{
-                console.log('normal function');
-             },2000);
-           };
-           //promises are executed immediately after instantiation
-           let promise = new Promise((successHandler,errorHandler) => {
-                console.log('promise ran!');
-                normalFunction();
-                successHandler(1);
-                errorHandler(2);
-           });
-           //not necessary to all then at all 
-           promise.then((val)=>{
-             console.log(`called Resolve! => ${val}`);
-           },(val)=>{
-             console.log(`called Reject! => ${val}`);
-           });
+        //    let normalFunction = () => {
+        //      setTimeout(()=>{
+        //         console.log('normal function');
+        //      },2000);
+        //    };
+        //    //promises are executed immediately after instantiation
+        //    let promise = new Promise((successHandler,errorHandler) => {
+        //         console.log('promise ran!');
+        //         normalFunction();
+        //         successHandler(1);
+        //         errorHandler(2);
+        //    });
+        //    //not necessary to all then at all 
+        //    promise.then((val)=>{
+        //      console.log(`called Resolve! => ${val}`);
+        //    },(val)=>{
+        //      console.log(`called Reject! => ${val}`);
+        //    });
+        // async function apiCall() {
+        //     const response = await fetch("https://www.google.ca");
+        //     // const json = await response.json();
+        //     console.log(response.body);
+        // }
+        // apiCall();
         </script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>

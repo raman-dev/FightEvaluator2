@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+lxml = "*"
+requests = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 
