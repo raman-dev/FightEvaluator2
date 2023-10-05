@@ -23,38 +23,146 @@
             <table class="table">
                 <thead class="border">
                     <tr class="border">
-                        <th class="col-4"></th>
-                        <th class="col-4">fighter a</th>
-                        <th class="col-4">fighter b</th>
+                        <th class="col">
+                            <div>fighter a</div>
+                            <div>fighter b</div>
+                        </th>
                     </tr>   
                 </thead> 
-                <tr> 
-                    <th>attrib 0</th>
-                    <td>a.value 0</td>
-                    <td>b.value 0 </td>
-                </tr>
-                <tr> 
-                    <th>attrib 1</th>
-                    <td>a.value 1</td>
-                    <td>b.value 1 </td>
-                </tr>
-                <tr> 
-                    <th>attrib 2</th>
-                    <td>a.value 2</td>
-                    <td>b.value 2 </td>
-                </tr>
-                <tr> 
-                    <th>attrib 3</th>
-                    <td>a.value 3</td>
-                    <td>b.value 3 </td>
-                </tr>
-                <tr> 
-                    <th>attrib 4</th>
-                    <td>a.value 4</td>
-                    <td>b.value 4</td>
-                </tr>
+                <tbody>
+                    <tr> 
+                        <th>attrib 0</th>
+                        <td>
+                            <!-- a.value 0 -->
+                            <div class="progress-bar" data-attrib-value="54">
+                                <div class="bar">
+                                </div>
+                                <div class="value">54</div>
+                            </div>
+                            <div class="progress-bar" data-attrib-value="68" >
+                                <div class="bar">
+                                </div>
+                                <div class="value">68</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th>attrib 0</th>
+                        <td>
+                            <!-- a.value 0 -->
+                            <div class="progress-bar"  data-attrib-value="47">
+                                <div class="bar">
+                                </div>
+                                <div class="value">54</div>
+                            </div>
+                            <div class="progress-bar" data-attrib-value="80" >
+                                <div class="bar">
+                                </div>
+                                <div class="value">68</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th>attrib 0</th>
+                        <td>
+                            <!-- a.value 0 -->
+                            <div class="progress-bar"  data-attrib-value="73">
+                                <div class="bar">
+                                </div>
+                                <div class="value">54</div>
+                            </div>
+                            <div class="progress-bar" data-attrib-value="70" >
+                                <div class="bar">
+                                </div>
+                                <div class="value">68</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th>attrib 0</th>
+                        <td>
+                            <!-- a.value 0 -->
+                            <div class="progress-bar"  data-attrib-value="59">
+                                <div class="bar">
+                                </div>
+                                <div class="value">54</div>
+                            </div>
+                            <div class="progress-bar" data-attrib-value="60" >
+                                <div class="bar">
+                                </div>
+                                <div class="value">68</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th>attrib 0</th>
+                        <td>
+                            <!-- a.value 0 -->
+                            <div class="progress-bar"  data-attrib-value="87">
+                                <div class="bar">
+                                </div>
+                                <div class="value">54</div>
+                            </div>
+                            <div class="progress-bar" data-attrib-value="30" >
+                                <div class="bar">
+                                </div>
+                                <div class="value">68</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+               
             </table>
         </div>
+        
+        
+        <style>
+            /* table with is at most 40% of the screen */
+            .table {
+                max-width: 60%;
+                margin: auto;
+            }
+
+            th {
+                text-align: center;
+                width: 12ch;
+                white-space: nowrap;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 20px;
+                /* overflow: hidden; */
+                background-color: #f2f2f2;
+                color: black;
+                position: relative;
+            }
+            
+            .progress-bar .value{
+                font-weight: bold;
+                z-index: 2;
+            }
+
+            .bar {
+                position: absolute;
+                height: 100%;
+                width: 0px;
+                background-color: #007bff;
+                z-index: 1;
+            }
+            
+            /*
+                for every tr td's even child's .bar should be red
+            */
+            .table tr td .progress-bar:first-child .bar {
+                background-color: red;
+            }
+
+        </style>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
         <script>
             /*
             
@@ -84,8 +192,46 @@
         //     console.log(response.body);
         // }
         // apiCall();
+        // Set the progress bar fill element
+            
+        // Set the progress bar animation
+        
+
+        //For every progress bar read the data-attribValue attribute and set the width of the progress bar fill element to that value
+        const progressBars = document.querySelectorAll('.progress-bar');
+      
+        progressBars.forEach((progressBar,index) => {
+            const progressFill = progressBar.querySelector('.bar');
+            const progressText = progressBar.querySelector('.value');
+            const attribValue = parseInt(progressBar.dataset.attribValue);
+
+            let props = {
+                barWidth: 0,
+                barValue: 0
+            }
+
+            anime({
+                targets: props,
+                barWidth: `${attribValue}%}`,
+                barValue: attribValue,
+                easing: 'easeInOutQuad',
+                delay: index * 100,
+                update : (anim) => {
+                    //set progressFill width to barWidth
+                    progressFill.style.width = `${parseInt(props.barWidth)}%`;
+                    progressText.textContent = `${parseInt(props.barValue)}`;
+                    // console.log('updated' + `${props.barValue}`);
+                },
+                begin: (anim) => {
+                    progressText.textContent = `${props.barValue}`;
+                    console.log('began' + index);
+                },
+                duration: 500
+            });
+        });
+        
+        
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+      
     </body>
 </html>
