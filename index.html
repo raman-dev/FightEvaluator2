@@ -1,298 +1,62 @@
-<html>
-  <head>
-    <title>Hello World!</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body data-bs-theme="dark">
-    <div class="border container-fluid">
-      <!--
-                
-                |    fighter a  |     fighter b    |
-                                            <div class="">attrib 5</div>
-     a.value 0   | b.value 0
-                attrib 1     a.value 1   | b.value 1
-                attrib 2     a.value 2   | b.value 2
-                   .
-                   .
-                   .
-                attrib n     a.value n  | b.value n
-            -->
-      <!--nine row table -->
-      <table class="table">
-        <thead class="border">
-          <tr class="border">
-            <th class="col">
-              <div>
-                <div class="red-box"></div>
-                fighter a
-              </div>
-              <div><div class="blue-box"></div>fighter b</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th><div class="">attrib 1</div></th>
-            <td>
-              <div class="progress-bar" data-attrib-value="54">
-                <div class="bar"></div>
-                <div class="value">54</div>
-              </div>
-              <div class="progress-bar" data-attrib-value="68">
-                <div class="bar"></div>
-                <div class="value">68</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th><div class="">attrib 2</div></th>
-            <td>
-              <div class="progress-bar" data-attrib-value="47">
-                <div class="bar"></div>
-                <div class="value">54</div>
-              </div>
-              <div class="progress-bar" data-attrib-value="80">
-                <div class="bar"></div>
-                <div class="value">68</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th><div class="">attrib 3</div></th>
-            <td>
-              <div class="progress-bar" data-attrib-value="73">
-                <div class="bar"></div>
-                <div class="value">54</div>
-              </div>
-              <div class="progress-bar" data-attrib-value="70">
-                <div class="bar"></div>
-                <div class="value">68</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th><div class="">attrib 4</div></th>
-            <td>
-              <div class="progress-bar" data-attrib-value="59">
-                <div class="bar"></div>
-                <div class="value">54</div>
-              </div>
-              <div class="progress-bar" data-attrib-value="60">
-                <div class="bar"></div>
-                <div class="value">68</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              <div class="">attrib 5</div>
-            </th>
-            <td>
-              <div class="progress-bar" data-attrib-value="87">
-                <div class="bar"></div>
-                <div class="value">54</div>
-              </div>
-              <div class="progress-bar" data-attrib-value="30">
-                <div class="bar"></div>
-                <div class="value">68</div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<!doctype html>
+<html lang="en">
 
-    <style>
-      .table {
-        margin: auto;
-      }
-      /* responsive media queries for table for all standard screen 
-        sizes */
-      @media (max-width: 576px) {
-        .table {
-          max-width: 100%;
-          margin: auto;
-        }
-      }
-      @media (min-width: 576px) {
-        .table {
-          max-width: 100%;
-          margin: auto;
-        }
-      }
-      @media (min-width: 768px) {
-        .table {
-          max-width: 80%;
-          margin: auto;
-        }
-      }
-      @media (min-width: 992px) {
-        .table {
-          max-width: 60%;
-          margin: auto;
-        }
-      }
-      @media (min-width: 1200px) {
-        .table {
-          max-width: 45%;
-          margin: auto;
-        }
-      }
-      thead th {
-        display: flex;
-        justify-content: space-around;
-      }
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
 
-      thead th div{
-        display: flex;
-        align-items: center;
-      }
+<body data-bs-theme="dark">
+    <!--container-->
+    <div class="container">
+        <h1 class="event-title">Event Name</h1>
+        <!--5 rows of fight matchups-->
+        <div class="matchup-container">
+            <div class="matchup">
+                <!--small sample image-->
+                <div>
+                    <img src="sample_50.png" alt="fighter a">
+                    <a href="#">fighter a</a>
+                </div>
+                vs
+                <div>
+                    <a href="#">fighter b</a>
+                    <img src="sample_50.png" alt="fighter b">
+                </div>
+            </div>
+        </div>
+        <style>
+            /*horizontally centered event-title*/
+            .event-title {
+                text-align: center;
+            }
 
-      tbody tr {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 0%;
-      }
+            /*matchups are horizontally centered and vertically stacked*/
+            .matchup-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
 
-      /* tbody tr content are in the same row of the grid */
-      tbody tr * {
-        grid-row: 1;
-      }
+            /*links have no styling default*/
+            .matchup a {
+                text-decoration: none;
+            }
 
-      tbody th {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+            .matchup {
+                display:flex;
+                flex-direction: row;
+                align-items: center;
+            }
 
-      .progress-bar {
-        width: 100%;
-        height: 20px;
-        /* overflow: hidden; */
-        background-color: #f2f2f2;
-        color: black;
-        position: relative;
-      }
-
-      .progress-bar .value {
-        font-weight: bold;
-        z-index: 2;
-      }
-
-      .bar {
-        position: absolute;
-        height: 100%;
-        width: 0px;
-        background-color: #007bff;
-        z-index: 1;
-      }
-
-      .red-box{
-        width: 2ch;
-        height: 2ch;
-        background-color: red;
-        margin-right: 1ch;
-      }
-
-      .blue-box{
-        width: 2ch;
-        height: 2ch;
-        background-color: blue;
-        margin-right: 1ch;
-      }
-
-      /*
-            for every tr td's even child's .bar should be red
-        */
-      .table tr td .progress-bar:first-child .bar {
-        background-color: red;
-      }
-    </style>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
-      integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      /*
             
-                Promise takes a normal function as an argument
-            */
-      //    let normalFunction = () => {
-      //      setTimeout(()=>{
-      //         console.log('normal function');
-      //      },2000);
-      //    };
-      //    //promises are executed immediately after instantiation
-      //    let promise = new Promise((successHandler,errorHandler) => {
-      //         console.log('promise ran!');
-      //         normalFunction();
-      //         successHandler(1);
-      //         errorHandler(2);
-      //    });
-      //    //not necessary to all then at all
-      //    promise.then((val)=>{
-      //      console.log(`called Resolve! => ${val}`);
-      //    },(val)=>{
-      //      console.log(`called Reject! => ${val}`);
-      //    });
-      // async function apiCall() {
-      //     const response = await fetch("https://www.google.ca");
-      //     // const json = await response.json();
-      //     console.log(response.body);
-      // }
-      // apiCall();
-      // Set the progress bar fill element
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</body>
 
-      // Set the progress bar animation
-
-      //For every progress bar read the data-attribValue attribute and set the width of the progress bar fill element to that value
-      const progressBars = document.querySelectorAll(".progress-bar");
-
-      progressBars.forEach((progressBar, index) => {
-        const progressFill = progressBar.querySelector(".bar");
-        const progressText = progressBar.querySelector(".value");
-        const attribValue = parseInt(progressBar.dataset.attribValue);
-
-        let props = {
-          barWidth: 0,
-          barValue: 0,
-        };
-
-        anime({
-          targets: props,
-          barWidth: `${attribValue}%}`,
-          barValue: attribValue,
-          easing: "easeInOutQuad",
-          delay: index * 100,
-          update: (anim) => {
-            //set progressFill width to barWidth
-            progressFill.style.width = `${parseInt(props.barWidth)}%`;
-            progressText.textContent = `${parseInt(props.barValue)}`;
-            // console.log('updated' + `${props.barValue}`);
-          },
-          begin: (anim) => {
-            progressText.textContent = `${props.barValue}`;
-            console.log("began" + index);
-          },
-          duration: 500,
-        });
-      });
-    </script>
-  </body>
 </html>
