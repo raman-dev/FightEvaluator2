@@ -1,0 +1,31 @@
+<!--
+    Requirements (what do i need?)
+    -----------------        
+    - show next ufc event
+    - show good and bad attributes of any fighter
+    - show both good and bad attributes of both fighters in an upcoming match
+    - edit attributes of a fighter
+    why build this?
+    make something that can show me my assessment of a fighter
+    so i don't have to repeat work again
+    
+    attribute:
+        head movement - good/bad/mediocre
+            good - doesn't stand upright/doesn't get hit unnecessarily
+            bad - gets hit alot/keeps head upright
+        gas tank - good or bad or mediocre
+        aggression - high/low
+        desire to win - yes/no
+            yes - tries to finish fight
+            no - grindy fighter/reactive not proactive
+        striking - good or bad 
+            good - uses all weapons kicks + punches + elbows + knees
+        chinny - yes/no/somewhat
+        grappling offense - good/bad  
+            good - tries to submit opponent
+            bad - loses position/overcommits to submissions
+        grappling defense - good/bad
+            good - primarily can survive having back taken and not getting choked or
+                    submitted from difficult positions
+            bad - gets choked out/taps quickly/does wrong thing often
+--> 
