@@ -14,12 +14,14 @@
             good - doesn't stand upright/doesn't get hit unnecessarily
             bad - gets hit alot/keeps head upright
         gas tank - good or bad or mediocre
-        aggression - high/low
+        aggression - high/mid/low
         desire to win - yes/no
             yes - tries to finish fight
             no - grindy fighter/reactive not proactive
-        striking - good or bad 
+        striking - good\bad\mediocre
             good - uses all weapons kicks + punches + elbows + knees
+            mediocre - mostly punches, not many or few kicks maybe be proficient at boxing
+            bad - only punches/ maybe good at boxing
         chinny - yes/no/somewhat
         grappling offense - good/bad  
             good - tries to submit opponent

@@ -25,15 +25,65 @@
   src: url("./Poppins/Poppins-SemiBold.ttf") format("truetype");
 }
 /* use font as variable */
-html, body {
+html,
+body {
   font-family: PoppinsLight;
   font-size: 16px;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: PoppinsBold;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   font-family: PoppinsSemiBold;
+}
+
+/* responsive media queries for table for all standard screen 
+        sizes */
+@media (max-width: 576px) {
+  .main-container {
+    max-width: 100%;
+    margin: auto;
+  }
+}
+@media (min-width: 576px) {
+  .main-container {
+    max-width: 100%;
+    margin: auto;
+  }
+}
+@media (min-width: 768px) {
+  .main-container {
+    max-width: 85%;
+    margin: auto;
+  }
+}
+@media (min-width: 992px) {
+  .main-container {
+    max-width: 70%;
+    margin: auto;
+  }
+}
+@media (min-width: 1200px) {
+  .main-container {
+    max-width: 63%;
+    margin: auto;
+  }
+}
+@media (min-width: 1400px) {
+  .main-container {
+    max-width: 53%;
+    margin: auto;
+  }
+}
+@media (min-width: 1600px) {
+  .main-container {
+    max-width: 45%;
+    margin: auto;
+  }
 }/*# sourceMappingURL=styles.css.map */
