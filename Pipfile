@@ -9,6 +9,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 lxml = "*"
 requests = "*"
 beautifulsoup4 = "*"
+pony = "*"
 
 [dev-packages]
 
