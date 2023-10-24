@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bootstrap demo</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.css"
+      integrity="sha512-r0fo0kMK8myZfuKWk9b6yY8azUnHCPhgNz/uWDl2rtMdWJlk7gmd9socvGZdZzICwAkMgfTkVrplDahQ07Gi0A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-bs-theme="dark">
+    <div class="container main-container">
+      <div class="fighter-info-container d-flex">
+        <!--fighter image-->
+        <div class="fighter-img">
+          <img class="fighter-img" src="sample_150.png" alt="" />
+        </div>
+        <!--fighter biographical info in a list-->
+        <div class="fighter-bio list-group">
+          <div class="container">
+            <h4>Biographical Info</h4>
+            <!--2 column flex grid-->
+            <div class="d-flex">
+              <div class="row">
+                <div class="col">
+                  <p>name</p>
+                  <p>age</p>
+                </div>
+                <div class="col">
+                  <p>height</p>
+                  <p>weight</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-around">
+            <p>record</p>
+            <p>reach</p>
+            <p>stance</p>
+          </div>
+        </div>
+      </div>
+
+      <!--list of 8 fighter attributes-->
+      <div class="fighter-attrib-list list-group">
+        <div class="list-group-item">
+          <h4>Head Movement</h4>
+          <!--horizontal list of 3 radio buttons reading good/mediocre/bad -->
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
+            <div class="btn btn-outline-warning mediocre-radio" data-radioType="mediocre">mediocre</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Gas Tank</h4>
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good" >good</div>
+            <div class="btn btn-outline-warning mediocre-radio" data-radioType="mediocre">mediocre</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Aggression</h4>
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good" >high</div>
+            <div class="btn btn-outline-warning mediocre-radio" data-radioType="mediocre">mid</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">low</div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Striking</h4>
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good" >good</div>
+            <div class="btn btn-outline-warning mediocre-radio" data-radioType="mediocre">mediocre</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Chinny</h4>
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good">No</div>
+            <div class="btn btn-outline-warning mediocre-radio" data-radioType="mediocre">Somewhat</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">Yes</div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Grappling Offense</h4>
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Grappling Defense</h4>
+          <div class="button-container d-flex justify-content-around mradio-group">
+            <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
+            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+          </div>
+        </div>
+      </div>
+      <!--additional notes and context info to consider about a particular fighter-->
+      <div class="fighter-notes">
+        <!--list of text notes about a the fighter in jot note style-->
+        <div class="notes-list list-group">
+          <div class="list-group-item">
+            <h4>Notes</h4>
+            <p>note 1</p>
+            <p>note 2</p>
+            <p>note 3</p>
+            <p>note 4</p>
+            <p>note 5</p>
+          </div>
+        </div>
+      </div>
+      <style>
+        /*container is at most 70% width*/
+        .container-fluid {
+          max-width: 70%;
+        }
+        
+        /* .mradio-group .selected{
+          border-color: lavender !important;
+        } */
+        
+      </style>
+    </div>
+    <script>
+      function getRadioType(radioType) {
+        switch(radioType){
+          case "good":
+            radioType = "primary";
+            break;
+          case "mediocre":
+            radioType = "warning";
+            break;
+          case "bad":
+            radioType = "danger";
+            break;
+        }
+        return radioType;
+      }
+      //for every mradio-group
+      document.querySelectorAll('.mradio-group').forEach((element,idx) => {
+        // console.log(element,idx);
+        //for every radio button in element add event listener
+        element.querySelectorAll('.btn').forEach((btn,idx) => {
+          btn.addEventListener('click', (event) => {       
+            let selectedElement = element.querySelectorAll('.selected')[0];     
+            //add selected class to clicked button
+            let currentClassList = event.target.classList;
+            let currentRadioType = getRadioType(event.target.dataset.radiotype);
+
+            let filledClass = 'btn-' + currentRadioType;
+            let outlineClass = 'btn-outline-' + currentRadioType;
+            if (!currentClassList.contains('selected')) {
+              //add selected class to clicked button
+              currentClassList.add('selected');
+              currentClassList.add(filledClass);
+              currentClassList.remove(outlineClass);
+            }
+            //remove selected class from previously selected button
+            if (selectedElement != null){
+              let selectedClassList = selectedElement.classList;
+              let selectedRadioType = getRadioType(selectedElement.dataset.radiotype);
+              selectedClassList.remove('selected');
+              selectedClassList.remove('btn-' + selectedRadioType);
+              selectedClassList.add('btn-outline-'+selectedRadioType);
+            }
+          });
+        });
+      });
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
+      integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </body>
+</html>

@@ -10,6 +10,7 @@ lxml = "*"
 requests = "*"
 beautifulsoup4 = "*"
 pony = "*"
+sqlmodel = "*"
 
 [dev-packages]
 
