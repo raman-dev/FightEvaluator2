@@ -94,5 +94,21 @@ def read_books():
         return books
 
 @app.get("/")
-async def main():
-    return FileResponse("static/templates/index.html")
+async def index():
+    return FileResponse("static/index.html")
+
+@app.get("/assessment")
+async def index():
+    return FileResponse("static/assessment.html")
+
+@app.get("/matchup")
+async def index():
+    return FileResponse("static/matchup.html")
+
+@app.get("/styles.css")
+async def styles():
+    return FileResponse("static/styles/styles.css")
+
+@app.get("/static/media/{resource_name}")
+async def media(resource_name):
+    return FileResponse("static/media/"+resource_name)
