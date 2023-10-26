@@ -1,10 +1,12 @@
 from typing import Optional,List
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
 
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
+from datetime import date
+from enum import Enum
 
 sqlite_file_name ="database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -13,6 +15,61 @@ connect_args = {"check_same_thread": False}
 engine = create_engine(sqlite_url,echo=True, connect_args=connect_args)
 
 app = FastAPI()
+
+class AttributeQualifier(Enum):
+    good = "good"
+    bad = "bad"
+    mediocre = "mediocre"
+    high = "high"
+    mid = "mid"
+    low = "low"
+
+
+class WeightClass(Enum):
+    CATCHWEIGHT = "Catchweight"
+    STRAWWEIGHT = "Strawweight"
+    FLYWEIGHT = "Flyweight"
+    BANTAMWEIGHT = "Bantamweight"
+    FEATHERWEIGHT = "Featherweight"
+    LIGHTWEIGHT = "Lightweight"
+    WELTERWEIGHT = "Welterweight"
+    MIDDLEWEIGHT = "Middleweight"
+    LIGHT_HEAVYWEIGHT = "Light Heavyweight"
+    HEAVYWEIGHT = "Heavyweight"
+
+class MatchUp(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    date: Optional[date]
+    max_rounds: int
+    weight_class: WeightClass
+
+class Fighter(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    first_name: str
+    last_name: str
+    nick_name: Optional[str] 
+    weight_class: Optional[WeightClass]
+    height: Optional[str]
+    date_of_birth: Optional[date]
+    #an optional foreign key to the matchup table if a matchup is scheduled
+    matchup_id: Optional[int] = Field(default=None, foreign_key="matchup.id")
+    matchup: Optional[MatchUp] = Relationship(back_populates="fighters")
+
+
+
+class Assessment(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    head_movement: Optional[AttributeQualifier]
+    gas_tank: Optional[AttributeQualifier]
+    aggression: Optional[AttributeQualifier]
+    desire_to_win: Optional[AttributeQualifier]
+    striking: Optional[AttributeQualifier]
+    chinny: Optional[bool]
+    grappling_offense: Optional[AttributeQualifier]
+    grappling_defense: Optional[AttributeQualifier]
+    notes: Optional[str]
+
+
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
@@ -44,3 +101,11 @@ async def styles():
 @app.get("/static/media/{resource_name}")
 async def media(resource_name):
     return FileResponse("static/media/"+resource_name)
+
+@app.get("/fighters/{fighter_id}")
+async def get_fighter(fighter_id:int):
+    with Session(engine) as session:
+        fighter = session.get(Fighter,fighter_id)
+        return fighter
+
+
