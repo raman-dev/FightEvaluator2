@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from datetime import date
 from enum import Enum
+import scraper
 
 sqlite_file_name ="database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -23,7 +24,6 @@ class AttributeQualifier(Enum):
     high = "high"
     mid = "mid"
     low = "low"
-
 
 class WeightClass(Enum):
     CATCHWEIGHT = "Catchweight"
@@ -54,7 +54,9 @@ class Fighter(SQLModel,table=True):
     #an optional foreign key to the matchup table if a matchup is scheduled
     matchup_id: Optional[int] = Field(default=None, foreign_key="matchup.id")
     matchup: Optional[MatchUp] = Relationship(back_populates="fighters")
-
+    #optional since a fighter may need to still be assessed
+    assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
+    assesment: Optional["Assessment"] = Relationship(back_populates="fighter")
 
 
 class Assessment(SQLModel,table=True):
@@ -69,6 +71,11 @@ class Assessment(SQLModel,table=True):
     grappling_defense: Optional[AttributeQualifier]
     notes: Optional[str]
 
+class FightEvent(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    name: str
+    date: date
+    location: str
 
 
 def create_db_and_tables():
@@ -84,6 +91,11 @@ def on_start():
 
 @app.get("/")
 async def index():
+    #query my database for the next event
+    #check the date of the next event
+    #if date is upcoming or today load event from database
+    #if not retrieve using scraper and create FightEvent object
+    #and create matchup objects for each matchup in the events
     return FileResponse("static/index.html")
 
 @app.get("/assessment")
