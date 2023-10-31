@@ -37,27 +37,24 @@ class WeightClass(Enum):
     LIGHT_HEAVYWEIGHT = "Light Heavyweight"
     HEAVYWEIGHT = "Heavyweight"
 
+class FightEvent(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    name: str
+    date: date
+    location: str
+    link: Optional[str]
+
 class MatchUp(SQLModel,table=True):
     id: int = Field(primary_key=True)
-    date: Optional[date]
-    max_rounds: int
+    # date: Optional[date]
     weight_class: WeightClass
-
-class Fighter(SQLModel,table=True):
-    id: int = Field(primary_key=True)
-    first_name: str
-    last_name: str
-    nick_name: Optional[str] 
-    weight_class: Optional[WeightClass]
-    height: Optional[str]
-    date_of_birth: Optional[date]
-    #an optional foreign key to the matchup table if a matchup is scheduled
-    matchup_id: Optional[int] = Field(default=None, foreign_key="matchup.id")
-    matchup: Optional[MatchUp] = Relationship(back_populates="fighters")
-    #optional since a fighter may need to still be assessed
-    assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
-    assesment: Optional["Assessment"] = Relationship(back_populates="fighter")
-
+    fighter_a: str
+    fighter_b: str
+    #almost always 3 unless main-event or championship fight
+    max_rounds: Optional[int]
+    #optional foreign key to the fightevent table
+    event_id: Optional[int] = Field(default=None, foreign_key="fightevent.id")
+    # fighters: List["Fighter"] = Relationship(back_populates="matchup")
 
 class Assessment(SQLModel,table=True):
     id: int = Field(primary_key=True)
@@ -71,11 +68,24 @@ class Assessment(SQLModel,table=True):
     grappling_defense: Optional[AttributeQualifier]
     notes: Optional[str]
 
-class FightEvent(SQLModel,table=True):
+    # fighters: List["Fighter"] = Relationship(back_populates="assessment")
+
+class Fighter(SQLModel,table=True):
     id: int = Field(primary_key=True)
-    name: str
-    date: date
-    location: str
+    first_name: str
+    last_name: str
+    nick_name: Optional[str] 
+    weight_class: Optional[WeightClass]
+    height: Optional[str]
+    date_of_birth: Optional[date]
+    #an optional foreign key to the matchup table if a matchup is scheduled
+    matchup_id: Optional[int] = Field(default=None, foreign_key="matchup.id")
+    # matchup: Optional[MatchUp] = Relationship(back_populates="fighters")
+    #optional since a fighter may need to still be assessed
+    assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
+    # assesment: Optional["Assessment"] = Relationship(back_populates="fighters")
+
+
 
 
 def create_db_and_tables():
@@ -96,6 +106,7 @@ async def index():
     #if date is upcoming or today load event from database
     #if not retrieve using scraper and create FightEvent object
     #and create matchup objects for each matchup in the events
+    #or do i create an endpoint that scrapes the next event and returns it
     return FileResponse("static/index.html")
 
 @app.get("/assessment")
@@ -105,6 +116,39 @@ async def index():
 @app.get("/matchup")
 async def index():
     return FileResponse("static/matchup.html")
+
+
+@app.get("/nextevent")
+async def next_event():
+    
+    event = None
+    matchups = []
+    with Session(engine) as session:
+        # using session query the fightevent that is greater than current date
+        # event = session.query(FightEvent).all()
+        event = session.query(FightEvent).filter(FightEvent.date >= date.today()).first()
+        if not event:
+        #     #if no event is found scrape the next event and create it
+            print('fetching from site....')
+            next_event = scraper.getNextEvent(scraper.EVENTS_URL)
+            event = FightEvent(**next_event)
+            session.add(event)
+            session.commit()
+            #two commits since id is not created until commit is done
+            matchupsRaw = scraper.getEventMatchups(event.link)
+            for matchup in matchupsRaw:
+                matchup = MatchUp(**matchup)
+                matchup.event_id = event.id
+                print('----',matchup)
+                session.add(matchup)
+                matchups.append(matchup)
+            session.commit()
+        else:
+            print('retreived from db....')
+            #grab matchups for current event
+            matchups = session.query(MatchUp).filter(MatchUp.event_id == event.id).all()
+        print(event)
+    return {'event':event,'matchups':matchups}
 
 @app.get("/styles.css")
 async def styles():

@@ -1,5 +1,7 @@
 import requests 
 from bs4 import BeautifulSoup
+from datetime import datetime
+import main
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
 
@@ -25,13 +27,13 @@ def getNextEvent(url):
     #extract the name and date and location of the event
     nameData, locationData = nextEventRow.findAll('td')
     name = nameData.i.a.text.strip()
-    date = nameData.span.text.strip()
+    fdate = datetime.strptime(nameData.span.text.strip(),"%B %d, %Y").date()
     link = nameData.i.a['href']
     location = locationData.text.strip()
 
     return {
         "name": name,
-        "date": date,
+        "date": fdate,
         "location": location,
         "link": link
     }
@@ -71,23 +73,23 @@ def getEventMatchups(event_url):
         if i == 0:
             continue
         rowData = row.findAll('td')
-        fighterNameColumn = rowData[1]   
+        fa,fb = rowData[1].findAll('p')   
         weightClassData = rowData[6]
 
-        fighter_a = fighterNameColumn.p.a.text.strip()
-        fighter_b = fighterNameColumn.p.a.text.strip()
-        weightclass = weightClassData.p.text.strip()
+        fighter_a = fa.a.text.strip()
+        fighter_b = fb.a.text.strip()
+        weightclass = weightClassData.p.text.replace("Women's","").strip().upper().replace(" ","_")
 
         matchups.append({
             "fighter_a": fighter_a,
             "fighter_b": fighter_b,
-            "weightclass": weightclass
+            "weight_class": main.WeightClass[weightclass]
         })
     return matchups
 
 
-eventInfo = getNextEvent(EVENTS_URL)
-matchups = getEventMatchups(eventInfo['link'])
+# eventInfo = getNextEvent(EVENTS_URL)
+# matchups = getEventMatchups(eventInfo['link'])
 # print(eventInfo)
 # print(getEventMatchups('http://ufcstats.com/event-details/7c4ec656d8fcb867'))
 # print(getEventMatchups(eventInfo['link']))
