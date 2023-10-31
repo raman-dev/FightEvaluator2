@@ -118,7 +118,7 @@
           <div class="list-group-item">
             <h4>Notes - Things to consider about this fighter...</h4>
             <!--unordered scrollable list of p tags wrapped in li-->
-            <!-- <textarea class="note-editor" name="textarea" placeholder="Things to consider about this fighter..."></textarea> -->
+            <!-- <textarea class="note-editor" name="textarea" placeholder="Considerations..." rows="2" cols="50"></textarea> -->
             <div class="form-floating">
               <textarea class="note-editor form-control" placeholder="Leave a comment here" id="floatingTextarea" rows="1"></textarea>
               <label for="floatingTextarea">Considerations</label>
@@ -234,6 +234,16 @@
             }
           });
         });
+      });
+    
+      //auto resize textarea
+      document.querySelector('textarea').addEventListener('input',(event) => {
+        // event.target.style.height = "1px";
+        // event.target.style.height = (25+event.target.scrollHeight)+"px";
+        if (event.target.scrollHeight > event.target.clientHeight){
+          event.target.style.height = (event.target.scrollHeight)+"px";
+        }
+        console.log(event);
       });
     </script>
     <script
