@@ -113,9 +113,12 @@ async def index():
 async def index():
     return FileResponse("static/assessment.html")
 
-@app.get("/matchup")
-async def index():
+@app.get("/matchup/")
+async def index(fighter_a: int | None = None,fighter_b: int | None = None):
+    if fighter_a:
+        print('matchup for fighters -> ',fighter_a,fighter_b)  
     return FileResponse("static/matchup.html")
+
 
 
 @app.get("/nextevent")

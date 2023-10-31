@@ -89,18 +89,25 @@
             <div class="btn btn-outline-danger bad-radio" data-radioType="bad">Yes</div>
           </div>
         </div>
-        <div class="list-group-item">
-          <h4>Grappling Offense</h4>
-          <div class="button-container d-flex justify-content-around mradio-group">
-            <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
-          </div>
-        </div>
-        <div class="list-group-item">
-          <h4>Grappling Defense</h4>
-          <div class="button-container d-flex justify-content-around mradio-group">
-            <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+        <div class="list-group-item grappling-info-container">
+          <h4>
+            Grappling
+          </h4>
+          <div class="grappling-container">
+            <div class="border offense-container">
+              <h4>Offense</h4>
+              <div class="button-container d-flex justify-content-around mradio-group">
+                <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
+                <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+              </div>
+            </div>
+            <div class="border defense-container">
+              <h4>Defense</h4>
+              <div class="button-container d-flex justify-content-around mradio-group">
+                <div class="btn btn-outline-primary good-radio" data-radioType="good">good</div>
+                <div class="btn btn-outline-danger bad-radio" data-radioType="bad">bad</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -110,11 +117,18 @@
         <div class="notes-list list-group">
           <div class="list-group-item">
             <h4>Notes</h4>
-            <p>note 1</p>
-            <p>note 2</p>
-            <p>note 3</p>
-            <p>note 4</p>
-            <p>note 5</p>
+            <!--unordered scrollable list of p tags wrapped in li-->
+            <textarea class="note-editor" name="textarea" placeholder="Things to consider about this fighter..."></textarea>
+            <ul>
+              <li><p>note 1</p></li>
+              <li><p>note 2</p></li>
+              <li><p>note 3</p></li>
+              <li><p>note 4</p></li>
+              <li><p>note 5</p></li>
+              <li><p>note 6</p></li>
+              <li><p>note 7</p></li>
+              <li><p>note 8</p></li>
+            </ul>
           </div>
         </div>
       </div>
@@ -124,10 +138,43 @@
           max-width: 70%;
         }
         
-        /* .mradio-group .selected{
-          border-color: lavender !important;
-        } */
+        .note-editor{
+          width: 100%;
+          height: fit-content;
+        }
+        ul li{
+          list-style: None;
+          display: flex;
+        }
         
+        /*notes list style dot is a dash instead*/
+        ul li::before {
+          content: "-";
+          margin-right: 0.4rem;
+          margin-left: -1rem;
+        }
+
+        .grappling-info-container .grappling-container{
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+        }
+
+        .grappling-container{
+          padding-left: 2rem;
+          padding-right: 2rem;
+        }
+
+        /*class that ends with ense-container */
+        .grappling-container div[class$="ense-container"] {
+          width: 100%;
+          margin: 0.2rem;
+          padding: 0.4rem;
+          /*rounded border*/
+          border-radius: 0.8rem;
+          /* border: 1px solid #343a40; */
+        }
+
       </style>
     </div>
     <script>

@@ -13,31 +13,38 @@
 
 <body data-bs-theme="dark">
     <!--container-->
-    <div class="container">
+    <div class="container-fluid">
         <h1 class="event-title">Event Name</h1>
         <!-- clickable list of 5 items in bootstrap -->
         <div class="list-group matchup-container mx-auto">
-            <!-- <a href="#" class="list-group-item list-group-item-action">
+            <a href="/matchup?fighter_a=1&fighter_b=2" class="list-group-item list-group-item-action">
                 <div class="matchup">
                     <h1>5</h1>
                     <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                    <h4>
-                        fighter a
+                    <h4 class="fighter-a-name">
+                        First Name Last Name
                     </h4>
-                    <p>vs</p>
-                    <h4>
-                        fighter b
+                    <div class="weightclass">
+                        <p>
+                            vs<br>
+                        </p>
+                        <h6>Lightweight</h6>
+                    </div>
+                    <h4 class="fighter-b-name">
+                        First Name Last Name
                     </h4>
                     <img class="fighter-img" src="static/media/sample_50.png" alt="">
                 </div>
-            </a> -->
-            
+            </a> 
         </div>
     </div>
     <style>
         /*horizontally centered event-title*/
         .event-title {
             text-align: center;
+            margin: 1rem;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /*matchups are horizontally centered and vertically stacked*/
@@ -49,21 +56,31 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             margin: auto;
         }
-
+        
+        /* nth fight on the card*/
         .matchup h1 {
+            text-align: center;
             opacity: 0.5;
-            width: 1ch;
+            width: 2.2ch;
         }
 
         .matchup p {
-            padding: 1rem;
+            margin: 0px;
         }
 
-        .matchup * {
-            /* margin: 0.2rem; */
+        .matchup h4{
+            width: 18ch;
+            text-align: center;
+        }
+
+        .matchup .weightclass{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* fighter-img has rounded corners using crop */
@@ -85,7 +102,12 @@
                     <h4>
                         ${fighter_a}
                     </h4>
-                    <p>vs</p>
+                    <div class="weightclass">
+                        <p>
+                            vs<br>
+                        </p>
+                        <h6>${weight_class}</h6>
+                    </div>                    
                     <h4>
                         <!-- <a href="#">fighter b</a> -->
                         ${fighter_b}
