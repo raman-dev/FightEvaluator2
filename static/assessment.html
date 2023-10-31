@@ -116,10 +116,14 @@
         <!--list of text notes about a the fighter in jot note style-->
         <div class="notes-list list-group">
           <div class="list-group-item">
-            <h4>Notes</h4>
+            <h4>Notes - Things to consider about this fighter...</h4>
             <!--unordered scrollable list of p tags wrapped in li-->
-            <textarea class="note-editor" name="textarea" placeholder="Things to consider about this fighter..."></textarea>
-            <ul>
+            <!-- <textarea class="note-editor" name="textarea" placeholder="Things to consider about this fighter..."></textarea> -->
+            <div class="form-floating">
+              <textarea class="note-editor form-control" placeholder="Leave a comment here" id="floatingTextarea" rows="1"></textarea>
+              <label for="floatingTextarea">Considerations</label>
+            </div>
+            <ul class="mt-4">
               <li><p>note 1</p></li>
               <li><p>note 2</p></li>
               <li><p>note 3</p></li>
@@ -133,6 +137,14 @@
         </div>
       </div>
       <style>
+
+        .list-group-item{
+          margin-bottom: 1rem;
+          background-color: #242a30 !important;
+          border: 1px solid #343a40 !important;
+          border-radius: 0.5rem !important;
+        }
+
         /*container is at most 70% width*/
         .container-fluid {
           max-width: 70%;
@@ -140,8 +152,8 @@
         
         .note-editor{
           width: 100%;
-          height: fit-content;
         }
+
         ul li{
           list-style: None;
           display: flex;
@@ -173,6 +185,7 @@
           /*rounded border*/
           border-radius: 0.8rem;
           /* border: 1px solid #343a40; */
+          background-color: #212529;
         }
 
       </style>
