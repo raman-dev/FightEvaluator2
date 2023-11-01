@@ -118,11 +118,7 @@
           <div class="list-group-item">
             <h4>Notes - Things to consider about this fighter...</h4>
             <!--unordered scrollable list of p tags wrapped in li-->
-            <!-- <textarea class="note-editor" name="textarea" placeholder="Considerations..." rows="2" cols="50"></textarea> -->
-            <div class="form-floating">
-              <textarea class="note-editor form-control" placeholder="Leave a comment here" id="floatingTextarea" rows="1"></textarea>
-              <label for="floatingTextarea">Considerations</label>
-            </div>
+            <textarea class="note-editor" name="textarea" placeholder="Considerations..." rows="2" ></textarea>
             <ul class="mt-4">
               <li><p>note 1</p></li>
               <li><p>note 2</p></li>
@@ -144,6 +140,21 @@
           border: 1px solid #343a40 !important;
           border-radius: 0.5rem !important;
         }
+
+        .note-editor{
+          resize: none;
+          overflow: hidden;
+          background-color: #212529;
+          border-radius: 0.5rem;
+          max-width: 64ch;
+        }
+
+        /* show light electric blue outline when note-editor is focused */
+        .note-editor:focus{
+          outline: 3px solid #3d7efd;
+          border-color: transparent;
+        }
+
 
         /*container is at most 70% width*/
         .container-fluid {
@@ -237,13 +248,25 @@
       });
     
       //auto resize textarea
+      let current = null;
       document.querySelector('textarea').addEventListener('input',(event) => {
-        // event.target.style.height = "1px";
-        // event.target.style.height = (25+event.target.scrollHeight)+"px";
-        if (event.target.scrollHeight > event.target.clientHeight){
-          event.target.style.height = (event.target.scrollHeight)+"px";
+        if (event.inputType == 'insertLineBreak'){
+          //increase the number of rows in the text area
+          let currentVal = parseInt(event.target.getAttribute('rows'));
+          event.target.setAttribute('rows',`${currentVal+1}`);
         }
-        console.log(event);
+        else if (event.inputType == 'deleteContentBackward'){
+          // console.log('deleting a char');
+          let text = event.target.value;
+          //count lines of text
+          let lines = text.split('\n');
+          let currentVal = parseInt(event.target.getAttribute('rows'));
+          // console.log(lines.length,currentVal);
+          if (lines.length < currentVal){
+            event.target.setAttribute('rows',`${Math.max(currentVal - 1,2)}`);
+          }
+        }
+        // console.log(event);
       });
     </script>
     <script
