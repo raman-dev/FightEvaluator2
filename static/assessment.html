@@ -112,25 +112,30 @@
         </div>
       </div>
       <!--additional notes and context info to consider about a particular fighter-->
-      <div class="fighter-notes">
+      <div class="fighter-notes list-group-item d-flex flex-column p-4">
         <!--list of text notes about a the fighter in jot note style-->
-        <div class="notes-list list-group">
-          <div class="list-group-item">
-            <h4>Notes - Things to consider about this fighter...</h4>
+            <div class="notes-title">
+              <h4>Notes - Things to consider about this fighter...</h4>
+            </div>
             <!--unordered scrollable list of p tags wrapped in li-->
-            <textarea class="note-editor" name="textarea" placeholder="Considerations..." rows="2" ></textarea>
-            <ul class="mt-4">
-              <li><p>note 1</p></li>
-              <li><p>note 2</p></li>
-              <li><p>note 3</p></li>
-              <li><p>note 4</p></li>
-              <li><p>note 5</p></li>
-              <li><p>note 6</p></li>
-              <li><p>note 7</p></li>
-              <li><p>note 8</p></li>
-            </ul>
-          </div>
-        </div>
+            <!--textarea made with div and contenteditable -->
+            <div class="note-editor-container">
+              <label for="note-editor">Considerations</label>
+              <div class="note-editor" contenteditable="plaintext-only"></div>
+              <button class="btn btn-success note-submit-btn">submit</button>
+            </div>
+            <div class="notes-list">
+              <ul class="mt-4">
+                <li><p>note 1</p></li>
+                <li><p>note 2</p></li>
+                <li><p>note 3</p></li>
+                <li><p>note 4</p></li>
+                <li><p>note 5</p></li>
+                <li><p>note 6</p></li>
+                <li><p>note 7</p></li>
+                <li><p>note 8</p></li>
+              </ul>
+            </div>
       </div>
       <style>
 
@@ -141,17 +146,34 @@
           border-radius: 0.5rem !important;
         }
 
+        .note-editor-container{
+          padding-left: 1rem;
+        }
+
+        .note-submit-btn{
+          float:right;
+          margin: 0.4rem;
+          margin-right: 2rem;
+        }
+
         .note-editor{
-          resize: none;
           overflow: hidden;
           background-color: #212529;
+          border: solid 1px #444a40;
           border-radius: 0.5rem;
+          outline: 0px solid #3d7efd;
           max-width: 64ch;
+          min-height: 4rem;
+          transition: outline 0.05s ease-out;
+        }
+        
+        .notes-list{
+          background-color: #212529;
         }
 
         /* show light electric blue outline when note-editor is focused */
         .note-editor:focus{
-          outline: 3px solid #3d7efd;
+          outline-width: 3px;
           border-color: transparent;
         }
 
@@ -247,27 +269,7 @@
         });
       });
     
-      //auto resize textarea
-      let current = null;
-      document.querySelector('textarea').addEventListener('input',(event) => {
-        if (event.inputType == 'insertLineBreak'){
-          //increase the number of rows in the text area
-          let currentVal = parseInt(event.target.getAttribute('rows'));
-          event.target.setAttribute('rows',`${currentVal+1}`);
-        }
-        else if (event.inputType == 'deleteContentBackward'){
-          // console.log('deleting a char');
-          let text = event.target.value;
-          //count lines of text
-          let lines = text.split('\n');
-          let currentVal = parseInt(event.target.getAttribute('rows'));
-          // console.log(lines.length,currentVal);
-          if (lines.length < currentVal){
-            event.target.setAttribute('rows',`${Math.max(currentVal - 1,2)}`);
-          }
-        }
-        // console.log(event);
-      });
+      
     </script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
