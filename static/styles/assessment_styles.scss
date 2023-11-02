@@ -1,0 +1,100 @@
+.list-group-item {
+    margin-bottom: 1rem;
+    background-color: #242a30 !important;
+    border: 1px solid #343a40 !important;
+    border-radius: 0.5rem !important;
+}
+
+.fighter-bio{
+    .info-wrapper{
+        display: flex;
+        flex-direction: row;
+        p{
+            white-space: nowrap;
+        }
+    }
+}
+
+.fighter-notes {
+    padding: 1rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    
+    .notes-title{
+        margin-left: -3rem;
+    }
+    .notes-list {
+        background-color: #212529;
+        border: 1px solid #343a40 !important;
+        border-radius: 0.5rem;
+        width: 100%;
+
+        ul {
+            width: 100%;
+            li {
+                list-style: None;
+                display: flex;
+            }
+            /*notes list style dot is a dash instead*/
+            li::before {
+                content: "-";
+                margin-right: 0.4rem;
+                margin-left: -1rem;
+            }
+        }
+    }
+}
+
+.note-editor-container {
+    row-gap: 0.5rem;
+
+    .note-submit-btn {
+        margin-left: auto;
+        max-width: fit-content;
+    }
+    .note-editor {
+        overflow: hidden;
+        background-color: #212529;
+        border: 1px solid #343a40;
+        border-radius: 0.5rem;
+        outline: 0px solid #3d7efd;
+
+        width: 100%;
+        min-height: 4rem;
+        transition: outline 0.05s ease-out;
+    }
+
+    /* show light electric blue outline when note-editor is focused */
+    .note-editor:focus {
+        outline-width: 3px;
+        border-color: transparent;
+    }
+}
+
+
+/*container is at most 70% width*/
+.container-fluid {
+    max-width: 70%;
+}
+
+.grappling-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    /*class that ends with ense-container */
+    div[class$="ense-container"] {
+        width: 100%;
+        margin: 0.2rem;
+        padding: 0.4rem;
+        /*rounded border*/
+        border-radius: 0.8rem;
+        /* border: 1px solid #343a40; */
+        background-color: #212529;
+    }
+}
+
+

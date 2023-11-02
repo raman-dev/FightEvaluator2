@@ -26,7 +26,7 @@ class AttributeQualifier(Enum):
     low = "low"
 
 class WeightClass(Enum):
-    CATCHWEIGHT = "Catchweight"
+    CATCH_WEIGHT = "Catch weight"
     STRAWWEIGHT = "Strawweight"
     FLYWEIGHT = "Flyweight"
     BANTAMWEIGHT = "Bantamweight"
@@ -66,9 +66,11 @@ class Assessment(SQLModel,table=True):
     chinny: Optional[bool]
     grappling_offense: Optional[AttributeQualifier]
     grappling_defense: Optional[AttributeQualifier]
-    notes: Optional[str]
 
-    # fighters: List["Fighter"] = Relationship(back_populates="assessment")
+class Note(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    assessment_id: int = Field(foreign_key="assessment.id")
+    data: str
 
 class Fighter(SQLModel,table=True):
     id: int = Field(primary_key=True)
@@ -98,6 +100,25 @@ app.mount("/static", StaticFiles(directory=Path("static")), name="static")
 def on_start():
     create_db_and_tables()
     # create_sample_data()
+    #create a sample fighter if none exists
+    with Session(engine) as session:
+        fighter = session.query(Fighter).first()
+        if not fighter:
+            #commit first since id's are not generated unless committed
+            assessment = Assessment(id=0)
+            fighter = Fighter(
+                id=0,
+                first_name="John",
+                last_name="Doe",
+                nick_name="The Pussy Destroyer",
+                weight_class=WeightClass.LIGHTWEIGHT,
+                date_of_birth=date(1994,1,1),
+                assessment_id=assessment.id
+            )
+            session.add(assessment)
+            session.add(fighter)
+            session.commit()
+            session.refresh(fighter)
 
 @app.get("/")
 async def index():
@@ -109,7 +130,8 @@ async def index():
     #or do i create an endpoint that scrapes the next event and returns it
     return FileResponse("static/index.html")
 
-@app.get("/assessment")
+#assessmnent require fighter id since they cannot exist without a fighter
+@app.get("/assessment/{fighter_id}")
 async def index():
     return FileResponse("static/assessment.html")
 
@@ -118,8 +140,6 @@ async def index(fighter_a: int | None = None,fighter_b: int | None = None):
     if fighter_a:
         print('matchup for fighters -> ',fighter_a,fighter_b)  
     return FileResponse("static/matchup.html")
-
-
 
 @app.get("/nextevent")
 async def next_event():
@@ -147,11 +167,41 @@ async def next_event():
                 matchups.append(matchup)
             session.commit()
         else:
-            print('retreived from db....')
+            print('\nRETRIEVED FROM DB....\n')
             #grab matchups for current event
             matchups = session.query(MatchUp).filter(MatchUp.event_id == event.id).all()
         print(event)
+
     return {'event':event,'matchups':matchups}
+
+@app.get("/notes/{assessment_id}")
+async def get_notes(assessment_id):
+    #get notes for assessment id with session
+    notes = None
+    with Session (engine) as session:
+        notes = session.query(Note).filter(Note.assessment_id == assessment_id).all()
+    return list(notes)
+
+@app.post("/notes")
+async def create_note(note: Note):
+    #add note to database
+    print('\nRECEIVED FROM BROWSER\n',note)
+    with Session(engine) as session:
+        session.add(note)
+        session.commit()
+        session.refresh(note)
+    return note
+
+@app.get("/fighters/{fighter_id}")
+async def get_fighter(fighter_id:int):
+    print('getting fighter with id -> ',fighter_id)
+    with Session(engine) as session:
+        fighter = session.get(Fighter,fighter_id)
+        return fighter
+
+@app.get("/assessment_styles.css")
+async def assessment_styles():
+    return FileResponse("static/styles/assessment_styles.css")
 
 @app.get("/styles.css")
 async def styles():
@@ -160,11 +210,5 @@ async def styles():
 @app.get("/static/media/{resource_name}")
 async def media(resource_name):
     return FileResponse("static/media/"+resource_name)
-
-@app.get("/fighters/{fighter_id}")
-async def get_fighter(fighter_id:int):
-    with Session(engine) as session:
-        fighter = session.get(Fighter,fighter_id)
-        return fighter
 
 

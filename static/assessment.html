@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bootstrap demo</title>
+    <title>Fighter Assessment</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.css"
@@ -11,14 +11,15 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/assessment_styles.css">
   </head>
   <body data-bs-theme="dark">
     <div class="container main-container">
       <div class="fighter-info-container d-flex">
         <!--fighter image-->
         <div class="fighter-img">
-          <img class="fighter-img" src="static/media/sample_150.png" alt="" />
+          <img class="fighter-img" src="/static/media/sample_150.png" alt="" />
         </div>
         <!--fighter biographical info in a list-->
         <div class="fighter-bio list-group">
@@ -28,20 +29,20 @@
             <div class="d-flex">
               <div class="row">
                 <div class="col">
-                  <p>name</p>
-                  <p>age</p>
+                  <div class="info-wrapper"><label>name:_</label><p class="fighter-name">name</p></div>
+                  <div class="info-wrapper"><label>age:_</label><p class="fighter-age">age</p></div>
                 </div>
                 <div class="col">
-                  <p>height</p>
-                  <p>weight</p>
+                  <div class="info-wrapper"><label>height: </label><p class="fighter-height">height</p></div>
+                  <div class="info-wrapper"><label>weight: </label><p class="fighter-weight">weight</p></div>
                 </div>
               </div>
             </div>
           </div>
           <div class="d-flex flex-row justify-content-around">
-            <p>record</p>
-            <p>reach</p>
-            <p>stance</p>
+            <div class="info-wrapper"><label>record: </label><p class="fighter-record">1-1-1</p></div>
+            <div class="info-wrapper"><label>reach: </label><p class="fighter-reach"></p></div>
+            <div class="info-wrapper"><label>stance: </label><p class="fighter-stance"></p></div>
           </div>
         </div>
       </div>
@@ -112,118 +113,31 @@
         </div>
       </div>
       <!--additional notes and context info to consider about a particular fighter-->
-      <div class="fighter-notes list-group-item d-flex flex-column p-4">
+      <div class="fighter-notes list-group-item d-flex flex-column">
         <!--list of text notes about a the fighter in jot note style-->
             <div class="notes-title">
               <h4>Notes - Things to consider about this fighter...</h4>
             </div>
             <!--unordered scrollable list of p tags wrapped in li-->
             <!--textarea made with div and contenteditable -->
-            <div class="note-editor-container">
-              <label for="note-editor">Considerations</label>
-              <div class="note-editor" contenteditable="plaintext-only"></div>
-              <button class="btn btn-success note-submit-btn">submit</button>
+            <div class="note-editor-container d-flex flex-column">
+              <button class="btn btn-success note-submit-btn" onclick="addNote(event)">submit</button>
+              <div class="note-editor align-self-center" contenteditable="plaintext-only"></div>
             </div>
-            <div class="notes-list">
-              <ul class="mt-4">
+            <div class="notes-list align-self-center mt-4">
+              <ul>
                 <li><p>note 1</p></li>
                 <li><p>note 2</p></li>
                 <li><p>note 3</p></li>
-                <li><p>note 4</p></li>
-                <li><p>note 5</p></li>
-                <li><p>note 6</p></li>
-                <li><p>note 7</p></li>
-                <li><p>note 8</p></li>
               </ul>
             </div>
       </div>
-      <style>
-
-        .list-group-item{
-          margin-bottom: 1rem;
-          background-color: #242a30 !important;
-          border: 1px solid #343a40 !important;
-          border-radius: 0.5rem !important;
-        }
-
-        .note-editor-container{
-          padding-left: 1rem;
-        }
-
-        .note-submit-btn{
-          float:right;
-          margin: 0.4rem;
-          margin-right: 2rem;
-        }
-
-        .note-editor{
-          overflow: hidden;
-          background-color: #212529;
-          border: solid 1px #444a40;
-          border-radius: 0.5rem;
-          outline: 0px solid #3d7efd;
-          max-width: 64ch;
-          min-height: 4rem;
-          transition: outline 0.05s ease-out;
-        }
-        
-        .notes-list{
-          background-color: #212529;
-        }
-
-        /* show light electric blue outline when note-editor is focused */
-        .note-editor:focus{
-          outline-width: 3px;
-          border-color: transparent;
-        }
-
-
-        /*container is at most 70% width*/
-        .container-fluid {
-          max-width: 70%;
-        }
-        
-        .note-editor{
-          width: 100%;
-        }
-
-        ul li{
-          list-style: None;
-          display: flex;
-        }
-        
-        /*notes list style dot is a dash instead*/
-        ul li::before {
-          content: "-";
-          margin-right: 0.4rem;
-          margin-left: -1rem;
-        }
-
-        .grappling-info-container .grappling-container{
-          display: flex;
-          flex-direction: row;
-          justify-content: space-around;
-        }
-
-        .grappling-container{
-          padding-left: 2rem;
-          padding-right: 2rem;
-        }
-
-        /*class that ends with ense-container */
-        .grappling-container div[class$="ense-container"] {
-          width: 100%;
-          margin: 0.2rem;
-          padding: 0.4rem;
-          /*rounded border*/
-          border-radius: 0.8rem;
-          /* border: 1px solid #343a40; */
-          background-color: #212529;
-        }
-
-      </style>
     </div>
     <script>
+
+      var fighter_id = parseInt(window.location.href.split('/').pop());
+      var assessment_id = null;
+
       function getRadioType(radioType) {
         switch(radioType){
           case "good":
@@ -268,14 +182,101 @@
           });
         });
       });
-    
+      //grab content from note-editor and send it to the server
+      //update the notes-list with the new note
+      async function addNote(event){
+        //from note-editor get the text content make sure it is non empty
+        let noteEditor = document.querySelector('.note-editor');
+        let noteText = noteEditor.textContent.trim();
+        if (noteText.length > 0){
+          //create a new li element with the noteText
+          let newNote = document.createElement('li');
+          newNote.innerHTML = '<li><p>'+noteText+'</p></li>';
+          //append the new li element to the notes-list
+          let notesList = document.querySelector('.notes-list ul');
+          notesList.prepend(newNote);
+          //clear the note-editor
+          noteEditor.textContent = '';
+          //post request to server with new note
+          let response = await fetch('/notes', {
+            method: 'POST',
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            body: {
+              "id":101,
+              "assessment_id":assessment_id,
+              "note": noteText
+            }
+          });
+          console.log(response);
+        }
+      }
       
+      async function getFighterInfo(){
+        //get fighter_id from last part of url
+        // let fighter_id = parseInt(window.location.href.split('/').pop());
+        const response = await fetch(`/fighters/${fighter_id}`);
+        const data = await response.json();
+        console.log(data);
+        return data;
+      }
+
+      function dobToAge (dob) {
+        let today = new Date();
+        let birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())){
+          age--;
+        }
+        return age;
+      }
+
+      async function getFighterNotes(){
+        //get fighter_id from last part of url
+        const response = await fetch(`/notes/${assessment_id}`);
+        const data = await response.json();
+        console.log(data);
+        return data;
+      }
+
+      getFighterInfo().then((data)=>{
+        // write fighter info to page
+        let fighterName = document.querySelector('.fighter-name');
+        let fighterAge = document.querySelector('.fighter-age');
+        let fighterHeight = document.querySelector('.fighter-height');
+        let fighterWeight = document.querySelector('.fighter-weight');
+        let fighterRecord = document.querySelector('.fighter-record');
+        let fighterReach = document.querySelector('.fighter-reach');
+        let fighterStance = document.querySelector('.fighter-stance');
+        // let fighterImg = document.querySelector('.fighter-img');
+        // let fighterNotes = document.querySelector('.notes-list ul');
+        fighterName.textContent = `${data.first_name} ${data.last_name}`;
+        fighterAge.textContent = dobToAge(data.date_of_birth);
+        fighterHeight.textContent = data.height;
+        fighterWeight.textContent = data.weight;
+        fighterRecord.textContent = data.record;
+        fighterReach.textContent = data.reach;
+        fighterStance.textContent = data.stance;
+        
+        assessment_id = data.assessment_id;
+      });
+
+      getFighterNotes().then((data)=>{
+        // write notes to page
+        let notesList = document.querySelector('.notes-list ul');
+        data.forEach((note)=>{
+          let newNote = document.createElement('li');
+          newNote.innerHTML = '<li><p>'+note.note+'</p></li>';
+          notesList.prepend(newNote);
+        });
+      });
+
     </script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
       integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+      referrerpolicy="no-referrer"></script>
   </body>
 </html>
