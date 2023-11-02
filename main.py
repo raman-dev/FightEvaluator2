@@ -202,7 +202,10 @@ async def create_note(noteIn: NoteIn):#,request: Request):
 async def delete_notes(note_id):
     #delete note from database
     with Session(engine) as session:
-        session.delete(Note,id=note_id)
+        note = session.get(Note,note_id)
+        if not note:
+            return {'status':'failed'}
+        session.delete(note)
         session.commit()
     return {'status':'success'}
 

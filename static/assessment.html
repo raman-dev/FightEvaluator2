@@ -9,8 +9,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.css"
       integrity="sha512-r0fo0kMK8myZfuKWk9b6yY8azUnHCPhgNz/uWDl2rtMdWJlk7gmd9socvGZdZzICwAkMgfTkVrplDahQ07Gi0A=="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+      referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/assessment_styles.css" />
   </head>
@@ -18,208 +17,155 @@
     <div class="container main-container">
       <div class="fighter-info-container d-flex">
         <!--fighter image-->
-        <div class="fighter-img">
-          <img class="fighter-img" src="/static/media/sample_150.png" alt="" />
-        </div>
-        <!--fighter biographical info in a list-->
-        <div class="fighter-bio list-group">
-          <div class="container">
-            <h4>Biographical Info</h4>
-            <!--2 column flex grid-->
-            <div class="d-flex">
-              <div class="row">
-                <div class="col">
-                  <div class="info-wrapper">
-                    <label>name:_</label>
-                    <p class="fighter-name">name</p>
+        <div class="col d-flex">
+          <div class="fighter-img">
+            <img
+              class="fighter-img"
+              src="/static/media/sample_150.png"
+              alt="" />
+          </div>
+          <!--fighter biographical info in a list-->
+          <div class="fighter-bio list-group">
+            <div class="container">
+              <h4>Biographical Info</h4>
+              <!--2 column flex grid-->
+              <div class="d-flex">
+                <div class="row">
+                  <div class="col">
+                    <div class="info-wrapper">
+                      <label>name:_</label>
+                      <p class="fighter-name">name</p>
+                    </div>
+                    <div class="info-wrapper">
+                      <label>age:_</label>
+                      <p class="fighter-age">age</p>
+                    </div>
                   </div>
-                  <div class="info-wrapper">
-                    <label>age:_</label>
-                    <p class="fighter-age">age</p>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="info-wrapper">
-                    <label>height: </label>
-                    <p class="fighter-height">height</p>
-                  </div>
-                  <div class="info-wrapper">
-                    <label>weight: </label>
-                    <p class="fighter-weight">weight</p>
+                  <div class="col">
+                    <div class="info-wrapper">
+                      <label>height: </label>
+                      <p class="fighter-height">height</p>
+                    </div>
+                    <div class="info-wrapper">
+                      <label>weight: </label>
+                      <p class="fighter-weight">weight</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="d-flex flex-row justify-content-around">
+              <div class="info-wrapper">
+                <label>record: </label>
+                <p class="fighter-record">1-1-1</p>
+              </div>
+              <div class="info-wrapper">
+                <label>reach: </label>
+                <p class="fighter-reach"></p>
+              </div>
+              <div class="info-wrapper">
+                <label>stance: </label>
+                <p class="fighter-stance"></p>
+              </div>
+            </div>
           </div>
-          <div class="d-flex flex-row justify-content-around">
-            <div class="info-wrapper">
-              <label>record: </label>
-              <p class="fighter-record">1-1-1</p>
-            </div>
-            <div class="info-wrapper">
-              <label>reach: </label>
-              <p class="fighter-reach"></p>
-            </div>
-            <div class="info-wrapper">
-              <label>stance: </label>
-              <p class="fighter-stance"></p>
-            </div>
+        </div>
+
+        <div class="col edit-button-container">
+          <div class="edit-button">
+            <p>edit</p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 -960 960 960"
+              width="24">
+              <!--white path-->
+              <path
+                fill="white"
+                d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z" />
+            </svg>
           </div>
         </div>
       </div>
 
       <!--list of 8 fighter attributes-->
       <div class="fighter-attrib-list list-group">
-        <div class="list-group-item">
+        <!--
+          if a change has been made set data-changed attribute on list-item-group
+        -->
+        <!-- <div class="list-group-item mradio-group" data-changed data-value="null"> -->
+          <!--group title-->
+          <!-- <h4>Attribute X</h4> -->
+          <!--button group options container-->
+          <!-- <div class="group-options-container">
+            <div class="btn mradio-option" data-polarity="positive">option-0</div>
+            <div class="btn mradio-option" data-polarity="neutral">option-1</div>
+            <div class="btn mradio-option" data-polarity="negative">option-2</div>
+          </div> -->
+        <!-- </div> -->
+        <div class="list-group-item mradio-group" data-changed="false" data-value="null">
           <h4>Head Movement</h4>
           <!--horizontal list of 3 radio buttons reading good/mediocre/bad -->
           <div
-            class="button-container d-flex justify-content-around mradio-group"
-          >
-            <div
-              class="btn btn-outline-primary good-radio"
-              data-radioType="good"
-            >
-              good
-            </div>
-            <div
-              class="btn btn-outline-warning mediocre-radio"
-              data-radioType="mediocre"
-            >
-              mediocre
-            </div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">
-              bad
-            </div>
+            class="button-container d-flex justify-content-around group-options-container">
+            <div class="btn btn-outline-primary mradio-option" data-polarity="positive">good</div>
+            <div class="btn btn-outline-warning mradio-option" data-polarity="neutral">mediocre</div>
+            <div class="btn btn-outline-danger  mradio-option" data-polarity="negative">bad</div>
           </div>
         </div>
-        <div class="list-group-item">
+        <div class="list-group-item mradio-group" data-changed="false" data-value="null">
+          <!-- <div class="d-flex justify-content-between"> -->
           <h4>Gas Tank</h4>
           <div
-            class="button-container d-flex justify-content-around mradio-group"
-          >
-            <div
-              class="btn btn-outline-primary good-radio"
-              data-radioType="good"
-            >
-              good
-            </div>
-            <div
-              class="btn btn-outline-warning mediocre-radio"
-              data-radioType="mediocre"
-            >
-              mediocre
-            </div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">
-              bad
-            </div>
+            class="button-container d-flex justify-content-around group-options-container">
+            <div class="btn mradio-option" data-polarity="positive">good</div>
+            <div class="btn mradio-option" data-polarity="neutral">mediocre</div>
+            <div class="btn mradio-option" data-polarity="negative">bad</div>
           </div>
         </div>
-        <div class="list-group-item">
+        <div class="list-group-item mradio-group">
           <h4>Aggression</h4>
-          <div
-            class="button-container d-flex justify-content-around mradio-group"
-          >
-            <div
-              class="btn btn-outline-primary good-radio"
-              data-radioType="good"
-            >
-              high
-            </div>
-            <div
-              class="btn btn-outline-warning mediocre-radio"
-              data-radioType="mediocre"
-            >
-              mid
-            </div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">
-              low
-            </div>
+          <div class="button-container d-flex justify-content-around group-options-container">
+            <div class="btn mradio-option" data-polarity="positive">high</div>
+            <div class="btn mradio-option" data-polarity="neutral">mid</div>
+            <div class="btn mradio-option" data-polarity="negative">low</div>
           </div>
         </div>
-        <div class="list-group-item">
+        <div class="list-group-item mradio-group" data-changed="false" data-value="null">
+          <!-- <div class="d-flex justify-content-between"> -->
           <h4>Striking</h4>
           <div
-            class="button-container d-flex justify-content-around mradio-group"
-          >
-            <div
-              class="btn btn-outline-primary good-radio"
-              data-radioType="good"
-            >
-              good
-            </div>
-            <div
-              class="btn btn-outline-warning mediocre-radio"
-              data-radioType="mediocre"
-            >
-              mediocre
-            </div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">
-              bad
-            </div>
+            class="button-container d-flex justify-content-around group-options-container">
+            <div class="btn mradio-option" data-polarity="positive">good</div>
+            <div class="btn mradio-option" data-polarity="neutral">mediocre</div>
+            <div class="btn mradio-option" data-polarity="negative">bad</div>
           </div>
         </div>
-        <div class="list-group-item">
+        <div class="list-group-item mradio-group" data-changed="false" data-value="null">
+          <!-- <div class="d-flex justify-content-between"> -->
           <h4>Chinny</h4>
           <div
-            class="button-container d-flex justify-content-around mradio-group"
-          >
-            <div
-              class="btn btn-outline-primary good-radio"
-              data-radioType="good"
-            >
-              No
-            </div>
-            <div
-              class="btn btn-outline-warning mediocre-radio"
-              data-radioType="mediocre"
-            >
-              Somewhat
-            </div>
-            <div class="btn btn-outline-danger bad-radio" data-radioType="bad">
-              Yes
-            </div>
+            class="button-container d-flex justify-content-around group-options-container">
+            <div class="btn mradio-option" data-polarity="positive">no</div>
+            <div class="btn mradio-option" data-polarity="neutral">somewhat</div>
+            <div class="btn mradio-option" data-polarity="negative">yes</div>
           </div>
         </div>
         <div class="list-group-item grappling-info-container">
           <h4>Grappling</h4>
-          <div class="grappling-container">
-            <div class="border offense-container">
+          <div class="row grappling-container">
+            <div class="col mradio-group offense-container" data-changed="false" data-value="null">
               <h4>Offense</h4>
-              <div
-                class="button-container d-flex justify-content-around mradio-group"
-              >
-                <div
-                  class="btn btn-outline-primary good-radio"
-                  data-radioType="good"
-                >
-                  good
-                </div>
-                <div
-                  class="btn btn-outline-danger bad-radio"
-                  data-radioType="bad"
-                >
-                  bad
-                </div>
+              <div class="button-container d-flex justify-content-around group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">good</div>
+                <div class="btn mradio-option" data-polarity="negative">bad</div>
               </div>
             </div>
-            <div class="border defense-container">
+            <div class="col mradio-group defense-container" data-changed="false" data-value="null">
               <h4>Defense</h4>
-              <div
-                class="button-container d-flex justify-content-around mradio-group"
-              >
-                <div
-                  class="btn btn-outline-primary good-radio"
-                  data-radioType="good"
-                >
-                  good
-                </div>
-                <div
-                  class="btn btn-outline-danger bad-radio"
-                  data-radioType="bad"
-                >
-                  bad
-                </div>
+              <div class="button-container d-flex justify-content-around group-options-container">
+                <div class="btn mradio-option" data-polarity="positive"> good</div>
+                <div class="btn mradio-option" data-polarity="negative">bad</div>
               </div>
             </div>
           </div>
@@ -236,22 +182,19 @@
         <div class="note-editor-container d-flex flex-column">
           <button
             class="btn btn-success note-submit-btn"
-            onclick="addNote(event)"
-          >
+            onclick="addNote(event)">
             submit
           </button>
           <div
             class="note-editor align-self-center"
-            contenteditable="plaintext-only"
-          ></div>
+            contenteditable="plaintext-only"></div>
         </div>
         <div class="notes-list align-self-center mt-4">
-          <ul>
-          </ul>
+          <ul></ul>
         </div>
       </div>
     </div>
-    <script src="/static/custom_radio_button.js"></script>
+    <script src="/static/js/custom_radio_button.js"></script>
     <script>
       var fighter_id = parseInt(window.location.href.split("/").pop());
       var assessment_id = null;
@@ -262,7 +205,6 @@
         let noteEditor = document.querySelector(".note-editor");
         let noteText = noteEditor.textContent.trim();
         if (noteText.length > 0) {
-          
           //post request to server with new note
           let response = await fetch("/notes", {
             method: "POST",
@@ -275,7 +217,7 @@
               data: noteText,
             }),
           });
-          let noteData = await response.json(); 
+          let noteData = await response.json();
           //create a new li element with the noteText
           let newNote = document.createElement("li");
           newNote.innerHTML = "<p>" + noteText + "</p>";
@@ -288,12 +230,12 @@
         }
       }
 
-      async function deleteNote(event){
+      async function deleteNote(event) {
         //get the note id from the note element
         //send delete request to server
         //remove note from notes-list
-        let noteId = parseInt(event.target.getAttribute("data-note-id"));
-        let response = await fetch(`/notes/${noteId}`, {
+        let note_id = parseInt(event.target.getAttribute("data-note-id"));
+        let response = await fetch(`/notes/${note_id}`, {
           method: "DELETE",
           headers: {
             accept: "application/json",
@@ -356,7 +298,7 @@
           let notesList = document.querySelector(".notes-list ul");
           notes.forEach((note) => {
             let newNote = document.createElement("li");
-            newNote.setAttribute ("data-note-id", note.id);
+            newNote.setAttribute("data-note-id", note.id);
             newNote.innerHTML = "<p>" + note.data + "</p>";
             notesList.prepend(newNote);
           });
@@ -367,7 +309,6 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
       integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+      referrerpolicy="no-referrer"></script>
   </body>
 </html>

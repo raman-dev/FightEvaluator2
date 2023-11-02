@@ -5,6 +5,63 @@
     border-radius: 0.5rem !important;
 }
 
+.fighter-info-container{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    :first-child{
+        align-items: center;
+    }
+}
+
+.edit-button-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    width: 100%;
+    margin: 0.5rem;
+    border: 1px solid lavender;
+}
+
+.edit-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid lavender;
+    border-radius: 0.5rem;
+    height: fit-content;
+
+    padding: 0.5rem;
+
+    p {
+        margin: 0px;
+    }
+}
+
+// custom attribute boolean selection
+div[data-mradio-selected]{
+    // background-color: red;
+    outline: 2px solid lavender;
+}
+
+div[data-changed="true"]{
+    outline: 2px solid red;
+}
+
+.mradio-group{
+    .group-options-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly; 
+    }
+}
+
+.edit-button:hover{
+    background-color: lavender;
+    cursor: pointer;
+}
+
 .fighter-bio{
     .info-wrapper{
         display: flex;
