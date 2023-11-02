@@ -1,7 +1,7 @@
 from typing import Optional,List
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -66,6 +66,10 @@ class Assessment(SQLModel,table=True):
     chinny: Optional[bool]
     grappling_offense: Optional[AttributeQualifier]
     grappling_defense: Optional[AttributeQualifier]
+
+class NoteIn(SQLModel):
+    assessment_id: int
+    data: str
 
 class Note(SQLModel,table=True):
     id: int = Field(primary_key=True)
@@ -183,14 +187,25 @@ async def get_notes(assessment_id):
     return list(notes)
 
 @app.post("/notes")
-async def create_note(note: Note):
+async def create_note(noteIn: NoteIn):#,request: Request):
     #add note to database
-    print('\nRECEIVED FROM BROWSER\n',note)
+    # body = await request.body()
+    # print('\nRECEIVED FROM BROWSER\n',body,noteIn.data)
+    note = Note(assessment_id=noteIn.assessment_id,data=noteIn.data)
     with Session(engine) as session:
         session.add(note)
         session.commit()
         session.refresh(note)
     return note
+
+@app.delete("/notes/{note_id}")
+async def delete_notes(note_id):
+    #delete note from database
+    with Session(engine) as session:
+        session.delete(Note,id=note_id)
+        session.commit()
+    return {'status':'success'}
+
 
 @app.get("/fighters/{fighter_id}")
 async def get_fighter(fighter_id:int):
