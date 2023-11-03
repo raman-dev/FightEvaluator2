@@ -48,45 +48,43 @@ function getRadioType(radioType) {
   change data-value to the option clicked
 */
 
-function reflectOptionChange(prevOption, newOption) {
+function toggleRadioButtons(option,toggleOn) {
   let selectedClass = 'btn-warning';
   let unselectedClass = 'btn-outline-warning';
-  if (prevOption != null) {
-    let prevPolarity = prevOption.dataset.polarity.trim();
-    if (prevPolarity == "positive") {
-      selectedClass = 'btn-primary';
-      unselectedClass = 'btn-outline-primary';
-    }
-    else if (prevPolarity == "negative"){
-      selectedClass = 'btn-danger';
-      unselectedClass = 'btn-outline-danger';
-    }
-    prevOption.classList.remove(selectedClass);
-    prevOption.classList.add(unselectedClass);
-  }
-  //set styling info based on option polarity
-  // console.log('newOption => ', newOption);
-  let polarity = newOption.dataset.polarity.trim();
-  //reset selectedClass and unselectedClass
-  selectedClass = 'btn-warning';
-  unselectedClass = 'btn-outline-warning';
-  if (polarity === "positive") {
+  
+  let polarity = option.dataset.polarity.trim();
+  if (polarity == "positive") {
     selectedClass = 'btn-primary';
     unselectedClass = 'btn-outline-primary';
   }
-  else if (polarity === "negative"){
+  else if (polarity == "negative"){
     selectedClass = 'btn-danger';
     unselectedClass = 'btn-outline-danger';
   }
-  // console.log('selectedClass => ', selectedClass, ' unselectedClass => ', unselectedClass);
-  newOption.classList.remove(unselectedClass);
-  newOption.classList.add(selectedClass);
+  if (toggleOn){
+    option.classList.add(selectedClass);
+    option.classList.remove(unselectedClass);
+  }else{
+    option.classList.remove(selectedClass);
+    option.classList.add(unselectedClass);
+  }
+  
 }
 
-function mRadioOptionChangeListener(optionElement) {
+function reflectOptionChange(prevOption, newOption) {
+  if (prevOption != null) {
+    toggleRadioButtons(prevOption,false);
+  }
+  toggleRadioButtons(newOption,true);
+}
+
+function mRadioOptionChangeListener(optionElement,index) {
   //new value to reflect in page
+  if(!editModeEnabled) {
+    return;
+  }
   let newOptionElement = optionElement;
-  let newOptionValue = optionElement.textContent.trim();
+  let newOptionValue = optionElement.dataset.polarity;
   let radioGroup = this.radioGroup;
   //check if data-value is null or empty
   let prevOptionElement = radioGroup.querySelector(`[data-mradio-selected]`);
@@ -97,7 +95,7 @@ function mRadioOptionChangeListener(optionElement) {
     // console.log('option changed to => ',newOptionValue);
     prevOptionElement.removeAttribute('data-mradio-selected');
   }
-  radioGroup.dataset.value = newOptionValue;
+  radioGroup.dataset.polarity = newOptionValue;
   //set the data-changed attribute to true
   radioGroup.dataset.changed = true;
   newOptionElement.setAttribute('data-mradio-selected', '');
@@ -115,8 +113,37 @@ function initRadioButtionListeners() {
     //and the radioGroup needs to change the data-changed attribute
     //for every mradio-option child of mradio-group add event listener
     mRadioGroup.querySelectorAll('.mradio-option').forEach((radioOptionElement, idx) => {
-      radioOptionElement.addEventListener('click', mRadioOptionChangeListener.bind({ radioGroup: mRadioGroup }, radioOptionElement));
+      radioOptionElement.addEventListener('click', mRadioOptionChangeListener.bind({ radioGroup: mRadioGroup }, radioOptionElement,idx));
     });
+  });
+}
+
+function clearRadioButtons(){
+  //any edit options selected need to be cleared
+  //unset any options that are selected
+  //now we need to map assessment_data to the radio buttons
+  //for every mradio-group
+  //compare value with assessment_data object
+  //if different then return to original or unset if null
+  document.querySelectorAll('[data-changed="true"]').forEach((element, idx) => {
+    //
+    let radioGroup = element;
+    let attribute_name = radioGroup.getAttribute('data-attribute-name');
+    //restore original value
+    radioGroup.dataset.polarity = assessment_data[attribute_name];
+    radioGroup.dataset.changed = false;
+    console.log(`assessment_data[${attribute_name}] => `,assessment_data[attribute_name]);
+    //remove the selected attribute
+    let candidate = radioGroup.querySelector(`[data-mradio-selected]`);
+    candidate.removeAttribute('data-mradio-selected');
+    toggleRadioButtons(candidate,false);
+    //restore the original selected option
+    if (assessment_data[attribute_name] != null){
+      //set the selected attribute
+      let original = radioGroup.querySelector(`[data-polarity="${assessment_data[attribute_name]}"]`);
+      original.setAttribute('data-mradio-selected','');
+      toggleRadioButtons(original,true);
+    }
   });
 }
 

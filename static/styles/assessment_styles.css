@@ -22,7 +22,7 @@
   border: 1px solid lavender;
 }
 
-.edit-button {
+.mbutton {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +32,9 @@
   height: fit-content;
   padding: 0.5rem;
 }
-.edit-button p {
+.mbutton p {
   margin: 0px;
+  margin-right: 0.5rem;
 }
 
 div[data-mradio-selected] {
@@ -50,7 +51,7 @@ div[data-changed=true] {
   justify-content: space-evenly;
 }
 
-.edit-button:hover {
+.mbutton:hover {
   background-color: lavender;
   cursor: pointer;
 }

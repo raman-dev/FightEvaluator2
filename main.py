@@ -24,6 +24,9 @@ class AttributeQualifier(Enum):
     high = "high"
     mid = "mid"
     low = "low"
+    positive = "positive"
+    negative = "negative"
+    neutral = "neutral"
 
 class WeightClass(Enum):
     CATCH_WEIGHT = "Catch weight"
@@ -55,6 +58,17 @@ class MatchUp(SQLModel,table=True):
     #optional foreign key to the fightevent table
     event_id: Optional[int] = Field(default=None, foreign_key="fightevent.id")
     # fighters: List["Fighter"] = Relationship(back_populates="matchup")
+
+class AssessmentUpdate(SQLModel):
+    id: int
+    head_movement: Optional[AttributeQualifier] = None
+    gas_tank: Optional[AttributeQualifier] = None
+    aggression: Optional[AttributeQualifier] = None
+    desire_to_win: Optional[AttributeQualifier] = None
+    striking: Optional[AttributeQualifier] = None
+    chinny: Optional[bool] = None
+    grappling_offense: Optional[AttributeQualifier] = None
+    grappling_defense: Optional[AttributeQualifier] = None
 
 class Assessment(SQLModel,table=True):
     id: int = Field(primary_key=True)
@@ -90,8 +104,6 @@ class Fighter(SQLModel,table=True):
     #optional since a fighter may need to still be assessed
     assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
     # assesment: Optional["Assessment"] = Relationship(back_populates="fighters")
-
-
 
 
 def create_db_and_tables():
@@ -138,6 +150,26 @@ async def index():
 @app.get("/assessment/{fighter_id}")
 async def index():
     return FileResponse("static/assessment.html")
+
+@app.get("/assessment/data/{assessment_id}")
+async def get_assessment(assessment_id: int):
+    with Session (engine) as session:
+        assessment = session.get(Assessment,assessment_id)
+        return assessment
+
+@app.patch("/assessment/")
+async def update_assessment(assessmentUpdate: AssessmentUpdate):
+    #update assessment in database
+    with Session(engine) as session:
+        db_assessment = session.get(Assessment,assessmentUpdate.id)
+        if not db_assessment:
+            raise HTTPException(status_code=404, detail="Assessment not found")
+        assessment_data = assessmentUpdate.dict(exclude_unset=True)
+        for key, value in assessment_data.items():
+            setattr(db_assessment, key, value)
+        session.commit()
+        session.refresh(db_assessment)
+        return db_assessment
 
 @app.get("/matchup/")
 async def index(fighter_a: int | None = None,fighter_b: int | None = None):

@@ -23,7 +23,7 @@
     border: 1px solid lavender;
 }
 
-.edit-button{
+.mbutton{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,6 +36,7 @@
 
     p {
         margin: 0px;
+        margin-right: 0.5rem;
     }
 }
 
@@ -57,7 +58,7 @@ div[data-changed="true"]{
     }
 }
 
-.edit-button:hover{
+.mbutton:hover{
     background-color: lavender;
     cursor: pointer;
 }
