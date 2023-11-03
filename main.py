@@ -66,7 +66,7 @@ class AssessmentUpdate(SQLModel):
     aggression: Optional[AttributeQualifier] = None
     desire_to_win: Optional[AttributeQualifier] = None
     striking: Optional[AttributeQualifier] = None
-    chinny: Optional[bool] = None
+    chinny: Optional[AttributeQualifier] = None
     grappling_offense: Optional[AttributeQualifier] = None
     grappling_defense: Optional[AttributeQualifier] = None
 
@@ -77,7 +77,7 @@ class Assessment(SQLModel,table=True):
     aggression: Optional[AttributeQualifier]
     desire_to_win: Optional[AttributeQualifier]
     striking: Optional[AttributeQualifier]
-    chinny: Optional[bool]
+    chinny: Optional[AttributeQualifier]
     grappling_offense: Optional[AttributeQualifier]
     grappling_defense: Optional[AttributeQualifier]
 

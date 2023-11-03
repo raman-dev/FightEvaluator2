@@ -49,6 +49,11 @@ function getRadioType(radioType) {
 */
 
 function toggleRadioButtons(option,toggleOn) {
+  if (toggleOn){
+    option.setAttribute('data-mradio-selected','');
+  }else{
+    option.removeAttribute('data-mradio-selected');
+  }
   let selectedClass = 'btn-warning';
   let unselectedClass = 'btn-outline-warning';
   
@@ -71,13 +76,6 @@ function toggleRadioButtons(option,toggleOn) {
   
 }
 
-function reflectOptionChange(prevOption, newOption) {
-  if (prevOption != null) {
-    toggleRadioButtons(prevOption,false);
-  }
-  toggleRadioButtons(newOption,true);
-}
-
 function mRadioOptionChangeListener(optionElement,index) {
   //new value to reflect in page
   if(!editModeEnabled) {
@@ -88,18 +86,15 @@ function mRadioOptionChangeListener(optionElement,index) {
   let radioGroup = this.radioGroup;
   //check if data-value is null or empty
   let prevOptionElement = radioGroup.querySelector(`[data-mradio-selected]`);
-  // let prevOptionValue = radioGroup.dataset.value;
   //check if values is null string
   //if it does not equal the current option change
   if (prevOptionElement != null) {
-    // console.log('option changed to => ',newOptionValue);
-    prevOptionElement.removeAttribute('data-mradio-selected');
+    toggleRadioButtons(prevOptionElement,false);
   }
   radioGroup.dataset.polarity = newOptionValue;
   //set the data-changed attribute to true
   radioGroup.dataset.changed = true;
-  newOptionElement.setAttribute('data-mradio-selected', '');
-  reflectOptionChange(prevOptionElement, newOptionElement);
+  toggleRadioButtons(newOptionElement,true);
 }
 
 function initRadioButtionListeners() {
@@ -132,19 +127,33 @@ function clearRadioButtons(){
     //restore original value
     radioGroup.dataset.polarity = assessment_data[attribute_name];
     radioGroup.dataset.changed = false;
-    console.log(`assessment_data[${attribute_name}] => `,assessment_data[attribute_name]);
+    // console.log(`assessment_data[${attribute_name}] => `,assessment_data[attribute_name]);
     //remove the selected attribute
     let candidate = radioGroup.querySelector(`[data-mradio-selected]`);
-    candidate.removeAttribute('data-mradio-selected');
     toggleRadioButtons(candidate,false);
     //restore the original selected option
     if (assessment_data[attribute_name] != null){
       //set the selected attribute
       let original = radioGroup.querySelector(`[data-polarity="${assessment_data[attribute_name]}"]`);
-      original.setAttribute('data-mradio-selected','');
       toggleRadioButtons(original,true);
     }
   });
+}
+
+function onAssessmentChanged(){
+  //read the assessment_data object
+  //for every key in assessment_data
+  for (let key in assessment_data){
+    if (assessment_data[key] == null || key == 'id'){
+      continue;
+    }
+    console.log(`key => ${key} value => ${assessment_data[key]}`);
+    //get the radio group with data-attribute-name=key
+    let radioGroup = document.querySelector(`[data-attribute-name="${key}"]`);
+    radioGroup.dataset.polarity = assessment_data[key];
+    let radioOption = radioGroup.querySelector(`[data-polarity="${assessment_data[key]}"]`);
+    toggleRadioButtons(radioOption,true);
+  }
 }
 
 setButtonStyles();

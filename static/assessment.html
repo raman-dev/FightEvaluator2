@@ -85,7 +85,7 @@
                 d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z" />
             </svg>
           </div>
-          <div class="commit-button mbutton">
+          <div class="commit-button mbutton" onclick="updateAssessment()">
             <p>commit</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -202,6 +202,19 @@
             <div class="btn mradio-option" data-polarity="negative">yes</div>
           </div>
         </div>
+        <div
+          class="list-group-item mradio-group"
+          data-changed="false"
+          data-polarity="null"
+          data-attribute-name="desire_to_win">
+          <!-- <div class="d-flex justify-content-between"> -->
+          <h4>Desire To Win</h4>
+          <div
+            class="button-container d-flex justify-content-around group-options-container">
+            <div class="btn mradio-option" data-polarity="positive">yes</div>
+            <div class="btn mradio-option" data-polarity="negative">no</div>
+          </div>
+        </div>
         <div class="list-group-item grappling-info-container">
           <h4>Grappling</h4>
           <div class="row grappling-container">
@@ -269,7 +282,7 @@
       var fighter_id = parseInt(window.location.href.split("/").pop());
       var assessment_id = null;
       var assessment_data = {
-        assessment_id: null,
+        id: null,
         head_movement: null,
         gas_tank: null,
         aggression: null,
@@ -389,7 +402,7 @@
         fighterStance.textContent = fighter.stance;
 
         assessment_id = fighter.assessment_id;
-        assessment_data.assessment_id = fighter.assessment_id;
+        assessment_data.id = fighter.assessment_id;
         getFighterAssessment().then((assessment) => {
           assessment_data.head_movement = assessment.head_movement;
           assessment_data.gas_tank = assessment.gas_tank;
@@ -400,6 +413,7 @@
           assessment_data.grappling_offense = assessment.grappling_offense;
           assessment_data.grappling_defense = assessment.grappling_defense;
           console.log(assessment_data);
+          onAssessmentChanged();
         });
         getFighterNotes().then((notes) => {
           // write notes to page
@@ -414,15 +428,38 @@
       });
 
       async function updateAssessment() {
-        let response = await fetch("/assessment", {
+        if (!editModeEnabled){
+          return;
+        }
+        // console.log(JSON.stringify(assessment_data));
+        //read in all attributes from radio options
+        const newAssessment = structuredClone(assessment_data);
+        for (let key in assessment_data){
+          if (key == "id"){
+            continue;
+          }
+          let radioGroup = document.querySelector(`[data-attribute-name="${key}"]`);
+          if (radioGroup.getAttribute("data-changed") == "true"){
+            newAssessment[key] = radioGroup.getAttribute("data-polarity");
+          }
+        }
+        let response = await fetch("/assessment/", {
           method: "PATCH",
           headers: {
             accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(assessment_data),
+          body: JSON.stringify(newAssessment),
         });
         console.log(response);
+        if (response.status == 200){
+          editModeEnabled = false;
+          let data = await response.json();
+          for (let key in data){
+            assessment_data[key] = data[key];
+          }
+          onAssessmentChanged();
+        }
       }
     </script>
     <script
