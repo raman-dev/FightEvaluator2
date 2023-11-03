@@ -18,8 +18,6 @@
   justify-content: flex-end;
   align-items: end;
   width: 100%;
-  margin: 0.5rem;
-  border: 1px solid lavender;
 }
 
 .mbutton {
@@ -37,18 +35,22 @@
   margin-right: 0.5rem;
 }
 
-div[data-mradio-selected] {
-  outline: 2px solid lavender;
-}
-
 div[data-changed=true] {
-  outline: 2px solid red;
+  outline-width: 2px;
 }
 
+.mradio-group {
+  outline: 0px solid red;
+  transition: outline 0.05s ease-out;
+}
 .mradio-group .group-options-container {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+}
+.mradio-group div[data-mradio-selected] {
+  color: white;
+  outline: 2px solid lavender;
 }
 
 .mbutton:hover {
@@ -56,12 +58,21 @@ div[data-changed=true] {
   cursor: pointer;
 }
 
-.fighter-bio .info-wrapper {
+.fighter-bio {
+  /* a 3x3 grid layout */
+}
+.fighter-bio .fighter-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+.fighter-bio .fighter-info-grid .info-wrapper {
   display: flex;
   flex-direction: row;
 }
-.fighter-bio .info-wrapper p {
+.fighter-bio .fighter-info-grid .info-wrapper p {
   white-space: nowrap;
+  margin: 0px !important;
 }
 
 .fighter-notes {

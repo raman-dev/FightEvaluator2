@@ -143,6 +143,9 @@ function clearRadioButtons(){
 function onAssessmentChanged(){
   //read the assessment_data object
   //for every key in assessment_data
+  document.querySelectorAll('[data-changed="true"]').forEach((element, idx) => {
+    element.setAttribute('data-changed','false');
+  });
   for (let key in assessment_data){
     if (assessment_data[key] == null || key == 'id'){
       continue;

@@ -1,158 +1,167 @@
 .list-group-item {
-    margin-bottom: 1rem;
-    background-color: #242a30 !important;
-    border: 1px solid #343a40 !important;
-    border-radius: 0.5rem !important;
+  margin-bottom: 1rem;
+  background-color: #242a30 !important;
+  border: 1px solid #343a40 !important;
+  border-radius: 0.5rem !important;
 }
 
-.fighter-info-container{
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+.fighter-info-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 
-    :first-child{
-        align-items: center;
-    }
-}
-
-.edit-button-container{
-    display: flex;
-    justify-content: flex-end;
-    align-items: end;
-    width: 100%;
-    margin: 0.5rem;
-    border: 1px solid lavender;
-}
-
-.mbutton{
-    display: flex;
-    justify-content: center;
+  :first-child {
     align-items: center;
-
-    border: 1px solid lavender;
-    border-radius: 0.5rem;
-    height: fit-content;
-
-    padding: 0.5rem;
-
-    p {
-        margin: 0px;
-        margin-right: 0.5rem;
-    }
+  }
 }
 
-// custom attribute boolean selection
-div[data-mradio-selected]{
-    // background-color: red;
+.edit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  width: 100%;
+
+}
+
+.mbutton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid lavender;
+  border-radius: 0.5rem;
+  height: fit-content;
+
+  padding: 0.5rem;
+
+  p {
+    margin: 0px;
+    margin-right: 0.5rem;
+  }
+}
+
+
+div[data-changed="true"] {
+  outline-width: 2px;
+}
+
+.mradio-group {
+  outline: 0px solid red;
+  transition: outline 0.05s ease-out;
+  .group-options-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+    // custom attribute boolean selection
+  div[data-mradio-selected]{
+    color: white;
     outline: 2px solid lavender;
+  }
 }
 
-div[data-changed="true"]{
-    outline: 2px solid red;
+.mbutton:hover {
+  background-color: lavender;
+  cursor: pointer;
 }
 
-.mradio-group{
-    .group-options-container{
+.fighter-bio {
+  /* a 3x3 grid layout */
+  .fighter-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+
+    .info-wrapper {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly; 
-    }
-}
-
-.mbutton:hover{
-    background-color: lavender;
-    cursor: pointer;
-}
-
-.fighter-bio{
-    .info-wrapper{
-        display: flex;
-        flex-direction: row;
-        p{
-            white-space: nowrap;
+        // border: 1px solid white;
+    
+        p {
+          white-space: nowrap;
+          margin: 0px !important;
         }
-    }
+      }
+  }
+   
 }
 
 .fighter-notes {
-    padding: 1rem;
-    padding-left: 4rem;
-    padding-right: 4rem;
-    
-    .notes-title{
-        margin-left: -3rem;
-    }
-    .notes-list {
-        background-color: #212529;
-        border: 1px solid #343a40 !important;
-        border-radius: 0.5rem;
-        width: 100%;
+  padding: 1rem;
+  padding-left: 4rem;
+  padding-right: 4rem;
 
-        ul {
-            width: 100%;
-            li {
-                list-style: None;
-                display: flex;
-            }
-            /*notes list style dot is a dash instead*/
-            li::before {
-                content: "-";
-                margin-right: 0.4rem;
-                margin-left: -1rem;
-            }
-        }
+  .notes-title {
+    margin-left: -3rem;
+  }
+  .notes-list {
+    background-color: #212529;
+    border: 1px solid #343a40 !important;
+    border-radius: 0.5rem;
+    width: 100%;
+
+    ul {
+      width: 100%;
+      li {
+        list-style: None;
+        display: flex;
+      }
+      /*notes list style dot is a dash instead*/
+      li::before {
+        content: "-";
+        margin-right: 0.4rem;
+        margin-left: -1rem;
+      }
     }
+  }
 }
 
 .note-editor-container {
-    row-gap: 0.5rem;
+  row-gap: 0.5rem;
 
-    .note-submit-btn {
-        margin-left: auto;
-        max-width: fit-content;
-    }
-    .note-editor {
-        overflow: hidden;
-        background-color: #212529;
-        border: 1px solid #343a40;
-        border-radius: 0.5rem;
-        outline: 0px solid #3d7efd;
+  .note-submit-btn {
+    margin-left: auto;
+    max-width: fit-content;
+  }
+  .note-editor {
+    overflow: hidden;
+    background-color: #212529;
+    border: 1px solid #343a40;
+    border-radius: 0.5rem;
+    outline: 0px solid #3d7efd;
 
-        width: 100%;
-        min-height: 4rem;
-        transition: outline 0.05s ease-out;
-    }
+    width: 100%;
+    min-height: 4rem;
+    transition: outline 0.05s ease-out;
+  }
 
-    /* show light electric blue outline when note-editor is focused */
-    .note-editor:focus {
-        outline-width: 3px;
-        border-color: transparent;
-    }
+  /* show light electric blue outline when note-editor is focused */
+  .note-editor:focus {
+    outline-width: 3px;
+    border-color: transparent;
+  }
 }
-
 
 /*container is at most 70% width*/
 .container-fluid {
-    max-width: 70%;
+  max-width: 70%;
 }
 
 .grappling-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 
-    padding-left: 2rem;
-    padding-right: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 
-    /*class that ends with ense-container */
-    div[class$="ense-container"] {
-        width: 100%;
-        margin: 0.2rem;
-        padding: 0.4rem;
-        /*rounded border*/
-        border-radius: 0.8rem;
-        border: 1px solid #444a50; 
-        background-color: #212529;
-    }
+  /*class that ends with ense-container */
+  div[class$="ense-container"] {
+    width: 100%;
+    margin: 0.2rem;
+    padding: 0.4rem;
+    /*rounded border*/
+    border-radius: 0.8rem;
+    border: 1px solid #444a50;
+    background-color: #212529;
+  }
 }
-
-

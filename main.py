@@ -179,7 +179,6 @@ async def index(fighter_a: int | None = None,fighter_b: int | None = None):
 
 @app.get("/nextevent")
 async def next_event():
-    
     event = None
     matchups = []
     with Session(engine) as session:

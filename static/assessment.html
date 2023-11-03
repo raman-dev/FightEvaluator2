@@ -25,52 +25,44 @@
               alt="" />
           </div>
           <!--fighter biographical info in a list-->
-          <div class="fighter-bio list-group">
+          <div class="fighter-bio">
             <div class="container">
               <h4>Biographical Info</h4>
-              <!--2 column flex grid-->
-              <div class="d-flex">
-                <div class="row">
-                  <div class="col">
-                    <div class="info-wrapper">
-                      <label>name:_</label>
-                      <p class="fighter-name">name</p>
-                    </div>
-                    <div class="info-wrapper">
-                      <label>age:_</label>
-                      <p class="fighter-age">age</p>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="info-wrapper">
-                      <label>height: </label>
-                      <p class="fighter-height">height</p>
-                    </div>
-                    <div class="info-wrapper">
-                      <label>weight: </label>
-                      <p class="fighter-weight">weight</p>
-                    </div>
-                  </div>
+              <div class="fighter-info-grid">
+                <!--2 column flex grid-->
+                <div class="info-wrapper">
+                  <label>name:_</label>
+                  <p class="fighter-name">name</p>
                 </div>
-              </div>
-            </div>
-            <div class="d-flex flex-row justify-content-around">
-              <div class="info-wrapper">
-                <label>record: </label>
-                <p class="fighter-record">1-1-1</p>
-              </div>
-              <div class="info-wrapper">
-                <label>reach: </label>
-                <p class="fighter-reach"></p>
-              </div>
-              <div class="info-wrapper">
-                <label>stance: </label>
-                <p class="fighter-stance"></p>
+                <div class="info-wrapper">
+                  <label>height: </label>
+                  <p class="fighter-height">height</p>
+                </div>
+                <div class="info-wrapper">
+                  <label>weight: </label>
+                  <p class="fighter-weight">weight</p>
+                </div>
+                <div class="info-wrapper">
+                  <label>age:_</label>
+                  <p class="fighter-age">age</p>
+                </div>
+                <div class="info-wrapper">
+                    <label>record: </label>
+                    <p class="fighter-record">1-1-1</p>
+                </div>
+                <div class="info-wrapper">
+                    <label>reach: </label>
+                    <p class="fighter-reach"></p>
+                </div>
+                <div class="info-wrapper">
+                    <label>stance: </label>
+                    <p class="fighter-stance"></p>
+                </div>
+                
               </div>
             </div>
           </div>
         </div>
-
         <div class="col edit-button-container">
           <div class="edit-button mbutton">
             <p>edit</p>
@@ -428,18 +420,20 @@
       });
 
       async function updateAssessment() {
-        if (!editModeEnabled){
+        if (!editModeEnabled) {
           return;
         }
         // console.log(JSON.stringify(assessment_data));
         //read in all attributes from radio options
         const newAssessment = structuredClone(assessment_data);
-        for (let key in assessment_data){
-          if (key == "id"){
+        for (let key in assessment_data) {
+          if (key == "id") {
             continue;
           }
-          let radioGroup = document.querySelector(`[data-attribute-name="${key}"]`);
-          if (radioGroup.getAttribute("data-changed") == "true"){
+          let radioGroup = document.querySelector(
+            `[data-attribute-name="${key}"]`
+          );
+          if (radioGroup.getAttribute("data-changed") == "true") {
             newAssessment[key] = radioGroup.getAttribute("data-polarity");
           }
         }
@@ -452,10 +446,10 @@
           body: JSON.stringify(newAssessment),
         });
         console.log(response);
-        if (response.status == 200){
+        if (response.status == 200) {
           editModeEnabled = false;
           let data = await response.json();
-          for (let key in data){
+          for (let key in data) {
             assessment_data[key] = data[key];
           }
           onAssessmentChanged();

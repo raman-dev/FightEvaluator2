@@ -4,6 +4,50 @@ from datetime import datetime
 import main
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
+#use tapology website its better and more comprehensive
+EVENTS_URL2 = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
+domain = "https://www.tapology.com"
+
+def extractLinkAndDate(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    """
+
+        table.fcLeaderboard
+            tr <---- column names
+            tr <---- event info
+                td <--- event name and link just need link for now
+                td
+                td  <--- event date format is YYYY.MM.DD
+                td
+                td
+    """
+    table = soup.find('table',class_='fcLeaderboard')
+    # print(table.tbody)
+    today = datetime.now().date()
+    rows = table.findAll('tr')
+    result = {'link':'','date':None}
+    for i,row in enumerate(rows):
+        if i == 0:
+            continue
+        data = row.findAll('td')
+        #get href value from data object
+        data_link = data[0].a['href']
+        #get date from data object
+        data_date = datetime.strptime(data[2].text.strip(),"%Y.%m.%d").date()
+        #compare today and date when the distance from today and date increases break loop
+        if data_date < today:
+            break
+        result['link'] = domain + data_link
+        result['date'] = data_date
+    return result
+
+
+def getNextEvent2(url):
+    linkAndDate = extractLinkAndDate(EVENTS_URL2)
+    page = requests.get(linkAndDate['link'])
+    soup = BeautifulSoup(page.content, 'html.parser')
+    #extract event title and matchups from page
 
 def getNextEvent(url):
     page = requests.get(url)
