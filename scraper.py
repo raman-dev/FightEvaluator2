@@ -2,11 +2,19 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 import main
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
 #use tapology website its better and more comprehensive
 EVENTS_URL2 = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
 domain = "https://www.tapology.com"
+
+DRIVER_PATH='chromedriver-win64/chromedriver'
+options = Options()
+options.add_argument("--headless=new")
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--ignore-ssl-errors')
 
 def extractLinkAndDate(url):
     page = requests.get(url)
@@ -45,9 +53,20 @@ def extractLinkAndDate(url):
 
 def getNextEvent2(url):
     linkAndDate = extractLinkAndDate(EVENTS_URL2)
-    page = requests.get(linkAndDate['link'])
-    soup = BeautifulSoup(page.content, 'html.parser')
+    print(linkAndDate)
+    # page = requests.get(linkAndDate['link'])
+    browser = webdriver.Chrome(options=options)
+    browser.implicitly_wait(10)
+    browser.get(linkAndDate['link'])
+    
+    source = browser.page_source
+    browser.quit()
+    soup = BeautifulSoup(source, 'html.parser')
     #extract event title and matchups from page
+    matchups = soup.find('ul',class_='fightCard')
+    print(matchups)
+
+getNextEvent2(EVENTS_URL2)
 
 def getNextEvent(url):
     page = requests.get(url)

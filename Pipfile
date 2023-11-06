@@ -12,6 +12,7 @@ beautifulsoup4 = "*"
 pony = "*"
 sqlmodel = "*"
 jinja2 = "*"
+selenium = "*"
 
 [dev-packages]
 

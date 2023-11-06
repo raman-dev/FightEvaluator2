@@ -136,6 +136,7 @@ def on_start():
             session.commit()
             session.refresh(fighter)
 
+
 @app.get("/")
 async def index():
     #query my database for the next event
@@ -201,12 +202,12 @@ async def next_event():
                 session.add(matchup)
                 matchups.append(matchup)
             session.commit()
+            return {'event':event,'matchups':matchups}
         else:
             print('\nRETRIEVED FROM DB....\n')
             #grab matchups for current event
             matchups = session.query(MatchUp).filter(MatchUp.event_id == event.id).all()
-        print(event)
-
+    # print(event)
     return {'event':event,'matchups':matchups}
 
 @app.get("/notes/{assessment_id}")
