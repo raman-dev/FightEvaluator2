@@ -66,7 +66,7 @@ def getNextEvent2(url):
     matchups = soup.find('ul',class_='fightCard')
     print(matchups)
 
-getNextEvent2(EVENTS_URL2)
+# getNextEvent2(EVENTS_URL2)
 
 def getNextEvent(url):
     page = requests.get(url)

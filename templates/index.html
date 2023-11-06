@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fight Evaluator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css" />
+
+</head>
+
+<body data-bs-theme="dark">
+    <!--container-->
+    <div class="container-fluid">
+        <h1 class="event-title">Event Name</h1>
+        <!-- clickable list of 5 items in bootstrap -->
+        <div class="list-group matchup-container mx-auto">
+            <a href="/matchup?fighter_a=1&fighter_b=2" class="list-group-item list-group-item-action">
+                <div class="matchup">
+                    <h1>5</h1>
+                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
+                    <h4 class="fighter-a-name">
+                        First Name Last Name
+                    </h4>
+                    <div class="weightclass">
+                        <p>
+                            vs<br>
+                        </p>
+                        <h6>Lightweight</h6>
+                    </div>
+                    <h4 class="fighter-b-name">
+                        First Name Last Name
+                    </h4>
+                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
+                </div>
+            </a> 
+        </div>
+    </div>
+    <style>
+        /*horizontally centered event-title*/
+        .event-title {
+            text-align: center;
+            margin: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /*matchups are horizontally centered and vertically stacked*/
+        .matchup-container {
+            width: fit-content;
+        }
+
+        .matchup {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            margin: auto;
+        }
+        
+        /* nth fight on the card*/
+        .matchup h1 {
+            text-align: center;
+            opacity: 0.5;
+            width: 2.2ch;
+        }
+
+        .matchup p {
+            margin: 0px;
+        }
+
+        .matchup h4{
+            width: 18ch;
+            text-align: center;
+        }
+
+        .matchup .weightclass{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .matchup h6{
+            text-align: center;
+        }
+
+        /* fighter-img has rounded corners using crop */
+        .fighter-img {
+            border-radius: 10%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script>
+        
+        function getMatchupDomElement(index,fighter_a,fighter_b,weight_class) {
+            let matchupTemplate = 
+            // `<a href="#" class="list-group-item list-group-item-action">
+                `<div class="matchup">
+                    <h1>${index}</h1>
+                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
+                    <h4>
+                        ${fighter_a}
+                    </h4>
+                    <div class="weightclass">
+                        <p>
+                            vs<br>
+                        </p>
+                        <h6>${weight_class}</h6>
+                    </div>                    
+                    <h4>
+                        <!-- <a href="#">fighter b</a> -->
+                        ${fighter_b}
+                    </h4>
+                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
+                </div>`;
+            // </a>`;  
+            const element = document.createElement('a');
+            element.setAttribute('href','#');
+            element.setAttribute('class','list-group-item list-group-item-action');
+            element.innerHTML = matchupTemplate;  
+            return element;
+        }
+        
+        //how to call my api now?
+        async function getEvent() {
+            const response = await fetch('http://localhost:8000/nextevent');
+            const data = await response.json();
+            // console.log(data);
+            return data;
+        }
+        getEvent().then((data)=>{
+            console.log(data);
+            const title = document.querySelector('.event-title');
+            title.textContent = data.event.name;
+            const matchupContainer = document.querySelector('.matchup-container');
+            const matchups = data.matchups;
+            //for every matchup, create a matchup element and append it to the matchup container
+            matchups.forEach((matchup,index)=>{
+                const matchupElement = getMatchupDomElement(
+                    index+1,
+                    matchup.fighter_a,
+                    matchup.fighter_b,
+                    matchup.weight_class
+                );
+                matchupContainer.appendChild(matchupElement);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -4,6 +4,7 @@ from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, sele
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from datetime import date
 from enum import Enum
@@ -110,7 +111,7 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 app.mount("/static", StaticFiles(directory=Path("static")), name="static")
-# templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="templates")
 
 @app.on_event("startup")
 def on_start():
@@ -138,14 +139,15 @@ def on_start():
 
 
 @app.get("/")
-async def index():
+async def index(request: Request):
     #query my database for the next event
     #check the date of the next event
     #if date is upcoming or today load event from database
     #if not retrieve using scraper and create FightEvent object
     #and create matchup objects for each matchup in the events
     #or do i create an endpoint that scrapes the next event and returns it
-    return FileResponse("static/index.html")
+    # return FileResponse("static/index.html")
+    return templates.TemplateResponse("index.html",{"request": request})
 
 #assessmnent require fighter id since they cannot exist without a fighter
 @app.get("/assessment/{fighter_id}")
