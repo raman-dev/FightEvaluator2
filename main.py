@@ -20,12 +20,12 @@ engine = create_engine(sqlite_url,echo=True, connect_args=connect_args)
 app = FastAPI()
 
 class AttributeQualifier(Enum):
-    good = "good"
-    bad = "bad"
-    mediocre = "mediocre"
-    high = "high"
-    mid = "mid"
-    low = "low"
+    # good = "good"
+    # bad = "bad"
+    # mediocre = "mediocre"
+    # high = "high"
+    # mid = "mid"
+    # low = "low"
     positive = "positive"
     negative = "negative"
     neutral = "neutral"
