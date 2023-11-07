@@ -2,3 +2,6 @@ pat.json
 .vscode
 kth.py
 chromedriver-win64
+sqlite3.exe
+sqlite3_analyzer.exe
+sqldiff.exe
