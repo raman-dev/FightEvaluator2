@@ -116,11 +116,11 @@ def getNextEvent2():
         weightclass = fightCardMatchup.find('span',class_='weight').text.strip()
         a = {
             'name': fighter_a.a.text.strip(),
-            'link': domain + fighter_a.a['href']
+            'link': fighter_a.a['href']
         }
         b = {
             'name': fighter_b.a.text.strip(),
-            'link': domain + fighter_b.a['href']
+            'link': fighter_b.a['href']
         }
         matchups.append({
             'fighter_a':a['name'],
