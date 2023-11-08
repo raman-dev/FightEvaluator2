@@ -37,26 +37,22 @@
                 </div>
             </a> -->
             {% for matchup in matchups %}
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="matchup">
-                        <h1>{{ loop.index }}</h1>
-                        <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                        <h4>
-                            {{ matchup.fighter_a }}
-                        </h4>
-                        <div class="weightclass">
-                            <p>
-                                vs<br>
-                            </p>
-                            <h6>{{ matchup.weight_class|weightclassStr }}</h6>
-                        </div>                    
-                        <h4>
-                            <!-- <a href="#">fighter b</a> -->
-                            {{ matchup.fighter_b }}
-                        </h4>
-                        <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                    </div>
-                </a>
+                <!-- <a href="#" class="list-group-item list-group-item-action"> -->
+                <div class="matchup list-group-item list-group-item-action">
+                    <h1>{{ loop.index }}</h1>
+                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
+                    
+                    <a href=""><h4>{{ matchup.fighter_a }}</h4></a>
+                    <div class="weightclass">
+                        <p>
+                            vs<br>
+                        </p>
+                        <h6>{{ matchup.weight_class|weightclassStr }}</h6>
+                    </div>                    
+                    <a href="/assessment?fighter_link={{ matchup.fighter_b_link }}"><h4>{{ matchup.fighter_b }}</h4></a>
+                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
+                </div>
+                <!-- </a> -->
             {% endfor %}
         </div>
     </div>
@@ -93,6 +89,10 @@
             margin: 0px;
         }
 
+        .matchup .fighter-link{
+            width: 18ch;
+            text-align: center;
+        } 
         .matchup h4{
             width: 18ch;
             text-align: center;

@@ -53,13 +53,19 @@ class MatchUp(SQLModel,table=True):
     id: int = Field(primary_key=True)
     # date: Optional[date]
     weight_class: WeightClass
+    
     fighter_a: str
+    fighter_a_link: Optional[str]
+    
     fighter_b: str
+    fighter_b_link: Optional[str]
+    rounds: Optional[str]
     #almost always 3 unless main-event or championship fight
     max_rounds: Optional[int]
     #optional foreign key to the fightevent table
     event_id: Optional[int] = Field(default=None, foreign_key="fightevent.id")
     # fighters: List["Fighter"] = Relationship(back_populates="matchup")
+
 
 class AssessmentUpdate(SQLModel):
     id: int
@@ -167,11 +173,12 @@ async def index(request: Request):
     #and create matchup objects for each matchup in the events
     #or do i create an endpoint that scrapes the next event and returns it
     # return FileResponse("static/index.html")
-    context = {"request":request}
-    eventData = next_event()
-    context['event'] = eventData['event']
-    context['matchups'] = eventData['matchups']
-    return templates.TemplateResponse("index.html",context)#context
+    with Session(engine) as session:
+        context = {"request":request}
+        eventData = next_event(session)
+        context['event'] = eventData['event']
+        context['matchups'] = eventData['matchups']
+        return templates.TemplateResponse("index.html",context)#context
 
 #assessmnent require fighter id since they cannot exist without a fighter
 @app.get("/assessment/{fighter_id}")
@@ -228,34 +235,30 @@ async def index(fighter_a: int | None = None,fighter_b: int | None = None):
     return FileResponse("static/matchup.html")
 
 # @app.get("/nextevent")
-def next_event():
-    event = None
+def next_event(session):
     matchups = []
-    with Session(engine) as session:
-        # using session query the fightevent that is greater than current date
-        # event = session.query(FightEvent).all()
-        event = session.query(FightEvent).filter(FightEvent.date >= date.today()).first()
-        if not event:
-        #     #if no event is found scrape the next event and create it
-            print('fetching from site....')
-            next_event = scraper.getNextEvent(scraper.EVENTS_URL)
-            event = FightEvent(**next_event)
-            session.add(event)
+    event = session.query(FightEvent).filter(FightEvent.date >= date.today()).first()
+    if not event:
+    #     #if no event is found scrape the next event and create it
+        print('fetching from site....')            
+        #two commits since id is not created until commit is done
+        eventData = scraper.getNextEvent2()
+        event = FightEvent(**eventData['event'])
+        session.add(event)
+        session.commit()
+        for matchupRaw in eventData['matchups']:
+            matchup = MatchUp(**matchupRaw)
+            matchup.event_id = event.id
+            session.add(matchup)
             session.commit()
-            #two commits since id is not created until commit is done
-            matchupsRaw = scraper.getEventMatchups(event.link)
-            for matchup in matchupsRaw:
-                matchup = MatchUp(**matchup)
-                matchup.event_id = event.id
-                print('----',matchup)
-                session.add(matchup)
-                matchups.append(matchup)
-            session.commit()
-            return {'event':event,'matchups':matchups}
-        else:
-            print('\nRETRIEVED FROM DB....\n')
-            #grab matchups for current event
-            matchups = session.query(MatchUp).filter(MatchUp.event_id == event.id).all()
+            session.refresh(matchup)
+            matchups.append(matchup)
+        session.refresh(event)
+        return {'event':event,'matchups':matchups}
+    else:
+        print('\nRETRIEVED FROM DB....\n')
+        #grab matchups for current event
+        matchups = session.query(MatchUp).filter(MatchUp.event_id == event.id).all()
     # print(event)
     return {'event':event,'matchups':matchups}
 

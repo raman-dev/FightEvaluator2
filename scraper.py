@@ -51,22 +51,90 @@ def extractLinkAndDate(url):
     return result
 
 
-def getNextEvent2(url):
+def toWeightClass(weight):
+    #switch statement
+    if weight == 115:
+        return main.WeightClass["STRAWWEIGHT"]
+    elif weight == 125:
+        return main.WeightClass["FLYWEIGHT"]
+    elif weight == 135:
+        return main.WeightClass["BANTAMWEIGHT"]
+    elif weight == 145:
+        return main.WeightClass["FEATHERWEIGHT"]
+    elif weight == 155:
+        return main.WeightClass["LIGHTWEIGHT"]
+    elif weight == 170:
+        return main.WeightClass["WELTERWEIGHT"]
+    elif weight == 185:
+        return main.WeightClass["MIDDLEWEIGHT"]
+    elif weight == 205:
+        return main.WeightClass["LIGHT_HEAVYWEIGHT"]
+    elif weight == 265:
+        return main.WeightClass["HEAVYWEIGHT"]
+    else:
+        return main.WeightClass["CATCH_WEIGHT"]
+
+def getNextEvent2():
     linkAndDate = extractLinkAndDate(EVENTS_URL2)
     print(linkAndDate)
     # page = requests.get(linkAndDate['link'])
     browser = webdriver.Chrome(options=options)
-    browser.implicitly_wait(10)
+    # browser.implicitly_wait(10)
     browser.get(linkAndDate['link'])
     
     source = browser.page_source
     browser.quit()
     soup = BeautifulSoup(source, 'html.parser')
     #extract event title and matchups from page
-    matchups = soup.find('ul',class_='fightCard')
-    print(matchups)
+    matchupsRaw = soup.find('ul',class_='fightCard')
+    """
+        div.eventPageHeaderTitles.h1 <-- event title
+        ul.fightCard
+            li.fightCard
+                div.fightCardBout id=someId
+                    fightCardFighterBout left/right
+                        a <--fighter link
+                        a.textContent <-- fighter name
+                    fightCardMatchup
+                        td.textContent <--rounds
+                            fightCardWeight.span <--weightclass
+                        
 
-# getNextEvent2(EVENTS_URL2)
+    """
+    eventName = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
+    titleUl = soup.select('div.details ul.clearfix')[0]
+    # print(titleUl.findAll('li'))
+    location = titleUl.findAll('li')[5].span.text.strip()
+    matchups = []
+    for li in matchupsRaw.findAll('li'):
+        # print(li)
+        fightCardBout = li.find('div',class_='fightCardBout')
+        fighter_a = fightCardBout.find('div',class_='fightCardFighterBout left')
+        fighter_b = fightCardBout.find('div',class_='fightCardFighterBout right')
+        fightCardMatchup = fightCardBout.find('div',class_='fightCardMatchup')
+        rounds = fightCardMatchup.find('td').text.strip()
+        weightclass = fightCardMatchup.find('span',class_='weight').text.strip()
+        a = {
+            'name': fighter_a.a.text.strip(),
+            'link': domain + fighter_a.a['href']
+        }
+        b = {
+            'name': fighter_b.a.text.strip(),
+            'link': domain + fighter_b.a['href']
+        }
+        matchups.append({
+            'fighter_a':a['name'],
+            'fighter_b':b['name'],
+            'fighter_a_link':a['link'],
+            'fighter_b_link':b['link'],
+            'rounds':rounds,
+            'weight_class':toWeightClass(int(weightclass))
+        })
+    # print(matchups)
+
+    return {'event':{'name':eventName,'date':linkAndDate['date'],'location':location},'matchups':matchups}
+
+# print(getNextEvent2())
 
 def getNextEvent(url):
     page = requests.get(url)
