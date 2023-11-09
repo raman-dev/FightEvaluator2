@@ -4,6 +4,7 @@ from datetime import datetime
 import main
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import re
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
 #use tapology website its better and more comprehensive
@@ -224,3 +225,71 @@ def getEventMatchups(event_url):
 # print(eventInfo)
 # print(getEventMatchups('http://ufcstats.com/event-details/7c4ec656d8fcb867'))
 # print(getEventMatchups(eventInfo['link']))
+
+"""
+
+url format 
+
+ufcstats.com/statistics/fighters?char=a&page=8
+                                 char=[a-z]&page=[1-9]+
+
+for every letter 
+    for every page
+        visite every fighter page
+        extract data 
+        create fighter object
+        add to database
+
+""" 
+
+def getFighterInfo(pageSoup,result):
+    #for every row in the table body
+    #get fighter first name,last name,w l d,height, weight,stance ,reach, nickname if exists
+    rows = pageSoup.findAll('tr',class_='b-statistics__table-row')[2:]#exclude first 2 rows
+    for row in rows:
+        #11 column row 
+        #first column is fighter first name
+        #second column is fighter last name
+        #third column is fighter nickname if exists
+        #fourth column is fighter height
+        #fifth column is fighter weight
+        #sixth column is fighter reach
+        #seventh column is fighter stance
+        #eight column is fighter w
+        #ninth column is fighter l
+        #tenth column is fighter d
+        #eleventh column is fighter belt status
+        # print(row)
+        cols = row.findAll('td')
+        #ignore this fighter
+        if re.findall(r'\d+',cols[4].text.strip()) == []:
+            continue
+        fighter_data = {}
+        fighter_data['first_name'] = cols[0].a.text.strip()
+        fighter_data['last_name'] = cols[1].a.text.strip()
+        fighter_data['nickname'] = cols[2].text.strip()
+        fighter_data['height'] = cols[3].text.strip()
+        fighter_data['weight_class'] = cols[4].text.strip() #convert to int
+        fighter_data['reach'] = cols[5].text.strip()
+        fighter_data['stance'] = cols[6].text.strip()
+        fighter_data['record'] = cols[7].text.strip() + '-' + cols[8].text.strip() + '-' + cols[9].text.strip()
+        result.append(fighter_data)
+        
+
+
+
+fighterListUrlPrefix = "http://ufcstats.com/statistics/fighters?char="
+fighterListUrlSuffix = "&page="
+letters = "abcdefghijklmnopqrstuvwxyz"
+fighters = []
+for char in letters:
+    currentUrl = fighterListUrlPrefix + char + fighterListUrlSuffix + "1"
+    #visit page get max page number from table
+    soup = BeautifulSoup(requests.get(currentUrl).content,"html.parser")
+    maxPages = int(soup.findAll('li',class_='b-statistics__paginate-item')[-2].text.strip())
+    getFighterInfo(soup,fighters)
+    for i in range(1,maxPages + 1):
+        currentUrl = fighterListUrlPrefix + char + fighterListUrlSuffix + str(i)
+    break
+
+print(fighters)

@@ -126,15 +126,15 @@ def fightAttribQualifier(value):
         return "null"
     return '`'+value.value.__str__() +'`'
 
-def stripDomain(url):
-    return url.replace("https://www.tapology.com","")
+# def stripDomain(url):
+#     return url.replace("https://www.tapology.com","")
 
 app.mount("/static", StaticFiles(directory=Path("static")), name="static")
 templates = Jinja2Templates(directory="templates")
 templates.env.filters['weightclassStr'] = weightclassStr
 templates.env.filters['none2Null'] = none2Null
 templates.env.filters['fightAttribQualifier'] = fightAttribQualifier
-templates.env.filters['stripDomain'] = stripDomain
+# templates.env.filters['stripDomain'] = stripDomain
 
 
 @app.on_event("startup")

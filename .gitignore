@@ -5,3 +5,5 @@ chromedriver-win64
 sqlite3.exe
 sqlite3_analyzer.exe
 sqldiff.exe
+testlxml.py
+test.html
