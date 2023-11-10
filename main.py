@@ -2,7 +2,7 @@ from typing import Optional
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse,FileResponse
+from fastapi.responses import HTMLResponse,FileResponse,HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
