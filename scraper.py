@@ -1,10 +1,14 @@
 import requests 
 from bs4 import BeautifulSoup
 from datetime import datetime
-import main
+from models import WeightClass
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import time
 import re
+import json
+import os
+
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
 #use tapology website its better and more comprehensive
@@ -55,25 +59,25 @@ def extractLinkAndDate(url):
 def toWeightClass(weight):
     #switch statement
     if weight == 115:
-        return main.WeightClass["STRAWWEIGHT"]
+        return WeightClass["STRAWWEIGHT"]
     elif weight == 125:
-        return main.WeightClass["FLYWEIGHT"]
+        return WeightClass["FLYWEIGHT"]
     elif weight == 135:
-        return main.WeightClass["BANTAMWEIGHT"]
+        return WeightClass["BANTAMWEIGHT"]
     elif weight == 145:
-        return main.WeightClass["FEATHERWEIGHT"]
+        return WeightClass["FEATHERWEIGHT"]
     elif weight == 155:
-        return main.WeightClass["LIGHTWEIGHT"]
+        return WeightClass["LIGHTWEIGHT"]
     elif weight == 170:
-        return main.WeightClass["WELTERWEIGHT"]
+        return WeightClass["WELTERWEIGHT"]
     elif weight == 185:
-        return main.WeightClass["MIDDLEWEIGHT"]
+        return WeightClass["MIDDLEWEIGHT"]
     elif weight == 205:
-        return main.WeightClass["LIGHT_HEAVYWEIGHT"]
+        return WeightClass["LIGHT_HEAVYWEIGHT"]
     elif weight == 265:
-        return main.WeightClass["HEAVYWEIGHT"]
+        return WeightClass["HEAVYWEIGHT"]
     else:
-        return main.WeightClass["CATCH_WEIGHT"]
+        return WeightClass["CATCH_WEIGHT"]
 
 def getNextEvent2():
     linkAndDate = extractLinkAndDate(EVENTS_URL2)
@@ -215,7 +219,7 @@ def getEventMatchups(event_url):
         matchups.append({
             "fighter_a": fighter_a,
             "fighter_b": fighter_b,
-            "weight_class": main.WeightClass[weightclass]
+            "weight_class": WeightClass[weightclass]
         })
     return matchups
 
@@ -274,22 +278,43 @@ def getFighterInfo(pageSoup,result):
         fighter_data['stance'] = cols[6].text.strip()
         fighter_data['record'] = cols[7].text.strip() + '-' + cols[8].text.strip() + '-' + cols[9].text.strip()
         result.append(fighter_data)
-        
+
+
+def saveToFile(fighters):
+    #fighters is a list of dictionaries append them to an existing file fighters.json
+    #if the file doesn't exist create it
+    if os.path.exists('fighters.json'):
+        with open('fighters.json','r') as f:
+            data = json.load(f)
+            data.extend(fighters)
+            with open('fighters.json','w') as f:
+                json.dump(data,f)
+    else:
+        with open('fighters.json','w') as f:
+            json.dump(fighters,f)
+
+def scrapeFighters():
+    fighterListUrlPrefix = "http://ufcstats.com/statistics/fighters?char="
+    fighterListUrlSuffix = "&page="
+    letters = "abcdefghijklmnopqrstuvwxyz"
+
+    for char in letters:
+        fighters = []
+        currentUrl = fighterListUrlPrefix + char + fighterListUrlSuffix + "1"
+        #visit page get max page number from table
+        soup = BeautifulSoup(requests.get(currentUrl).content,"html.parser")
+        maxPages = int(soup.findAll('li',class_='b-statistics__paginate-item')[-2].text.strip())
+        getFighterInfo(soup,fighters)
+        for i in range(1,maxPages + 1):
+            if i == 1 :
+                continue
+            time.sleep(5)
+            currentUrl = fighterListUrlPrefix + char + fighterListUrlSuffix + str(i)
+            soup = BeautifulSoup(requests.get(currentUrl).content,"html.parser")
+            getFighterInfo(soup,fighters)
+        saveToFile(fighters)
 
 
 
-fighterListUrlPrefix = "http://ufcstats.com/statistics/fighters?char="
-fighterListUrlSuffix = "&page="
-letters = "abcdefghijklmnopqrstuvwxyz"
-fighters = []
-for char in letters:
-    currentUrl = fighterListUrlPrefix + char + fighterListUrlSuffix + "1"
-    #visit page get max page number from table
-    soup = BeautifulSoup(requests.get(currentUrl).content,"html.parser")
-    maxPages = int(soup.findAll('li',class_='b-statistics__paginate-item')[-2].text.strip())
-    getFighterInfo(soup,fighters)
-    for i in range(1,maxPages + 1):
-        currentUrl = fighterListUrlPrefix + char + fighterListUrlSuffix + str(i)
-    break
 
-print(fighters)
+
