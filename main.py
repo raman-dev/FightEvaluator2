@@ -6,10 +6,8 @@ from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
-import scraper
 from datetime import date,datetime
-import re
-import json
+import re,json,unicodedata,scraper
 from models import *
 
 sqlite_file_name ="database.db"
@@ -52,9 +50,10 @@ def on_start():
 
 def getFighterIdByName(session,name):
     space_index = name.index(' ')
-    first_name = name[:space_index]
-    last_name = name[space_index + 1:]
+    first_name = unicodedata.normalize('NFD',name[:space_index]).encode('ascii', 'ignore').decode("ascii")
+    last_name = unicodedata.normalize('NFD',name[space_index + 1:]).encode('ascii', 'ignore').decode("ascii")
     #find fighter id by first_name last_name
+    print(first_name,last_name)
     fighter = session.query(Fighter).filter(Fighter.first_name == first_name,Fighter.last_name == last_name).first()        
     if fighter:
         return fighter.id
