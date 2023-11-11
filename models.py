@@ -35,9 +35,12 @@ class MatchUp(SQLModel,table=True):
     
     fighter_a: str
     fighter_a_link: Optional[str]
+    fighter_a_id: Optional[int]
     
     fighter_b: str
     fighter_b_link: Optional[str]
+    fighter_b_id: Optional[int]
+
     rounds: Optional[str]
     #almost always 3 unless main-event or championship fight
     max_rounds: Optional[int]
@@ -86,6 +89,9 @@ class Fighter(SQLModel,table=True):
     weight_class: Optional[WeightClass]
     height: Optional[str]
     date_of_birth: Optional[date]
+    reach: Optional[str]
+    stance: Optional[str]
+    record: Optional[str]
     #optional since a fighter may need to still be assessed
     assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
     # assesment: Optional["Assessment"] = Relationship(back_populates="fighters")

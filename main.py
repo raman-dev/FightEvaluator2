@@ -1,14 +1,15 @@
 from typing import Optional
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse,FileResponse,HTTPException
+from fastapi import FastAPI, Request,HTTPException
+from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import scraper
 from datetime import date,datetime
-
+import re
+import json
 from models import *
 
 sqlite_file_name ="database.db"
@@ -48,27 +49,16 @@ templates.env.filters['fightAttribQualifier'] = fightAttribQualifier
 @app.on_event("startup")
 def on_start():
     create_db_and_tables()
-    # create_sample_data()
-    #create a sample fighter if none exists
-    with Session(engine) as session:
-        fighter = session.query(Fighter).first()
-        if not fighter:
-            #commit first since id's are not generated unless committed
-            assessment = Assessment(id=0)
-            fighter = Fighter(
-                id=0,
-                first_name="John",
-                last_name="Doe",
-                nick_name="The Pussy Destroyer",
-                weight_class=WeightClass.LIGHTWEIGHT,
-                date_of_birth=date(1994,1,1),
-                assessment_id=assessment.id
-            )
-            session.add(assessment)
-            session.add(fighter)
-            session.commit()
-            session.refresh(fighter)
 
+def getFighterIdByName(session,name):
+    space_index = name.index(' ')
+    first_name = name[:space_index]
+    last_name = name[space_index + 1:]
+    #find fighter id by first_name last_name
+    fighter = session.query(Fighter).filter(Fighter.first_name == first_name,Fighter.last_name == last_name).first()        
+    if fighter:
+        return fighter.id
+    return -1
 
 @app.get("/")
 async def index(request: Request):
@@ -84,6 +74,13 @@ async def index(request: Request):
         eventData = next_event(session)
         context['event'] = eventData['event']
         context['matchups'] = eventData['matchups']
+        for matchup in context['matchups']:
+            fighter_a_id = getFighterIdByName(session,matchup.fighter_a)
+            fighter_b_id = getFighterIdByName(session,matchup.fighter_b)
+            if fighter_a_id != -1:
+                matchup.fighter_a_id = fighter_a_id
+            if fighter_b_id != -1:
+                matchup.fighter_b_id = fighter_b_id
         return templates.TemplateResponse("index.html",context)#context
 
 #assessmnent require fighter id since they cannot exist without a fighter
@@ -218,5 +215,28 @@ async def styles():
 @app.get("/static/media/{resource_name}")
 async def media(resource_name):
     return FileResponse("static/media/"+resource_name)
+
+async def create_fighters():
+    print('creating fighters')
+    with Session(engine) as session:
+        #read fighters from json file
+        with open('fighters.json') as f:
+            fighters = json.load(f)
+            #create fighter objects
+            for fighter in fighters:
+                fighterAssessment = Assessment()
+                session.add(fighterAssessment)
+                session.commit()
+                fighter['weight_class'] = scraper.toWeightClass(int(re.findall(r'\d+',fighter['weight_class'])[0]))
+                # print(fighter)
+                fighterObj = Fighter(**fighter)
+                fighterObj.assessment_id = fighterAssessment.id
+                session.add(fighterObj)
+                session.commit()
+                session.refresh(fighterObj)
+                # print(fighterObj.id,fighterObj.first_name,fighterObj.last_name,fighterObj.weight_class)
+                # return {'fighter' : fighterObj}
+
+    return {'status':'success'}
 
 

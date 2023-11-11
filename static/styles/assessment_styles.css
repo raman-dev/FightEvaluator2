@@ -16,7 +16,7 @@
 .edit-button-container {
   display: flex;
   justify-content: flex-end;
-  align-items: end;
+  align-items: center;
   width: 100%;
 }
 
@@ -69,8 +69,9 @@ div[data-changed=true] {
 .fighter-bio .fighter-info-grid .info-wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
-.fighter-bio .fighter-info-grid .info-wrapper p {
+.fighter-bio .fighter-info-grid .info-wrapper h6 {
   white-space: nowrap;
   margin: 0px !important;
 }

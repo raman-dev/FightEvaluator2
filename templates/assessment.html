@@ -27,36 +27,33 @@
           <!--fighter biographical info in a list-->
           <div class="fighter-bio">
             <div class="container">
-              <h4>Biographical Info</h4>
+              <!-- <h4>Biographical Info</h4> -->
+              <h4>{{ fighter.first_name }} {{ fighter.last_name }}</h4>
               <div class="fighter-info-grid">
                 <!--2 column flex grid-->
                 <div class="info-wrapper">
-                  <label>name:_</label>
-                  <p class="fighter-name">{{ fighter.first_name }} {{ fighter.last_name }}</p>
+                  <label>height:&nbsp;</label>
+                  <h6 class="fighter-height">{{ fighter.height }}</h6>
                 </div>
                 <div class="info-wrapper">
-                  <label>height: </label>
-                  <p class="fighter-height">height</p>
+                  <label>class:&nbsp;</label>
+                  <h6 class="fighter-weight"> {{ fighter.weight_class|weightclassStr }}</h6>
                 </div>
                 <div class="info-wrapper">
-                  <label>weight: </label>
-                  <p class="fighter-weight">weight</p>
+                  <label>age:&nbsp;</label>
+                  <h6 class="fighter-age">age</h6>
                 </div>
                 <div class="info-wrapper">
-                  <label>age:_</label>
-                  <p class="fighter-age">age</p>
+                    <label>record:&nbsp;</label>
+                    <h6 class="fighter-record">{{ fighter.record }}</h6>
                 </div>
                 <div class="info-wrapper">
-                    <label>record: </label>
-                    <p class="fighter-record">1-1-1</p>
+                    <label>reach:&nbsp;</label>
+                    <h6 class="fighter-reach">{{ fighter.reach }}</h6>
                 </div>
                 <div class="info-wrapper">
-                    <label>reach: </label>
-                    <p class="fighter-reach"></p>
-                </div>
-                <div class="info-wrapper">
-                    <label>stance: </label>
-                    <p class="fighter-stance"></p>
+                    <label>stance:&nbsp;</label>
+                    <h6 class="fighter-stance">{{ fighter.stance }}</h6>
                 </div>
                 
               </div>

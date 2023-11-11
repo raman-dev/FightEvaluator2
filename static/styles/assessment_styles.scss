@@ -17,9 +17,9 @@
 .edit-button-container {
   display: flex;
   justify-content: flex-end;
-  align-items: end;
+  align-items: center;
   width: 100%;
-
+  // border: 1px solid white;
 }
 
 .mbutton {
@@ -65,6 +65,7 @@ div[data-changed="true"] {
 }
 
 .fighter-bio {
+  // border: 1px solid white; 
   /* a 3x3 grid layout */
   .fighter-info-grid {
     display: grid;
@@ -74,12 +75,14 @@ div[data-changed="true"] {
     .info-wrapper {
         display: flex;
         flex-direction: row;
-        // border: 1px solid white;
+        align-items: center;
+        // border: 1px solid white; 
     
-        p {
+        h6 {
           white-space: nowrap;
-          margin: 0px !important;
+          margin: 0px !important; 
         }
+
       }
   }
    
@@ -165,3 +168,5 @@ div[data-changed="true"] {
     background-color: #212529;
   }
 }
+
+
