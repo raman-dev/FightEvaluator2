@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/assessment_styles.css" />
   </head>
   <body data-bs-theme="dark">
-    <div class="container main-container">
+    <div class="container xmain-container">
       <div class="fighter-info-container d-flex">
         <!--fighter image-->
         <div class="col d-flex">
@@ -93,328 +93,330 @@
           </div>
         </div>
       </div>
-
-      <!--list of 8 fighter attributes-->
-      <div class="fighter-attrib-list list-group">
-        <!--
-          if a change has been made set data-changed attribute on list-item-group
-        -->
-        <!-- <div class="list-group-item mradio-group" data-changed data-polarity="null"  data-attribute-name="head_movement"> -->
-        <!--group title-->
-        <!-- <h4>Attribute X</h4> -->
-        <!--button group options container-->
-        <!-- <div class="group-options-container">
-            <div class="btn mradio-option" data-polarity="positive">option-0</div>
-            <div class="btn mradio-option" data-polarity="neutral">option-1</div>
-            <div class="btn mradio-option" data-polarity="negative">option-2</div>
-          </div> -->
-        <!-- </div> -->
-        <div
-          class="list-group-item mradio-group"
-          data-changed="false"
-          data-polarity="null"
-          data-attribute-name="head_movement">
-          <div class="state-container d-flex align-items-center">
-            <h4>Head Movement</h4>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-            </svg>
-            <div
-              class="mradio-option border rounded-2 p-2"
-              data-polarity="positive">
-              good
-            </div>
-          </div>
-          <!--horizontal list of 3 radio buttons reading good/mediocre/bad -->
-          <div class="m-1 collapse attrib-collapse">
-            <div class="button-container group-options-container">
+      <div class="fighter-grid-container">
+          <!--list of 8 fighter attributes-->
+        <div class="fighter-attrib-list list-group">
+          <!--
+            if a change has been made set data-changed attribute on list-item-group
+          -->
+          <!-- <div class="list-group-item mradio-group" data-changed data-polarity="null"  data-attribute-name="head_movement"> -->
+          <!--group title-->
+          <!-- <h4>Attribute X</h4> -->
+          <!--button group options container-->
+          <!-- <div class="group-options-container">
+              <div class="btn mradio-option" data-polarity="positive">option-0</div>
+              <div class="btn mradio-option" data-polarity="neutral">option-1</div>
+              <div class="btn mradio-option" data-polarity="negative">option-2</div>
+            </div> -->
+          <!-- </div> -->
+          <div
+            class="list-group-item mradio-group"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="head_movement">
+            <div class="state-container d-flex align-items-center">
+              <h4>Head Movement</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
               <div
-                class="btn btn-outline-primary mradio-option"
+                class="mradio-option border rounded-2 p-2"
                 data-polarity="positive">
                 good
               </div>
-              <div
-                class="btn btn-outline-warning mradio-option"
-                data-polarity="neutral">
-                mediocre
-              </div>
-              <div
-                class="btn btn-outline-danger mradio-option"
-                data-polarity="negative">
-                bad
-              </div>
             </div>
-          </div>
-        </div>
-        <div
-          class="list-group-item mradio-group"
-          data-changed="false"
-          data-polarity="null"
-          data-attribute-name="gas_tank">
-          <div class="state-container d-flex align-items-center">
-            <h4>Gas Tank</h4>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-            </svg>
-            <div
-              class="mradio-option border rounded-2 p-2"
-              data-polarity="positive">
-              good
-            </div>
-          </div>
-          <div class="m-1 collapse attrib-collapse">
-            <div class="button-container group-options-container">
-              <div class="btn mradio-option" data-polarity="positive">good</div>
-              <div class="btn mradio-option" data-polarity="neutral">
-                mediocre
-              </div>
-              <div class="btn mradio-option" data-polarity="negative">bad</div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="list-group-item mradio-group"
-          data-changed="false"
-          data-polarity="null"
-          data-attribute-name="aggression">
-          <div class="state-container d-flex align-items-center">
-            <h4>Aggression</h4>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-            </svg>
-            <div
-              class="mradio-option border rounded-2 p-2"
-              data-polarity="positive">
-              good
-            </div>
-          </div>
-          <div class="m-1 collapse attrib-collapse">
-            <div class="button-container group-options-container">
-              <div class="btn mradio-option" data-polarity="positive">high</div>
-              <div class="btn mradio-option" data-polarity="neutral">mid</div>
-              <div class="btn mradio-option" data-polarity="negative">low</div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="list-group-item mradio-group"
-          data-changed="false"
-          data-polarity="null"
-          data-attribute-name="striking">
-          <div class="state-container d-flex align-items-center">
-            <h4>Striking</h4>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-            </svg>
-            <div
-              class="mradio-option border rounded-2 p-2"
-              data-polarity="positive">
-              good
-            </div>
-          </div>
-          <div class="m-1 collapse attrib-collapse">
-            <div class="button-container group-options-container">
-              <div class="btn mradio-option" data-polarity="positive">good</div>
-              <div class="btn mradio-option" data-polarity="neutral">
-                mediocre
-              </div>
-              <div class="btn mradio-option" data-polarity="negative">bad</div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="list-group-item mradio-group"
-          data-changed="false"
-          data-polarity="null"
-          data-attribute-name="chinny">
-          <!-- <div class="d-flex justify-content-between"> -->
-          <div class="state-container d-flex align-items-center">
-            <h4>Chinny</h4>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-            </svg>
-            <div
-              class="mradio-option border rounded-2 p-2"
-              data-polarity="positive">
-              good
-            </div>
-          </div>
-          <div class="m-1 collapse attrib-collapse">
-            <div class="button-container group-options-container">
-              <div class="btn mradio-option" data-polarity="positive">no</div>
-              <div class="btn mradio-option" data-polarity="neutral">
-                somewhat
-              </div>
-              <div class="btn mradio-option" data-polarity="negative">yes</div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="list-group-item mradio-group"
-          data-changed="false"
-          data-polarity="null"
-          data-attribute-name="desire_to_win">
-          <div class="state-container d-flex align-items-center">
-            <h4>Desire To Win</h4>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-            </svg>
-            <div
-              class="mradio-option border rounded-2 p-2"
-              data-polarity="positive">
-              good
-            </div>
-          </div>
-          <div class="m-1 collapse attrib-collapse">
-            <div class="button-container group-options-container">
-              <div class="btn mradio-option" data-polarity="positive">yes</div>
-              <div class="btn mradio-option" data-polarity="negative">no</div>
-            </div>
-          </div>
-        </div>
-        <div class="list-group-item grappling-info-container">
-          <h4>Grappling</h4>
-          <div class="row grappling-container">
-            <div
-              class="col mradio-group offense-container"
-              data-changed="false"
-              data-polarity="null"
-              data-attribute-name="grappling_offense">
-              <div class="state-container d-flex align-items-center">
-                <h4>Offense</h4>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24"
-                  viewBox="0 -960 960 960"
-                  width="24">
-                  <path
-                    fill="white"
-                    d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                </svg>
+            <!--horizontal list of 3 radio buttons reading good/mediocre/bad -->
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
                 <div
-                  class="mradio-option border rounded-2 p-2"
+                  class="btn btn-outline-primary mradio-option"
                   data-polarity="positive">
                   good
                 </div>
-              </div>
-              <div class="m-1 collapse attrib-collapse">
-                <div class="button-container group-options-container">
-                  <div class="btn mradio-option" data-polarity="positive">
-                    good
-                  </div>
-                  <div class="btn mradio-option" data-polarity="negative">
-                    bad
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="col mradio-group defense-container"
-              data-changed="false"
-              data-polarity="null"
-              data-attribute-name="grappling_defense">
-              <div class="state-container d-flex align-items-center">
-                <h4>Defense</h4>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24"
-                  viewBox="0 -960 960 960"
-                  width="24">
-                  <path
-                    fill="white"
-                    d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                </svg>
                 <div
-                  class="mradio-option border rounded-2 p-2"
-                  data-polarity="positive">
-                  good
+                  class="btn btn-outline-warning mradio-option"
+                  data-polarity="neutral">
+                  mediocre
                 </div>
-              </div>              
-              <div class="m-1 collapse attrib-collapse">
-                <div class="button-container group-options-container">
-                  <div class="btn mradio-option" data-polarity="positive">
-                    good
-                  </div>
-                  <div class="btn mradio-option" data-polarity="negative">
-                    bad
-                  </div>
+                <div
+                  class="btn btn-outline-danger mradio-option"
+                  data-polarity="negative">
+                  bad
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!--additional notes and context info to consider about a particular fighter-->
-      <div class="fighter-notes list-group-item d-flex flex-column">
-        <!--list of text notes about a the fighter in jot note style-->
-        <div class="notes-title">
-          <h4>Notes - Things to consider about this fighter...</h4>
-        </div>
-        <!--unordered scrollable list of p tags wrapped in li-->
-        <!--textarea made with div and contenteditable -->
-        <div class="note-editor-container d-flex flex-column">
-          <button
-            class="btn btn-success note-submit-btn"
-            onclick="addNote(event)">
-            submit
-          </button>
           <div
-            class="note-editor align-self-center"
-            contenteditable="plaintext-only"></div>
+            class="list-group-item mradio-group"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="gas_tank">
+            <div class="state-container d-flex align-items-center">
+              <h4>Gas Tank</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
+              <div
+                class="mradio-option border rounded-2 p-2"
+                data-polarity="positive">
+                good
+              </div>
+            </div>
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">good</div>
+                <div class="btn mradio-option" data-polarity="neutral">
+                  mediocre
+                </div>
+                <div class="btn mradio-option" data-polarity="negative">bad</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="list-group-item mradio-group"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="aggression">
+            <div class="state-container d-flex align-items-center">
+              <h4>Aggression</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
+              <div
+                class="mradio-option border rounded-2 p-2"
+                data-polarity="positive">
+                good
+              </div>
+            </div>
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">high</div>
+                <div class="btn mradio-option" data-polarity="neutral">mid</div>
+                <div class="btn mradio-option" data-polarity="negative">low</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="list-group-item mradio-group"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="striking">
+            <div class="state-container d-flex align-items-center">
+              <h4>Striking</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
+              <div
+                class="mradio-option border rounded-2 p-2"
+                data-polarity="positive">
+                good
+              </div>
+            </div>
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">good</div>
+                <div class="btn mradio-option" data-polarity="neutral">
+                  mediocre
+                </div>
+                <div class="btn mradio-option" data-polarity="negative">bad</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="list-group-item mradio-group"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="chinny">
+            <!-- <div class="d-flex justify-content-between"> -->
+            <div class="state-container d-flex align-items-center">
+              <h4>Chinny</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
+              <div
+                class="mradio-option border rounded-2 p-2"
+                data-polarity="positive">
+                good
+              </div>
+            </div>
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">no</div>
+                <div class="btn mradio-option" data-polarity="neutral">
+                  somewhat
+                </div>
+                <div class="btn mradio-option" data-polarity="negative">yes</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="list-group-item mradio-group"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="desire_to_win">
+            <div class="state-container d-flex align-items-center">
+              <h4>Desire To Win</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
+              <div
+                class="mradio-option border rounded-2 p-2"
+                data-polarity="positive">
+                good
+              </div>
+            </div>
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">yes</div>
+                <div class="btn mradio-option" data-polarity="negative">no</div>
+              </div>
+            </div>
+          </div>
+          <div class="list-group-item grappling-info-container">
+            <h4>Grappling</h4>
+            <div class="row grappling-container">
+              <div
+                class="col mradio-group offense-container"
+                data-changed="false"
+                data-polarity="null"
+                data-attribute-name="grappling_offense">
+                <div class="state-container d-flex align-items-center">
+                  <h4>Offense</h4>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24"
+                    viewBox="0 -960 960 960"
+                    width="24">
+                    <path
+                      fill="white"
+                      d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                  </svg>
+                  <div
+                    class="mradio-option border rounded-2 p-2"
+                    data-polarity="positive">
+                    good
+                  </div>
+                </div>
+                <div class="m-1 collapse attrib-collapse">
+                  <div class="button-container group-options-container">
+                    <div class="btn mradio-option" data-polarity="positive">
+                      good
+                    </div>
+                    <div class="btn mradio-option" data-polarity="negative">
+                      bad
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col mradio-group defense-container"
+                data-changed="false"
+                data-polarity="null"
+                data-attribute-name="grappling_defense">
+                <div class="state-container d-flex align-items-center">
+                  <h4>Defense</h4>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24"
+                    viewBox="0 -960 960 960"
+                    width="24">
+                    <path
+                      fill="white"
+                      d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                  </svg>
+                  <div
+                    class="mradio-option border rounded-2 p-2"
+                    data-polarity="positive">
+                    good
+                  </div>
+                </div>              
+                <div class="m-1 collapse attrib-collapse">
+                  <div class="button-container group-options-container">
+                    <div class="btn mradio-option" data-polarity="positive">
+                      good
+                    </div>
+                    <div class="btn mradio-option" data-polarity="negative">
+                      bad
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="notes-list align-self-center mt-4">
-          <ul>
-            {% for note in notes %}
-            <li data-note-id="{{ note.id }}">
-              <p>{{ note.data }}</p>
-              <!-- <button
-                class="btn btn-danger note-delete-btn"
-                data-note-id="{{ note.id }}"
-                onclick="deleteNote(event)">
-                delete
-              </button> -->
-            </li>
-            {% endfor %}
-          </ul>
+        <!--additional notes and context info to consider about a particular fighter-->
+        <div class="fighter-notes list-group-item d-flex flex-column">
+          <!--list of text notes about a the fighter in jot note style-->
+          <div class="notes-title">
+            <h4>Notes - Things to consider about this fighter...</h4>
+          </div>
+          <!--unordered scrollable list of p tags wrapped in li-->
+          <!--textarea made with div and contenteditable -->
+          <div class="note-editor-container d-flex flex-column">
+            <button
+              class="btn btn-success note-submit-btn"
+              onclick="addNote(event)">
+              submit
+            </button>
+            <div
+              class="note-editor align-self-center"
+              contenteditable="plaintext-only"></div>
+          </div>
+          <div class="notes-list align-self-center mt-4">
+            <ul>
+              {% for note in notes %}
+              <li data-note-id="{{ note.id }}">
+                <p>{{ note.data }}</p>
+                <!-- <button
+                  class="btn btn-danger note-delete-btn"
+                  data-note-id="{{ note.id }}"
+                  onclick="deleteNote(event)">
+                  delete
+                </button> -->
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
+      
     </div>
     <script src="{{ url_for('static', path='/js/custom_radio_button.js') }}"></script>
     <script>

@@ -165,12 +165,12 @@ def next_event(session):
     return {'event':event,'matchups':matchups}
 
 @app.get("/notes/{assessment_id}")
-async def get_notes(assessment_id):
+async def get_notes(assessment_id: int):
     #get notes for assessment id with session
     notes = None
     with Session (engine) as session:
         notes = session.query(Note).filter(Note.assessment_id == assessment_id).all()
-    return list(notes)
+    return notes
 
 @app.post("/notes")
 async def create_note(noteIn: NoteIn):#,request: Request):
