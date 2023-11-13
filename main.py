@@ -195,6 +195,19 @@ async def delete_notes(note_id):
         session.commit()
     return {'status':'success'}
 
+#add all note delete by assessment id
+@app.delete("/notes/assessment/{assessment_id}")
+async def delete_notes_by_assessment(assessment_id):
+    #delete note from database
+    with Session(engine) as session:
+        notes = session.query(Note).filter(Note.assessment_id == assessment_id).all()
+        if not notes:
+            return {'status':'failed'}
+        for note in notes:
+            session.delete(note)
+        session.commit()
+    return {'status':'success'}
+
 
 @app.get("/fighters/{fighter_id}")
 def get_fighter(fighter_id:int):

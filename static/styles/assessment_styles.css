@@ -1,3 +1,14 @@
+html {
+  height: 100vh;
+}
+
+body {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+}
+
 .xmain-container {
   border: 1px solid white;
 }
@@ -62,6 +73,11 @@ div[data-changed=true] {
   outline-width: 2px;
 }
 
+.dx-none {
+  display: none;
+  border: none;
+}
+
 .mradio-group {
   outline: 0px solid red;
   transition: outline 0.05s ease-out;
@@ -111,19 +127,42 @@ div[data-changed=true] {
 
 .fighter-notes {
   padding: 1rem;
-  padding-left: 4rem;
-  padding-right: 4rem;
 }
-.fighter-notes .notes-title {
-  margin-left: -3rem;
+.fighter-notes .note-editor-container {
+  row-gap: 0.5rem;
+  /* show light electric blue outline when note-editor is focused */
+}
+.fighter-notes .note-editor-container .note-submit-btn {
+  margin-left: auto;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+.fighter-notes .note-editor-container .note-editor {
+  overflow: hidden;
+  background-color: #212529;
+  border: 1px solid #343a40;
+  border-radius: 0.5rem;
+  outline: 0px solid #3d7efd;
+  width: 100%;
+  max-width: 32ch;
+  word-break: break-all;
+  min-height: 4rem;
+  transition: outline 0.05s ease-out;
+}
+.fighter-notes .note-editor-container .note-editor:focus {
+  outline-width: 3px;
+  border-color: transparent;
 }
 .fighter-notes .notes-list {
   background-color: #212529;
-  border: 1px solid #343a40 !important;
-  border-radius: 0.5rem;
   width: 100%;
 }
 .fighter-notes .notes-list ul {
+  border: 1px solid #343a40 !important;
+  border-radius: 0.5rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin: 0px;
   width: 100%;
   /*notes list style dot is a dash instead*/
 }
@@ -131,34 +170,16 @@ div[data-changed=true] {
   list-style: None;
   display: flex;
 }
+.fighter-notes .notes-list ul li p {
+  word-break: break-all;
+  text-wrap: wrap;
+  max-width: 32ch;
+  margin: 0px;
+}
 .fighter-notes .notes-list ul li::before {
   content: "-";
   margin-right: 0.4rem;
   margin-left: -1rem;
-}
-
-.note-editor-container {
-  row-gap: 0.5rem;
-  /* show light electric blue outline when note-editor is focused */
-}
-.note-editor-container .note-submit-btn {
-  margin-left: auto;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
-}
-.note-editor-container .note-editor {
-  overflow: hidden;
-  background-color: #212529;
-  border: 1px solid #343a40;
-  border-radius: 0.5rem;
-  outline: 0px solid #3d7efd;
-  width: 100%;
-  min-height: 4rem;
-  transition: outline 0.05s ease-out;
-}
-.note-editor-container .note-editor:focus {
-  outline-width: 3px;
-  border-color: transparent;
 }
 
 /*container is at most 70% width*/

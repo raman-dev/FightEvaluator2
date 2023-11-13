@@ -400,7 +400,7 @@
               contenteditable="plaintext-only"></div>
           </div>
           <div class="notes-list align-self-center mt-4">
-            <ul>
+            <ul class="dx-none">
               {% for note in notes %}
               <li data-note-id="{{ note.id }}">
                 <p>{{ note.data }}</p>
@@ -434,7 +434,8 @@
         grappling_offense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
       };
-
+      
+      
       document.querySelector(".edit-button")
         .addEventListener("click", (event) => {
           //toggle edit mode
@@ -463,12 +464,15 @@
             }),
           });
           let noteData = await response.json();
+          let notesContainer = document.querySelector(".notes-list");
+          notesContainer.classList.remove('dx-none');
           //create a new li element with the noteText
           let newNote = document.createElement("li");
           newNote.innerHTML = "<p>" + noteText + "</p>";
           newNote.setAttribute("data-note-id", noteData.id);
           //append the new li element to the notes-list
           let notesList = document.querySelector(".notes-list ul");
+          notesList.classList.remove('dx-none');//if there are no notes, remove the d-none class
           notesList.prepend(newNote);
           //clear the note-editor
           noteEditor.textContent = "";
@@ -543,6 +547,21 @@
           }
           onAssessmentChanged();
         }
+      }
+      
+      let notesList = document.querySelector('.notes-list');
+      let notesListUl = document.querySelector(".notes-list ul");
+      //fix .fighter-notes to have max height as the height of attribute list
+      let notesContainer = document.querySelector(".fighter-notes");
+      let attribList = document.querySelector(".fighter-attrib-list");
+      notesContainer.style.maxHeight = attribList.offsetHeight + "px";
+      //use resize observer to observe size of attrib-list
+      //get padding of notesContainer
+      let notesContainerStyle = window.getComputedStyle(notesContainer);
+      let paddingMarginOffset = parseInt(notesContainerStyle.paddingBottom) + parseInt(notesContainerStyle.marginBottom);
+      notesListUl.style.maxHeight = (attribList.offsetHeight - notesList.offsetTop - paddingMarginOffset) + "px";
+      if (notesListUl.children.length > 0){
+        notesListUl.classList.remove('dx-none');
       }
     </script>
     <script

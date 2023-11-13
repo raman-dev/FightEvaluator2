@@ -39,8 +39,9 @@ div[data-mradio-selected]{
 /* use font as variable */
 html,
 body {
+    min-height: 800px;
     font-family: PoppinsLight;
-    font-size: 16px;
+    font-size: 16px; 
 }
 
 h1,
