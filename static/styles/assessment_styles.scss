@@ -64,6 +64,18 @@ div[data-changed="true"] {
   cursor: pointer;
 }
 
+.state-container{
+  h4 {
+    margin: 0px;
+  }
+  svg {
+    margin-left: .5rem;
+    margin-right: .5rem;
+    height: 2.7rem;
+    width: 2.7rem;
+  }
+}
+
 .fighter-bio {
   // border: 1px solid white; 
   /* a 3x3 grid layout */
