@@ -12,21 +12,38 @@ body {
 /*data-polarity color variables*/
 .xmain-container .fighter-grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   -moz-column-gap: 1rem;
        column-gap: 1rem;
 }
 .xmain-container .fighter-grid-container .fighter-attrib-list {
+  grid-column: span 3;
+}
+.xmain-container .fighter-grid-container .fighter-notes {
   grid-column: span 2;
 }
 
 /*greater than */
 @media (max-width: 1200px) {
-  .fighter-attrib-list {
-    grid-column: span 3 !important;
+  .fighter-grid-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
   }
-  .fighter-notes {
-    grid-column: span 3 !important;
+  .fighter-grid-container .fighter-attrib-list {
+    grid-column: span 2 !important;
+  }
+  .fighter-grid-container .fighter-notes {
+    grid-column: span 2 !important;
+  }
+}
+@media (max-width: 926px) {
+  .fighter-grid-container {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .fighter-grid-container .fighter-attrib-list {
+    grid-column: span 2 !important;
+  }
+  .fighter-grid-container .fighter-notes {
+    grid-column: span 2 !important;
   }
 }
 .list-group-item {
@@ -241,11 +258,6 @@ div[data-edit-mode-enabled=true] .state-container div[data-polarity=neutral] {
 }
 div[data-edit-mode-enabled=true] .state-container div[data-polarity~=null] {
   color: #212529;
-}
-
-/*container is at most 70% width*/
-.container-fluid {
-  max-width: 70%;
 }
 
 .grappling-container {

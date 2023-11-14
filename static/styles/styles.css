@@ -79,21 +79,9 @@ h6 {
     margin: auto;
   }
 }
-@media (min-width: 1200px) {
-  .main-container {
-    max-width: 70%;
-    margin: auto;
-  }
-}
 @media (min-width: 1400px) {
   .main-container {
-    max-width: 65%;
-    margin: auto;
-  }
-}
-@media (min-width: 1600px) {
-  .main-container {
-    max-width: 54%;
+    max-width: 70%;
     margin: auto;
   }
 }/*# sourceMappingURL=styles.css.map */
