@@ -495,9 +495,9 @@
     <script src="{{ url_for('static', path='/js/custom_radio_button.js') }}"></script>
     <script>
       var editModeEnabled = false;
-      var fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
-      var assessment_id = {{ assessment.id }};
-      var assessment_data = {
+      const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
+      const assessment_id = {{ assessment.id }};
+      const assessment_data = {
         id: {{ assessment.id }},
         head_movement: {{ assessment.head_movement|fightAttribQualifier if assessment.head_movement is not none else 'null' }},
         gas_tank: {{ assessment.gas_tank|fightAttribQualifier if assessment.gas_tank is not none else 'null' }},
@@ -508,15 +508,55 @@
         grappling_offense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
       };
+
+      const collapseState = {
+        isCollapsing:false,
+        isExpanding: false
+      };
+
+      function collapseStateChangeHandler(event){
+          switch(event.type){
+            case "show.bs.collapse":
+              collapseState.isExpanding = true;
+              collapseState.isCollapsing = false;
+              break;
+            // case "shown.bs.collapse":
+            //   break;
+            case "hide.bs.collapse":
+              collapseState.isExpanding = false;
+              collapseState.isCollapsing = true;
+              break;
+            // case "hidden.bs.collapse":
+            //final state when hidden
+            //   break;
+          }
+      }
       
-      
+      function setCollapseListeners(){
+          //listen to see if attrib has been collapsed using shown.bs.collapse
+          let collapseElement = document.querySelector('.attrib-collapse');
+          // collapseElement.addEventListener('shown.bs.collapse',collapseStateChangeHandler);
+          collapseElement.addEventListener('show.bs.collapse',collapseStateChangeHandler);
+          collapseElement.addEventListener('hide.bs.collapse',collapseStateChangeHandler);
+          // collapseElement.addEventListener('hidden.bs.collapse',collapseStateChangeHandler);
+      }
+
+      setCollapseListeners();
+
+
       document.querySelector(".edit-button")
         .addEventListener("click", (event) => {
+          //return if already opening or closing
           //toggle edit mode
           //uncollapse collapsed items
-          editModeEnabled = !editModeEnabled;
+          if (collapseState.isExpanding){
+            editModeEnabled = true;
+          }
+          if (collapseState.isCollapsing){
+            editModeEnabled = false;
+          }
           document.querySelector('.fighter-attrib-list').setAttribute('data-edit-mode-enabled', editModeEnabled);
-          clearRadioButtons();
+          if (!editModeEnabled) clearRadioButtons();
         });
 
       //grab content from note-editor and send it to the server
