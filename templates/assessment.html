@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="/assessment_styles.css" />
   </head>
   <body data-bs-theme="dark">
-    <div class="container xmain-container">
-      <div class="fighter-info-container d-flex">
+    <div class="main-container xmain-container">
+      <div class="fighter-info-container">
         <!--fighter image-->
-        <div class="col d-flex">
+        <div class="info">
           <div class="fighter-img">
             <img
               class="fighter-img"
@@ -61,7 +61,7 @@
             </div>
           </div>
         </div>
-        <div class="col edit-button-container">
+        <div class="edit-button-container">
           <div
             class="edit-button mbutton"
             data-bs-toggle="collapse"
@@ -95,7 +95,7 @@
       </div>
       <div class="fighter-grid-container">
           <!--list of 8 fighter attributes-->
-        <div class="fighter-attrib-list list-group">
+        <div class="fighter-attrib-list list-group" data-edit-mode-enabled="false">
           <!--
             if a change has been made set data-changed attribute on list-item-group
           -->
@@ -125,11 +125,7 @@
                   fill="white"
                   d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
               </svg>
-              <div
-                class="mradio-option border rounded-2 p-2"
-                data-polarity="positive">
-                good
-              </div>
+              <div class="state-indicator p-2" data-polarity="null">good</div>
             </div>
             <!--horizontal list of 3 radio buttons reading good/mediocre/bad -->
             <div class="m-1 collapse attrib-collapse">
@@ -151,6 +147,17 @@
                 </div>
               </div>
             </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                doesn't stand upright/doesn't get hit unnecessarily
+              </p>
+              <p data-polarity="neutral">
+                doesn't stand upright/doesn't get hit unnecessarily
+              </p>
+              <p data-polarity="negative">
+                gets hit alot/keeps head upright
+              </p>
+            </div>
           </div>
           <div
             class="list-group-item mradio-group"
@@ -169,9 +176,7 @@
                   d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
               </svg>
               <div
-                class="mradio-option border rounded-2 p-2"
-                data-polarity="positive">
-                good
+                class="state-indicator p-2" data-polarity="null">good
               </div>
             </div>
             <div class="m-1 collapse attrib-collapse">
@@ -182,6 +187,17 @@
                 </div>
                 <div class="btn mradio-option" data-polarity="negative">bad</div>
               </div>
+            </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                can go full 3 rounds without slowing down much
+              </p>
+              <p data-polarity="neutral">
+                gets more tired but not entirely gassed
+              </p>
+              <p data-polarity="negative">
+                after 1 or 2 rounds gassed and sloppy
+              </p>
             </div>
           </div>
           <div
@@ -201,8 +217,7 @@
                   d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
               </svg>
               <div
-                class="mradio-option border rounded-2 p-2"
-                data-polarity="positive">
+                class="state-indicator p-2" data-polarity="null">
                 good
               </div>
             </div>
@@ -212,6 +227,17 @@
                 <div class="btn mradio-option" data-polarity="neutral">mid</div>
                 <div class="btn mradio-option" data-polarity="negative">low</div>
               </div>
+            </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                always moving forward, throwing strikes, looking for openings
+              </p>
+              <p data-polarity="neutral">
+                sometimes moving forward, throwing strikes, looking for openings
+              </p>
+              <p data-polarity="negative">
+                rarely moving forward/reactive not proactive fighter
+              </p>
             </div>
           </div>
           <div
@@ -231,8 +257,7 @@
                   d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
               </svg>
               <div
-                class="mradio-option border rounded-2 p-2"
-                data-polarity="positive">
+                class="state-indicator p-2" data-polarity="null">
                 good
               </div>
             </div>
@@ -244,6 +269,17 @@
                 </div>
                 <div class="btn mradio-option" data-polarity="negative">bad</div>
               </div>
+            </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                uses all or most weapons kicks + punches + elbows + knees
+              </p>
+              <p data-polarity="neutral">
+                mostly punches, not many or few kicks maybe proficient at boxing
+              </p>
+              <p data-polarity="negative">
+                only punches/ maybe ok at boxing/ maybe sloppy striking
+              </p>
             </div>
           </div>
           <div
@@ -264,8 +300,7 @@
                   d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
               </svg>
               <div
-                class="mradio-option border rounded-2 p-2"
-                data-polarity="positive">
+                class="state-indicator p-2" data-polarity="null">
                 good
               </div>
             </div>
@@ -277,6 +312,17 @@
                 </div>
                 <div class="btn mradio-option" data-polarity="negative">yes</div>
               </div>
+            </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                can take hits and recover/ doesn't get ko'd
+              </p>
+              <p data-polarity="neutral">
+                sometimes gets into trouble but has history of recovering
+              </p>
+              <p data-polarity="negative">
+                history of getting ko'd/gets dazed or buzzed alot
+              </p>
             </div>
           </div>
           <div
@@ -296,8 +342,7 @@
                   d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
               </svg>
               <div
-                class="mradio-option border rounded-2 p-2"
-                data-polarity="positive">
+                class="state-indicator p-2" data-polarity="null">
                 good
               </div>
             </div>
@@ -306,6 +351,17 @@
                 <div class="btn mradio-option" data-polarity="positive">yes</div>
                 <div class="btn mradio-option" data-polarity="negative">no</div>
               </div>
+            </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                always looking to win, tries to finish fight,never gives up
+              </p>
+              <p data-polarity="neutral">
+                somewhat - sometimes looking to win, sometimes looking to survive
+              </p>
+              <p data-polarity="negative">
+                no - grindy fighter/ reactive not proactive fighter
+              </p>
             </div>
           </div>
           <div class="list-group-item grappling-info-container">
@@ -328,8 +384,7 @@
                       d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
                   </svg>
                   <div
-                    class="mradio-option border rounded-2 p-2"
-                    data-polarity="positive">
+                    class="state-indicator p-2" data-polarity="null">
                     good
                   </div>
                 </div>
@@ -342,6 +397,16 @@
                       bad
                     </div>
                   </div>
+                </div>
+                <div class="attrib-description-container">
+                  <p data-polarity="positive">
+                    tries to submit opponent/tries to get into dominant positions
+                  </p>
+                  <p data-polarity="neutral">
+                  </p>
+                  <p data-polarity="negative">
+                    loses position/overcommits to submissions and gets reversed
+                  </p>
                 </div>
               </div>
 
@@ -362,8 +427,7 @@
                       d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
                   </svg>
                   <div
-                    class="mradio-option border rounded-2 p-2"
-                    data-polarity="positive">
+                    class="state-indicator p-2" data-polarity="null">
                     good
                   </div>
                 </div>              
@@ -376,6 +440,16 @@
                       bad
                     </div>
                   </div>
+                </div>
+                <div class="attrib-description-container">
+                  <p data-polarity="positive">
+                    primarily can survive having back taken and not getting choked or submitted from difficult positions
+                  </p>
+                  <p data-polarity="neutral">
+                  </p>
+                  <p data-polarity="negative">
+                    gets choked out/taps quickly/does wrong thing often
+                  </p>
                 </div>
               </div>
             </div>
@@ -441,6 +515,7 @@
           //toggle edit mode
           //uncollapse collapsed items
           editModeEnabled = !editModeEnabled;
+          document.querySelector('.fighter-attrib-list').setAttribute('data-edit-mode-enabled', editModeEnabled);
           clearRadioButtons();
         });
 
@@ -540,7 +615,6 @@
         });
         console.log(response);
         if (response.status == 200) {
-          editModeEnabled = false;
           let data = await response.json();
           for (let key in data) {
             assessment_data[key] = data[key];
@@ -554,8 +628,6 @@
       //fix .fighter-notes to have max height as the height of attribute list
       let notesContainer = document.querySelector(".fighter-notes");
       let attribList = document.querySelector(".fighter-attrib-list");
-      notesContainer.style.maxHeight = attribList.offsetHeight + "px";
-      //use resize observer to observe size of attrib-list
       //get padding of notesContainer
       let notesContainerStyle = window.getComputedStyle(notesContainer);
       let paddingMarginOffset = parseInt(notesContainerStyle.paddingBottom) + parseInt(notesContainerStyle.marginBottom);

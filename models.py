@@ -8,6 +8,7 @@ class AttributeQualifier(Enum):
     positive = "positive"
     negative = "negative"
     neutral = "neutral"
+    untested = "untested"
 
 class WeightClass(Enum):
     CATCH_WEIGHT = "Catch weight"

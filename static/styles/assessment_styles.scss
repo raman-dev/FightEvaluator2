@@ -9,10 +9,15 @@ body {
   place-items: center;
 }
 
+/*data-polarity color variables*/
+$positiveBg: #0d6efd;
+$negativeBg: #dc3545;
+$neutralBg: #ffc107;
+
 .xmain-container {
   border: 1px solid white;
   .fighter-grid-container {
-    border: 1px solid white;
+    // border: 1px solid white;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 1rem;
@@ -33,6 +38,7 @@ body {
   }
 }
 
+
 .list-group-item {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
@@ -41,11 +47,13 @@ body {
 }
 
 .fighter-info-container {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  display: grid;
+  margin: 1rem;
 
-  :first-child {
-    align-items: center;
+  .info {
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
@@ -88,11 +96,33 @@ div[data-changed="true"] {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    padding: 0.5rem;
   }
   // custom attribute boolean selection
   div[data-mradio-selected] {
     color: white;
     outline: 2px solid lavender;
+  }
+
+  .attrib-description-container{
+    p{
+      display: none;
+      border: 2px solid lavender;
+      border-radius: 0.4rem;
+      padding: 0.4rem;
+      margin: 0.3rem;
+    }
+
+    p[data-polarity="positive"]{
+      border-color: $positiveBg !important;
+    }
+    p[data-polarity="negative"]{
+      border-color: $negativeBg !important;
+    }
+    p[data-polarity="neutral"]{
+      border-color: $neutralBg !important;
+    }
+
   }
 }
 
@@ -102,6 +132,8 @@ div[data-changed="true"] {
 }
 
 .state-container {
+  text-transform: uppercase;
+
   h4 {
     margin: 0px;
   }
@@ -110,6 +142,25 @@ div[data-changed="true"] {
     margin-right: 0.5rem;
     height: 2.7rem;
     width: 2.7rem;
+  }
+  .state-indicator{
+    background-color: slategray;
+    border: 2px solid lavender;
+    border-radius: 0.4rem;
+    color: ghostwhite;
+  }
+
+  div[data-polarity="positive"] {
+    background-color: $positiveBg;
+  }
+  div[data-polarity="negative"]{
+    background-color: $negativeBg;
+  }
+  div[data-polarity="neutral"]{
+    background-color: $neutralBg;
+  }
+  div[data-polarity="null"]{
+    color: /*blackish grey*/ #212529;
   }
 }
 
@@ -153,7 +204,7 @@ div[data-changed="true"] {
       outline: 0px solid #3d7efd;
 
       width: 100%;
-      max-width: 32ch;
+      // max-width: 32ch;
       word-break: break-all;
       min-height: 4rem;
       transition: outline 0.05s ease-out;
@@ -168,7 +219,6 @@ div[data-changed="true"] {
 
   .notes-list {
     background-color: #212529;
-    
     width: 100%;
 
     ul {
@@ -198,6 +248,38 @@ div[data-changed="true"] {
   }
 }
 
+div[data-edit-mode-enabled="true"]{
+  .state-container{
+    .state-indicator{
+      background-color: slategray;
+      border: 2px solid lavender;
+      border-radius: 0.4rem;
+      color: ghostwhite;
+    }
+  
+    div[data-polarity="positive"] {
+      background-color: transparent;
+      border-color: $positiveBg;
+      color: $positiveBg;
+    }
+    div[data-polarity="negative"]{
+      background-color: transparent;
+      border-color: $negativeBg;
+      color: $negativeBg;
+    }
+    div[data-polarity="neutral"]{
+      background-color: transparent;
+      border-color: $neutralBg;
+      color: $neutralBg;
+    }
+
+    div[data-polarity~="null"]{
+      color: #212529;
+    }  
+  }
+
+}
+
 /*container is at most 70% width*/
 .container-fluid {
   max-width: 70%;
@@ -222,3 +304,5 @@ div[data-changed="true"] {
     background-color: #212529;
   }
 }
+
+

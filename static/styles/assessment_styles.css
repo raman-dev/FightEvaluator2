@@ -9,11 +9,11 @@ body {
   place-items: center;
 }
 
+/*data-polarity color variables*/
 .xmain-container {
   border: 1px solid white;
 }
 .xmain-container .fighter-grid-container {
-  border: 1px solid white;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   -moz-column-gap: 1rem;
@@ -40,11 +40,13 @@ body {
 }
 
 .fighter-info-container {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  display: grid;
+  margin: 1rem;
 }
-.fighter-info-container :first-child {
-  align-items: center;
+.fighter-info-container .info {
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .edit-button-container {
@@ -86,10 +88,27 @@ div[data-changed=true] {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  padding: 0.5rem;
 }
 .mradio-group div[data-mradio-selected] {
   color: white;
   outline: 2px solid lavender;
+}
+.mradio-group .attrib-description-container p {
+  display: none;
+  border: 2px solid lavender;
+  border-radius: 0.4rem;
+  padding: 0.4rem;
+  margin: 0.3rem;
+}
+.mradio-group .attrib-description-container p[data-polarity=positive] {
+  border-color: #0d6efd !important;
+}
+.mradio-group .attrib-description-container p[data-polarity=negative] {
+  border-color: #dc3545 !important;
+}
+.mradio-group .attrib-description-container p[data-polarity=neutral] {
+  border-color: #ffc107 !important;
 }
 
 .mbutton:hover {
@@ -97,6 +116,9 @@ div[data-changed=true] {
   cursor: pointer;
 }
 
+.state-container {
+  text-transform: uppercase;
+}
 .state-container h4 {
   margin: 0px;
 }
@@ -105,6 +127,24 @@ div[data-changed=true] {
   margin-right: 0.5rem;
   height: 2.7rem;
   width: 2.7rem;
+}
+.state-container .state-indicator {
+  background-color: slategray;
+  border: 2px solid lavender;
+  border-radius: 0.4rem;
+  color: ghostwhite;
+}
+.state-container div[data-polarity=positive] {
+  background-color: #0d6efd;
+}
+.state-container div[data-polarity=negative] {
+  background-color: #dc3545;
+}
+.state-container div[data-polarity=neutral] {
+  background-color: #ffc107;
+}
+.state-container div[data-polarity=null] {
+  color: #212529;
 }
 
 .fighter-bio {
@@ -144,7 +184,6 @@ div[data-changed=true] {
   border-radius: 0.5rem;
   outline: 0px solid #3d7efd;
   width: 100%;
-  max-width: 32ch;
   word-break: break-all;
   min-height: 4rem;
   transition: outline 0.05s ease-out;
@@ -180,6 +219,31 @@ div[data-changed=true] {
   content: "-";
   margin-right: 0.4rem;
   margin-left: -1rem;
+}
+
+div[data-edit-mode-enabled=true] .state-container .state-indicator {
+  background-color: slategray;
+  border: 2px solid lavender;
+  border-radius: 0.4rem;
+  color: ghostwhite;
+}
+div[data-edit-mode-enabled=true] .state-container div[data-polarity=positive] {
+  background-color: transparent;
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+div[data-edit-mode-enabled=true] .state-container div[data-polarity=negative] {
+  background-color: transparent;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+div[data-edit-mode-enabled=true] .state-container div[data-polarity=neutral] {
+  background-color: transparent;
+  border-color: #ffc107;
+  color: #ffc107;
+}
+div[data-edit-mode-enabled=true] .state-container div[data-polarity~=null] {
+  color: #212529;
 }
 
 /*container is at most 70% width*/

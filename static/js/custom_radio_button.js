@@ -147,15 +147,31 @@ function onAssessmentChanged(){
     element.setAttribute('data-changed','false');
   });
   for (let key in assessment_data){
-    if (assessment_data[key] == null || key == 'id'){
-      continue;
-    }
-    console.log(`key => ${key} value => ${assessment_data[key]}`);
-    //get the radio group with data-attribute-name=key
+    if (key == 'id') continue;
     let radioGroup = document.querySelector(`[data-attribute-name="${key}"]`);
-    radioGroup.dataset.polarity = assessment_data[key];
-    let radioOption = radioGroup.querySelector(`[data-polarity="${assessment_data[key]}"]`);
-    toggleRadioButtons(radioOption,true);
+    let stateIndicator = radioGroup.querySelector('.state-container .state-indicator');
+    let attribDescriptionContainer = radioGroup.querySelector('.attrib-description-container');
+    if (assessment_data[key] != null){
+      console.log(`key => ${key} value => ${assessment_data[key]}`);
+      //get the radio group with data-attribute-name=key
+      radioGroup.dataset.polarity = assessment_data[key];
+      let radioOption = radioGroup.querySelector(`[data-polarity="${assessment_data[key]}"]`);
+      toggleRadioButtons(radioOption,true);
+      //set the state-container state to polarity
+      stateIndicator.textContent = radioOption.textContent;
+      stateIndicator.dataset.polarity = assessment_data[key];
+      let description = attribDescriptionContainer.querySelector(`[data-polarity="${assessment_data[key]}"]`);
+      //if element has same polarity as assesment_data[key]
+      //remove class d-none
+      if (description.dataset.polarity == assessment_data[key]){
+        // element.classList.remove('d-none');
+        description.style.display='block';
+      }
+
+    }else{
+      //set the state-container state to untested
+      stateIndicator.textContent = 'untested';
+    }
   }
 }
 

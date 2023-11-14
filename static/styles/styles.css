@@ -49,6 +49,10 @@ h6 {
   font-family: PoppinsSemiBold;
 }
 
+.state-indicator {
+  font-family: PoppinsSemiBold;
+}
+
 /* responsive media queries for table for all standard screen 
         sizes */
 @media (max-width: 576px) {
@@ -71,25 +75,25 @@ h6 {
 }
 @media (min-width: 992px) {
   .main-container {
-    max-width: 70%;
+    max-width: 80%;
     margin: auto;
   }
 }
 @media (min-width: 1200px) {
   .main-container {
-    max-width: 63%;
+    max-width: 70%;
     margin: auto;
   }
 }
 @media (min-width: 1400px) {
   .main-container {
-    max-width: 53%;
+    max-width: 65%;
     margin: auto;
   }
 }
 @media (min-width: 1600px) {
   .main-container {
-    max-width: 45%;
+    max-width: 54%;
     margin: auto;
   }
 }/*# sourceMappingURL=styles.css.map */
