@@ -4,10 +4,8 @@ from datetime import datetime
 from models import WeightClass
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import time
-import re
-import json
-import os
+import time,re,json,os
+import unicodedata
 
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
@@ -315,6 +313,56 @@ def scrapeFighters():
         saveToFile(fighters)
 
 
+def getFighterData(path):
+    url = domain + path
+    browser = webdriver.Chrome(options=options)
+    # browser.implicitly_wait(10)
+    browser.get(url)
+    
+    source = browser.page_source
+    browser.quit()
+    soup = BeautifulSoup(source, 'html.parser')
+    """
+    
+        fighter details structure
+        ul 
+            li <-- full name
+            li <-- record
+            li <-- nickname
+            li
+            li <-- age | date of birth
+            li
+            li <-- weightclass
+            li
+            li <-- height | reach
+            li
+            li <-- born location
+            li 
+            li 
+            li 
+            li
+            li
+
+    """
+    ul = soup.select('.details ul.clearfix')[0]
+    # print(ul)
+    listItems = ul.findAll('li')
+    nameSpaceIndex = listItems[0].span.text.find(' ')
+    first_name = normalizeString(listItems[0].span.text[:nameSpaceIndex].strip())
+    last_name = normalizeString(listItems[0].span.text[nameSpaceIndex + 1:].strip())
+    fighter_data = {
+        'first_name': first_name,
+        'last_name': last_name,
+        'record': listItems[1].span.text.split(' ')[0].strip(),
+        'nick_name': normalizeString(listItems[2].span.text.strip()),
+        'date_of_birth': datetime.strptime(listItems[4].findAll('span')[1].text.strip(),"%Y.%m.%d").date(),
+        'weight_class': listItems[6].span.text.strip().upper().replace(" ","_"),
+        'height': listItems[8].findAll('span')[0].text.strip(),
+        'reach': listItems[8].findAll('span')[1].text.strip(),
+    }
+
+    return fighter_data
 
 
-
+def normalizeString(string):
+    return unicodedata.normalize('NFD',string).encode('ascii', 'ignore').decode("ascii").lower()

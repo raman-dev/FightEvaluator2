@@ -26,17 +26,25 @@ $neutralBg: #ffc107;
       grid-column: span 3;
     }
 
-    .fighter-notes{
-      //spans 3 frs 
+    .fighter-notes {
+      //spans 3 frs
       grid-column: span 2;
     }
   }
 }
 
-
 /*greater than */
 @media (max-width: 1200px) {
-  .fighter-grid-container{
+  .fighter-info-container {
+    .info {
+      grid-column: span 3 !important;
+    }
+    .edit-button-container {
+      grid-column: span 3 !important;
+    }
+  }
+
+  .fighter-grid-container {
     grid-template-columns: 1fr 1fr 1fr 1fr !important;
     .fighter-attrib-list {
       grid-column: span 2 !important;
@@ -45,12 +53,10 @@ $neutralBg: #ffc107;
       grid-column: span 2 !important;
     }
   }
-  
 }
 
-
-@media(max-width: 926px){
-  .fighter-grid-container{
+@media (max-width: 926px) {
+  .fighter-grid-container {
     grid-template-columns: 1fr 1fr !important;
     .fighter-attrib-list {
       grid-column: span 2 !important;
@@ -61,7 +67,6 @@ $neutralBg: #ffc107;
   }
 }
 
-
 .list-group-item {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
@@ -71,21 +76,23 @@ $neutralBg: #ffc107;
 
 .fighter-info-container {
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   margin: 1rem;
 
   .info {
-    display: grid;
-    place-items: center;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
+    grid-column: span 2;
 
-.edit-button-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-  // border: 1px solid white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .edit-button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    width: 100%;
+    // border: 1px solid white;
+  }
 }
 
 .mbutton {
@@ -108,7 +115,7 @@ $neutralBg: #ffc107;
 div[data-changed="true"] {
   outline-width: 2px;
 }
-.dx-none{
+.dx-none {
   display: none;
   border: none;
 }
@@ -127,8 +134,8 @@ div[data-changed="true"] {
     outline: 2px solid lavender;
   }
 
-  .attrib-description-container{
-    p{
+  .attrib-description-container {
+    p {
       display: none;
       border: 2px solid lavender;
       border-radius: 0.4rem;
@@ -136,16 +143,15 @@ div[data-changed="true"] {
       margin: 0.3rem;
     }
 
-    p[data-polarity="positive"]{
+    p[data-polarity="positive"] {
       border-color: $positiveBg !important;
     }
-    p[data-polarity="negative"]{
+    p[data-polarity="negative"] {
       border-color: $negativeBg !important;
     }
-    p[data-polarity="neutral"]{
+    p[data-polarity="neutral"] {
       border-color: $neutralBg !important;
     }
-
   }
 }
 
@@ -166,7 +172,7 @@ div[data-changed="true"] {
     height: 2.7rem;
     width: 2.7rem;
   }
-  .state-indicator{
+  .state-indicator {
     background-color: slategray;
     border: 2px solid lavender;
     border-radius: 0.4rem;
@@ -176,13 +182,13 @@ div[data-changed="true"] {
   div[data-polarity="positive"] {
     background-color: $positiveBg;
   }
-  div[data-polarity="negative"]{
+  div[data-polarity="negative"] {
     background-color: $negativeBg;
   }
-  div[data-polarity="neutral"]{
+  div[data-polarity="neutral"] {
     background-color: $neutralBg;
   }
-  div[data-polarity="null"]{
+  div[data-polarity="null"] {
     color: /*blackish grey*/ #212529;
   }
 }
@@ -210,7 +216,7 @@ div[data-changed="true"] {
 }
 
 .fighter-notes {
-   padding: 1rem;
+  padding: 1rem;
 
   .note-editor-container {
     row-gap: 0.5rem;
@@ -271,36 +277,35 @@ div[data-changed="true"] {
   }
 }
 
-div[data-edit-mode-enabled="true"]{
-  .state-container{
-    .state-indicator{
+div[data-edit-mode-enabled="true"] {
+  .state-container {
+    .state-indicator {
       background-color: slategray;
       border: 2px solid lavender;
       border-radius: 0.4rem;
       color: ghostwhite;
     }
-  
+
     div[data-polarity="positive"] {
       background-color: transparent;
       border-color: $positiveBg;
       color: $positiveBg;
     }
-    div[data-polarity="negative"]{
+    div[data-polarity="negative"] {
       background-color: transparent;
       border-color: $negativeBg;
       color: $negativeBg;
     }
-    div[data-polarity="neutral"]{
+    div[data-polarity="neutral"] {
       background-color: transparent;
       border-color: $neutralBg;
       color: $neutralBg;
     }
 
-    div[data-polarity~="null"]{
+    div[data-polarity~="null"] {
       color: #212529;
-    }  
+    }
   }
-
 }
 
 .grappling-container {
@@ -322,5 +327,3 @@ div[data-edit-mode-enabled="true"]{
     background-color: #212529;
   }
 }
-
-

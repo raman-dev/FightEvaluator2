@@ -14,7 +14,7 @@ sqlite_file_name ="database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url,echo=True, connect_args=connect_args)
+engine = create_engine(sqlite_url,connect_args=connect_args)
 
 app = FastAPI()
 
@@ -50,14 +50,30 @@ def on_start():
 
 def getFighterIdByName(session,name):
     space_index = name.index(' ')
-    first_name = unicodedata.normalize('NFD',name[:space_index]).encode('ascii', 'ignore').decode("ascii")
-    last_name = unicodedata.normalize('NFD',name[space_index + 1:]).encode('ascii', 'ignore').decode("ascii")
+    first_name = scraper.normalizeString(name[:space_index])#unicodedata.normalize('NFD',name[:space_index]).encode('ascii', 'ignore').decode("ascii").lower()
+    last_name = scraper.normalizeString(name[space_index + 1:])#unicodedata.normalize('NFD',name[space_index + 1:]).encode('ascii', 'ignore').decode("ascii").lower()
     #find fighter id by first_name last_name
-    print(first_name,last_name)
     fighter = session.query(Fighter).filter(Fighter.first_name == first_name,Fighter.last_name == last_name).first()        
     if fighter:
+        print(first_name,last_name,fighter.id)
         return fighter.id
+    print(first_name,last_name,-1)
     return -1
+
+def createFighter(link,session):
+    #need to query site for fighter data and create fighter object
+    fighter_data = scraper.getFighterData(link)
+    fighterAssessment = Assessment()
+    session.add(fighterAssessment)
+    session.commit()
+    fighter_data['weight_class'] = WeightClass[fighter_data['weight_class']]
+    fighterObj = Fighter(**fighter_data)
+    # print(fighterObj)
+    fighterObj.assessment_id = fighterAssessment.id
+    session.add(fighterObj)
+    session.commit()
+
+    return fighterObj.id
 
 @app.get("/")
 async def index(request: Request):
@@ -76,16 +92,22 @@ async def index(request: Request):
         for matchup in context['matchups']:
             fighter_a_id = getFighterIdByName(session,matchup.fighter_a)
             fighter_b_id = getFighterIdByName(session,matchup.fighter_b)
-            if fighter_a_id != -1:
+
+            if fighter_a_id == -1:
+                matchup.fighter_a_id = createFighter(matchup.fighter_a_link,session)
+            elif fighter_a_id != -1:
                 matchup.fighter_a_id = fighter_a_id
-            if fighter_b_id != -1:
+            
+            if fighter_b_id == -1:
+                matchup.fighter_b_id = createFighter(matchup.fighter_b_link,session)
+            elif fighter_b_id != -1:
                 matchup.fighter_b_id = fighter_b_id
+        
         return templates.TemplateResponse("index.html",context)#context
 
 #assessmnent require fighter id since they cannot exist without a fighter
 @app.get("/assessment/{fighter_id}")
-async def index(request: Request,fighter_id: int):
-    # return FileResponse("static/assessment.html")
+async def assessment(request: Request,fighter_id: int):
     context = {"request":request}
     # context['fighter'] = get_fighter(fighter_id)
     with Session(engine) as session:
@@ -250,5 +272,6 @@ async def create_fighters():
                 # return {'fighter' : fighterObj}
 
     return {'status':'success'}
+
 
 
