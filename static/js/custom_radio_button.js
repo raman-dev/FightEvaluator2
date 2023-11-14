@@ -90,11 +90,20 @@ function mRadioOptionChangeListener(optionElement,index) {
   //if it does not equal the current option change
   if (prevOptionElement != null) {
     toggleRadioButtons(prevOptionElement,false);
+    //hide description
+    let description = radioGroup
+                    .querySelector('.attrib-description-container')
+                    .querySelector(`[data-polarity="${prevOptionElement.dataset.polarity}"]`);
+    description.style.display='none';
   }
   radioGroup.dataset.polarity = newOptionValue;
   //set the data-changed attribute to true
   radioGroup.dataset.changed = true;
   toggleRadioButtons(newOptionElement,true);
+  let description = radioGroup
+                    .querySelector('.attrib-description-container')
+                    .querySelector(`[data-polarity="${newOptionValue}"]`);
+  description.style.display='block';
 }
 
 function initRadioButtionListeners() {
@@ -124,17 +133,22 @@ function clearRadioButtons(){
     //
     let radioGroup = element;
     let attribute_name = radioGroup.getAttribute('data-attribute-name');
+    let attribDescriptionContainer = radioGroup.querySelector('.attrib-description-container');
     //restore original value
     radioGroup.dataset.polarity = assessment_data[attribute_name];
     radioGroup.dataset.changed = false;
     // console.log(`assessment_data[${attribute_name}] => `,assessment_data[attribute_name]);
     //remove the selected attribute
     let candidate = radioGroup.querySelector(`[data-mradio-selected]`);
+    let candidateDescription = attribDescriptionContainer.querySelector(`[data-polarity="${candidate.dataset.polarity}"]`);
+    candidateDescription.style.display='none';
     toggleRadioButtons(candidate,false);
     //restore the original selected option
     if (assessment_data[attribute_name] != null){
       //set the selected attribute
       let original = radioGroup.querySelector(`[data-polarity="${assessment_data[attribute_name]}"]`);
+      let originalDescription = attribDescriptionContainer.querySelector(`[data-polarity="${assessment_data[attribute_name]}"]`);
+      originalDescription.style.display='block';
       toggleRadioButtons(original,true);
     }
   });
@@ -155,7 +169,7 @@ function onAssessmentChanged(){
       console.log(`key => ${key} value => ${assessment_data[key]}`);
       //get the radio group with data-attribute-name=key
       radioGroup.dataset.polarity = assessment_data[key];
-      let radioOption = radioGroup.querySelector(`[data-polarity="${assessment_data[key]}"]`);
+      let radioOption = radioGroup.querySelector(`.group-options-container [data-polarity="${assessment_data[key]}"]`);
       toggleRadioButtons(radioOption,true);
       //set the state-container state to polarity
       stateIndicator.textContent = radioOption.textContent;

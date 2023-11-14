@@ -152,7 +152,7 @@
                 doesn't stand upright/doesn't get hit unnecessarily
               </p>
               <p data-polarity="neutral">
-                doesn't stand upright/doesn't get hit unnecessarily
+                sometimes gets hit/keeps head upright
               </p>
               <p data-polarity="negative">
                 gets hit alot/keeps head upright
@@ -587,9 +587,7 @@
       fighterAge.textContent = dobToAge('{{ fighter.date_of_birth }}');
 
       async function updateAssessment() {
-        if (!editModeEnabled) {
-          return;
-        }
+        if (!editModeEnabled) return;
         // console.log(JSON.stringify(assessment_data));
         //read in all attributes from radio options
         const newAssessment = structuredClone(assessment_data);
@@ -604,7 +602,7 @@
             newAssessment[key] = radioGroup.getAttribute("data-polarity");
           }
         }
-        console.log(JSON.stringify(newAssessment));
+        // console.log(JSON.stringify(newAssessment));
         let response = await fetch("/assessment/", {
           method: "PATCH",
           headers: {
@@ -613,7 +611,7 @@
           },
           body: JSON.stringify(newAssessment),
         });
-        console.log(response);
+        // console.log(response);
         if (response.status == 200) {
           let data = await response.json();
           for (let key in data) {
