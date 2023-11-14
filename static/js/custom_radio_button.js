@@ -146,7 +146,7 @@ function clearRadioButtons(){
     //restore the original selected option
     if (assessment_data[attribute_name] != null){
       //set the selected attribute
-      let original = radioGroup.querySelector(`[data-polarity="${assessment_data[attribute_name]}"]`);
+      let original = radioGroup.querySelector(`.group-options-container [data-polarity="${assessment_data[attribute_name]}"]`);
       let originalDescription = attribDescriptionContainer.querySelector(`[data-polarity="${assessment_data[attribute_name]}"]`);
       originalDescription.style.display='block';
       toggleRadioButtons(original,true);
@@ -181,7 +181,6 @@ function onAssessmentChanged(){
         // element.classList.remove('d-none');
         description.style.display='block';
       }
-
     }else{
       //set the state-container state to untested
       stateIndicator.textContent = 'untested';

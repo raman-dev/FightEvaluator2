@@ -10,9 +10,6 @@ body {
 }
 
 /*data-polarity color variables*/
-.xmain-container {
-  border: 1px solid white;
-}
 .xmain-container .fighter-grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
