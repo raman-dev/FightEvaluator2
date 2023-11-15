@@ -1,0 +1,70 @@
+/*horizontally centered event-title*/
+.event-title {
+    text-align: center;
+    margin: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*matchups are horizontally centered and vertically stacked*/
+.matchup-container {
+    width: fit-content;
+}
+
+.matchup:hover{
+    cursor: pointer;
+    .weightclass{
+        h6{
+            text-decoration: underline;
+        }
+    }
+}
+
+.matchup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin: auto;
+    /* nth fight on the card*/
+    h1 {
+        text-align: center;
+        opacity: 0.5;
+        width: 2.2ch;
+    }
+
+     p {
+        margin: 0px;
+    }
+    
+    h4{
+        width: 18ch;
+        text-align: center;
+        a {
+            text-decoration: none;
+            margin: 0px;
+            color: #dee2e6;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+    }
+
+    .weightclass{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+     h6{
+        text-align: center;
+    }
+}
+
+
+
+/* fighter-img has rounded corners using crop */
+.fighter-img {
+    border-radius: 10%;
+}

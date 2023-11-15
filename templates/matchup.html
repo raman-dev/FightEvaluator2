@@ -43,7 +43,9 @@
                 <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
                 <div class="fighter-bio">
                     <div class="name">
-                        <h5>{{ fighter_a.data.first_name }} {{ fighter_a.data.last_name }}</h5>
+                        <h5>
+                          <a href="/assessment/{{ fighter_a.data.id }}">{{ fighter_a.data.first_name }} {{ fighter_a.data.last_name }}</a>
+                        </h5>
                     </div>
                     <div class="age">
                         <div class="age-label">age:&nbsp;</div>
@@ -69,8 +71,10 @@
             <div class="fighter-info m-1 border rounded-2">
               <div class="fighter-bio">
                 <div class="name">
-                    <h5>{{ fighter_b.data.first_name }} {{ fighter_b.data.last_name }}</h5>
-                </div>
+                  <h5>
+                    <a href="/assessment/{{ fighter_b.data.id }}">{{ fighter_b.data.first_name }} {{ fighter_b.data.last_name }}</a>
+                  </h5>
+              </div>
                 <div class="age">
                     <div class="age-label">age:&nbsp;</div>
                     <h5 class="age">{{ fighter_b.data.date_of_birth|dobToAge }}</h5>
@@ -129,33 +133,43 @@
     <div class="fighter-notes-container">
       <!--notes on fighter a and fighter b in two columns-->
       <div class="notes-section">
-        <h3>Fighter A</h3>
+        <h3 class="fighter-name">{{ fighter_a.data.first_name }} {{ fighter_a.data.last_name }}</h3>
         <!-- text container of notes  -->
         <div class="notes-container">
-          <div class="notes">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatum, quibusdam, quia, quod voluptate voluptatem
-              exercitationem quas voluptatibus quos doloribus quae. Quisquam
-              voluptatum, quibusdam, quia, quod voluptate voluptatem
-              exercitationem quas voluptatibus quos doloribus quae.
-            </p>
-          </div>
+          <ul class="notes">
+            <li>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+                voluptatum, quibusdam, quia, quod voluptate voluptatem
+                exercitationem quas voluptatibus quos doloribus quae. Quisquam
+                voluptatum, quibusdam, quia, quod voluptate voluptatem
+                exercitationem quas voluptatibus quos doloribus quae.
+              </p>
+            </li>
+            {% for note in fighter_a.notes %}
+              <li>{{ note.data }}</li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
       <div class="notes-section">
-        <h3>Fighter B</h3>
+        <h3 class="fighter-name">{{ fighter_b.data.first_name }} {{ fighter_b.data.last_name }}</h3>
         <!-- text container of notes  -->
         <div class="notes-container">
-          <div class="notes">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatum, quibusdam, quia, quod voluptate voluptatem
-              exercitationem quas voluptatibus quos doloribus quae. Quisquam
-              voluptatum, quibusdam, quia, quod voluptate voluptatem
-              exercitationem quas voluptatibus quos doloribus quae.
-            </p>
-          </div>
+          <ul class="notes">
+            <li>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+                voluptatum, quibusdam, quia, quod voluptate voluptatem
+                exercitationem quas voluptatibus quos doloribus quae. Quisquam
+                voluptatum, quibusdam, quia, quod voluptate voluptatem
+                exercitationem quas voluptatibus quos doloribus quae.
+              </p>
+            </li>
+            {% for note in fighter_b.notes %}
+              <li>{{ note.data }}</li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>

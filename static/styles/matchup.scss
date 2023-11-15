@@ -55,6 +55,9 @@ h5, h6{
 .fighter-notes-container{
     display: grid;
     grid-template-columns: 1fr 1fr;
+    .fighter-name{
+        text-transform: capitalize;
+    }
 }
 
 

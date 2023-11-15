@@ -49,6 +49,9 @@ h5, h6 {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+.fighter-notes-container .fighter-name {
+  text-transform: capitalize;
+}
 
 .attrib-row {
   display: grid;

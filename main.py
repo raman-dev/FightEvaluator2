@@ -204,11 +204,13 @@ async def index(request: Request,matchup_id: int):
         context['matchup'] = matchup
         context['fighter_a'] = {
             'data':fighter_a,
-            'assessment':session.get(Assessment,fighter_a.assessment_id)
+            'assessment':session.get(Assessment,fighter_a.assessment_id),
+            'notes' : session.query(Note).filter(Note.assessment_id == fighter_a.assessment_id).order_by(Note.timestamp.desc()).all()
         }
         context['fighter_b'] = {
             'data':fighter_b,
-            'assessment':session.get(Assessment,fighter_b.assessment_id)
+            'assessment':session.get(Assessment,fighter_b.assessment_id),
+            'notes' : session.query(Note).filter(Note.assessment_id == fighter_b.assessment_id).order_by(Note.timestamp.desc()).all()
         }
     return templates.TemplateResponse("matchup.html",context)
 
