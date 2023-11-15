@@ -1,0 +1,58 @@
+/*horizontally centered event-title*/
+.event-title {
+  text-align: center;
+  margin: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h5, h6 {
+  margin: 0px;
+}
+
+.fighter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+.fighter-container .fighter-info {
+  display: flex;
+  flex-direction: column;
+}
+.fighter-container .fighter-info img {
+  margin: auto;
+}
+.fighter-container .fighter-info .fighter-bio > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.8rem;
+}
+.fighter-container .fighter-info .fighter-bio .name {
+  text-transform: capitalize;
+}
+
+.matchup-container {
+  display: flex;
+  flex-direction: column;
+}
+.matchup-container .matchup-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.fighter-notes-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (min-width: 1200px) {
+  .xmain-container {
+    width: 60%;
+  }
+}/*# sourceMappingURL=matchup.css.map */

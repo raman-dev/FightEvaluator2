@@ -1,0 +1,219 @@
+<html>
+
+<head>
+  <title>Hello World!</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ url_for('static', path='/styles/styles.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='/styles/matchup.css') }}" />
+</head>
+
+<body data-bs-theme="dark">
+  <div class="border container-fluid xmain-container">
+    
+    <!--
+                
+                |    fighter a  |     fighter b    |
+                                            <div class="">attrib 5</div>
+     a.value 0   | b.value 0
+                attrib 1     a.value 1   | b.value 1
+                attrib 2     a.value 2   | b.value 2
+                   .
+                   .
+                   .
+                attrib n     a.value n  | b.value n
+            -->
+    
+    <div class="matchup-container d-flex border justify-content-center">
+        <!--contains information about each fighter including fighter img-->
+        <div class="matchup-info">
+            <div class="matchup-weightclass">
+                <h4>
+                    {{ matchup.weight_class|weightClassToStr }}
+                </h4>
+            </div>
+            <div class="matchup-rounds">
+                <h4>{{ matchup.rounds }}</h4>
+            </div>
+        </div>
+        <div class="fighter-container">
+            <div class="fighter-info m-1 border rounded-2">
+                <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
+                <div class="fighter-bio">
+                    <div class="name">
+                        <h5>{{ fighter_a.first_name }} {{ fighter_a.last_name }}</h5>
+                    </div>
+                    <div class="age">
+                        <div class="age-label">age:&nbsp;</div>
+                        <h5 class="age">{{ fighter_a.date_of_birth|dobToAge }}</h5>
+                    </div>
+                    <div class="record">
+                        <div class="record-label">record:&nbsp;</div>
+                        <h5 class="record">{{ fighter_a.record }}</h5>
+                    </div>
+                    <div class="height">
+                        <div class="height-label">height:&nbsp;</div>
+                        <h5>{{fighter_a.height}}</h5>
+                    </div>
+                    <div class="reach">
+                        <div class="reach-label">reach:&nbsp;</div>
+                        <h5>
+                            {{fighter_a.reach}}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="fighter-info m-1 border rounded-2">
+                <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
+                <div class="fighter-bio">
+                    <div class="name">
+                        <h5>{{ fighter_b.first_name }} {{ fighter_b.last_name }}</h5>
+                    </div>
+                    <div class="age">
+                        <div class="age-label">age:&nbsp;</div>
+                        <h5 class="age">{{ fighter_b.date_of_birth|dobToAge }}</h5>
+                    </div>
+                    <div class="record">
+                        <div class="record-label">record:&nbsp;</div>
+                        <h5 class="record">{{ fighter_b.record }}</h5>
+                    </div>
+                    <div class="height">
+                        <div class="height-label">height:&nbsp;</div>
+                        <h5>{{fighter_b.height}}</h5>
+                    </div>
+                    <div class="reach">
+                        <div class="reach-label">reach:&nbsp;</div>
+                        <h5>
+                            {{fighter_b.reach}}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="fighter-notes-container">
+      <!--notes on fighter a and fighter b in two columns-->
+      <div class="notes-section">
+        <h3>Fighter A</h3>
+        <!-- text container of notes  -->
+        <div class="notes-container">
+          <div class="notes">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+              voluptatum, quibusdam, quia, quod voluptate voluptatem
+              exercitationem quas voluptatibus quos doloribus quae. Quisquam
+              voluptatum, quibusdam, quia, quod voluptate voluptatem
+              exercitationem quas voluptatibus quos doloribus quae.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="notes-section">
+        <h3>Fighter B</h3>
+        <!-- text container of notes  -->
+        <div class="notes-container">
+          <div class="notes">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+              voluptatum, quibusdam, quia, quod voluptate voluptatem
+              exercitationem quas voluptatibus quos doloribus quae. Quisquam
+              voluptatum, quibusdam, quia, quod voluptate voluptatem
+              exercitationem quas voluptatibus quos doloribus quae.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+    crossorigin="anonymous"></script>
+  <script>
+    /*
+          
+              Promise takes a normal function as an argument
+          */
+    //    let normalFunction = () => {
+    //      setTimeout(()=>{
+    //         console.log('normal function');
+    //      },2000);
+    //    };
+    //    //promises are executed immediately after instantiation
+    //    let promise = new Promise((successHandler,errorHandler) => {
+    //         console.log('promise ran!');
+    //         normalFunction();
+    //         successHandler(1);
+    //         errorHandler(2);
+    //    });
+    //    //not necessary to all then at all
+    //    promise.then((val)=>{
+    //      console.log(`called Resolve! => ${val}`);
+    //    },(val)=>{
+    //      console.log(`called Reject! => ${val}`);
+    //    });
+    // async function apiCall() {
+    //     const response = await fetch("https://www.google.ca");
+    //     // const json = await response.json();
+    //     console.log(response.body);
+    // }
+    // apiCall();
+
+    // Set the progress bar fill element
+    // Set the progress bar animation
+    //For every progress bar read the data-attribValue attribute and set the width of the progress bar fill element to that value
+    const tableRows = document.querySelectorAll("tbody tr");
+    tableRows.forEach((row, index) => {
+      const attributeLabel = row.querySelector("th div");
+      const [progressBarA, progressBarB] = row.querySelectorAll(".progress-bar");
+      const [progressFillA, progressFillB] = row.querySelectorAll(".bar");
+      const [progressTextA, progressTextB] = row.querySelectorAll(".value");
+
+      const attribValueA = parseInt(progressBarA.dataset.attribValue);
+      const attribValueB = parseInt(progressBarB.dataset.attribValue);
+
+      let props = {
+        barWidthA: 0,
+        barWidthB: 0,
+
+        barValueA: 0,
+        barValueB: 0,
+        opacity: 0,
+      };
+
+      anime({
+        targets: props,
+        barWidthA: `${attribValueA}%}`,
+        barWidthB: `${attribValueB}%}`,
+
+        barValueA: `${attribValueA}`,
+        barValueB: `${attribValueB}`,
+        opacity: 1,
+
+        easing: "easeOutQuad",
+        delay: index * 100,
+        update: (anim) => {
+          //set progressFill width to barWidth
+          progressFillA.style.width = `${parseFloat(props.barWidthA)}%`;
+          progressFillB.style.width = `${parseFloat(props.barWidthB)}%`;
+
+          progressTextA.textContent = `${parseInt(props.barValueA)}`;
+          progressTextB.textContent = `${parseInt(props.barValueB)}`;
+
+          attributeLabel.style.opacity = props.opacity;
+        },
+        duration: 700,
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -10,8 +10,8 @@
       integrity="sha512-r0fo0kMK8myZfuKWk9b6yY8azUnHCPhgNz/uWDl2rtMdWJlk7gmd9socvGZdZzICwAkMgfTkVrplDahQ07Gi0A=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/styles.css" />
-    <link rel="stylesheet" href="/assessment_styles.css" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles/styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles/assessment_styles.css') }}" />
   </head>
   <body data-bs-theme="dark">
     <div class="main-container xmain-container">
@@ -38,7 +38,7 @@
                 <div class="info-wrapper">
                   <label>class:&nbsp;</label>
                   <h6 class="fighter-weight">
-                    {{ fighter.weight_class|weightclassStr }}
+                    {{ fighter.weight_class|weightClassToStr }}
                   </h6>
                 </div>
                 <div class="info-wrapper">
@@ -476,7 +476,7 @@
           <div class="notes-list align-self-center mt-4">
             <ul class="dx-none">
               {% for note in notes %}
-              <li data-note-id="{{ note.id }}">
+              <li class="note" data-note-id="{{ note.id }}">
                 <p>{{ note.data }}</p>
                 <!-- <button
                   class="btn btn-danger note-delete-btn"

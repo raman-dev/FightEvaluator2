@@ -21,7 +21,7 @@ app = FastAPI()
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
-def weightclassStr(weightclass: WeightClass):
+def weightClassToStr(weightclass: WeightClass):
     return weightclass.value.__str__()
 
 def none2Null(value):
@@ -35,14 +35,20 @@ def fightAttribQualifier(value):
         return "null"
     return '`'+value.value.__str__() +'`'
 
-# def stripDomain(url):
-#     return url.replace("https://www.tapology.com","")
+def dobToAge(dob: datetime.date):
+    if dob == None:
+        return "N\A"
+    today = date.today()
+    if today == None:
+        return "FUCK YOU"
+    return (today - dob).days // 365
 
 app.mount("/static", StaticFiles(directory=Path("static")), name="static")
 templates = Jinja2Templates(directory="templates")
-templates.env.filters['weightclassStr'] = weightclassStr
+templates.env.filters['weightClassToStr'] = weightClassToStr
 templates.env.filters['none2Null'] = none2Null
 templates.env.filters['fightAttribQualifier'] = fightAttribQualifier
+templates.env.filters['dobToAge'] = dobToAge
 
 @app.on_event("startup")
 def on_start():
@@ -90,19 +96,22 @@ async def index(request: Request):
         context['event'] = eventData['event']
         context['matchups'] = eventData['matchups']
         for matchup in context['matchups']:
-            fighter_a_id = getFighterIdByName(session,matchup.fighter_a)
-            fighter_b_id = getFighterIdByName(session,matchup.fighter_b)
+            if matchup.fighter_a_id == None and matchup.fighter_b_id == None:
+                fighter_a_id = getFighterIdByName(session,matchup.fighter_a)
+                fighter_b_id = getFighterIdByName(session,matchup.fighter_b)
 
-            if fighter_a_id == -1:
-                matchup.fighter_a_id = createFighter(matchup.fighter_a_link,session)
-            elif fighter_a_id != -1:
-                matchup.fighter_a_id = fighter_a_id
+                if fighter_a_id == -1:
+                    matchup.fighter_a_id = createFighter(matchup.fighter_a_link,session)
+                elif fighter_a_id != -1:
+                    matchup.fighter_a_id = fighter_a_id
+                
+                if fighter_b_id == -1:
+                    matchup.fighter_b_id = createFighter(matchup.fighter_b_link,session)
+                elif fighter_b_id != -1:
+                    matchup.fighter_b_id = fighter_b_id
+                session.add(matchup)
+                session.commit()
             
-            if fighter_b_id == -1:
-                matchup.fighter_b_id = createFighter(matchup.fighter_b_link,session)
-            elif fighter_b_id != -1:
-                matchup.fighter_b_id = fighter_b_id
-        
         return templates.TemplateResponse("index.html",context)#context
 
 #assessmnent require fighter id since they cannot exist without a fighter
@@ -152,11 +161,19 @@ async def update_assessment(assessmentUpdate: AssessmentUpdate):
         session.refresh(db_assessment)
         return db_assessment
 
-@app.get("/matchup/")
-async def index(fighter_a: int | None = None,fighter_b: int | None = None):
-    if fighter_a:
-        print('matchup for fighters -> ',fighter_a,fighter_b)  
-    return FileResponse("static/matchup.html")
+@app.get("/matchup/{matchup_id}")
+async def index(request: Request,matchup_id: int):
+    with Session(engine) as session:
+        matchup = session.get(MatchUp,matchup_id)
+        if not matchup:
+            raise HTTPException(status_code=404, detail="Matchup not found")
+        fighter_a = session.get(Fighter,matchup.fighter_a_id)
+        fighter_b = session.get(Fighter,matchup.fighter_b_id)
+        context = {'request': request}
+        context['matchup'] = matchup
+        context['fighter_a'] = fighter_a
+        context['fighter_b'] = fighter_b
+    return templates.TemplateResponse("matchup.html",context)
 
 # @app.get("/nextevent")
 def next_event(session):
@@ -238,9 +255,9 @@ def get_fighter(fighter_id:int):
         fighter = session.get(Fighter,fighter_id)
         return fighter
 
-@app.get("/assessment_styles.css")
-async def assessment_styles():
-    return FileResponse("static/styles/assessment_styles.css")
+# @app.get("/assessment_styles.css")
+# async def assessment_styles():
+#     return FileResponse("static/styles/assessment_styles.css")
 
 @app.get("/styles.css")
 async def styles():

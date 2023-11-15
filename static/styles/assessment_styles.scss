@@ -194,6 +194,9 @@ div[data-changed="true"] {
 }
 
 .fighter-bio {
+   h4{
+    text-transform: capitalize;
+   }
   // border: 1px solid white;
   /* a 3x3 grid layout */
   .fighter-info-grid {
@@ -247,31 +250,30 @@ div[data-changed="true"] {
   }
 
   .notes-list {
-    background-color: #212529;
     width: 100%;
 
     ul {
-      border: 1px solid #343a40 !important;
+      // border: 1px solid #343a40 !important
       border-radius: 0.5rem;
       overflow-y: scroll;
       overflow-x: hidden;
       margin: 0px;
       width: 100%;
-      li {
+      padding: 0px;
+      .note {
+        background-color: #212529;
+        border: 2px solid lavender;
+        border-radius: 0.6rem;
         list-style: None;
         display: flex;
+        padding: 1rem;
+        margin: 0.6rem;
         p {
           word-break: break-all;
           text-wrap: wrap;
           max-width: 32ch;
           margin: 0px;
         }
-      }
-      /*notes list style dot is a dash instead*/
-      li::before {
-        content: "-";
-        margin-right: 0.4rem;
-        margin-left: -1rem;
       }
     }
   }
