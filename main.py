@@ -171,8 +171,14 @@ async def index(request: Request,matchup_id: int):
         fighter_b = session.get(Fighter,matchup.fighter_b_id)
         context = {'request': request}
         context['matchup'] = matchup
-        context['fighter_a'] = fighter_a
-        context['fighter_b'] = fighter_b
+        context['fighter_a'] = {
+            'data':fighter_a,
+            'assessment':session.get(Assessment,fighter_a.assessment_id)
+        }
+        context['fighter_b'] = {
+            'data':fighter_b,
+            'assessment':session.get(Assessment,fighter_b.assessment_id)
+        }
     return templates.TemplateResponse("matchup.html",context)
 
 # @app.get("/nextevent")

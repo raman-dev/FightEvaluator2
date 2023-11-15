@@ -43,24 +43,24 @@
                 <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
                 <div class="fighter-bio">
                     <div class="name">
-                        <h5>{{ fighter_a.first_name }} {{ fighter_a.last_name }}</h5>
+                        <h5>{{ fighter_a.data.first_name }} {{ fighter_a.data.last_name }}</h5>
                     </div>
                     <div class="age">
                         <div class="age-label">age:&nbsp;</div>
-                        <h5 class="age">{{ fighter_a.date_of_birth|dobToAge }}</h5>
+                        <h5 class="age">{{ fighter_a.data.date_of_birth|dobToAge }}</h5>
                     </div>
                     <div class="record">
                         <div class="record-label">record:&nbsp;</div>
-                        <h5 class="record">{{ fighter_a.record }}</h5>
+                        <h5 class="record">{{ fighter_a.data.record }}</h5>
                     </div>
                     <div class="height">
                         <div class="height-label">height:&nbsp;</div>
-                        <h5>{{fighter_a.height}}</h5>
+                        <h5>{{fighter_a.data.height}}</h5>
                     </div>
                     <div class="reach">
                         <div class="reach-label">reach:&nbsp;</div>
                         <h5>
-                            {{fighter_a.reach}}
+                            {{fighter_a.data.reach}}
                         </h5>
                     </div>
                 </div>
@@ -70,24 +70,24 @@
                 <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
                 <div class="fighter-bio">
                     <div class="name">
-                        <h5>{{ fighter_b.first_name }} {{ fighter_b.last_name }}</h5>
+                        <h5>{{ fighter_b.data.first_name }} {{ fighter_b.data.last_name }}</h5>
                     </div>
                     <div class="age">
                         <div class="age-label">age:&nbsp;</div>
-                        <h5 class="age">{{ fighter_b.date_of_birth|dobToAge }}</h5>
+                        <h5 class="age">{{ fighter_b.data.date_of_birth|dobToAge }}</h5>
                     </div>
                     <div class="record">
                         <div class="record-label">record:&nbsp;</div>
-                        <h5 class="record">{{ fighter_b.record }}</h5>
+                        <h5 class="record">{{ fighter_b.data.record }}</h5>
                     </div>
                     <div class="height">
                         <div class="height-label">height:&nbsp;</div>
-                        <h5>{{fighter_b.height}}</h5>
+                        <h5>{{fighter_b.data.height}}</h5>
                     </div>
                     <div class="reach">
                         <div class="reach-label">reach:&nbsp;</div>
                         <h5>
-                            {{fighter_b.reach}}
+                            {{fighter_b.data.reach}}
                         </h5>
                     </div>
                 </div>
