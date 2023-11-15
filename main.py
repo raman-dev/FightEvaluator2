@@ -35,6 +35,12 @@ def fightAttribQualifier(value):
         return "null"
     return '`'+value.value.__str__() +'`'
 
+def attribToStr(value):
+    if value == None:
+        return "null"
+
+    return value.value.__str__()
+
 def dobToAge(dob: datetime.date):
     if dob == None:
         return "N\A"
@@ -43,12 +49,37 @@ def dobToAge(dob: datetime.date):
         return "FUCK YOU"
     return (today - dob).days // 365
 
+def attribNameToStr(attribName):
+    result = attribName.replace("_"," ")
+    return result.title()
+
+def attribToStateStr(attribName: str,attribValue: AttributeQualifier):
+    
+    if not attribValue:
+        return "untested"
+    
+    attribValueStateMap = {
+        "head_movement":{"positive":"good","neutral":"mediocre","negative":"bad"},
+        "gas_tank":{"positive":"good","neutral":"mediocre","negative":"bad"},
+        "aggression":{"positive":"high","neutral":"mid","negative":"low"},
+        "striking":{"positive":"good","neutral":"mediocre","negative":"bad"},
+        "chinny":{"positive":"no","neutral":"somewhat","negative":"yes"},
+        "desire_to_win":{"positive":"yes","neutral":"kinda","negative":"no"},
+        "grappling_offense":{"positive":"good","neutral":"mediocre","negative":"bad"},
+        "grappling_defense":{"positive":"good","neutral":"mediocre","negative":"bad"}
+    }
+    return attribValueStateMap[attribName][attribValue.name]
+
+
 app.mount("/static", StaticFiles(directory=Path("static")), name="static")
 templates = Jinja2Templates(directory="templates")
 templates.env.filters['weightClassToStr'] = weightClassToStr
 templates.env.filters['none2Null'] = none2Null
 templates.env.filters['fightAttribQualifier'] = fightAttribQualifier
 templates.env.filters['dobToAge'] = dobToAge
+templates.env.filters['attribToStr'] = attribToStr
+templates.env.filters['attribNameToStr'] = attribNameToStr
+templates.env.filters['attribToStateStr'] = attribToStateStr
 
 @app.on_event("startup")
 def on_start():

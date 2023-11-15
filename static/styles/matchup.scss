@@ -1,3 +1,7 @@
+/*data-polarity color variables*/
+$positiveBg: #0d6efd;
+$negativeBg: #dc3545;
+$neutralBg: #ffc107;
 /*horizontally centered event-title*/
 .event-title {
     text-align: center;
@@ -15,11 +19,9 @@ h5, h6{
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin: 1rem;
     
     .fighter-info{
         display: flex;
-        flex-direction: column;
         img{
             margin: auto;
         }
@@ -55,8 +57,64 @@ h5, h6{
     grid-template-columns: 1fr 1fr;
 }
 
+
+
+.attrib-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+
+    h3{
+        text-align: center;
+        grid-column: span 2;
+    }
+
+    .attrib-col{
+        border: 3px solid lavender;
+        border-radius: 0.8rem;
+        margin: 0.4rem;
+        padding : 0.3rem;
+        
+    }
+
+    .attrib-left{
+        text-align: end;
+    }
+
+    div[data-polarity="positive"]{
+        border-color: $positiveBg;
+        h5{
+            background-color: $positiveBg;
+        }
+    }
+    div[data-polarity="negative"]{
+        border-color: $negativeBg;
+        h5{
+            background-color: $negativeBg;
+        }
+    }
+    div[data-polarity="neutral"]{
+        border-color: $neutralBg;
+        .state-container{
+            background-color: $neutralBg;
+            h5{
+                color: black;
+            }
+        }
+    }
+
+    div[data-polarity="null"]{
+        .state-container{
+            background-color: lightgray;
+            h5{
+                color: darkslategray;
+            }
+        }
+    }
+}
+
+
 @media (min-width: 1200px){
     .xmain-container{
-        width: 60%;
+        max-width: 60%;
     }
 }
