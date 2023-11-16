@@ -93,6 +93,7 @@ class Fighter(SQLModel,table=True):
     reach: Optional[str]
     stance: Optional[str]
     record: Optional[str]
+    img_link: Optional[str]
     #optional since a fighter may need to still be assessed
     assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
     # assesment: Optional["Assessment"] = Relationship(back_populates="fighters")

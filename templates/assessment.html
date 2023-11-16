@@ -58,6 +58,7 @@
                   <h6 class="fighter-stance">{{ fighter.stance }}</h6>
                 </div>
               </div>
+              <div class="img-link">{{ fighter.img_link }}</div>
             </div>
           </div>
         </div>
@@ -66,7 +67,9 @@
             class="edit-button mbutton"
             data-bs-toggle="collapse"
             data-bs-target=".attrib-collapse"
-            aria-expanded="false">
+            aria-expanded="false"
+            aria-role="button"
+            >
             <p>edit</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -507,6 +510,7 @@
         chinny: {{ assessment.chinny|fightAttribQualifier if assessment.chinny is not none else 'null' }},
         grappling_offense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
+        img_link: {{ fighter.img_link|fightLinkFilter if assessment.img_link is not none else 'null' }}
       };
 
       const collapseState = {
@@ -556,7 +560,13 @@
             editModeEnabled = false;
           }
           document.querySelector('.fighter-attrib-list').setAttribute('data-edit-mode-enabled', editModeEnabled);
+          event.target.classList.toggle("active-button");
           if (!editModeEnabled) clearRadioButtons();
+          if (editModeEnabled){
+            //make img-link editable
+            let imgLink = document.querySelector('.img-link');
+            imgLink.setAttribute('contenteditable', 'plaintext-only');
+          }
         });
 
       //grab content from note-editor and send it to the server
@@ -632,6 +642,11 @@
         if (!editModeEnabled) return;
         // console.log(JSON.stringify(assessment_data));
         //read in all attributes from radio options
+        //if img-link has changed grab new link
+        let imgLink = document.querySelector('.img-link').textContent.trim();
+        if (assessment.img_link != imgLink){
+          assessment_data.img_link = imgLink;
+        }
         const newAssessment = structuredClone(assessment_data);
         for (let key in assessment_data) {
           if (key == "id") {

@@ -70,6 +70,10 @@ def attribToStateStr(attribName: str,attribValue: AttributeQualifier):
     }
     return attribValueStateMap[attribName][attribValue.name]
 
+def fightLinkFilter(link:str):
+    if link == None:
+        return "null"
+    return '`' + link+ '`'
 
 app.mount("/static", StaticFiles(directory=Path("static")), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -80,6 +84,7 @@ templates.env.filters['dobToAge'] = dobToAge
 templates.env.filters['attribToStr'] = attribToStr
 templates.env.filters['attribNameToStr'] = attribNameToStr
 templates.env.filters['attribToStateStr'] = attribToStateStr
+templates.env.filters['fightLinkFilter'] = fightLinkFilter
 
 @app.on_event("startup")
 def on_start():

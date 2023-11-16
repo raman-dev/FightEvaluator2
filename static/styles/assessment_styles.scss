@@ -33,37 +33,15 @@ $neutralBg: #ffc107;
   }
 }
 
-/*greater than */
-@media (max-width: 1200px) {
-  .fighter-info-container {
-    .info {
-      grid-column: span 3 !important;
-    }
-    .edit-button-container {
-      grid-column: span 3 !important;
-    }
+/*
+  blinking outline animation called flicker
+*/
+@keyframes flicker {
+  0% {
+    outline-color: lavender;
   }
-
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr 1fr 1fr !important;
-    .fighter-attrib-list {
-      grid-column: span 2 !important;
-    }
-    .fighter-notes {
-      grid-column: span 2 !important;
-    }
-  }
-}
-
-@media (max-width: 926px) {
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr !important;
-    .fighter-attrib-list {
-      grid-column: span 2 !important;
-    }
-    .fighter-notes {
-      grid-column: span 2 !important;
-    }
+  100% {
+    outline-color: red;
   }
 }
 
@@ -91,26 +69,48 @@ $neutralBg: #ffc107;
     justify-content: flex-end;
     align-items: end;
     width: 100%;
-    // border: 1px solid white;
+  
+    .mbutton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    
+      outline: 2px solid transparent;
+      border: 2px solid lavender;
+      border-radius: 0.5rem;
+      height: fit-content;
+    
+      padding: 0.5rem;
+      margin-left: 0.5rem;
+      p {
+        margin: 0px;
+        margin-right: 0.5rem;
+      }
+    }
+    .mbutton:hover {
+      background-color: lavender;
+      border-color: black;
+      cursor: pointer;
+      svg{
+        path{
+          fill: black;
+        }
+      }
+      p {
+        color: black;
+      };
+    }
+    
+    .mbutton *{
+      pointer-events: none;
+    }
+
+    .active-button{
+      animation: flicker 500ms infinite;
+    }
   }
 }
 
-.mbutton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border: 1px solid lavender;
-  border-radius: 0.5rem;
-  height: fit-content;
-
-  padding: 0.5rem;
-
-  p {
-    margin: 0px;
-    margin-right: 0.5rem;
-  }
-}
 
 div[data-changed="true"] {
   outline-width: 2px;
@@ -155,10 +155,7 @@ div[data-changed="true"] {
   }
 }
 
-.mbutton:hover {
-  background-color: lavender;
-  cursor: pointer;
-}
+
 
 .state-container {
   text-transform: uppercase;
@@ -327,5 +324,39 @@ div[data-edit-mode-enabled="true"] {
     border-radius: 0.8rem;
     border: 1px solid #444a50;
     background-color: #212529;
+  }
+}
+
+/*greater than */
+@media (max-width: 1200px) {
+  .fighter-info-container {
+    .info {
+      grid-column: span 3 !important;
+    }
+    .edit-button-container {
+      grid-column: span 3 !important;
+    }
+  }
+
+  .fighter-grid-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+    .fighter-attrib-list {
+      grid-column: span 2 !important;
+    }
+    .fighter-notes {
+      grid-column: span 2 !important;
+    }
+  }
+}
+
+@media (max-width: 926px) {
+  .fighter-grid-container {
+    grid-template-columns: 1fr 1fr !important;
+    .fighter-attrib-list {
+      grid-column: span 2 !important;
+    }
+    .fighter-notes {
+      grid-column: span 2 !important;
+    }
   }
 }

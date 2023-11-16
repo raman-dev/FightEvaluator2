@@ -23,33 +23,15 @@ body {
   grid-column: span 2;
 }
 
-/*greater than */
-@media (max-width: 1200px) {
-  .fighter-info-container .info {
-    grid-column: span 3 !important;
+/*
+  blinking outline animation called flicker
+*/
+@keyframes flicker {
+  0% {
+    outline-color: lavender;
   }
-  .fighter-info-container .edit-button-container {
-    grid-column: span 3 !important;
-  }
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr 1fr 1fr !important;
-  }
-  .fighter-grid-container .fighter-attrib-list {
-    grid-column: span 2 !important;
-  }
-  .fighter-grid-container .fighter-notes {
-    grid-column: span 2 !important;
-  }
-}
-@media (max-width: 926px) {
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .fighter-grid-container .fighter-attrib-list {
-    grid-column: span 2 !important;
-  }
-  .fighter-grid-container .fighter-notes {
-    grid-column: span 2 !important;
+  100% {
+    outline-color: red;
   }
 }
 .list-group-item {
@@ -76,20 +58,38 @@ body {
   align-items: end;
   width: 100%;
 }
-
-.mbutton {
+.fighter-info-container .edit-button-container .mbutton {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid lavender;
+  outline: 2px solid transparent;
+  border: 2px solid lavender;
   border-radius: 0.5rem;
   height: -moz-fit-content;
   height: fit-content;
   padding: 0.5rem;
+  margin-left: 0.5rem;
 }
-.mbutton p {
+.fighter-info-container .edit-button-container .mbutton p {
   margin: 0px;
   margin-right: 0.5rem;
+}
+.fighter-info-container .edit-button-container .mbutton:hover {
+  background-color: lavender;
+  border-color: black;
+  cursor: pointer;
+}
+.fighter-info-container .edit-button-container .mbutton:hover svg path {
+  fill: black;
+}
+.fighter-info-container .edit-button-container .mbutton:hover p {
+  color: black;
+}
+.fighter-info-container .edit-button-container .mbutton * {
+  pointer-events: none;
+}
+.fighter-info-container .edit-button-container .active-button {
+  animation: flicker 500ms infinite;
 }
 
 div[data-changed=true] {
@@ -130,11 +130,6 @@ div[data-changed=true] {
 }
 .mradio-group .attrib-description-container p[data-polarity=neutral] {
   border-color: #ffc107 !important;
-}
-
-.mbutton:hover {
-  background-color: lavender;
-  cursor: pointer;
 }
 
 .state-container {
@@ -284,4 +279,34 @@ div[data-edit-mode-enabled=true] .state-container div[data-polarity~=null] {
   border-radius: 0.8rem;
   border: 1px solid #444a50;
   background-color: #212529;
+}
+
+/*greater than */
+@media (max-width: 1200px) {
+  .fighter-info-container .info {
+    grid-column: span 3 !important;
+  }
+  .fighter-info-container .edit-button-container {
+    grid-column: span 3 !important;
+  }
+  .fighter-grid-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  }
+  .fighter-grid-container .fighter-attrib-list {
+    grid-column: span 2 !important;
+  }
+  .fighter-grid-container .fighter-notes {
+    grid-column: span 2 !important;
+  }
+}
+@media (max-width: 926px) {
+  .fighter-grid-container {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .fighter-grid-container .fighter-attrib-list {
+    grid-column: span 2 !important;
+  }
+  .fighter-grid-container .fighter-notes {
+    grid-column: span 2 !important;
+  }
 }/*# sourceMappingURL=assessment_styles.css.map */
