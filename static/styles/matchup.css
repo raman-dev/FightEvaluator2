@@ -45,14 +45,6 @@ h5, h6 {
   margin: 1rem;
 }
 
-.fighter-notes-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.fighter-notes-container .fighter-name {
-  text-transform: capitalize;
-}
-
 .attrib-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -98,8 +90,59 @@ h5, h6 {
   color: darkslategray;
 }
 
-@media (min-width: 1200px) {
-  .xmain-container {
-    max-width: 60%;
+.content-grid > * {
+  grid-row: 1;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+.content-grid .notes-section .fighter-name {
+  text-transform: capitalize;
+}
+.content-grid .notes-section .notes {
+  list-style: none;
+  padding: 0px;
+}
+.content-grid .notes-section .notes li p {
+  max-width: 36ch;
+}
+.content-grid .notes-section .notes .note {
+  background-color: #212529;
+  border: 2px solid lavender;
+  border-radius: 0.6rem;
+  list-style: None;
+  display: flex;
+  padding: 1rem;
+  margin: 0.6rem;
+}
+.content-grid .notes-section .notes .note p {
+  word-break: break-all;
+  text-wrap: wrap;
+  max-width: 32ch;
+  margin: 0px;
+}
+.content-grid .notes-left {
+  grid-column: 1;
+}
+.content-grid .notes-right {
+  grid-column: 5;
+}
+.content-grid .attrib-compare-table {
+  grid-column: span 3/5;
+}
+
+@media (max-width: 991px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .content-grid .attrib-compare-table {
+    grid-row: 1;
+    grid-column: span 4;
+  }
+  .content-grid .notes-section {
+    grid-row: 2;
+    grid-column: span 2;
   }
 }/*# sourceMappingURL=matchup.css.map */

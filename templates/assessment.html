@@ -583,6 +583,8 @@
           notesContainer.classList.remove('dx-none');
           //create a new li element with the noteText
           let newNote = document.createElement("li");
+          newNote.classList.add("note");
+          newNote.setAttribute("data-note-id", noteData.id);
           newNote.innerHTML = "<p>" + noteText + "</p>";
           newNote.setAttribute("data-note-id", noteData.id);
           //append the new li element to the notes-list
