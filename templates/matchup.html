@@ -40,7 +40,7 @@
         </div>
         <div class="fighter-container">
             <div class="fighter-info m-1 border rounded-2">
-                <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
+                <img src="{{ fighter_a.data.img_link if fighter_a.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
                 <div class="fighter-bio">
                     <div class="name">
                         <h5>
@@ -94,8 +94,7 @@
                     </h5>
                 </div>
             </div>
-                <img src="{{ url_for('static',path='/media/sample_150.png') }}" alt="">
-                
+                <img src="{{ fighter_b.data.img_link if fighter_b.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
             </div>
         </div>
     </div>

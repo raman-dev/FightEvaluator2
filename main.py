@@ -292,6 +292,17 @@ async def delete_notes_by_assessment(assessment_id):
     return {'status':'success'}
 
 
+@app.patch("/fighters/updateImageLink")
+async def update_fighter_imglink(imgLinkIn: ImageLinkIn):
+    with Session(engine) as session:
+        fighter = session.get(Fighter,imgLinkIn.fighter_id)
+        if not fighter:
+            raise HTTPException(status_code=404, detail="Fighter not found")
+        fighter.img_link = imgLinkIn.img_link
+        session.commit()
+        session.refresh(fighter)
+        return {'status':'success','img_link':imgLinkIn.img_link}
+
 @app.get("/fighters/{fighter_id}")
 def get_fighter(fighter_id:int):
     print('getting fighter with id -> ',fighter_id)

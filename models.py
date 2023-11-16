@@ -4,6 +4,10 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 
 
+class ImageLinkIn(SQLModel):
+    fighter_id : int
+    img_link: str
+
 class AttributeQualifier(Enum):
     positive = "positive"
     negative = "negative"

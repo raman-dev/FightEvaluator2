@@ -52,6 +52,18 @@ body {
   flex-direction: row;
   align-items: center;
 }
+.fighter-info-container .info div.fighter-img {
+  min-width: 150px;
+  min-height: 150px;
+}
+.fighter-info-container .info div.fighter-img img {
+  max-width: 100%;
+  -webkit-clip-path: inset(0% 0% round 0.8rem);
+          clip-path: inset(0% 0% round 0.8rem);
+}
+.fighter-info-container .info .fighter-bio .img-link {
+  opacity: 0;
+}
 .fighter-info-container .edit-button-container {
   display: flex;
   justify-content: flex-end;

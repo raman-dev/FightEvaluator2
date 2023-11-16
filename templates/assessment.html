@@ -21,7 +21,7 @@
           <div class="fighter-img">
             <img
               class="fighter-img"
-              src="/static/media/sample_150.png"
+              src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"
               alt="" />
           </div>
           <!--fighter biographical info in a list-->
@@ -58,7 +58,9 @@
                   <h6 class="fighter-stance">{{ fighter.stance }}</h6>
                 </div>
               </div>
-              <div class="img-link">{{ fighter.img_link }}</div>
+              <div class="img-link edit-element" >
+                {{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}
+              </div>
             </div>
           </div>
         </div>
@@ -500,6 +502,7 @@
       var editModeEnabled = false;
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
       const assessment_id = {{ assessment.id }};
+      var fighterImgLink = {{ fighter.img_link|fightLinkFilter if assessment.img_link is not none else 'null' }};
       const assessment_data = {
         id: {{ assessment.id }},
         head_movement: {{ assessment.head_movement|fightAttribQualifier if assessment.head_movement is not none else 'null' }},
@@ -510,8 +513,11 @@
         chinny: {{ assessment.chinny|fightAttribQualifier if assessment.chinny is not none else 'null' }},
         grappling_offense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
-        img_link: {{ fighter.img_link|fightLinkFilter if assessment.img_link is not none else 'null' }}
       };
+
+      if (fighterImgLink != null){
+        document.querySelector('img').setAttribute('src',fighterImgLink);
+      }
 
       const collapseState = {
         isCollapsing:false,
@@ -561,10 +567,15 @@
           }
           document.querySelector('.fighter-attrib-list').setAttribute('data-edit-mode-enabled', editModeEnabled);
           event.target.classList.toggle("active-button");
-          if (!editModeEnabled) clearRadioButtons();
+          let imgLink = document.querySelector('.img-link');
+          if (!editModeEnabled) {
+            clearRadioButtons();
+            imgLink.setAttribute('contenteditable', 'false');
+            imgLink.style.opacity = '0';
+          }
           if (editModeEnabled){
             //make img-link editable
-            let imgLink = document.querySelector('.img-link');
+            imgLink.style.opacity = '1';
             imgLink.setAttribute('contenteditable', 'plaintext-only');
           }
         });
@@ -638,14 +649,38 @@
       let fighterAge = document.querySelector(".fighter-age");
       fighterAge.textContent = dobToAge('{{ fighter.date_of_birth }}');
 
+      async function updateFighterImgLink(){
+        //send fighter link update to server
+        let response = await fetch(`/fighters/updateImageLink`, {
+          method: "PATCH",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fighter_id: fighter_id,
+            img_link: fighterImgLink,
+          }),
+        });
+
+        if (response.status == 200){
+          console.log('img link updated');
+          //update imglink in page
+          let imgLink = document.querySelector('.img-link');
+          imgLink.textContent = fighterImgLink;
+        }
+        
+      }
+
       async function updateAssessment() {
         if (!editModeEnabled) return;
         // console.log(JSON.stringify(assessment_data));
         //read in all attributes from radio options
         //if img-link has changed grab new link
         let imgLink = document.querySelector('.img-link').textContent.trim();
-        if (assessment.img_link != imgLink){
-          assessment_data.img_link = imgLink;
+        if (fighterImgLink != imgLink){
+            fighterImgLink = imgLink;
+            updateFighterImgLink();
         }
         const newAssessment = structuredClone(assessment_data);
         for (let key in assessment_data) {
