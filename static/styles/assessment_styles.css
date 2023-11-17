@@ -64,35 +64,13 @@ body {
 .fighter-info-container .info .fighter-bio .img-link {
   opacity: 0;
 }
-
-.button-container {
-  display: flex;
-  align-items: center;
-}
-
-.xbutton {
-  display: flex;
-  align-items: center;
-  border: 2px solid lavender;
-  border-radius: 0.4rem;
-  text-transform: lowercase;
-}
-.xbutton svg {
-  max-width: 24px;
-}
-.xbutton * {
-  margin: 0.4rem;
-  pointer-events: none;
-}
-
-.edit-button-container {
+.fighter-info-container .edit-button-container {
   display: flex;
   justify-content: flex-end;
   align-items: end;
   width: 100%;
-  text-transform: lowercase;
 }
-.edit-button-container .mbutton {
+.fighter-info-container .edit-button-container .mbutton {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,25 +82,25 @@ body {
   padding: 0.5rem;
   margin-left: 0.5rem;
 }
-.edit-button-container .mbutton p {
+.fighter-info-container .edit-button-container .mbutton p {
   margin: 0px;
   margin-right: 0.5rem;
 }
-.edit-button-container .mbutton:hover {
+.fighter-info-container .edit-button-container .mbutton:hover {
   background-color: lavender;
   border-color: black;
   cursor: pointer;
 }
-.edit-button-container .mbutton:hover svg path {
+.fighter-info-container .edit-button-container .mbutton:hover svg path {
   fill: black;
 }
-.edit-button-container .mbutton:hover p {
+.fighter-info-container .edit-button-container .mbutton:hover p {
   color: black;
 }
-.edit-button-container .mbutton * {
+.fighter-info-container .edit-button-container .mbutton * {
   pointer-events: none;
 }
-.edit-button-container .active-button {
+.fighter-info-container .edit-button-container .active-button {
   animation: flicker 500ms infinite;
 }
 
@@ -172,7 +150,7 @@ div[data-changed=true] {
 .state-container h4 {
   margin: 0px;
 }
-.state-container .arrow {
+.state-container svg {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   height: 2.7rem;
