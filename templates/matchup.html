@@ -134,15 +134,6 @@
         <!-- text container of notes  -->
         <div class="notes-container">
           <ul class="notes">
-            <li class="note">
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-                voluptatum, quibusdam, quia, quod voluptate voluptatem
-                exercitationem quas voluptatibus quos doloribus quae. Quisquam
-                voluptatum, quibusdam, quia, quod voluptate voluptatem
-                exercitationem quas voluptatibus quos doloribus quae.
-              </p>
-            </li>
             {% for note in fighter_a.notes %}
               <li class="note">
                 <p>{{ note.data }}</p>
@@ -156,7 +147,7 @@
         <!-- text container of notes  -->
         <div class="notes-container">
           <ul class="notes">
-            <li class="note">
+            <!-- <li class="note">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
                 voluptatum, quibusdam, quia, quod voluptate voluptatem
@@ -164,9 +155,13 @@
                 voluptatum, quibusdam, quia, quod voluptate voluptatem
                 exercitationem quas voluptatibus quos doloribus quae.
               </p>
-            </li>
+            </li> -->
             {% for note in fighter_b.notes %}
-              <li>{{ note.data }}</li>
+              <li class="note">
+               <p>
+                {{ note.data }}
+               </p> 
+              </li>
             {% endfor %}
           </ul>
         </div>

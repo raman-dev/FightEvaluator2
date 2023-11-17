@@ -118,7 +118,7 @@ h5, h6 {
   margin: 0.6rem;
 }
 .content-grid .notes-section .notes .note p {
-  word-break: break-all;
+  word-break: break-word;
   text-wrap: wrap;
   max-width: 32ch;
   margin: 0px;

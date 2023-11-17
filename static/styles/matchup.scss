@@ -131,9 +131,9 @@ h5, h6{
                 list-style: None;
                 display: flex;
                 padding: 1rem;
-                margin: 0.6rem;
+                margin: 0.6rem; 
                 p {
-                  word-break: break-all;
+                  word-break: break-word;
                   text-wrap: wrap;
                   max-width: 32ch;
                   margin: 0px;
