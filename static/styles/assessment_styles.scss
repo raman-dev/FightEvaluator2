@@ -79,50 +79,77 @@ $neutralBg: #ffc107;
       }
     }
   }
-  .edit-button-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: end;
-    width: 100%;
   
-    .mbutton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    
-      outline: 2px solid transparent;
-      border: 2px solid lavender;
-      border-radius: 0.5rem;
-      height: fit-content;
-    
-      padding: 0.5rem;
-      margin-left: 0.5rem;
-      p {
-        margin: 0px;
-        margin-right: 0.5rem;
-      }
-    }
-    .mbutton:hover {
-      background-color: lavender;
-      border-color: black;
-      cursor: pointer;
-      svg{
-        path{
-          fill: black;
-        }
-      }
-      p {
-        color: black;
-      };
-    }
-    
-    .mbutton *{
-      pointer-events: none;
-    }
+}
+.button-container{
+  display: flex;
+  align-items: center;
+}
+.xbutton{
+  display: flex;
+  align-items: center;
+  
+  border: 2px solid lavender;
+  border-radius: 0.4rem;
 
-    .active-button{
-      animation: flicker 500ms infinite;
+  
+  text-transform: lowercase;
+  
+  svg{
+    max-width: 24px;
+    // margin: 0px;
+  }
+  *{
+    margin: 0.4rem;
+    pointer-events: none;
+  }
+}
+
+
+.edit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  width: 100%;
+  text-transform: lowercase;
+
+  .mbutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    outline: 2px solid transparent;
+    border: 2px solid lavender;
+    border-radius: 0.5rem;
+    height: fit-content;
+  
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+    p {
+      margin: 0px;
+      margin-right: 0.5rem;
     }
+  }
+  .mbutton:hover {
+    background-color: lavender;
+    border-color: black;
+    cursor: pointer;
+    svg{
+      path{ 
+        fill: black;
+      }
+    }
+    p {
+      color: black;
+    };
+  }
+  
+  .mbutton *{
+    pointer-events: none;
+  }
+
+  .active-button{
+    animation: flicker 500ms infinite;
   }
 }
 
@@ -178,7 +205,7 @@ div[data-changed="true"] {
   h4 {
     margin: 0px;
   }
-  svg {
+  .arrow {
     margin-left: 0.5rem;
     margin-right: 0.5rem;
     height: 2.7rem;
