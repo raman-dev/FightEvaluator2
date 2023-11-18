@@ -9,10 +9,20 @@ body {
   place-items: center;
 }
 
+//remove pointer events from all elements
+// * {
+//   pointer-events: none;
+// }
+
+// .interactive {
+//   pointer-events: auto;
+// }
+
 /*data-polarity color variables*/
 $positiveBg: #0d6efd;
 $negativeBg: #dc3545;
 $neutralBg: #ffc107;
+$outlineColor : #3d7efd;
 
 .xmain-container {
   // border: 1px solid white;
@@ -48,8 +58,18 @@ $neutralBg: #ffc107;
 .list-group-item {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
-  border: 1px solid #343a40 !important;
-  border-radius: 0.5rem !important;
+  border: 2px solid transparent !important;
+  outline: 2px solid transparent !important;
+  border-radius: 0.5rem !important;  
+}
+
+.mradio-group.active{
+  border-color: lavender !important;
+  outline-color: lavender $outlineColor;
+}
+
+.mradio-group:hover{
+    outline-color: lavender !important;
 }
 
 .fighter-info-container {
@@ -162,8 +182,13 @@ div[data-changed="true"] {
   border: none;
 }
 .mradio-group {
-  outline: 0px solid red;
-  transition: outline 0.05s ease-out;
+  margin-bottom: 1rem;
+  background-color: #242a30 !important;
+  border: 2px solid transparent !important;
+  outline: 2px solid transparent !important;
+  border-radius: 0.5rem !important;  
+  cursor: pointer;
+  // transition: outline 0.05s ease-out;
   .group-options-container {
     display: flex;
     flex-direction: row;

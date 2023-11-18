@@ -37,8 +37,18 @@ body {
 .list-group-item {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
-  border: 1px solid #343a40 !important;
+  border: 2px solid transparent !important;
+  outline: 2px solid transparent !important;
   border-radius: 0.5rem !important;
+}
+
+.mradio-group.active {
+  border-color: lavender !important;
+  outline-color: lavender #3d7efd;
+}
+
+.mradio-group:hover {
+  outline-color: lavender !important;
 }
 
 .fighter-info-container {
@@ -136,8 +146,12 @@ div[data-changed=true] {
 }
 
 .mradio-group {
-  outline: 0px solid red;
-  transition: outline 0.05s ease-out;
+  margin-bottom: 1rem;
+  background-color: #242a30 !important;
+  border: 2px solid transparent !important;
+  outline: 2px solid transparent !important;
+  border-radius: 0.5rem !important;
+  cursor: pointer;
 }
 .mradio-group .group-options-container {
   display: flex;
