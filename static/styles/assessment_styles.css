@@ -37,7 +37,7 @@ body {
 .list-group-item {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
-  border: 2px solid transparent !important;
+  border: 2px solid #242a30 !important;
   outline: 2px solid transparent !important;
   border-radius: 0.5rem !important;
 }
@@ -146,11 +146,7 @@ div[data-changed=true] {
 }
 
 .mradio-group {
-  margin-bottom: 1rem;
-  background-color: #242a30 !important;
-  border: 2px solid transparent !important;
-  outline: 2px solid transparent !important;
-  border-radius: 0.5rem !important;
+  padding: 0.8rem;
   cursor: pointer;
 }
 .mradio-group .group-options-container {
@@ -280,9 +276,10 @@ div[data-changed=true] {
   margin: 0.6rem;
 }
 .fighter-notes .notes-list ul .note p {
-  word-break: break-all;
+  word-break: break-word;
   text-wrap: wrap;
-  max-width: 32ch;
+  min-width: 32ch;
+  max-width: 100%;
   margin: 0px;
 }
 
@@ -318,15 +315,6 @@ div[data-edit-mode-enabled=true] .state-container div[data-polarity~=null] {
   padding-left: 2rem;
   padding-right: 2rem;
   /*class that ends with ense-container */
-}
-.grappling-container div[class$=ense-container] {
-  width: 100%;
-  margin: 0.2rem;
-  padding: 0.4rem;
-  /*rounded border*/
-  border-radius: 0.8rem;
-  border: 1px solid #444a50;
-  background-color: #212529;
 }
 
 /*greater than */

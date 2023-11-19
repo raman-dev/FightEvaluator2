@@ -98,7 +98,7 @@
       </div>
       <div class="fighter-grid-container">
           <!--list of 8 fighter attributes-->
-        <div class="fighter-attrib-list list-group" data-edit-mode-enabled="false">
+        <div class="fighter-attrib-list" data-edit-mode-enabled="false">
           <!--
             if a change has been made set data-changed attribute on list-item-group
           -->
@@ -113,7 +113,7 @@
             </div> -->
           <!-- </div> -->
           <div
-            class="list-group-item mradio-group interactive"
+            class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
             data-attribute-name="head_movement">
@@ -230,7 +230,7 @@
             </div>
           </div>
           <div
-            class="list-group-item mradio-group interactive"
+            class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
             data-attribute-name="gas_tank">
@@ -271,7 +271,7 @@
             </div>
           </div>
           <div
-            class="list-group-item mradio-group interactive"
+            class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
             data-attribute-name="aggression">
@@ -311,7 +311,7 @@
             </div>
           </div>
           <div
-            class="list-group-item mradio-group interactive"
+            class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
             data-attribute-name="striking">
@@ -353,7 +353,7 @@
             </div>
           </div>
           <div
-            class="list-group-item mradio-group interactive"
+            class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
             data-attribute-name="chinny">
@@ -395,8 +395,7 @@
               </p>
             </div>
           </div>
-          <div
-            class="list-group-item mradio-group interactive"
+          <div class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
             data-attribute-name="desire_to_win">
@@ -434,11 +433,94 @@
               </p>
             </div>
           </div>
-          <div class="list-group-item grappling-info-container">
+          <!--another list-group-item-->
+          <div class="list-group-item mradio-group  offense-container"
+              data-changed="false"
+              data-polarity="null"
+              data-attribute-name="grappling_offense">
+              <div class="state-container d-flex align-items-center">
+                <h4>Grappling Offense</h4>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24"
+                  viewBox="0 -960 960 960"
+                  width="24">
+                  <path
+                    fill="white"
+                    d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                </svg>
+                <div
+                  class="state-indicator p-2" data-polarity="null">
+                  good
+                </div>
+              </div>
+              <div class="m-1 collapse attrib-collapse">
+                <div class="button-container group-options-container">
+                  <div class="btn mradio-option" data-polarity="positive">
+                    good
+                  </div>
+                  <div class="btn mradio-option" data-polarity="negative">
+                    bad
+                  </div>
+                </div>
+              </div>
+              <div class="attrib-description-container">
+                <p data-polarity="positive">
+                  tries to submit opponent/tries to get into dominant positions
+                </p>
+                <p data-polarity="neutral">
+                </p>
+                <p data-polarity="negative">
+                  loses position/overcommits to submissions and gets reversed
+                </p>
+              </div>
+          </div>
+          <div class="list-group-item mradio-group  defense-container"
+            data-changed="false"
+            data-polarity="null"
+            data-attribute-name="grappling_defense">
+            <div class="state-container d-flex align-items-center">
+              <h4>Grappling Defense</h4>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  fill="white"
+                  d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+              </svg>
+              <div
+                class="state-indicator p-2" data-polarity="null">
+                good
+              </div>
+            </div>              
+            <div class="m-1 collapse attrib-collapse">
+              <div class="button-container group-options-container">
+                <div class="btn mradio-option" data-polarity="positive">
+                  good
+                </div>
+                <div class="btn mradio-option" data-polarity="negative">
+                  bad
+                </div>
+              </div>
+            </div>
+            <div class="attrib-description-container">
+              <p data-polarity="positive">
+                primarily can survive having back taken and not getting choked or submitted from difficult positions
+              </p>
+              <p data-polarity="neutral">
+              </p>
+              <p data-polarity="negative">
+                gets choked out/taps quickly/does wrong thing often
+              </p>
+            </div>
+          </div>
+          <!-- <div class="list-group-item grappling-info-container">
             <h4>Grappling</h4>
             <div class="row grappling-container">
               <div
-                class="col mradio-group interactive offense-container"
+                class="col mradio-group  offense-container"
                 data-changed="false"
                 data-polarity="null"
                 data-attribute-name="grappling_offense">
@@ -481,7 +563,7 @@
               </div>
 
               <div
-                class="col mradio-group interactive defense-container"
+                class="col mradio-group  defense-container"
                 data-changed="false"
                 data-polarity="null"
                 data-attribute-name="grappling_defense">
@@ -523,7 +605,8 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
+
         </div>
         <!--additional notes and context info to consider about a particular fighter-->
         <div class="fighter-notes list-group-item d-flex flex-column">
@@ -795,9 +878,15 @@
       document.querySelectorAll('.mradio-group').forEach((element)=>{
         element.addEventListener('click',(event)=>{
           //remove active from any previous list-group-item.active
-          document.querySelectorAll('.list-group-item.active').forEach((activeElement)=>{
+          for (let activeElement of document.querySelectorAll('.list-group-item.active')){
+            //if previous active and current clicked are the same element then remove active and return
+            // activeElement.classList.remove('active');
+            if (activeElement.classList.contains('active') && activeElement == event.target){
+              activeElement.classList.remove('active');
+              return;
+            }
             activeElement.classList.remove('active');
-          });
+          }
           event.target.classList.add('active');
         });
       });
