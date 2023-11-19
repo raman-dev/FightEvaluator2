@@ -9,6 +9,14 @@ body {
   place-items: center;
 }
 
+* {
+  pointer-events: none;
+}
+
+.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *, .xbutton {
+  pointer-events: auto;
+}
+
 /*data-polarity color variables*/
 .xmain-container .fighter-grid-container {
   display: grid;
@@ -38,17 +46,24 @@ body {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
   border: 2px solid #242a30 !important;
-  outline: 2px solid transparent !important;
+  outline: 3px solid transparent !important;
+  outline-offset: 2px !important;
   border-radius: 0.5rem !important;
 }
 
 .mradio-group.active {
   border-color: lavender !important;
-  outline-color: lavender #3d7efd;
+  outline-color: #3d7efd !important;
+}
+.mradio-group.active .button-container {
+  display: flex;
 }
 
 .mradio-group:hover {
-  outline-color: lavender !important;
+  border-color: lavender !important;
+}
+.mradio-group:hover .button-container {
+  display: flex;
 }
 
 .fighter-info-container {
@@ -76,7 +91,7 @@ body {
 }
 
 .button-container {
-  display: flex;
+  display: none;
   align-items: center;
 }
 

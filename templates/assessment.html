@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fighter Assessment</title>
+    <title>Fighter Assessment: {{ fighter.first_name.capitalize() }} {{ fighter.last_name.capitalize() }}</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.css"
@@ -116,7 +116,8 @@
             class="list-group-item mradio-group "
             data-changed="false"
             data-polarity="null"
-            data-attribute-name="head_movement">
+            data-attribute-name="head_movement"
+            data-edit-mode-enabled="false">
             <div class="state-container d-flex justify-content-between">
               <div class="wrapper d-flex align-items-center">
                 <h4>Head Movement</h4>
@@ -133,9 +134,8 @@
                 <div class="state-indicator p-2" data-polarity="null">good</div>
               </div>
               
-              
               <div class="button-container">
-                <button class="edit-button xbutton" data-bs-toggle="collapse"
+                <div class="edit-button xbutton" data-bs-toggle="collapse"
                   data-bs-target="#head_movement_options"
                   aria-expanded="false"
                   aria-role="button">
@@ -149,7 +149,7 @@
                       fill="white"
                       d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z" />
                   </svg>
-                </button>
+                </div>
                 <div class="commit-button xbutton" onclick="updateAssessment()">
                   <p>commit</p>
                   <svg
@@ -163,39 +163,7 @@
                   </svg>
                 </div>
               </div>
-              <!-- <div class="edit-button-container">
-                <div
-                  class="edit-button mbutton"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#headMovementOptions"
-                  aria-expanded="false"
-                  aria-role="button"
-                  >
-                  <p>edit</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24"
-                    viewBox="0 -960 960 960"
-                    width="24">
-                    <path
-                      fill="white"
-                      d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z" />
-                  </svg>
-                </div>
-                <div class="commit-button mbutton" onclick="updateAssessment()">
-                  <p>commit</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24"
-                    viewBox="0 -960 960 960"
-                    width="24">
-                    <path
-                      fill="white"
-                      d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z" />
-                  </svg>
-                </div>
-              </div> -->
-
+             
             </div>
             <!--horizontal list of 3 radio buttons reading good/mediocre/bad -->
             <div class="m-1 collapse attrib-collapse" id="head_movement_options">
@@ -873,26 +841,10 @@
       if (notesListUl.children.length > 0){
         notesListUl.classList.remove('dx-none');
       }
-      
-      //on click list-group-item set it as active element of list
-      document.querySelectorAll('.mradio-group').forEach((element)=>{
-        element.addEventListener('click',(event)=>{
-          //remove active from any previous list-group-item.active
-          for (let activeElement of document.querySelectorAll('.list-group-item.active')){
-            //if previous active and current clicked are the same element then remove active and return
-            // activeElement.classList.remove('active');
-            if (activeElement.classList.contains('active') && activeElement == event.target){
-              activeElement.classList.remove('active');
-              return;
-            }
-            activeElement.classList.remove('active');
-          }
-          event.target.classList.add('active');
-        });
-      });
     
     
     </script>
+    <script src="{{ url_for('static', path='/js/attribute-interaction.js') }}"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
       integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="

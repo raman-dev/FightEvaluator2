@@ -101,8 +101,6 @@ def getNextEvent2():
                     fightCardMatchup
                         td.textContent <--rounds
                             fightCardWeight.span <--weightclass
-                        
-
     """
     eventName = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
     titleUl = soup.select('div.details ul.clearfix')[0]
@@ -344,12 +342,13 @@ def getFighterData(path):
             li
 
     """
+    fullName = soup.select('.fighterUpcomingHeader h1')[1].text.strip()#the last contains full name
     ul = soup.select('.details ul.clearfix')[0]
     # print(ul)
     listItems = ul.findAll('li')
-    nameSpaceIndex = listItems[0].span.text.find(' ')
-    first_name = normalizeString(listItems[0].span.text[:nameSpaceIndex].strip())
-    last_name = normalizeString(listItems[0].span.text[nameSpaceIndex + 1:].strip())
+    nameSpaceIndex = fullName.find(' ')
+    first_name = normalizeString(fullName[:nameSpaceIndex])
+    last_name = normalizeString(fullName[nameSpaceIndex + 1:])
     fighter_data = {
         'first_name': first_name,
         'last_name': last_name,

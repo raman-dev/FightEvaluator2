@@ -1,3 +1,8 @@
+$positiveBg: #0d6efd;
+$negativeBg: #dc3545;
+$neutralBg: #ffc107;
+$outlineColor : #3d7efd;
+
 html {
   height: 100vh;
 }
@@ -9,20 +14,17 @@ body {
   place-items: center;
 }
 
-//remove pointer events from all elements
-// * {
-//   pointer-events: none;
-// }
+//remove all pointer events
+* {
+  pointer-events: none;
+}
 
-// .interactive {
-//   pointer-events: auto;
-// }
+//only interactive elements have pointer events
+.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *,.xbutton{
+  pointer-events: auto;
+}
 
 /*data-polarity color variables*/
-$positiveBg: #0d6efd;
-$negativeBg: #dc3545;
-$neutralBg: #ffc107;
-$outlineColor : #3d7efd;
 
 .xmain-container {
   // border: 1px solid white;
@@ -59,17 +61,24 @@ $outlineColor : #3d7efd;
   margin-bottom: 1rem;
   background-color: #242a30 !important;
   border: 2px solid #242a30 !important;
-  outline: 2px solid transparent !important;
+  outline: 3px solid transparent !important;
+  outline-offset: 2px !important;
   border-radius: 0.5rem !important;  
 }
 
 .mradio-group.active{
   border-color: lavender !important;
-  outline-color: lavender $outlineColor;
+  outline-color: $outlineColor !important;
+  .button-container{
+    display: flex;
+  }
 }
 
 .mradio-group:hover{
-    outline-color: lavender !important;
+    border-color: lavender !important;
+    .button-container{
+      display: flex;
+    }
 }
 
 .fighter-info-container {
@@ -102,7 +111,8 @@ $outlineColor : #3d7efd;
   
 }
 .button-container{
-  display: flex;
+  // display: flex;
+  display: none;
   align-items: center;
 }
 .xbutton{
@@ -111,8 +121,6 @@ $outlineColor : #3d7efd;
   
   border: 2px solid lavender;
   border-radius: 0.4rem;
-
-  
   text-transform: lowercase;
   
   svg{
@@ -215,7 +223,7 @@ div[data-changed="true"] {
       border-color: $neutralBg !important;
     }
   }
-}
+} 
 
 
 

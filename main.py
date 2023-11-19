@@ -106,12 +106,14 @@ def createFighter(link,session):
     #need to query site for fighter data and create fighter object
     fighter_data = scraper.getFighterData(link)
     fighterAssessment = Assessment()
+
     session.add(fighterAssessment)
     session.commit()
+    
     fighter_data['weight_class'] = WeightClass[fighter_data['weight_class']]
     fighterObj = Fighter(**fighter_data)
-    # print(fighterObj)
     fighterObj.assessment_id = fighterAssessment.id
+    
     session.add(fighterObj)
     session.commit()
 
@@ -222,15 +224,18 @@ async def index(request: Request,matchup_id: int):
 # @app.get("/nextevent")
 def next_event(session):
     matchups = []
+    #find the next upcoming event
     event = session.query(FightEvent).filter(FightEvent.date >= date.today()).first()
     if not event:
-    #     #if no event is found scrape the next event and create it
+        #if no event is found scrape the next event and create it
         print('fetching from site....')            
         #two commits since id is not created until commit is done
         eventData = scraper.getNextEvent2()
         event = FightEvent(**eventData['event'])
+
         session.add(event)
         session.commit()
+        
         for matchupRaw in eventData['matchups']:
             matchup = MatchUp(**matchupRaw)
             matchup.event_id = event.id
@@ -244,7 +249,6 @@ def next_event(session):
         print('\nRETRIEVED FROM DB....\n')
         #grab matchups for current event
         matchups = session.query(MatchUp).filter(MatchUp.event_id == event.id).all()
-    # print(event)
     return {'event':event,'matchups':matchups}
 
 @app.get("/notes/{assessment_id}")
