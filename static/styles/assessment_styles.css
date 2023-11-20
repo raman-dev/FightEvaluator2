@@ -197,12 +197,6 @@ div[data-changed=true] {
 .state-container h4 {
   margin: 0px;
 }
-.state-container .arrow {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  height: 2.7rem;
-  width: 2.7rem;
-}
 .state-container .state-indicator {
   background-color: slategray;
   border: 2px solid lavender;
@@ -329,28 +323,21 @@ div[data-edit-mode-enabled=true] .state-container div[data-polarity~=null] {
   justify-content: space-around;
   padding-left: 2rem;
   padding-right: 2rem;
-  /*class that ends with ense-container */
 }
 
 /*greater than */
 @media (max-width: 1200px) {
+  .xmain-container {
+    max-width: 95%;
+  }
   .fighter-info-container .info {
     grid-column: span 3 !important;
   }
   .fighter-info-container .edit-button-container {
     grid-column: span 3 !important;
   }
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr 1fr 1fr !important;
-  }
-  .fighter-grid-container .fighter-attrib-list {
-    grid-column: span 2 !important;
-  }
-  .fighter-grid-container .fighter-notes {
-    grid-column: span 2 !important;
-  }
 }
-@media (max-width: 926px) {
+@media (max-width: 996px) {
   .fighter-grid-container {
     grid-template-columns: 1fr 1fr !important;
   }

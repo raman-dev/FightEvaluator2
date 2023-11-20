@@ -234,10 +234,10 @@ div[data-changed="true"] {
     margin: 0px;
   }
   .arrow {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    height: 2.7rem;
-    width: 2.7rem;
+    // margin-left: 0.2rem;
+    // margin-right: 0.2rem;
+    // height: 2.7rem;
+    // width: 2.7rem;
   }
   .state-indicator {
     background-color: slategray;
@@ -385,21 +385,13 @@ div[data-edit-mode-enabled="true"] {
 
   padding-left: 2rem;
   padding-right: 2rem;
-
-  /*class that ends with ense-container */
-  // div[class$="ense-container"] {
-  //   width: 100%;
-  //   margin: 0.2rem;
-  //   padding: 0.4rem;
-  //   /*rounded border*/
-  //   border-radius: 0.8rem;
-  //   border: 1px solid #444a50;
-  //   background-color: #212529;
-  // }
 }
 
 /*greater than */
 @media (max-width: 1200px) {
+  .xmain-container{
+    max-width: 95%;
+  }
   .fighter-info-container {
     .info {
       grid-column: span 3 !important;
@@ -409,18 +401,19 @@ div[data-edit-mode-enabled="true"] {
     }
   }
 
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr 1fr 1fr !important;
-    .fighter-attrib-list {
-      grid-column: span 2 !important;
-    }
-    .fighter-notes {
-      grid-column: span 2 !important;
-    }
-  }
+  // .fighter-grid-container {
+  //   grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  //   .fighter-attrib-list {
+  //     grid-column: span 2 !important;
+  //   }
+  //   .fighter-notes {
+  //     grid-column: span 2 !important;
+  //   }
+  // }
 }
 
-@media (max-width: 926px) {
+@media (max-width: 996px) {
+
   .fighter-grid-container {
     grid-template-columns: 1fr 1fr !important;
     .fighter-attrib-list {
@@ -430,4 +423,15 @@ div[data-edit-mode-enabled="true"] {
       grid-column: span 2 !important;
     }
   }
+  // .mradio-group{
+  //   .state-container{
+  //     // flex-direction: column;
+  //     display: grid !important;
+  //     grid-template-columns: 1fr;
+  //     // justify-content: space-between;
+  //     .button-container{
+  //       justify-self: end !important;
+  //     }
+  //   }
+  // }
 }
