@@ -78,12 +78,15 @@ function toggleRadioButtons(option,toggleOn) {
 
 function mRadioOptionChangeListener(optionElement,index) {
   //new value to reflect in page
+  
   if(!editModeEnabled) {
     return;
   }
+
   let newOptionElement = optionElement;
   let newOptionValue = optionElement.dataset.polarity;
   let radioGroup = this.radioGroup;
+  
   //check if data-value is null or empty
   let prevOptionElement = radioGroup.querySelector(`[data-mradio-selected]`);
   //check if values is null string

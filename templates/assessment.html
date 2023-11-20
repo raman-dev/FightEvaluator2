@@ -99,19 +99,108 @@
       <div class="fighter-grid-container">
           <!--list of 8 fighter attributes-->
         <div class="fighter-attrib-list" data-edit-mode-enabled="false">
-          <!--
-            if a change has been made set data-changed attribute on list-item-group
-          -->
-          <!-- <div class="list-group-item mradio-group" data-changed data-polarity="null"  data-attribute-name="head_movement"> -->
-          <!--group title-->
-          <!-- <h4>Attribute X</h4> -->
-          <!--button group options container-->
-          <!-- <div class="group-options-container">
-              <div class="btn mradio-option" data-polarity="positive">option-0</div>
-              <div class="btn mradio-option" data-polarity="neutral">option-1</div>
-              <div class="btn mradio-option" data-polarity="negative">option-2</div>
-            </div> -->
-          <!-- </div> -->
+          <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
+            <div class="card-header">
+              <div class="state-container">
+                <h4>Attribute-X</h4>
+                 <svg
+                  class="arrow"
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24"
+                    viewBox="0 -960 960 960"
+                    width="24">
+                    <path
+                      fill="white"
+                      d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                  </svg>
+              <div class="card-state">State X</div>
+              </div>
+              <div class="button-container">
+                <button class="attrib-edit-button">edit</button>
+                <button class="attrib-commit-button">commit</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <!--attribute state options container-->
+                <div class="attrib-option" data-state="positive">
+                  Option 0
+                </div>
+                <div class="attrib-option" data-state="neutral">
+                  Option 1
+                </div>
+                <div class="attrib-option" data-state="negative">
+                  Option 2
+                </div>
+            </div>
+            <div class="card-footer">
+              <div class="attrib-option-description" data-state="positive">
+                <p>Option 0 description</p>
+              </div>
+              <div class="attrib-option-description" data-state="neutral">
+                <p>Option 1 description</p>
+              </div>
+              <div class="attrib-option-description" data-state="negative">
+                <p>Option 2 description</p>
+              </div>
+            </div>
+          </div>
+          
+          {% for k,v in assessment.__dict__.items() %}
+            {% if loop.index != 1 and k != 'id' %}
+              <!-- <div class="">
+                <p>{{ k }}: {{ v }}</p>
+              </div> -->
+              <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
+                <div class="card-header">
+                  <div class="state-container">
+                    <h4>{{ k }}</h4>
+                     <svg
+                      class="arrow"
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24"
+                        viewBox="0 -960 960 960"
+                        width="24">
+                        <path
+                          fill="white"
+                          d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                      </svg>
+                  <div class="card-state">{{ v }}</div>
+                  </div>
+                  <div class="button-container">
+                    <button class="attrib-edit-button">edit</button>
+                    <button class="attrib-commit-button">commit</button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!--attribute state options container-->
+                    <div class="attrib-option" data-state="positive">
+                      Option 0
+                    </div>
+                    {% if k!= 'grappling_offense' and k!='grappling_defense' %}
+                    <div class="attrib-option" data-state="neutral">
+                      Option 1
+                    </div>
+                    {% endif %}
+                    <div class="attrib-option" data-state="negative">
+                      Option 2
+                    </div>
+                </div>
+                <div class="card-footer">
+                  <div class="attrib-option-description" data-state="positive">
+                    <p>Option 0 description</p>
+                  </div>
+                  {% if k != 'grappling_offense' and k != 'grappling_defense'  %}
+                  <div class="attrib-option-description" data-state="neutral">
+                    <p>Option 1 description</p>
+                  </div>
+                  {% endif %}
+                  <div class="attrib-option-description" data-state="negative">
+                    <p>Option 2 description</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
           <div
             class="list-group-item mradio-group "
             data-changed="false"

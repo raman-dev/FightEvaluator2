@@ -15,12 +15,12 @@ body {
 }
 
 //remove all pointer events
-* {
-  pointer-events: none;
-}
+// * {
+//   pointer-events: none;
+// }
 
 //only interactive elements have pointer events
-.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *,.xbutton{
+.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *,.xbutton, .attrib-card{
   pointer-events: auto;
 }
 
@@ -54,6 +54,57 @@ body {
   }
   100% {
     outline-color: red;
+  }
+}
+
+.attrib-card{
+  border: 2px solid lavender;
+  .card-header{
+    display: flex;
+    justify-content: space-between;
+    .state-container{
+      display: flex;
+    }
+    .button-container{
+      display: flex;
+    }
+  }
+  .card-body{
+    display: flex;
+    justify-content: space-evenly;
+    height: 0px;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    .attrib-option{
+      border: 2px solid lavender;
+      cursor: pointer;
+    }
+    .attrib-option:hover{
+      // cursor: pointer;
+      background-color: red;
+    }
+    .attrib-option[selected]{
+      background-color: red;
+    }
+  }
+
+  .card-footer{
+    //by default not visible
+    .attrib-option-description{
+      // height: 0px;
+      display: none;
+    }
+    .attrib-option-description[selected]{
+      display: block;
+    }
+  }
+}
+//disable button click on attrib options when card edit mode disabled
+.attrib-card[data-edit-mode-enabled="false"]{
+  .card-body{
+    .attrib-option{
+      pointer-events: none;
+    }
   }
 }
 

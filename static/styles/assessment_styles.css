@@ -9,11 +9,7 @@ body {
   place-items: center;
 }
 
-* {
-  pointer-events: none;
-}
-
-.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *, .xbutton {
+.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *, .xbutton, .attrib-card {
   pointer-events: auto;
 }
 
@@ -42,6 +38,47 @@ body {
     outline-color: red;
   }
 }
+.attrib-card {
+  border: 2px solid lavender;
+}
+.attrib-card .card-header {
+  display: flex;
+  justify-content: space-between;
+}
+.attrib-card .card-header .state-container {
+  display: flex;
+}
+.attrib-card .card-header .button-container {
+  display: flex;
+}
+.attrib-card .card-body {
+  display: flex;
+  justify-content: space-evenly;
+  height: 0px;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+.attrib-card .card-body .attrib-option {
+  border: 2px solid lavender;
+  cursor: pointer;
+}
+.attrib-card .card-body .attrib-option:hover {
+  background-color: red;
+}
+.attrib-card .card-body .attrib-option[selected] {
+  background-color: red;
+}
+.attrib-card .card-footer .attrib-option-description {
+  display: none;
+}
+.attrib-card .card-footer .attrib-option-description[selected] {
+  display: block;
+}
+
+.attrib-card[data-edit-mode-enabled=false] .card-body .attrib-option {
+  pointer-events: none;
+}
+
 .list-group-item {
   margin-bottom: 1rem;
   background-color: #242a30 !important;
