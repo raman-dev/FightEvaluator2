@@ -170,18 +170,18 @@
                 <div class="card-body">
                   <!--attribute state options container-->
                     <div class="attrib-option" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }} >
-                      Option 0
+                      <p>Option 0</p>
                     </div>
                     {% if attrib_name != 'grappling_offense' and attrib_name !='grappling_defense' %}
                     <div class="attrib-option" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr =="neutral"}} >
-                      Option 1
+                      <p>Option 1</p>
                     </div>
                     {% endif %}
                     <div class="attrib-option" data-option-state="negative" {{ "selected" if attrib_value|attribToStr =="negative"}} >
-                      Option 2
+                      <p>Option 2</p>
                     </div>
                     <div class="attrib-option" data-option-state="untested" {{ "selected" if attrib_value|attribToStr =="untested"}} >
-                      untested
+                      <p>untested</p>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -242,6 +242,7 @@
       </div>
       
     </div>
+    <script src="{{ url_for('static',path='/js/definitions.js')}}"></script>
     <script>
       var editModeEnabled = false;
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
@@ -258,6 +259,25 @@
         grappling_offense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
       };
+
+      
+      for (key in attribInfoMap){
+        //grab attrib-card
+        let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
+
+        attribCard.querySelectorAll('.attrib-option').forEach((attribOption)=>{
+          //grab option state
+          let optionState = attribOption.getAttribute('data-option-state');
+          attribOption.querySelector('p').textContent = attribInfoMap[key][optionState].state;
+        });
+
+        attribCard.querySelectorAll('.attrib-option-description').forEach((attribDescription)=>{
+          //grab option state
+          let optionState = attribDescription.getAttribute('data-option-state');
+          let p = attribDescription.querySelector('p');
+          p.textContent = attribInfoMap[key][optionState].description;
+        });
+      }
 
       if (fighterImgLink != null){
         document.querySelector('img').setAttribute('src',fighterImgLink);

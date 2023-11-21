@@ -9,7 +9,7 @@ body {
   place-items: center;
 }
 
-.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *, .xbutton, .attrib-card {
+.mbutton, .img-link, .fighter-notes *, .xbutton, .attrib-card {
   pointer-events: auto;
 }
 
@@ -39,11 +39,16 @@ body {
   }
 }
 .attrib-card {
+  background-color: #242a30;
+  border-radius: 0.5rem;
   border: 2px solid lavender;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 .attrib-card .card-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .attrib-card .card-header .state-container {
   display: flex;
@@ -63,8 +68,15 @@ body {
   transition: all 0.2s ease-in-out;
 }
 .attrib-card .card-body .attrib-option {
+  display: flex;
+  align-items: center;
   border: 2px solid lavender;
+  padding: 0.6rem;
+  margin: 0.6rem;
   cursor: pointer;
+}
+.attrib-card .card-body .attrib-option p {
+  margin: 0px;
 }
 .attrib-card .card-body .attrib-option:hover {
   background-color: red;

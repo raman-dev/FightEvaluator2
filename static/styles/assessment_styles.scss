@@ -3,6 +3,10 @@ $negativeBg: #dc3545;
 $neutralBg: #ffc107;
 $outlineColor : #3d7efd;
 
+$borderRadius: 0.5rem;
+
+$attribCardBg: #242a30;
+
 html {
   height: 100vh;
 }
@@ -20,7 +24,7 @@ body {
 // }
 
 //only interactive elements have pointer events
-.mradio-group, .mradio-option, .mbutton, .img-link, .fighter-notes *,.xbutton, .attrib-card{
+.mbutton, .img-link, .fighter-notes *,.xbutton, .attrib-card{
   pointer-events: auto;
 }
 
@@ -57,11 +61,21 @@ body {
   }
 }
 
+$cardPadding: 0.8rem;
+$optionPadding: 0.6rem;
+
 .attrib-card{
+  background-color: $attribCardBg;
+  
+  border-radius: $borderRadius;
   border: 2px solid lavender;
+  
+  padding: $cardPadding;
+  margin-bottom: 0.5rem;
   .card-header{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     .state-container{
       display: flex;
       text-transform: uppercase;
@@ -80,17 +94,30 @@ body {
     height: 0px;
     overflow: hidden;
     transition: all 0.2s ease-in-out;
+
     .attrib-option{
+      display: flex;
+      align-items: center;
+
       border: 2px solid lavender;
+      
+      padding: $optionPadding;
+      margin: $optionPadding;
       cursor: pointer;
+      p {
+        margin: 0px;
+      }
     }
+
     .attrib-option:hover{
       // cursor: pointer;
       background-color: red;
     }
+
     .attrib-option[selected]{
       background-color: red;
     }
+
     .attrib-option[data-option-state="untested"]{
       display: none; 
     }

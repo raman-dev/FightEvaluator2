@@ -20,7 +20,7 @@ function attribEditButtonClickListener(event){
         //if we had selected anything deselect it if it is not the current state
         let selectedAttribOption = attribCard.querySelector('.attrib-option[selected]');
         //we selected something
-        console.log(selectedAttribOption);
+        // console.log(selectedAttribOption);
         if (selectedAttribOption != null){        
             let selectedAttribOptionState = selectedAttribOption.getAttribute('data-option-state');
             let selectedAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${selectedAttribOptionState}]`);
@@ -73,7 +73,7 @@ async function attribCommitButtonClickListener(event){
     */
     let selectedAttribOption = attribCard.querySelector('.attrib-option[selected]');
     let selectedAttribOptionState = selectedAttribOption.getAttribute('data-option-state');
-    console.log(selectedAttribOption,selectedAttribOptionState);
+    // console.log(selectedAttribOption,selectedAttribOptionState);
     let dataStateChanged = selectedAttribOptionState != assessment_data[attribName];
     if (!dataStateChanged){
         return;
@@ -94,7 +94,7 @@ async function attribCommitButtonClickListener(event){
         //update the assessment object
         assessment_data[attribName] = responseJson[attribName];
         //reflect change in the card visually
-        attribCard.querySelector('.card-state').textContent = assessment_data[attribName];
+        attribCard.querySelector('.card-state').textContent = attribInfoMap[attribName][assessment_data[attribName]].state;
         attribCard.setAttribute('data-attrib-state',assessment_data[attribName]);
     }else{
         console.log('error updating assessment',response);

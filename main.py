@@ -192,7 +192,7 @@ async def update_assessment(assessmentUpdate: AssessmentUpdate):
         if not db_assessment:
             raise HTTPException(status_code=404, detail="Assessment not found")
         assessment_data = assessmentUpdate.dict(exclude_unset=True)
-        print(assessment_data)
+        # print(assessment_data)
         for key, value in assessment_data.items():
             setattr(db_assessment, key, value)
         session.commit()
