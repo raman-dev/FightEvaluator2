@@ -122,38 +122,38 @@
             </div>
             <div class="card-body">
               <!--attribute state options container-->
-                <div class="attrib-option" data-state="positive">
+                <div class="attrib-option" data-option-state="positive">
                   Option 0
                 </div>
-                <div class="attrib-option" data-state="neutral">
+                <div class="attrib-option" data-option-state="neutral">
                   Option 1
                 </div>
-                <div class="attrib-option" data-state="negative">
+                <div class="attrib-option" data-option-state="negative">
                   Option 2
                 </div>
             </div>
             <div class="card-footer">
-              <div class="attrib-option-description" data-state="positive">
+              <div class="attrib-option-description" data-option-state="positive">
                 <p>Option 0 description</p>
               </div>
-              <div class="attrib-option-description" data-state="neutral">
+              <div class="attrib-option-description" data-option-state="neutral">
                 <p>Option 1 description</p>
               </div>
-              <div class="attrib-option-description" data-state="negative">
+              <div class="attrib-option-description" data-option-state="negative">
                 <p>Option 2 description</p>
               </div>
             </div>
           </div>
           
-          {% for k,v in assessment.__dict__.items() %}
-            {% if loop.index != 1 and k != 'id' %}
+          {% for attrib_name,attrib_value in assessment.__dict__.items() %}
+            {% if loop.index != 1 and attrib_name != 'id' %}
               <!-- <div class="">
                 <p>{{ k }}: {{ v }}</p>
               </div> -->
-              <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
+              <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value|attribToStr }}" data-attrib-name="{{ attrib_name }}">
                 <div class="card-header">
                   <div class="state-container">
-                    <h4>{{ k }}</h4>
+                    <h4>{{ attrib_name|attribNameToStr }}</h4>
                      <svg
                       class="arrow"
                         xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@
                           fill="white"
                           d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
                       </svg>
-                  <div class="card-state">{{ v }}</div>
+                  <div class="card-state">{{ attrib_value|attribToStr }}</div>
                   </div>
                   <div class="button-container">
                     <button class="attrib-edit-button">edit</button>
@@ -173,28 +173,28 @@
                 </div>
                 <div class="card-body">
                   <!--attribute state options container-->
-                    <div class="attrib-option" data-state="positive">
+                    <div class="attrib-option" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }} >
                       Option 0
                     </div>
-                    {% if k!= 'grappling_offense' and k!='grappling_defense' %}
-                    <div class="attrib-option" data-state="neutral">
+                    {% if attrib_name != 'grappling_offense' and attrib_name !='grappling_defense' %}
+                    <div class="attrib-option" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr =="neutral"}} >
                       Option 1
                     </div>
                     {% endif %}
-                    <div class="attrib-option" data-state="negative">
+                    <div class="attrib-option" data-option-state="negative" {{ "selected" if attrib_value|attribToStr =="negative"}} >
                       Option 2
                     </div>
                 </div>
                 <div class="card-footer">
-                  <div class="attrib-option-description" data-state="positive">
+                  <div class="attrib-option-description" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }}>
                     <p>Option 0 description</p>
                   </div>
-                  {% if k != 'grappling_offense' and k != 'grappling_defense'  %}
-                  <div class="attrib-option-description" data-state="neutral">
+                  {% if attrib_name != 'grappling_offense' and attrib_name != 'grappling_defense'  %}
+                  <div class="attrib-option-description" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr=="neutral" }}>
                     <p>Option 1 description</p>
                   </div>
                   {% endif %}
-                  <div class="attrib-option-description" data-state="negative">
+                  <div class="attrib-option-description" data-option-state="negative" {{ "selected" if attrib_value|attribToStr=="negative" }}>
                     <p>Option 2 description</p>
                   </div>
                 </div>
@@ -573,97 +573,7 @@
               </p>
             </div>
           </div>
-          <!-- <div class="list-group-item grappling-info-container">
-            <h4>Grappling</h4>
-            <div class="row grappling-container">
-              <div
-                class="col mradio-group  offense-container"
-                data-changed="false"
-                data-polarity="null"
-                data-attribute-name="grappling_offense">
-                <div class="state-container d-flex align-items-center">
-                  <h4>Offense</h4>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24"
-                    viewBox="0 -960 960 960"
-                    width="24">
-                    <path
-                      fill="white"
-                      d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                  </svg>
-                  <div
-                    class="state-indicator p-2" data-polarity="null">
-                    good
-                  </div>
-                </div>
-                <div class="m-1 collapse attrib-collapse">
-                  <div class="button-container group-options-container">
-                    <div class="btn mradio-option" data-polarity="positive">
-                      good
-                    </div>
-                    <div class="btn mradio-option" data-polarity="negative">
-                      bad
-                    </div>
-                  </div>
-                </div>
-                <div class="attrib-description-container">
-                  <p data-polarity="positive">
-                    tries to submit opponent/tries to get into dominant positions
-                  </p>
-                  <p data-polarity="neutral">
-                  </p>
-                  <p data-polarity="negative">
-                    loses position/overcommits to submissions and gets reversed
-                  </p>
-                </div>
-              </div>
-
-              <div
-                class="col mradio-group  defense-container"
-                data-changed="false"
-                data-polarity="null"
-                data-attribute-name="grappling_defense">
-                <div class="state-container d-flex align-items-center">
-                  <h4>Defense</h4>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24"
-                    viewBox="0 -960 960 960"
-                    width="24">
-                    <path
-                      fill="white"
-                      d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                  </svg>
-                  <div
-                    class="state-indicator p-2" data-polarity="null">
-                    good
-                  </div>
-                </div>              
-                <div class="m-1 collapse attrib-collapse">
-                  <div class="button-container group-options-container">
-                    <div class="btn mradio-option" data-polarity="positive">
-                      good
-                    </div>
-                    <div class="btn mradio-option" data-polarity="negative">
-                      bad
-                    </div>
-                  </div>
-                </div>
-                <div class="attrib-description-container">
-                  <p data-polarity="positive">
-                    primarily can survive having back taken and not getting choked or submitted from difficult positions
-                  </p>
-                  <p data-polarity="neutral">
-                  </p>
-                  <p data-polarity="negative">
-                    gets choked out/taps quickly/does wrong thing often
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
+          
         </div>
         <!--additional notes and context info to consider about a particular fighter-->
         <div class="fighter-notes list-group-item d-flex flex-column">
@@ -702,7 +612,7 @@
       </div>
       
     </div>
-    <script src="{{ url_for('static', path='/js/custom_radio_button.js') }}"></script>
+    <!-- <script src="{{ url_for('static', path='/js/custom_radio_button.js') }}"></script> -->
     <script>
       var editModeEnabled = false;
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
@@ -848,7 +758,7 @@
         return age;
       }
 
-      onAssessmentChanged();
+      // onAssessmentChanged();
       // let fighterName = document.querySelector(".fighter-name");
       // fighterName.textContent = '{{ fighter.first_name }} { fighter.last_name }}';
       let fighterAge = document.querySelector(".fighter-age");
@@ -915,6 +825,8 @@
             assessment_data[key] = data[key];
           }
           onAssessmentChanged();
+        }else{
+          console.log('error updating assessment',response);
         }
       }
       

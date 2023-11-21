@@ -185,7 +185,7 @@ async def get_assessment(assessment_id: int):
         assessment = session.get(Assessment,assessment_id)
         return assessment
 
-@app.patch("/assessment/")
+@app.patch("/assessment/update")
 async def update_assessment(assessmentUpdate: AssessmentUpdate):
     #update assessment in database
     with Session(engine) as session:
