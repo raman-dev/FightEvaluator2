@@ -64,6 +64,11 @@ body {
     justify-content: space-between;
     .state-container{
       display: flex;
+      text-transform: uppercase;
+
+      h4 {
+        margin: 0px;
+      }
     }
     .button-container{
       display: flex;
@@ -85,6 +90,9 @@ body {
     }
     .attrib-option[selected]{
       background-color: red;
+    }
+    .attrib-option[data-option-state="untested"]{
+      display: none; 
     }
   }
 
@@ -117,20 +125,6 @@ body {
   border-radius: 0.5rem !important;  
 }
 
-.mradio-group.active{
-  border-color: lavender !important;
-  outline-color: $outlineColor !important;
-  .button-container{
-    display: flex;
-  }
-}
-
-.mradio-group:hover{
-    border-color: lavender !important;
-    .button-container{
-      display: flex;
-    }
-}
 
 .fighter-info-container {
   display: grid;
@@ -166,6 +160,7 @@ body {
   display: none;
   align-items: center;
 }
+
 .xbutton{
   display: flex;
   align-items: center;
@@ -232,83 +227,9 @@ body {
   }
 }
 
-
-div[data-changed="true"] {
-  outline-width: 2px;
-}
 .dx-none {
   display: none;
   border: none;
-}
-.mradio-group {
-  padding: 0.8rem;
-  cursor: pointer;
-  .group-options-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    padding: 0.5rem;
-  }
-  // custom attribute boolean selection
-  div[data-mradio-selected] {
-    color: white;
-    outline: 2px solid lavender;
-  }
-
-  .attrib-description-container {
-    p {
-      display: none;
-      border: 2px solid lavender;
-      border-radius: 0.4rem;
-      padding: 0.4rem;
-      margin: 0.3rem;
-    }
-
-    p[data-polarity="positive"] {
-      border-color: $positiveBg !important;
-    }
-    p[data-polarity="negative"] {
-      border-color: $negativeBg !important;
-    }
-    p[data-polarity="neutral"] {
-      border-color: $neutralBg !important;
-    }
-  }
-} 
-
-
-
-.state-container {
-  text-transform: uppercase;
-
-  h4 {
-    margin: 0px;
-  }
-  .arrow {
-    // margin-left: 0.2rem;
-    // margin-right: 0.2rem;
-    // height: 2.7rem;
-    // width: 2.7rem;
-  }
-  .state-indicator {
-    background-color: slategray;
-    border: 2px solid lavender;
-    border-radius: 0.4rem;
-    color: ghostwhite;
-  }
-
-  div[data-polarity="positive"] {
-    background-color: $positiveBg;
-  }
-  div[data-polarity="negative"] {
-    background-color: $negativeBg;
-  }
-  div[data-polarity="neutral"] {
-    background-color: $neutralBg;
-  }
-  div[data-polarity="null"] {
-    color: /*blackish grey*/ #212529;
-  }
 }
 
 .fighter-bio {
@@ -396,46 +317,6 @@ div[data-changed="true"] {
       }
     }
   }
-}
-
-div[data-edit-mode-enabled="true"] {
-  .state-container {
-    .state-indicator {
-      background-color: slategray;
-      border: 2px solid lavender;
-      border-radius: 0.4rem;
-      color: ghostwhite;
-    }
-
-    div[data-polarity="positive"] {
-      background-color: transparent;
-      border-color: $positiveBg;
-      color: $positiveBg;
-    }
-    div[data-polarity="negative"] {
-      background-color: transparent;
-      border-color: $negativeBg;
-      color: $negativeBg;
-    }
-    div[data-polarity="neutral"] {
-      background-color: transparent;
-      border-color: $neutralBg;
-      color: $neutralBg;
-    }
-
-    div[data-polarity~="null"] {
-      color: #212529;
-    }
-  }
-}
-
-.grappling-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 /*greater than */

@@ -47,6 +47,10 @@ body {
 }
 .attrib-card .card-header .state-container {
   display: flex;
+  text-transform: uppercase;
+}
+.attrib-card .card-header .state-container h4 {
+  margin: 0px;
 }
 .attrib-card .card-header .button-container {
   display: flex;
@@ -68,6 +72,9 @@ body {
 .attrib-card .card-body .attrib-option[selected] {
   background-color: red;
 }
+.attrib-card .card-body .attrib-option[data-option-state=untested] {
+  display: none;
+}
 .attrib-card .card-footer .attrib-option-description {
   display: none;
 }
@@ -86,21 +93,6 @@ body {
   outline: 3px solid transparent !important;
   outline-offset: 2px !important;
   border-radius: 0.5rem !important;
-}
-
-.mradio-group.active {
-  border-color: lavender !important;
-  outline-color: #3d7efd !important;
-}
-.mradio-group.active .button-container {
-  display: flex;
-}
-
-.mradio-group:hover {
-  border-color: lavender !important;
-}
-.mradio-group:hover .button-container {
-  display: flex;
 }
 
 .fighter-info-container {
@@ -188,69 +180,9 @@ body {
   animation: flicker 500ms infinite;
 }
 
-div[data-changed=true] {
-  outline-width: 2px;
-}
-
 .dx-none {
   display: none;
   border: none;
-}
-
-.mradio-group {
-  padding: 0.8rem;
-  cursor: pointer;
-}
-.mradio-group .group-options-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  padding: 0.5rem;
-}
-.mradio-group div[data-mradio-selected] {
-  color: white;
-  outline: 2px solid lavender;
-}
-.mradio-group .attrib-description-container p {
-  display: none;
-  border: 2px solid lavender;
-  border-radius: 0.4rem;
-  padding: 0.4rem;
-  margin: 0.3rem;
-}
-.mradio-group .attrib-description-container p[data-polarity=positive] {
-  border-color: #0d6efd !important;
-}
-.mradio-group .attrib-description-container p[data-polarity=negative] {
-  border-color: #dc3545 !important;
-}
-.mradio-group .attrib-description-container p[data-polarity=neutral] {
-  border-color: #ffc107 !important;
-}
-
-.state-container {
-  text-transform: uppercase;
-}
-.state-container h4 {
-  margin: 0px;
-}
-.state-container .state-indicator {
-  background-color: slategray;
-  border: 2px solid lavender;
-  border-radius: 0.4rem;
-  color: ghostwhite;
-}
-.state-container div[data-polarity=positive] {
-  background-color: #0d6efd;
-}
-.state-container div[data-polarity=negative] {
-  background-color: #dc3545;
-}
-.state-container div[data-polarity=neutral] {
-  background-color: #ffc107;
-}
-.state-container div[data-polarity=null] {
-  color: #212529;
 }
 
 .fighter-bio {
@@ -327,39 +259,6 @@ div[data-changed=true] {
   min-width: 32ch;
   max-width: 100%;
   margin: 0px;
-}
-
-div[data-edit-mode-enabled=true] .state-container .state-indicator {
-  background-color: slategray;
-  border: 2px solid lavender;
-  border-radius: 0.4rem;
-  color: ghostwhite;
-}
-div[data-edit-mode-enabled=true] .state-container div[data-polarity=positive] {
-  background-color: transparent;
-  border-color: #0d6efd;
-  color: #0d6efd;
-}
-div[data-edit-mode-enabled=true] .state-container div[data-polarity=negative] {
-  background-color: transparent;
-  border-color: #dc3545;
-  color: #dc3545;
-}
-div[data-edit-mode-enabled=true] .state-container div[data-polarity=neutral] {
-  background-color: transparent;
-  border-color: #ffc107;
-  color: #ffc107;
-}
-div[data-edit-mode-enabled=true] .state-container div[data-polarity~=null] {
-  color: #212529;
-}
-
-.grappling-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 /*greater than */

@@ -37,7 +37,7 @@ def fightAttribQualifier(value):
 
 def attribToStr(value):
     if value == None:
-        return "null"
+        return "untested"
 
     return value.value.__str__()
 
@@ -53,21 +53,20 @@ def attribNameToStr(attribName):
     result = attribName.replace("_"," ")
     return result.title()
 
+attribValueStateMap = {
+    "head_movement":{"positive":"good","neutral":"mediocre","negative":"bad","untested":"untested"},
+    "gas_tank":{"positive":"good","neutral":"mediocre","negative":"bad","untested":"untested"},
+    "aggression":{"positive":"high","neutral":"mid","negative":"low","untested":"untested"},
+    "striking":{"positive":"good","neutral":"mediocre","negative":"bad","untested":"untested"},
+    "chinny":{"positive":"no","neutral":"somewhat","negative":"yes","untested":"untested"},
+    "desire_to_win":{"positive":"yes","neutral":"kinda","negative":"no","untested":"untested"},
+    "grappling_offense":{"positive":"good","neutral":"mediocre","negative":"bad","untested":"untested"},
+    "grappling_defense":{"positive":"good","neutral":"mediocre","negative":"bad","untested":"untested"}
+}
+
 def attribToStateStr(attribName: str,attribValue: AttributeQualifier):
-    
     if not attribValue:
         return "untested"
-    
-    attribValueStateMap = {
-        "head_movement":{"positive":"good","neutral":"mediocre","negative":"bad"},
-        "gas_tank":{"positive":"good","neutral":"mediocre","negative":"bad"},
-        "aggression":{"positive":"high","neutral":"mid","negative":"low"},
-        "striking":{"positive":"good","neutral":"mediocre","negative":"bad"},
-        "chinny":{"positive":"no","neutral":"somewhat","negative":"yes"},
-        "desire_to_win":{"positive":"yes","neutral":"kinda","negative":"no"},
-        "grappling_offense":{"positive":"good","neutral":"mediocre","negative":"bad"},
-        "grappling_defense":{"positive":"good","neutral":"mediocre","negative":"bad"}
-    }
     return attribValueStateMap[attribName][attribValue.name]
 
 def fightLinkFilter(link:str):
@@ -193,6 +192,7 @@ async def update_assessment(assessmentUpdate: AssessmentUpdate):
         if not db_assessment:
             raise HTTPException(status_code=404, detail="Assessment not found")
         assessment_data = assessmentUpdate.dict(exclude_unset=True)
+        print(assessment_data)
         for key, value in assessment_data.items():
             setattr(db_assessment, key, value)
         session.commit()

@@ -73,19 +73,14 @@ async function attribCommitButtonClickListener(event){
     */
     let selectedAttribOption = attribCard.querySelector('.attrib-option[selected]');
     let selectedAttribOptionState = selectedAttribOption.getAttribute('data-option-state');
-    // let attribState = attribCard.getAttribute('data-attrib-state');
-
+    console.log(selectedAttribOption,selectedAttribOptionState);
     let dataStateChanged = selectedAttribOptionState != assessment_data[attribName];
     if (!dataStateChanged){
         return;
     }
-
-    if (attribState == 'null'){
-        attribState = 'untested';
-    }
     //dataStateChanged try and commit changes to server
     let data = structuredClone(assessment_data);
-    data[attribName] = attribState;
+    data[attribName] = selectedAttribOptionState;
     let response = await fetch('/assessment/update',{
         method:'PATCH',
         headers:{
@@ -93,11 +88,14 @@ async function attribCommitButtonClickListener(event){
         },
         body:JSON.stringify(data)
     });
+    let responseJson = await response.json();
+    // console.log(responseJson);
     if (response.status == 200){
         //update the assessment object
-        assessment_data[attribName] = attribState;
+        assessment_data[attribName] = responseJson[attribName];
         //reflect change in the card visually
-        attribCard.querySelector('.card-state').textContent = attribState;
+        attribCard.querySelector('.card-state').textContent = assessment_data[attribName];
+        attribCard.setAttribute('data-attrib-state',assessment_data[attribName]);
     }else{
         console.log('error updating assessment',response);
     }
@@ -114,21 +112,19 @@ function attribOptionClickListener(event){
         
     let currentAttribOption = attribCard.querySelector('.attrib-option[selected]');
     //if they are different then change the state to attribOptionState
-    if (currentAttribOption != null){
-        let currentAttribOptionState = currentAttribOption.getAttribute('data-option-state');
-        let currentAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${currentAttribOptionState}]`);
-        if (currentAttribOptionState != attribOptionState){
-        
-            attribOption.setAttribute('selected','');
-            attribOptionDescription.setAttribute('selected','');
-        }
-        currentAttribOption.removeAttribute('selected');
-        currentAttribOptionDescription.removeAttribute('selected');
-
-    }else{
+    let currentAttribOptionState = currentAttribOption.getAttribute('data-option-state');
+    let currentAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${currentAttribOptionState}]`);
+    if (currentAttribOptionState != attribOptionState){
         attribOption.setAttribute('selected','');
         attribOptionDescription.setAttribute('selected','');
+    }else{
+        //select untested attrib-option
+        this.untestedOption.setAttribute('selected','');
+        this.untestedOptionDescription.setAttribute('selected','');
     }
+    currentAttribOption.removeAttribute('selected');
+    currentAttribOptionDescription.removeAttribute('selected');
+
 }
 
 document.querySelectorAll(attribCardSelector).forEach((attribCard) => {
@@ -138,6 +134,10 @@ document.querySelectorAll(attribCardSelector).forEach((attribCard) => {
     attribCard.querySelector(attribCommitButtonSelector).addEventListener('click',attribCommitButtonClickListener.bind({attribCard:attribCard}));
     let cardBody = attribCard.querySelector('.card-body');
     cardBody.querySelectorAll(".attrib-option").forEach((attribOption) => {
-        attribOption.addEventListener('click',attribOptionClickListener.bind({attribCard:attribCard}));
+        attribOption.addEventListener('click',attribOptionClickListener.bind({
+            attribCard:attribCard,
+            untestedOption:attribCard.querySelector('.attrib-option[data-option-state="untested"]'),
+            untestedOptionDescription:attribCard.querySelector('.attrib-option-description[data-option-state="untested"]')
+        }));
     });
 });
