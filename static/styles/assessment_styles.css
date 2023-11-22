@@ -36,10 +36,16 @@ body {
 */
 @keyframes flicker {
   0% {
-    outline-color: lavender;
+    outline-color: transparent;
+  }
+  49% {
+    outline-color: transparent;
+  }
+  50% {
+    outline-color: #3d7efd;
   }
   100% {
-    outline-color: red;
+    outline-color: #3d7efd;
   }
 }
 .attrib-card[data-attrib-state=positive] .card-state {
@@ -58,9 +64,12 @@ body {
 
 .attrib-card {
   background-color: #242a30;
-  border-radius: 0.4rem;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  outline: 3px solid transparent;
+  outline-offset: 2px;
   padding: 0.8rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
 }
 .attrib-card p {
   margin: 0px;
@@ -101,7 +110,7 @@ body {
 .attrib-card .card-body .attrib-option {
   display: flex;
   align-items: center;
-  border-radius: 0.4rem;
+  border-radius: 0.5rem;
   border: 2px solid lavender;
   padding: 0.8rem;
   margin: 0.8rem;
@@ -146,7 +155,7 @@ body {
 .attrib-card .card-footer .attrib-option-description {
   display: none;
   border: 2px solid lavender;
-  border-radius: 0.4rem;
+  border-radius: 0.5rem;
   padding: 0.5rem;
 }
 .attrib-card .card-footer .attrib-option-description[data-option-state=positive] {
@@ -162,10 +171,19 @@ body {
   display: block;
 }
 
+.attrib-card[data-edit-mode-enabled=false] {
+  border-color: transparent !important;
+  outline-color: transparent !important;
+  animation-play-state: paused;
+}
 .attrib-card[data-edit-mode-enabled=false] .card-body .attrib-option {
   pointer-events: none;
 }
 
+.attrib-card[data-edit-mode-enabled=true] {
+  border-color: lavender !important;
+  animation-play-state: running;
+}
 .attrib-card[data-edit-mode-enabled=true] .card-state {
   background-color: transparent;
 }

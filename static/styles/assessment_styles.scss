@@ -56,10 +56,16 @@ body {
 */
 @keyframes flicker {
   0% {
-    outline-color: lavender;
+    outline-color: transparent;
+  }
+  49%{
+    outline-color: transparent;
+  }
+  50% {
+    outline-color: $outlineColor;
   }
   100% {
-    outline-color: red;
+    outline-color: $outlineColor;
   }
 }
 
@@ -67,7 +73,9 @@ $cardPadding: 0.8rem;
 $cardStatePadding: 0.3rem;
 $optionPadding: 0.8rem;
 $descriptionPadding: 0.5rem;
-$borderRadius: 0.4rem;
+$borderRadius: 0.5rem;
+$flickerDuration: 400ms;
+
 
 .attrib-card[data-attrib-state="positive"]{
   .card-state{
@@ -94,11 +102,16 @@ $borderRadius: 0.4rem;
 .attrib-card{
   background-color: $attribCardBg;
   
+  border: 2px solid transparent;
   border-radius: $borderRadius;
-  // border: 2px solid lavender;
+  outline: 3px solid transparent;
+  outline-offset: 2px;
   
   padding: $cardPadding;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
+  // animation: flicker $flickerDuration infinite alternate linear;
+
+
   p{
     margin: 0px;
   }
@@ -220,16 +233,23 @@ $borderRadius: 0.4rem;
     }
   }
 }
+
 //disable button click on attrib options when card edit mode disabled
 .attrib-card[data-edit-mode-enabled="false"]{
+   //reset outling color for animation
+   border-color: transparent !important;
+   outline-color: transparent !important;
+   animation-play-state: paused;
   .card-body{
     .attrib-option{
       pointer-events: none;
     }
   }
 }
-
 .attrib-card[data-edit-mode-enabled="true"]{
+  border-color: lavender !important;
+  animation-play-state: running;
+
   .card-state{
     background-color: transparent;
   }
