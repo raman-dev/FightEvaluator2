@@ -13,9 +13,11 @@ function attribEditButtonClickListener(event){
     if (editModeEnabled){
         //show card body
         cardBody.style.height = `${scrollHeight}px`;
+        cardBody.style.opacity = '1';
     }else{
         //hide card body
         cardBody.style.height = '0px';
+        cardBody.style.opacity = '0';
         let attribCardState = attribCard.getAttribute('data-attrib-state');
         //if we had selected anything deselect it if it is not the current state
         let selectedAttribOption = attribCard.querySelector('.attrib-option[selected]');

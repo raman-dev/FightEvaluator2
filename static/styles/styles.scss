@@ -31,11 +31,6 @@
     src: url("/static/styles/Poppins/Poppins-SemiBold.ttf") format("truetype");
 }
 
-div[data-mradio-selected]{
-    font-family: PoppinsMedium;
-    text-transform: uppercase;
-}
-
 /* use font as variable */
 html,
 body {
@@ -53,10 +48,6 @@ h3 {
 h4,
 h5,
 h6 {
-    font-family: PoppinsSemiBold;
-}
-
-.state-indicator{
     font-family: PoppinsSemiBold;
 }
 

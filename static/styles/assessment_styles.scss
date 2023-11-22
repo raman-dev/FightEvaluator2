@@ -1,10 +1,12 @@
+@font-face {
+  font-family: PoppinsSemiBold;
+  src: url("/static/styles/Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+
 $positiveBg: #0d6efd;
 $negativeBg: #dc3545;
 $neutralBg: #ffc107;
 $outlineColor : #3d7efd;
-
-$borderRadius: 0.5rem;
-
 $attribCardBg: #242a30;
 
 html {
@@ -62,26 +64,66 @@ body {
 }
 
 $cardPadding: 0.8rem;
-$optionPadding: 0.6rem;
+$cardStatePadding: 0.3rem;
+$optionPadding: 0.8rem;
+$descriptionPadding: 0.5rem;
+$borderRadius: 0.4rem;
+
+.attrib-card[data-attrib-state="positive"]{
+  .card-state{
+    background-color: $positiveBg;
+  }
+}
+
+.attrib-card[data-attrib-state="neutral"]{
+  .card-state{
+    background-color: $neutralBg;
+    color: whitesmoke;
+  }
+}
+
+.attrib-card[data-attrib-state="negative"]{
+  .card-state{
+    background-color: $negativeBg;
+    color: whitesmoke;
+  }
+}
+
+
 
 .attrib-card{
   background-color: $attribCardBg;
   
   border-radius: $borderRadius;
-  border: 2px solid lavender;
+  // border: 2px solid lavender;
   
   padding: $cardPadding;
   margin-bottom: 0.5rem;
+  p{
+    margin: 0px;
+  }
   .card-header{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.5rem;
     .state-container{
       display: flex;
+      align-items: center;
       text-transform: uppercase;
-
       h4 {
         margin: 0px;
+      }
+
+      .card-state{
+        display: flex;
+        align-items: center;
+
+        border-radius: 0.4rem;
+        border: 2px solid lavender;
+        padding: $cardStatePadding;
+
+        font-family: PoppinsSemiBold;
       }
     }
     .button-container{
@@ -91,31 +133,61 @@ $optionPadding: 0.6rem;
   .card-body{
     display: flex;
     justify-content: space-evenly;
+    
     height: 0px;
+    opacity: 0;
+    
     overflow: hidden;
-    transition: all 0.2s ease-in-out;
-
+    transition: all 0.3s cubic-bezier(.58,-0.02,.19,.85);
+  
     .attrib-option{
       display: flex;
       align-items: center;
 
+      border-radius: $borderRadius;
       border: 2px solid lavender;
       
       padding: $optionPadding;
       margin: $optionPadding;
       cursor: pointer;
-      p {
-        margin: 0px;
-      }
-    }
 
-    .attrib-option:hover{
-      // cursor: pointer;
-      background-color: red;
+      font-family: PoppinsSemiBold;
+      text-transform: uppercase;
     }
 
     .attrib-option[selected]{
-      background-color: red;
+      border-color: whitesmoke;
+      color: whitesmoke;
+    }
+
+    .attrib-option[data-option-state="positive"]{
+        border-color: $positiveBg;
+        color: $positiveBg;
+    }
+    .attrib-option[data-option-state="neutral"]{
+      border-color: $neutralBg;
+      color: $neutralBg;
+    }
+
+    .attrib-option[data-option-state="negative"]{
+        border-color: $negativeBg;
+        color: $negativeBg;
+    }
+    
+    .attrib-option[data-option-state="positive"][selected]{
+      border-color: whitesmoke;
+      color: whitesmoke;
+      background-color: $positiveBg;
+    }
+    .attrib-option[data-option-state="neutral"][selected]{
+      border-color: whitesmoke;
+      color: whitesmoke;
+      background-color: $neutralBg;
+    }
+    .attrib-option[data-option-state="negative"][selected]{
+      border-color: whitesmoke;
+      color: whitesmoke;
+      background-color: $negativeBg;
     }
 
     .attrib-option[data-option-state="untested"]{
@@ -124,10 +196,24 @@ $optionPadding: 0.6rem;
   }
 
   .card-footer{
-    //by default not visible
     .attrib-option-description{
-      // height: 0px;
       display: none;
+      
+      border: 2px solid lavender;
+      border-radius: $borderRadius;
+
+      padding: $descriptionPadding;
+    }
+    .attrib-option-description[data-option-state="positive"]{
+      border-color: $positiveBg !important;
+    }
+    
+    .attrib-option-description[data-option-state="neutral"]{
+      border-color: $neutralBg !important;
+    }
+    
+    .attrib-option-description[data-option-state="negative"]{
+      border-color: $negativeBg !important;
     }
     .attrib-option-description[selected]{
       display: block;
@@ -142,6 +228,34 @@ $optionPadding: 0.6rem;
     }
   }
 }
+
+.attrib-card[data-edit-mode-enabled="true"]{
+  .card-state{
+    background-color: transparent;
+  }
+}
+
+.attrib-card[data-edit-mode-enabled="true"][data-attrib-state="positive"]{
+  .card-state{
+    border-color: $positiveBg;
+    color: $positiveBg;
+  }
+}
+  
+.attrib-card[data-edit-mode-enabled="true"][data-attrib-state="neutral"]{
+  .card-state{
+    border-color: $neutralBg;
+    color: $neutralBg;
+  }
+}
+
+.attrib-card[data-edit-mode-enabled="true"][data-attrib-state="negative"]{
+  .card-state{
+    border-color: $negativeBg;
+    color: $negativeBg;
+  }
+}
+
 
 .list-group-item {
   margin-bottom: 1rem;
