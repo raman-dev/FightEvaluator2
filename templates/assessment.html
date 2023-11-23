@@ -12,13 +12,16 @@
       referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ url_for('static', path='/styles/styles.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', path='/styles/assessment_styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles/cyberpunk-material-theme/css/theme.css') }}" />
+    <!-- <link rel="stylesheet" href="{{ url_for('static', path='/styles/chainsawman-material-theme/css/theme.css') }}" /> -->
+
   </head>
-  <body data-bs-theme="dark">
+  <body class="surface-container-highest">
     <div class="main-container xmain-container">
       <div class="fighter-info-container">
         <div class="fighter-card">
           <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
-          <div class="content-wrapper">
+          <div class="content-wrapper primary-container">
             <div class="card-content">
               <div class="card-header">
                 <h2 class="fighter-name">{{ fighter.first_name }} {{ fighter.last_name }}</h2>
@@ -26,7 +29,7 @@
                   <h5 class="fighter-weight">{{ fighter.weight_class|weightClassToStr }}</h5>
                 </div>
               </div>
-              <div class="card-body">
+              <div class="card-body primary">
                 <div class="info-wrapper">
                   <label>height:&nbsp;</label>
                   <h6 class="fighter-height">{{ fighter.height }}</h6>
