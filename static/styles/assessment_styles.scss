@@ -20,16 +20,6 @@ body {
   place-items: center;
 }
 
-//remove all pointer events
-// * {
-//   pointer-events: none;
-// }
-
-//only interactive elements have pointer events
-.mbutton, .img-link, .fighter-notes *,.xbutton, .attrib-card{
-  pointer-events: auto;
-}
-
 /*data-polarity color variables*/
 
 .xmain-container {
@@ -76,6 +66,66 @@ $descriptionPadding: 0.5rem;
 $borderRadius: 0.5rem;
 $flickerDuration: 400ms;
 
+.fighter-info-container{
+  // .fighter-card{
+
+  // }
+  .img-link{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+  }
+}
+
+.fighter-card{
+  display: flex;
+  border: 2px solid lavender;
+  padding: 1rem;
+  .fighter-image{
+    clip-path: inset(0% 0% round 0.8rem);
+    max-width: 10rem;
+    max-height: 10rem;
+  }
+
+  .content-wrapper{
+    display: flex;
+    border: 2px solid lavender;
+    .button-container{
+      display: flex;
+      align-items: start;
+    }
+  }
+  .card-content{
+    // border: 2px solid lavender;
+    margin-left: 0.8rem;
+    .card-header{
+      .fighter-name{
+        margin: 0px;
+      }
+      .fighter-weight{
+        text-transform: uppercase;
+      }
+    }
+    
+    .card-body{
+      // border: 2px solid lavender;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      column-gap: 0.5rem;
+    }
+  }
+
+  
+  .info-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h6{
+      margin: 0px;
+    }
+  }
+}
 
 .attrib-card[data-attrib-state="positive"]{
   .card-state{
@@ -286,137 +336,11 @@ $flickerDuration: 400ms;
   border-radius: 0.5rem !important;  
 }
 
-
-.fighter-info-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin: 1rem;
-
-  .info {
-    grid-column: span 2;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    div.fighter-img{
-      min-width: 150px;
-      min-height: 150px;
-      img{
-        max-width: 100%;
-        clip-path: inset(0% 0% round 0.8rem); 
-      }
-    }
-
-    .fighter-bio{
-      .img-link{
-        opacity: 0;
-      }
-    }
-  }
-  
-}
-.button-container{
-  // display: flex;
-  display: none;
-  align-items: center;
-}
-
-.xbutton{
-  display: flex;
-  align-items: center;
-  
-  border: 2px solid lavender;
-  border-radius: 0.4rem;
-  text-transform: lowercase;
-  
-  svg{
-    max-width: 24px;
-    // margin: 0px;
-  }
-  *{
-    margin: 0.4rem;
-    pointer-events: none;
-  }
-}
-
-
-.edit-button-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: end;
-  width: 100%;
-  text-transform: lowercase;
-
-  .mbutton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    outline: 2px solid transparent;
-    border: 2px solid lavender;
-    border-radius: 0.5rem;
-    height: fit-content;
-  
-    padding: 0.5rem;
-    margin-left: 0.5rem;
-    p {
-      margin: 0px;
-      margin-right: 0.5rem;
-    }
-  }
-  .mbutton:hover {
-    background-color: lavender;
-    border-color: black;
-    cursor: pointer;
-    svg{
-      path{ 
-        fill: black;
-      }
-    }
-    p {
-      color: black;
-    };
-  }
-  
-  .mbutton *{
-    pointer-events: none;
-  }
-
-  .active-button{
-    animation: flicker 500ms infinite;
-  }
-}
-
 .dx-none {
   display: none;
   border: none;
 }
 
-.fighter-bio {
-   h4{
-    text-transform: capitalize;
-   }
-  // border: 1px solid white;
-  /* a 3x3 grid layout */
-  .fighter-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
-
-    .info-wrapper {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      // border: 1px solid white;
-
-      h6 {
-        white-space: nowrap;
-        margin: 0px !important;
-      }
-    }
-  }
-}
 
 .fighter-notes {
   padding: 1rem;
@@ -485,24 +409,6 @@ $flickerDuration: 400ms;
   .xmain-container{
     max-width: 95%;
   }
-  .fighter-info-container {
-    .info {
-      grid-column: span 3 !important;
-    }
-    .edit-button-container {
-      grid-column: span 3 !important;
-    }
-  }
-
-  // .fighter-grid-container {
-  //   grid-template-columns: 1fr 1fr 1fr 1fr !important;
-  //   .fighter-attrib-list {
-  //     grid-column: span 2 !important;
-  //   }
-  //   .fighter-notes {
-  //     grid-column: span 2 !important;
-  //   }
-  // }
 }
 
 @media (max-width: 996px) {
@@ -516,15 +422,4 @@ $flickerDuration: 400ms;
       grid-column: span 2 !important;
     }
   }
-  // .mradio-group{
-  //   .state-container{
-  //     // flex-direction: column;
-  //     display: grid !important;
-  //     grid-template-columns: 1fr;
-  //     // justify-content: space-between;
-  //     .button-container{
-  //       justify-self: end !important;
-  //     }
-  //   }
-  // }
 }

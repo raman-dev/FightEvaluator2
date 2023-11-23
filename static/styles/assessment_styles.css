@@ -13,10 +13,6 @@ body {
   place-items: center;
 }
 
-.mbutton, .img-link, .fighter-notes *, .xbutton, .attrib-card {
-  pointer-events: auto;
-}
-
 /*data-polarity color variables*/
 .xmain-container .fighter-grid-container {
   display: grid;
@@ -48,6 +44,56 @@ body {
     outline-color: #3d7efd;
   }
 }
+.fighter-info-container .img-link {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+}
+
+.fighter-card {
+  display: flex;
+  border: 2px solid lavender;
+  padding: 1rem;
+}
+.fighter-card .fighter-image {
+  -webkit-clip-path: inset(0% 0% round 0.8rem);
+          clip-path: inset(0% 0% round 0.8rem);
+  max-width: 10rem;
+  max-height: 10rem;
+}
+.fighter-card .content-wrapper {
+  display: flex;
+  border: 2px solid lavender;
+}
+.fighter-card .content-wrapper .button-container {
+  display: flex;
+  align-items: start;
+}
+.fighter-card .card-content {
+  margin-left: 0.8rem;
+}
+.fighter-card .card-content .card-header .fighter-name {
+  margin: 0px;
+}
+.fighter-card .card-content .card-header .fighter-weight {
+  text-transform: uppercase;
+}
+.fighter-card .card-content .card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  -moz-column-gap: 0.5rem;
+       column-gap: 0.5rem;
+}
+.fighter-card .info-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.fighter-card .info-wrapper h6 {
+  margin: 0px;
+}
+
 .attrib-card[data-attrib-state=positive] .card-state {
   background-color: #0d6efd;
 }
@@ -212,115 +258,9 @@ body {
   border-radius: 0.5rem !important;
 }
 
-.fighter-info-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin: 1rem;
-}
-.fighter-info-container .info {
-  grid-column: span 2;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.fighter-info-container .info div.fighter-img {
-  min-width: 150px;
-  min-height: 150px;
-}
-.fighter-info-container .info div.fighter-img img {
-  max-width: 100%;
-  -webkit-clip-path: inset(0% 0% round 0.8rem);
-          clip-path: inset(0% 0% round 0.8rem);
-}
-.fighter-info-container .info .fighter-bio .img-link {
-  opacity: 0;
-}
-
-.button-container {
-  display: none;
-  align-items: center;
-}
-
-.xbutton {
-  display: flex;
-  align-items: center;
-  border: 2px solid lavender;
-  border-radius: 0.4rem;
-  text-transform: lowercase;
-}
-.xbutton svg {
-  max-width: 24px;
-}
-.xbutton * {
-  margin: 0.4rem;
-  pointer-events: none;
-}
-
-.edit-button-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: end;
-  width: 100%;
-  text-transform: lowercase;
-}
-.edit-button-container .mbutton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  outline: 2px solid transparent;
-  border: 2px solid lavender;
-  border-radius: 0.5rem;
-  height: -moz-fit-content;
-  height: fit-content;
-  padding: 0.5rem;
-  margin-left: 0.5rem;
-}
-.edit-button-container .mbutton p {
-  margin: 0px;
-  margin-right: 0.5rem;
-}
-.edit-button-container .mbutton:hover {
-  background-color: lavender;
-  border-color: black;
-  cursor: pointer;
-}
-.edit-button-container .mbutton:hover svg path {
-  fill: black;
-}
-.edit-button-container .mbutton:hover p {
-  color: black;
-}
-.edit-button-container .mbutton * {
-  pointer-events: none;
-}
-.edit-button-container .active-button {
-  animation: flicker 500ms infinite;
-}
-
 .dx-none {
   display: none;
   border: none;
-}
-
-.fighter-bio {
-  /* a 3x3 grid layout */
-}
-.fighter-bio h4 {
-  text-transform: capitalize;
-}
-.fighter-bio .fighter-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
-}
-.fighter-bio .fighter-info-grid .info-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.fighter-bio .fighter-info-grid .info-wrapper h6 {
-  white-space: nowrap;
-  margin: 0px !important;
 }
 
 .fighter-notes {
@@ -382,12 +322,6 @@ body {
 @media (max-width: 1200px) {
   .xmain-container {
     max-width: 95%;
-  }
-  .fighter-info-container .info {
-    grid-column: span 3 !important;
-  }
-  .fighter-info-container .edit-button-container {
-    grid-column: span 3 !important;
   }
 }
 @media (max-width: 996px) {

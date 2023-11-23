@@ -16,30 +16,20 @@
   <body data-bs-theme="dark">
     <div class="main-container xmain-container">
       <div class="fighter-info-container">
-        <!--fighter image-->
-        <div class="info">
-          <div class="fighter-img">
-            <img
-              class="fighter-img"
-              src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"
-              alt="" />
-          </div>
-          <!--fighter biographical info in a list-->
-          <div class="fighter-bio">
-            <div class="container">
-              <!-- <h4>Biographical Info</h4> -->
-              <h4>{{ fighter.first_name }} {{ fighter.last_name }}</h4>
-              <div class="fighter-info-grid">
-                <!--2 column flex grid-->
+        <div class="fighter-card">
+          <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
+          <div class="content-wrapper">
+            <div class="card-content">
+              <div class="card-header">
+                <h2 class="fighter-name">{{ fighter.first_name }} {{ fighter.last_name }}</h2>
+                <div class="info-wrapper">
+                  <h5 class="fighter-weight">{{ fighter.weight_class|weightClassToStr }}</h5>
+                </div>
+              </div>
+              <div class="card-body">
                 <div class="info-wrapper">
                   <label>height:&nbsp;</label>
                   <h6 class="fighter-height">{{ fighter.height }}</h6>
-                </div>
-                <div class="info-wrapper">
-                  <label>class:&nbsp;</label>
-                  <h6 class="fighter-weight">
-                    {{ fighter.weight_class|weightClassToStr }}
-                  </h6>
                 </div>
                 <div class="info-wrapper">
                   <label>age:&nbsp;</label>
@@ -58,43 +48,15 @@
                   <h6 class="fighter-stance">{{ fighter.stance }}</h6>
                 </div>
               </div>
-              <div class="img-link edit-element" >{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}</div>
+            </div>
+            <div class="button-container">
+              <button class="bio-edit-button">edit</button>
+              <button class="bio-commit-button" onclick="updateFighterImgLink()">commit</button>
             </div>
           </div>
+          
         </div>
-        <div class="edit-button-container">
-          <div
-            class="edit-button mbutton"
-            data-bs-toggle="collapse"
-            data-bs-target=".attrib-collapse"
-            aria-expanded="false"
-            aria-role="button"
-            >
-            <p>edit</p>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <!--white path-->
-              <path
-                fill="white"
-                d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z" />
-            </svg>
-          </div>
-          <div class="commit-button mbutton" onclick="updateAssessment()">
-            <p>commit</p>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                fill="white"
-                d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z" />
-            </svg>
-          </div>
-        </div>
+        <div class="img-link edit-element" >{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}</div>
       </div>
       <div class="fighter-grid-container">
           <!--list of 8 fighter attributes-->
@@ -283,32 +245,22 @@
         document.querySelector('img').setAttribute('src',fighterImgLink);
       }
 
-      document.querySelector(".edit-button")
-        .addEventListener("click", (event) => {
-          //return if already opening or closing
-          //toggle edit mode
-          //uncollapse collapsed items
-          if (collapseState.isExpanding){
-            editModeEnabled = true;
-          }
-          if (collapseState.isCollapsing){
-            editModeEnabled = false;
-          }
-          document.querySelector('.fighter-attrib-list').setAttribute('data-edit-mode-enabled', editModeEnabled);
-          event.target.classList.toggle("active-button");
-          let imgLink = document.querySelector('.img-link');
-          if (!editModeEnabled) {
-            clearRadioButtons();
-            imgLink.setAttribute('contenteditable', 'false');
-            imgLink.style.opacity = '0';
-          }
-          if (editModeEnabled){
-            //make img-link editable
-            imgLink.style.opacity = '1';
-            imgLink.setAttribute('contenteditable', 'plaintext-only');
-          }
-        });
-
+      //grab bio edit button
+      let bioEditButton = document.querySelector(".bio-edit-button");
+      bioEditButton.addEventListener("click", (event) => {
+        //toggle edit mode
+        editModeEnabled = !editModeEnabled;
+        
+        let link = document.querySelector('.img-link');
+        if (editModeEnabled){
+          //make img-link editable
+          link.style.opacity = '1';
+          link.setAttribute('contenteditable','plaintext-only');
+        }else{
+          link.removeAttribute('contenteditable');
+          link.style.opacity = '0';
+        }
+      });
       //grab content from note-editor and send it to the server
       //update the notes-list with the new note
       async function addNote(event) {
@@ -372,13 +324,18 @@
         return age;
       }
 
-      // onAssessmentChanged();
-      // let fighterName = document.querySelector(".fighter-name");
-      // fighterName.textContent = '{{ fighter.first_name }} { fighter.last_name }}';
+     
       let fighterAge = document.querySelector(".fighter-age");
       fighterAge.textContent = dobToAge('{{ fighter.date_of_birth }}');
 
       async function updateFighterImgLink(){
+        if (!editModeEnabled){
+          return;
+        }
+        let newLink = document.querySelector('.img-link').textContent;
+        if (newLink == fighterImgLink){
+          return;
+        }
         //send fighter link update to server
         let response = await fetch(`/fighters/updateImageLink`, {
           method: "PATCH",
@@ -388,7 +345,7 @@
           },
           body: JSON.stringify({
             fighter_id: fighter_id,
-            img_link: fighterImgLink,
+            img_link: newLink,
           }),
         });
 
@@ -396,52 +353,9 @@
           console.log('img link updated');
           //update imglink in page
           let imgLink = document.querySelector('.img-link');
-          imgLink.textContent = fighterImgLink;
+          fighterImgLink = newLink;
         }
         
-      }
-
-      async function updateAssessment() {
-        if (!editModeEnabled) return;
-        // console.log(JSON.stringify(assessment_data));
-        //read in all attributes from radio options
-        //if img-link has changed grab new link
-        let imgLink = document.querySelector('.img-link').textContent.trim();
-        if (fighterImgLink != imgLink){
-            fighterImgLink = imgLink;
-            updateFighterImgLink();
-        }
-        const newAssessment = structuredClone(assessment_data);
-        for (let key in assessment_data) {
-          if (key == "id") {
-            continue;
-          }
-          let radioGroup = document.querySelector(
-            `[data-attribute-name="${key}"]`
-          );
-          if (radioGroup.getAttribute("data-changed") == "true") {
-            newAssessment[key] = radioGroup.getAttribute("data-polarity");
-          }
-        }
-        // console.log(JSON.stringify(newAssessment));
-        let response = await fetch("/assessment/", {
-          method: "PATCH",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newAssessment),
-        });
-        // console.log(response);
-        if (response.status == 200) {
-          let data = await response.json();
-          for (let key in data) {
-            assessment_data[key] = data[key];
-          }
-          onAssessmentChanged();
-        }else{
-          console.log('error updating assessment',response);
-        }
       }
       
       let notesList = document.querySelector('.notes-list');
