@@ -30,6 +30,7 @@ body {
   min-height: 800px;
   font-family: PoppinsLight;
   font-size: 16px;
+  background-color: #212529;
 }
 
 h1,
@@ -46,7 +47,7 @@ h6 {
 
 /* responsive media queries for table for all standard screen 
         sizes */
-@media (max-width: 576px) {
+@media (min-width: 576px) {
   .main-container {
     max-width: 100%;
     margin: auto;
@@ -58,21 +59,27 @@ h6 {
     margin: auto;
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .main-container {
-    max-width: 85%;
+    max-width: 100%;
     margin: auto;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .main-container {
-    max-width: 80%;
+    max-width: 75%;
+    margin: auto;
+  }
+}
+@media (min-width: 1300px) {
+  .main-container {
+    max-width: 70%;
     margin: auto;
   }
 }
 @media (min-width: 1400px) {
   .main-container {
-    max-width: 70%;
+    max-width: 58%;
     margin: auto;
   }
 }/*# sourceMappingURL=styles.css.map */

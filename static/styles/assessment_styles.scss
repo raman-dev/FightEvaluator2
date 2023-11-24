@@ -7,7 +7,11 @@ $positiveBg: #0d6efd;
 $negativeBg: #dc3545;
 $neutralBg: #ffc107;
 $outlineColor : #3d7efd;
-$attribCardBg: #242a30;
+
+
+$backgroundColor: #212529;
+// $cardColor: #242a30;
+$cardColor: #242a34;
 
 html {
   height: 100vh;
@@ -18,11 +22,14 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   place-items: center;
+  background-color: $backgroundColor;
 }
 
 /*data-polarity color variables*/
 
 .xmain-container {
+  width: 100% !important;
+  margin-top: 1rem;
   // border: 1px solid white;
   .fighter-grid-container {
     // border: 1px solid white;
@@ -79,7 +86,8 @@ $flickerDuration: 400ms;
 
 .fighter-card{
   display: flex;
-  border: 2px solid lavender;
+  align-items: center;
+  border-radius: $borderRadius;
   padding: 1rem;
   .fighter-image{
     clip-path: inset(0% 0% round 0.8rem);
@@ -89,14 +97,18 @@ $flickerDuration: 400ms;
 
   .content-wrapper{
     display: flex;
-    border: 2px solid lavender;
+    
+    border-radius: $borderRadius;
+    background-color: $cardColor;
+
+    margin-left: 0.8rem;
+    padding: 0.8rem;
     .button-container{
       display: flex;
       align-items: start;
     }
   }
   .card-content{
-    // border: 2px solid lavender;
     margin-left: 0.8rem;
     .card-header{
       .fighter-name{
@@ -109,10 +121,12 @@ $flickerDuration: 400ms;
     
     .card-body{
       // border: 2px solid lavender;
+      border-radius: $borderRadius;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.4rem;
       column-gap: 0.5rem;
+      padding-top: 0.4rem;
     }
   }
 
@@ -150,7 +164,7 @@ $flickerDuration: 400ms;
 
 
 .attrib-card{
-  background-color: $attribCardBg;
+  background-color: $cardColor;
   
   border: 2px solid transparent;
   border-radius: $borderRadius;
@@ -329,7 +343,7 @@ $flickerDuration: 400ms;
 
 .list-group-item {
   margin-bottom: 1rem;
-  background-color: #242a30 !important;
+  background-color: $cardColor;
   border: 2px solid #242a30 !important;
   outline: 3px solid transparent !important;
   outline-offset: 2px !important;
@@ -423,3 +437,13 @@ $flickerDuration: 400ms;
     }
   }
 }
+/*
+
+$backgroundColor: #212529;
+$cardColor: #242a30
+
+color scheme
+  background-color: #212529;
+  card-color: #242a30;
+
+*/

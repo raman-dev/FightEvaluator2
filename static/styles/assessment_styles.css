@@ -11,9 +11,14 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   place-items: center;
+  background-color: #212529;
 }
 
 /*data-polarity color variables*/
+.xmain-container {
+  width: 100% !important;
+  margin-top: 1rem;
+}
 .xmain-container .fighter-grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -52,7 +57,8 @@ body {
 
 .fighter-card {
   display: flex;
-  border: 2px solid lavender;
+  align-items: center;
+  border-radius: 0.5rem;
   padding: 1rem;
 }
 .fighter-card .fighter-image {
@@ -63,7 +69,10 @@ body {
 }
 .fighter-card .content-wrapper {
   display: flex;
-  border: 2px solid lavender;
+  border-radius: 0.5rem;
+  background-color: #242a34;
+  margin-left: 0.8rem;
+  padding: 0.8rem;
 }
 .fighter-card .content-wrapper .button-container {
   display: flex;
@@ -79,11 +88,13 @@ body {
   text-transform: uppercase;
 }
 .fighter-card .card-content .card-body {
+  border-radius: 0.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.4rem;
   -moz-column-gap: 0.5rem;
        column-gap: 0.5rem;
+  padding-top: 0.4rem;
 }
 .fighter-card .info-wrapper {
   display: flex;
@@ -109,7 +120,7 @@ body {
 }
 
 .attrib-card {
-  background-color: #242a30;
+  background-color: #242a34;
   border: 2px solid transparent;
   border-radius: 0.5rem;
   outline: 3px solid transparent;
@@ -251,7 +262,7 @@ body {
 
 .list-group-item {
   margin-bottom: 1rem;
-  background-color: #242a30 !important;
+  background-color: #242a34;
   border: 2px solid #242a30 !important;
   outline: 3px solid transparent !important;
   outline-offset: 2px !important;
@@ -334,4 +345,14 @@ body {
   .fighter-grid-container .fighter-notes {
     grid-column: span 2 !important;
   }
-}/*# sourceMappingURL=assessment_styles.css.map */
+}
+/*
+
+$backgroundColor: #212529;
+$cardColor: #242a30
+
+color scheme
+  background-color: #212529;
+  card-color: #242a30;
+
+*//*# sourceMappingURL=assessment_styles.css.map */

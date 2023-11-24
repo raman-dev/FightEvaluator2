@@ -14,53 +14,57 @@
 
 <body data-bs-theme="dark">
     <!--container-->
-    <div class="container-fluid">
+    <div class="container-fluid main-container">
         <h1 class="event-title">{{ event.name }}</h1>
-        <!-- clickable list of 5 items in bootstrap -->
-        <div class="list-group matchup-container mx-auto">
-            <!-- <a href="/matchup?fighter_a=1&fighter_b=2" class="list-group-item list-group-item-action">
-                <div class="matchup">
-                    <h1>5</h1>
-                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                    <h4 class="fighter-a-name">
-                        First Name Last Name
-                    </h4>
-                    <div class="weightclass">
-                        <p>
-                            vs<br>
-                        </p>
-                        <h6>Lightweight</h6>
-                    </div>
-                    <h4 class="fighter-b-name">
-                        First Name Last Name
-                    </h4>
-                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                </div>
-            </a> -->
-            {% for matchup in matchups %}
-                <!-- <a href="#" class="list-group-item list-group-item-action"> -->
-                <div class="matchup list-group-item list-group-item-action" data-matchup-id="{{ matchup.id }}">
-                    <h1>{{ loop.index }}</h1>
-                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                    <h4>
-                        <a href="/assessment/{{ matchup.fighter_a_id }}">{{ matchup.fighter_a }}</a>
-                    </h4>
-                    <div class="weightclass">
-                        <p>
-                            vs<br>
-                        </p>
-                        <h6>{{ matchup.weight_class|weightClassToStr }}</h6>
-                    </div>                    
-                    <h4>
-                        <a href="/assessment/{{ matchup.fighter_b_id }}">
-                            {{ matchup.fighter_b }}
-                        </a>
-                    </h4>
-                    <img class="fighter-img" src="static/media/sample_50.png" alt="">
-                </div>
-                <!-- </a> -->
-            {% endfor %}
-        </div>
+        <!--6 column table
+            column 1: matchup-number
+            column 2: fighter-a-image
+            column 3: fighter-a-name
+            column 4: vs
+            column 5: fighter-b-name
+            column 6: fighter-b-image
+        -->
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <!-- <th scope="col"></th> -->
+                    <!-- <th scope="col">Fighter A</th> -->
+                    <!-- <th scope="col">vs</th> -->
+                    <!-- <th scope="col">Fighter B</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for matchup in matchups %}
+                    <tr class="matchup" data-matchup-id="{{matchup.id}}">
+                        <th scope="row">
+                            <h1>{{loop.index}}</h1>
+                        </th>
+                        <td><img class="fighter-img" src="static/media/sample_50.png" alt=""></td>
+                        <td class="fighter-name">
+                            <a href="/assessment/{{ matchup.fighter_a_id }}">
+                                <h4>
+                                    {{ matchup.fighter_a }}
+                                </h4>
+                            </a>
+                        </td>
+                        <td>
+                            <div class="weightclass">
+                                <p>vs<br></p>
+                                <h6>{{ matchup.weight_class|weightClassToStr }}</h6>
+                            </div> 
+                        </td>
+                        <td class="fighter-name">
+                            <a href="/assessment/{{ matchup.fighter_b_id }}">
+                                <h4>
+                                    {{ matchup.fighter_b }}
+                                </h4>
+                            </a>
+                        </td>
+                        <td><img class="fighter-img" src="static/media/sample_50.png" alt=""></td>
+                    </tr>
+                {% endfor %}
+             </tbody>
+        </table>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
