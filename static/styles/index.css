@@ -6,25 +6,15 @@
   margin-right: auto;
 }
 
-tr:hover {
-  cursor: pointer;
+table {
+  /* fighter-img has rounded corners using crop */
 }
-tr:hover .weightclass h6 {
-  text-decoration: underline;
-}
-
-/* fighter-img has rounded corners using crop */
-.fighter-img {
-  border-radius: 10%;
-}
-
-table td[scope=row] {
+table th,
+table td {
   vertical-align: middle;
   text-align: center;
 }
 table td {
-  vertical-align: middle;
-  text-align: center;
   width: -moz-fit-content;
   width: fit-content;
 }
@@ -32,6 +22,16 @@ table h1 {
   text-align: center;
   opacity: 0.5;
   width: 2.2ch;
+  margin: 0px;
+}
+table tr:hover {
+  cursor: pointer;
+}
+table tr:hover .weightclass h6 {
+  text-decoration: underline;
+}
+table .fighter-img {
+  border-radius: 10%;
 }
 table .fighter-name a {
   width: 18ch;

@@ -8,10 +8,23 @@ $negativeBg: #dc3545;
 $neutralBg: #ffc107;
 $outlineColor : #3d7efd;
 
-
 $backgroundColor: #212529;
-// $cardColor: #242a30;
 $cardColor: #242a34;
+$cardBorderColor: #131b23;
+
+$color-0: #01161E;
+$color-1: #124559;
+$color-2: #598392;
+$color-3: #AEC3B0;
+$color-4: #EFF6E0;
+
+// $backgroundColor: #01121E;
+// $cardColor: #124554;
+
+$btnBackgroundColor: #598392;
+$btnBorderColor: black;
+$btnBorderRadius: 0.6rem;
+$btnClickBackground: #5983928f;
 
 html {
   height: 100vh;
@@ -73,6 +86,42 @@ $descriptionPadding: 0.5rem;
 $borderRadius: 0.5rem;
 $flickerDuration: 400ms;
 
+button{
+  // outline: 2px solid lavender;
+  outline-offset: 2px;
+
+  border: 2px solid $btnBorderColor;
+  border-radius: $btnBorderRadius;
+
+  margin-left: 0.4rem;
+  padding: 0.3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  background-color: $btnBackgroundColor;
+  font-family: PoppinsSemiBold;
+
+  transition: all 0.1s ease-out;
+}
+
+@mixin button-active{
+  box-shadow: black 2px 2px 0 0;
+  background-color: $btnClickBackground;
+}
+
+button:hover{
+  box-shadow: black 4px 4px 0 0;
+}
+
+button:active{
+  // box-shadow: black 2px 2px 0 0;
+  // background-color: $btnClickBackground;
+  @include button-active;
+}
+
+
+
+
 .fighter-info-container{
   // .fighter-card{
 
@@ -88,6 +137,7 @@ $flickerDuration: 400ms;
   display: flex;
   align-items: center;
   border-radius: $borderRadius;
+  border: 1px solid $cardBorderColor;
   padding: 1rem;
   .fighter-image{
     clip-path: inset(0% 0% round 0.8rem);
@@ -99,6 +149,7 @@ $flickerDuration: 400ms;
     display: flex;
     
     border-radius: $borderRadius;
+    border: 1px solid $cardBorderColor;
     background-color: $cardColor;
 
     margin-left: 0.8rem;
@@ -166,15 +217,13 @@ $flickerDuration: 400ms;
 .attrib-card{
   background-color: $cardColor;
   
-  border: 2px solid transparent;
+  border: 2px solid $cardBorderColor;
   border-radius: $borderRadius;
   outline: 3px solid transparent;
   outline-offset: 2px;
   
   padding: $cardPadding;
   margin-bottom: 0.7rem;
-  // animation: flicker $flickerDuration infinite alternate linear;
-
 
   p{
     margin: 0px;
@@ -301,7 +350,6 @@ $flickerDuration: 400ms;
 //disable button click on attrib options when card edit mode disabled
 .attrib-card[data-edit-mode-enabled="false"]{
    //reset outling color for animation
-   border-color: transparent !important;
    outline-color: transparent !important;
    animation-play-state: paused;
   .card-body{
@@ -316,6 +364,9 @@ $flickerDuration: 400ms;
 
   .card-state{
     background-color: transparent;
+  }
+  .attrib-edit-button{
+    @include button-active;
   }
 }
 
@@ -437,13 +488,3 @@ $flickerDuration: 400ms;
     }
   }
 }
-/*
-
-$backgroundColor: #212529;
-$cardColor: #242a30
-
-color scheme
-  background-color: #212529;
-  card-color: #242a30;
-
-*/

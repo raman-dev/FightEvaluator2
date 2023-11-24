@@ -13,9 +13,9 @@
 </head>
 
 <body data-bs-theme="dark">
+    {% include 'navbar.html' %}
     <!--container-->
     <div class="container-fluid main-container">
-        <h1 class="event-title">{{ event.name }}</h1>
         <!--6 column table
             column 1: matchup-number
             column 2: fighter-a-image
@@ -25,12 +25,14 @@
             column 6: fighter-b-image
         -->
         <table class="table table-dark table-striped table-hover">
+            <caption>{{event.name}}</caption>
             <thead>
                 <tr>
                     <!-- <th scope="col"></th> -->
                     <!-- <th scope="col">Fighter A</th> -->
                     <!-- <th scope="col">vs</th> -->
                     <!-- <th scope="col">Fighter B</th> -->
+                    <h1 class="event-title">{{event.name}}</h1>
                 </tr>
             </thead>
             <tbody>

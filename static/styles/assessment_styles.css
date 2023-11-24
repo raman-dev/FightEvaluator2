@@ -49,6 +49,28 @@ body {
     outline-color: #3d7efd;
   }
 }
+button {
+  outline-offset: 2px;
+  border: 2px solid black;
+  border-radius: 0.6rem;
+  margin-left: 0.4rem;
+  padding: 0.3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: #598392;
+  font-family: PoppinsSemiBold;
+  transition: all 0.1s ease-out;
+}
+
+button:hover {
+  box-shadow: black 4px 4px 0 0;
+}
+
+button:active {
+  box-shadow: black 2px 2px 0 0;
+  background-color: rgba(89, 131, 146, 0.5607843137);
+}
+
 .fighter-info-container .img-link {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -59,6 +81,7 @@ body {
   display: flex;
   align-items: center;
   border-radius: 0.5rem;
+  border: 1px solid #131b23;
   padding: 1rem;
 }
 .fighter-card .fighter-image {
@@ -70,6 +93,7 @@ body {
 .fighter-card .content-wrapper {
   display: flex;
   border-radius: 0.5rem;
+  border: 1px solid #131b23;
   background-color: #242a34;
   margin-left: 0.8rem;
   padding: 0.8rem;
@@ -121,7 +145,7 @@ body {
 
 .attrib-card {
   background-color: #242a34;
-  border: 2px solid transparent;
+  border: 2px solid #131b23;
   border-radius: 0.5rem;
   outline: 3px solid transparent;
   outline-offset: 2px;
@@ -229,7 +253,6 @@ body {
 }
 
 .attrib-card[data-edit-mode-enabled=false] {
-  border-color: transparent !important;
   outline-color: transparent !important;
   animation-play-state: paused;
 }
@@ -243,6 +266,10 @@ body {
 }
 .attrib-card[data-edit-mode-enabled=true] .card-state {
   background-color: transparent;
+}
+.attrib-card[data-edit-mode-enabled=true] .attrib-edit-button {
+  box-shadow: black 2px 2px 0 0;
+  background-color: rgba(89, 131, 146, 0.5607843137);
 }
 
 .attrib-card[data-edit-mode-enabled=true][data-attrib-state=positive] .card-state {
@@ -345,14 +372,4 @@ body {
   .fighter-grid-container .fighter-notes {
     grid-column: span 2 !important;
   }
-}
-/*
-
-$backgroundColor: #212529;
-$cardColor: #242a30
-
-color scheme
-  background-color: #212529;
-  card-color: #242a30;
-
-*//*# sourceMappingURL=assessment_styles.css.map */
+}/*# sourceMappingURL=assessment_styles.css.map */

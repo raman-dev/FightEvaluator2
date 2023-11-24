@@ -1,66 +1,64 @@
+
 /*horizontally centered event-title*/
 .event-title {
+  text-align: center;
+  margin: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table {
+  th,
+  td {
+    vertical-align: middle;
     text-align: center;
-    margin: 1rem;
-    margin-left: auto;
-    margin-right: auto;
-}
+  }
+  td {
+    width: fit-content;
+  }
 
-tr:hover{
+  h1 {
+    text-align: center;
+    opacity: 0.5;
+    width: 2.2ch;
+    margin: 0px;
+  }
+
+  tr:hover {
     cursor: pointer;
-    .weightclass{
-        h6{
-            text-decoration: underline;
-        }
+    .weightclass {
+      h6 {
+        text-decoration: underline;
+      }
     }
-}
-
-
-/* fighter-img has rounded corners using crop */
-.fighter-img {
+  }
+  /* fighter-img has rounded corners using crop */
+  .fighter-img {
     border-radius: 10%;
+  }
+
+  .fighter-name {
+    a {
+      width: 18ch;
+      text-align: center;
+      text-decoration: none;
+      h4 {
+        margin: 0px;
+        color: #dee2e6;
+      }
+      h4:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  .weightclass {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    p {
+      margin: 0px;
+    }
+  }
 }
-
-table{
-    td[scope="row"]{
-        vertical-align: middle;
-        text-align: center;
-    }
-    td{
-        vertical-align: middle;
-        text-align: center;
-        width: fit-content;
-    }
-    
-    h1 {
-        text-align: center;
-        opacity: 0.5;
-        width: 2.2ch;
-    }
-    .fighter-name{
-        a{
-            width: 18ch;
-            text-align: center;
-            text-decoration: none;
-            h4 {
-                margin: 0px;
-                color: #dee2e6;
-            }
-            h4:hover{
-                text-decoration: underline;
-            }
-        }
-    }
-    .weightclass{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        p{
-            margin: 0px;
-        }
-    }
-}
-
-
