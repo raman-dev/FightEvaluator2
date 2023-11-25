@@ -57,4 +57,10 @@ table .weightclass {
 }
 table .weightclass p {
   margin: 0px;
+}
+
+@media (max-width: 650px) {
+  table td {
+    display: block;
+  }
 }/*# sourceMappingURL=index.css.map */

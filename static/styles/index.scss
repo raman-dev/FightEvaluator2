@@ -46,6 +46,7 @@ table {
   }
 
   .fighter-name {
+
     a {
       width: 18ch;
       text-align: center;
@@ -67,6 +68,17 @@ table {
 
     p {
       margin: 0px;
+    }
+  }
+}
+
+@media(max-width: 650px) {
+  table {
+    td{
+      display: block;
+      // *{
+      //   display: block;
+      // }
     }
   }
 }
