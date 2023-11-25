@@ -253,15 +253,17 @@
       bioEditButton.addEventListener("click", (event) => {
         //toggle edit mode
         editModeEnabled = !editModeEnabled;
-        
+        let fighterCard = document.querySelector(".fighter-card");
         let link = document.querySelector('.img-link');
         if (editModeEnabled){
           //make img-link editable
           link.style.opacity = '1';
           link.setAttribute('contenteditable','plaintext-only');
+          fighterCard.setAttribute("data-edit-mode-enabled", "true");
         }else{
           link.removeAttribute('contenteditable');
           link.style.opacity = '0';
+          fighterCard.setAttribute("data-edit-mode-enabled", "false");
         }
       });
       //grab content from note-editor and send it to the server

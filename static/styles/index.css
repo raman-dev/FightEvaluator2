@@ -7,7 +7,11 @@
 }
 
 table {
+  border: None;
   /* fighter-img has rounded corners using crop */
+}
+table tbody {
+  border: 2px solid #131b23;
 }
 table th,
 table td {

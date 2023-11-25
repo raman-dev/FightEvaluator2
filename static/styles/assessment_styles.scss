@@ -133,6 +133,12 @@ button:active{
   }
 }
 
+.fighter-card[data-edit-mode-enabled="true"]{ 
+  .bio-edit-button{
+    @include button-active;
+  }
+}
+
 .fighter-card{
   display: flex;
   align-items: center;

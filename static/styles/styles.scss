@@ -54,6 +54,11 @@ h6 {
     font-family: PoppinsSemiBold;
 }
 
+$backgroundColor: #212529;
+$cardColor: #242a34;
+$cardBorderColor: #131b23;
+
+
 .navbar-links{
     a{
         text-decoration: none;
@@ -67,6 +72,7 @@ h6 {
 }
 
 .navbar{
+    background-color: $cardBorderColor;
     width: 100%;
     .navbar-container{
         display: flex;

@@ -7,7 +7,15 @@
   margin-right: auto;
 }
 
+$tableBorderRadius: 0.68em;
+$cardBorderColor: #131b23;
+
 table {
+
+  border: None;
+  tbody {
+    border: 2px solid $cardBorderColor;
+  }
   th,
   td {
     vertical-align: middle;

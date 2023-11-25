@@ -77,6 +77,11 @@ button:active {
   opacity: 0;
 }
 
+.fighter-card[data-edit-mode-enabled=true] .bio-edit-button {
+  box-shadow: black 2px 2px 0 0;
+  background-color: rgba(89, 131, 146, 0.5607843137);
+}
+
 .fighter-card {
   display: flex;
   align-items: center;
