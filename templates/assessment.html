@@ -225,6 +225,9 @@
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
       };
 
+      //set a cookie for the assessment_id so that i know which assessment was viewed last
+      document.cookie = `assessment_id=${assessment_id};SameSite=strict;path=/;max-age=31536000`;
+      //print all cookies
       
       for (key in attribInfoMap){
         //grab attrib-card

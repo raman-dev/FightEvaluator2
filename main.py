@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional,Annotated
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
-from fastapi import FastAPI, Request,HTTPException
+from fastapi import FastAPI, Request,HTTPException, Cookie
 from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -119,14 +119,15 @@ def createFighter(link,session):
     return fighterObj.id
 
 @app.get("/")
-async def index(request: Request):
+async def index(request: Request,assessment_id: Annotated[str | None, Cookie()] = None):
     #query my database for the next event
     #check the date of the next event
     #if date is upcoming or today load event from database
     #if not retrieve using scraper and create FightEvent object
     #and create matchup objects for each matchup in the events
+    # print('request',request.body(),request.cookies,request.headers)
     #or do i create an endpoint that scrapes the next event and returns it
-    # return FileResponse("static/index.html")
+    #return FileResponse("static/index.html")
     with Session(engine) as session:
         context = {"request":request}
         eventData = next_event(session)

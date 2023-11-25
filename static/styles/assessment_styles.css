@@ -20,18 +20,17 @@ body {
   margin-top: 1rem;
 }
 .xmain-container .fighter-grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  display: flex;
   -moz-column-gap: 1rem;
        column-gap: 1rem;
-}
-.xmain-container .fighter-grid-container .fighter-attrib-list {
-  grid-column: span 3;
-}
-.xmain-container .fighter-grid-container .fighter-notes {
-  grid-column: span 2;
+  width: 100%;
 }
 
+@media (max-width: 850px) {
+  .fighter-grid-container {
+    flex-direction: column;
+  }
+}
 /*
   blinking outline animation called flicker
 */
@@ -365,16 +364,5 @@ button:active {
 @media (max-width: 1200px) {
   .xmain-container {
     max-width: 95%;
-  }
-}
-@media (max-width: 996px) {
-  .fighter-grid-container {
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .fighter-grid-container .fighter-attrib-list {
-    grid-column: span 2 !important;
-  }
-  .fighter-grid-container .fighter-notes {
-    grid-column: span 2 !important;
   }
 }/*# sourceMappingURL=assessment_styles.css.map */
