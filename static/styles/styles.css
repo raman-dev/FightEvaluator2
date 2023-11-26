@@ -57,31 +57,52 @@ nav .sidebar-container {
   padding-top: 35%;
   border-right: 1px solid lavender;
 }
-nav .sidebar-container > * {
-  margin-bottom: 0.5rem;
-}
 nav .sidebar-container a {
   text-decoration: none;
   color: lavender;
 }
 nav .sidebar-container .link {
+  display: flex;
+  align-items: center;
   max-width: 24ch;
 }
-nav .sidebar-container .link-wrapper h4 {
+nav .sidebar-container .link h3 {
+  margin: 0px;
+  margin-left: 0.4rem;
+}
+nav .sidebar-container .link svg {
+  margin-left: 0.4rem;
+  fill: lavender;
+  width: 2rem;
+  height: 2rem;
+}
+nav .sidebar-container .home-link {
+  margin-bottom: 1rem;
+}
+nav .sidebar-container .link-wrapper .navbar-heading {
+  padding-left: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+nav .sidebar-container .link-wrapper .navbar-heading svg {
+  fill: #01161E;
+  width: 2rem;
+  height: 2rem;
+}
+nav .sidebar-container .link-wrapper .navbar-heading h3 {
+  margin: 0px;
   border: 2px solid transparent;
   border-radius: 0.5rem;
   text-transform: lowercase;
-  padding-left: 0.4rem;
-  padding-right: 0.4rem;
-  margin-left: 0.4rem;
-  margin-right: 0.4rem;
+  transition: all 0.15s ease;
 }
 nav .sidebar-container .link-wrapper .link-container {
   display: flex;
   flex-direction: column;
-  height: 0px;
   overflow: hidden;
   padding-left: 0.5rem;
+  border-bottom: 1px solid lavender;
 }
 nav .sidebar-container .link-wrapper .link-container .link {
   border: 1px solid transparent;
@@ -91,20 +112,16 @@ nav .sidebar-container .link-wrapper .link-container .link:hover {
   border-top: 1px solid lavender;
   border-bottom: 1px solid lavender;
 }
-nav .sidebar-container .link-wrapper.active h4 {
+nav .sidebar-container .link-wrapper.active .navbar-heading {
   background-color: #AEC3B0;
   color: #01161E;
-  box-shadow: black 4px 4px 0 0;
+  text-shadow: 1.5px 1px #EFF6E0;
 }
-nav .sidebar-container .link-wrapper.active .link-container {
-  border-bottom: 1px solid lavender;
-}
-nav .sidebar-container .link-wrapper h4:hover {
+nav .sidebar-container .navbar-heading:hover {
   cursor: pointer;
   border-color: lavender;
   background-color: #AEC3B0;
   color: #01161E;
-  box-shadow: black 4px 4px 0 0;
 }
 nav .sidebar-container .link-wrapper:hover .link-container {
   border-bottom: 1px solid lavender;

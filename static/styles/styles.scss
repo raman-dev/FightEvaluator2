@@ -77,14 +77,7 @@ nav {
         height: 100%;
 
         padding-top: 35%;
-        // padding-left: $sideBarPadding;
-        // padding-right: $sideBarPadding;
-
         border-right: 1px solid lavender;
-
-        > * {
-            margin-bottom: 0.5rem;
-        }
 
         a{
             text-decoration: none;
@@ -92,30 +85,54 @@ nav {
         }
 
         .link{
+            display: flex;
+            align-items: center;
             max-width: 24ch;
+            h3{
+                margin: 0px;
+                margin-left: 0.4rem;
+            }
+            svg{
+                margin-left:0.4rem;
+                fill: lavender;
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+
+        .home-link{
+            margin-bottom: 1rem;
         }
 
         .link-wrapper{
-
-            h4 { 
-                border: 2px solid transparent;
-                border-radius: $linkWrapperBorderRadius;
-                text-transform: lowercase;
-
+            .navbar-heading{
                 padding-left: 0.4rem;
-                padding-right: 0.4rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
 
-                margin-left: 0.4rem;
-                margin-right: 0.4rem;
+                svg{
+                    fill: $color-0;
+                    width: 2rem;
+                    height: 2rem;
+                }
+                h3{
+                    margin: 0px;
+                    border: 2px solid transparent;
+                    border-radius: $linkWrapperBorderRadius;
+                    text-transform: lowercase;
+
+                    transition: all 0.15s ease;
+                }
             }
 
             .link-container{
                 display: flex;
                 flex-direction: column;
-                height: 0px;
+                // height: 0px;
                 overflow: hidden;
                 padding-left: 0.5rem;
-                    
+                border-bottom: 1px solid lavender;
                 .link{
                     border: 1px solid transparent;
                     margin-left: 0.4rem;
@@ -129,23 +146,19 @@ nav {
         }
 
         .link-wrapper.active{
-            h4{
+            .navbar-heading{
                 background-color: $color-3;
                 color: $color-0;
-                box-shadow: black 4px 4px 0 0;
-            }
-
-            .link-container{
-                border-bottom: 1px solid lavender;
+                // box-shadow: black 4px 4px 0 0;
+                text-shadow: 1.5px 1px #EFF6E0, 
             }
         }
 
-        .link-wrapper h4:hover{
+        .navbar-heading:hover{
             cursor: pointer;
             border-color: lavender;
             background-color: $color-3;
             color: $color-0;
-            box-shadow: black 4px 4px 0 0;
         }
 
         .link-wrapper:hover{
@@ -155,9 +168,6 @@ nav {
         }
     }
 }
-
-
-
     
 
 /* responsive media queries for table for all standard screen 
