@@ -57,47 +57,105 @@ h6 {
 $backgroundColor: #212529;
 $cardColor: #242a34;
 $cardBorderColor: #131b23;
+$linkWrapperBorderRadius: 0.5rem;
+$sideBarPadding: 0.8rem;
+
+$color-0: #01161E;
+$color-1: #124559;
+$color-2: #598392;
+$color-3: #AEC3B0;
+$color-4: #EFF6E0;
 
 
-.navbar-links{
-    a{
-        text-decoration: none;
-        color: lavender;
-    }
-    a:hover{
-        .link{
-            text-decoration: underline;
-        }
-    }
-}
-
-.navbar{
+nav {
     background-color: $cardBorderColor;
-    width: 100%;
-    .navbar-container{
+    width: fit-content;
+
+    .sidebar-container{
         display: flex;
-        width: 100%;
-        .navbar-links{
-            display: flex;
-            align-items: center;
-            .link{
-                padding: 0.3rem;
+        flex-direction: column;
+        height: 100%;
+
+        padding-top: 35%;
+        // padding-left: $sideBarPadding;
+        // padding-right: $sideBarPadding;
+
+        border-right: 1px solid lavender;
+
+        > * {
+            margin-bottom: 0.5rem;
+        }
+
+        a{
+            text-decoration: none;
+            color: lavender;
+        }
+
+        .link{
+            max-width: 24ch;
+        }
+
+        .link-wrapper{
+
+            h4 {
+                border: 2px solid transparent;
+                border-radius: $linkWrapperBorderRadius;
+                text-transform: lowercase;
+
+                padding-left: 0.4rem;
+                padding-right: 0.4rem;
+            }
+
+            .link-container{
+                display: flex;
+                flex-direction: column;
+                height: 0px;
+                overflow: hidden;
+                padding-left: 0.5rem;
+    
+                transition: all 0.3s ease-in-out;
+                
+                .link{
+                    border: 1px solid transparent;
+                    margin-left: 0.4rem;
+                }
+                .link:hover{
+                    border-top: 1px solid lavender;
+                    border-bottom: 1px solid lavender;
+                }
+            }
+
+        }
+
+        .link-wrapper.active{
+            h4{
+                background-color: $color-3;
+                color: $color-0;
             }
         }
+
+        .link-wrapper h4:hover{
+            cursor: pointer;
+            border-color: lavender;
+        }
     }
 }
+
+
+
+    
 
 /* responsive media queries for table for all standard screen 
         sizes */
 @media (min-width: 576px) {
-    .main-container ,.navbar-container{
+    .main-container {
         max-width: 100%; 
         margin: auto;
     }
 }
 
 @media (min-width: 576px) {
-    .main-container ,.navbar-container{
+    .main-container {
         max-width: 100%;
         margin: auto;
     }
@@ -111,28 +169,28 @@ $cardBorderColor: #131b23;
 // }
 
 @media (min-width: 992px) {
-    .main-container ,.navbar-container{
+    .main-container {
         max-width: 100%;
         margin: auto;
     }
 }
 
 @media (min-width: 1200px) {
-    .main-container ,.navbar-container{
+    .main-container {
         max-width: 75%;
         margin: auto;
     }
 }
 
 @media (min-width: 1300px) {
-    .main-container ,.navbar-container{
+    .main-container {
         max-width: 70%;
         margin: auto;
     }
 }
 
 @media (min-width: 1400px) {
-    .main-container ,.navbar-container{
+    .main-container {
         max-width: 65%;
         margin: auto;
     }

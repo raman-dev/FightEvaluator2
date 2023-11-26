@@ -1,16 +1,49 @@
-<nav class="navbar">
-    <div class="navbar-container">
-        <!-- <div class="nav-logo">
-            <a href="/">
-                <img src="{{ url_for('static', path='/media/sample_50.png') }}" alt="logo">
-            </a>
-        </div> -->
-        <div class="navbar-links">
-            <a href="/">
-                <div class="link">
-                    Event
+<script src="
+https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
+"></script>
+<nav>
+    <div class="sidebar-container">
+        <!-- <div class="link"> -->
+        <a href="/">
+            <div class="link">
+                <h4>
+                    Event Name
+                </h4>
+            </div>
+        </a>
+        <!-- </div> -->
+        <!--collapsible container of last 5 visited assessments-->
+        <div class="link-wrapper assessment-links">
+            <h4>Assessments</h4>
+            <div class="link-container">
+                <!-- <a href="/assessments class="link">
+                    <div ">
+                        Fighter Name 0
+                    </div>
                 </div>
-            </a>
+                <div class="link">
+                    <a href="/assessments">
+                        Fighter Name 1
+                    </a>
+                </div> -->
+            </div>
+        </div>
+        <!--collapsible container of last 5 visited matchups-->
+        <div class="link-wrapper matchup-links">
+            <h4>Matchups</h4>
+            <div class="link-container">
+                <!-- <div class="link">
+                    <a href="/matchups">
+                        Matchup Name 0
+                    </a>
+                </div>
+                <div class="link">
+                    <a href="/matchups">
+                        Matchup Name 1
+                    </a>
+                </div> -->
+            </div>
         </div>
     </div>
 </nav>
+<script src="{{ url_for('static',path='/js/sidebar-interaction.js') }}"></script>

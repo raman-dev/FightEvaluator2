@@ -45,64 +45,94 @@ h6 {
   font-family: PoppinsSemiBold;
 }
 
-.navbar-links a {
+nav {
+  background-color: #131b23;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+nav .sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 35%;
+  border-right: 1px solid lavender;
+}
+nav .sidebar-container > * {
+  margin-bottom: 0.5rem;
+}
+nav .sidebar-container a {
   text-decoration: none;
   color: lavender;
 }
-.navbar-links a:hover .link {
-  text-decoration: underline;
+nav .sidebar-container .link {
+  max-width: 24ch;
 }
-
-.navbar {
-  background-color: #131b23;
-  width: 100%;
+nav .sidebar-container .link-wrapper h4 {
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  text-transform: lowercase;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
 }
-.navbar .navbar-container {
+nav .sidebar-container .link-wrapper .link-container {
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  height: 0px;
+  overflow: hidden;
+  padding-left: 0.5rem;
+  transition: all 0.3s ease-in-out;
 }
-.navbar .navbar-container .navbar-links {
-  display: flex;
-  align-items: center;
+nav .sidebar-container .link-wrapper .link-container .link {
+  border: 1px solid transparent;
+  margin-left: 0.4rem;
 }
-.navbar .navbar-container .navbar-links .link {
-  padding: 0.3rem;
+nav .sidebar-container .link-wrapper .link-container .link:hover {
+  border-top: 1px solid lavender;
+  border-bottom: 1px solid lavender;
+}
+nav .sidebar-container .link-wrapper.active h4 {
+  background-color: #AEC3B0;
+  color: #01161E;
+}
+nav .sidebar-container .link-wrapper h4:hover {
+  cursor: pointer;
+  border-color: lavender;
 }
 
 /* responsive media queries for table for all standard screen 
         sizes */
 @media (min-width: 576px) {
-  .main-container, .navbar-container {
+  .main-container {
     max-width: 100%;
     margin: auto;
   }
 }
 @media (min-width: 576px) {
-  .main-container, .navbar-container {
+  .main-container {
     max-width: 100%;
     margin: auto;
   }
 }
 @media (min-width: 992px) {
-  .main-container, .navbar-container {
+  .main-container {
     max-width: 100%;
     margin: auto;
   }
 }
 @media (min-width: 1200px) {
-  .main-container, .navbar-container {
+  .main-container {
     max-width: 75%;
     margin: auto;
   }
 }
 @media (min-width: 1300px) {
-  .main-container, .navbar-container {
+  .main-container {
     max-width: 70%;
     margin: auto;
   }
 }
 @media (min-width: 1400px) {
-  .main-container, .navbar-container {
+  .main-container {
     max-width: 65%;
     margin: auto;
   }

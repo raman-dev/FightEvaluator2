@@ -7,11 +7,8 @@ html {
 }
 
 body {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  place-items: center;
   background-color: #212529;
+  display: flex;
 }
 
 /*data-polarity color variables*/
@@ -28,6 +25,22 @@ body {
 
 @media (max-width: 850px) {
   .fighter-grid-container {
+    flex-direction: column;
+  }
+}
+@media (max-width: 720px) {
+  .fighter-card {
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: auto;
+    row-gap: 1rem;
+  }
+  .fighter-card .content-wrapper {
+    flex-direction: column;
+  }
+}
+@media (max-width: 576px) {
+  .fighter-card {
     flex-direction: column;
   }
 }

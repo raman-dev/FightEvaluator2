@@ -31,11 +31,8 @@ html {
 }
 
 body {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  place-items: center;
   background-color: $backgroundColor;
+  display: flex;
 }
 
 /*data-polarity color variables*/
@@ -43,22 +40,6 @@ body {
 .xmain-container {
   width: 100% !important;
   margin-top: 1rem;
-  // border: 1px solid white;
-  // .fighter-grid-container {
-  //   // border: 1px solid white;
-  //   display: grid;
-  //   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  //   column-gap: 1rem;
-
-  //   .fighter-attrib-list {
-  //     grid-column: span 3;
-  //   }
-
-  //   .fighter-notes {
-  //     //spans 3 frs
-  //     grid-column: span 2;
-  //   }
-  // }
 
   .fighter-grid-container{
     display: flex;
@@ -73,6 +54,22 @@ body {
   }
 }
 
+@media(max-width: 720px){
+  .fighter-card{
+    width: fit-content;
+    margin: auto;
+    row-gap: 1rem;
+    .content-wrapper{
+      flex-direction: column;
+    }
+  }
+}
+
+@media(max-width: 576px){
+  .fighter-card{
+    flex-direction: column;
+  }
+}
 
 /*
   blinking outline animation called flicker
@@ -494,17 +491,4 @@ button:active{
     max-width: 95%;
   }
 }
-
-// @media (max-width: 996px) {
-
-//   .fighter-grid-container {
-//     grid-template-columns: 1fr 1fr !important;
-//     .fighter-attrib-list {
-//       grid-column: span 2 !important;
-//     }
-//     .fighter-notes {
-//       grid-column: span 2 !important;
-//     }
-//   }
-// }
 

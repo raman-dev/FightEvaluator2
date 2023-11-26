@@ -1,3 +1,7 @@
+body {
+  display: flex;
+}
+
 /*horizontally centered event-title*/
 .event-title {
   text-align: center;

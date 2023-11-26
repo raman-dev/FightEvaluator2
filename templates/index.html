@@ -14,6 +14,7 @@
 
 <body data-bs-theme="dark">
     {% include 'navbar.html' %}
+    
     <!--container-->
     <div class="container-fluid main-container">
         <!--6 column table
@@ -37,49 +38,50 @@
             </thead>
             <tbody>
                 {% for matchup in matchups %}
-                    <tr class="matchup" data-matchup-id="{{matchup.id}}">
-                        <th scope="row">
-                            <h1>{{loop.index}}</h1>
-                        </th>
-                        <td><img class="fighter-img" src="static/media/sample_50.png" alt=""></td>
-                        <td class="fighter-name">
-                            <!-- <div class="fighter-name"> -->
-                                <!-- <img class="fighter-img" src="static/media/sample_50.png" alt=""> -->
-                                <a href="/assessment/{{ matchup.fighter_a_id }}">
-                                    <h4>
-                                        {{ matchup.fighter_a }}
-                                    </h4>
-                                </a>
-                            <!-- </div> -->
-                        </td>
-                        <td>
-                            <div class="weightclass">
-                                <p>vs<br></p>
-                                <h6>{{ matchup.weight_class|weightClassToStr }}</h6>
-                            </div> 
-                        </td>
-                        <td class="fighter-name">
-                            <a href="/assessment/{{ matchup.fighter_b_id }}">
-                                <h4>
-                                    {{ matchup.fighter_b }}
-                                </h4>
-                            </a>
-                        </td>
-                        <td><img class="fighter-img" src="static/media/sample_50.png" alt=""></td>
-                    </tr>
+                <tr class="matchup" data-matchup-id="{{matchup.id}}">
+                    <th scope="row">
+                        <h1>{{loop.index}}</h1>
+                    </th>
+                    <td><img class="fighter-img" src="static/media/sample_50.png" alt=""></td>
+                    <td class="fighter-name">
+                        <!-- <div class="fighter-name"> -->
+                        <!-- <img class="fighter-img" src="static/media/sample_50.png" alt=""> -->
+                        <a href="/assessment/{{ matchup.fighter_a_id }}">
+                            <h4>
+                                {{ matchup.fighter_a }}
+                            </h4>
+                        </a>
+                        <!-- </div> -->
+                    </td>
+                    <td>
+                        <div class="weightclass">
+                            <p>vs<br></p>
+                            <h6>{{ matchup.weight_class|weightClassToStr }}</h6>
+                        </div>
+                    </td>
+                    <td class="fighter-name">
+                        <a href="/assessment/{{ matchup.fighter_b_id }}">
+                            <h4>
+                                {{ matchup.fighter_b }}
+                            </h4>
+                        </a>
+                    </td>
+                    <td><img class="fighter-img" src="static/media/sample_50.png" alt=""></td>
+                </tr>
                 {% endfor %}
-             </tbody>
+            </tbody>
         </table>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <script>  
-        
+    <script>
+
         //for every matchup add on click listener that takes them to /matchup/data-matchup-id
         const matchups = document.querySelectorAll('.matchup');
-        matchups.forEach((matchup)=>{
-            matchup.addEventListener('click',(event)=>{
+        matchups.forEach((matchup) => {
+            matchup.addEventListener('click', (event) => {
                 const matchupId = matchup.dataset.matchupId;
                 window.location.href = `/matchup/${matchupId}`;
             });
