@@ -73,6 +73,8 @@ nav .sidebar-container .link-wrapper h4 {
   text-transform: lowercase;
   padding-left: 0.4rem;
   padding-right: 0.4rem;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 }
 nav .sidebar-container .link-wrapper .link-container {
   display: flex;
@@ -80,7 +82,6 @@ nav .sidebar-container .link-wrapper .link-container {
   height: 0px;
   overflow: hidden;
   padding-left: 0.5rem;
-  transition: all 0.3s ease-in-out;
 }
 nav .sidebar-container .link-wrapper .link-container .link {
   border: 1px solid transparent;
@@ -93,10 +94,20 @@ nav .sidebar-container .link-wrapper .link-container .link:hover {
 nav .sidebar-container .link-wrapper.active h4 {
   background-color: #AEC3B0;
   color: #01161E;
+  box-shadow: black 4px 4px 0 0;
+}
+nav .sidebar-container .link-wrapper.active .link-container {
+  border-bottom: 1px solid lavender;
 }
 nav .sidebar-container .link-wrapper h4:hover {
   cursor: pointer;
   border-color: lavender;
+  background-color: #AEC3B0;
+  color: #01161E;
+  box-shadow: black 4px 4px 0 0;
+}
+nav .sidebar-container .link-wrapper:hover .link-container {
+  border-bottom: 1px solid lavender;
 }
 
 /* responsive media queries for table for all standard screen 

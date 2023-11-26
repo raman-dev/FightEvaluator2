@@ -1,13 +1,11 @@
-function stripIdAndStore(stack,storeKey){
-    let url_parts = url.split('/');
-    let id = parseInt(url_parts[url_parts.length-1]);
+function stripIdAndStore(stack,storeKey,data){
+
     if (!id in stack){
-        stack.push(id);
+        stack.push(data);
     }else{
         //remove the element from the stack and push it to the top
-        //remove the element
-        stack = stack.filter((item) => item !== id);
-        stack.push(id);
+        stack = stack.filter((item) => item.id !== id);
+        stack.push(data);
     }
      //remove the last element of the stack if size is greater than 5
     if (stack.length > 5){
@@ -20,10 +18,10 @@ function stripIdAndStore(stack,storeKey){
 function addSideBarLinks(stack, linkContainer,path){
     // console.log(linkContainer);
     for (let i = stack.length - 1;i >= 0;i--){
-        let id = stack[i];
+        let data = stack[i];
         let link = document.createElement('a');
         link.href = `/${path}/${id}`;
-        link.innerHTML = `<div class="link">${id}</div>`;
+        link.innerHTML = `<div class="link">${data.last_name}</div>`;
         linkContainer.appendChild(link);
         // console.log(link);
     }
@@ -51,10 +49,16 @@ if (matchupStack == null){
 let url = window.location.href;
 //
 if (url.includes('assessment')){
-    stripIdAndStore(assessmentStack,'assessments');
-    document.querySelector('.assessment-links').classList.add('active');
     
-}else if (url.includes('matchup')){
+    let url_parts = url.split('/');
+    let id = parseInt(url_parts[url_parts.length-1]);
+    stripIdAndStore(assessmentStack,'assessments',{
+        id: id,
+        last_name: {{ fighter.last_name }}
+    });
+    document.querySelector('.assessment-links').classList.add('active');
+}
+if (url.includes('matchup')){
     document.querySelector('.matchup-links').classList.add('active');
     stripIdAndStore(matchupStack,'matchups');
 }
@@ -82,4 +86,8 @@ document.querySelectorAll('.sidebar-container .link-wrapper').forEach((linkWrapp
         let linkContainerHeight = linkContainer.scrollHeight;
         linkContainer.style.height = linkContainerHeight + 'px';
     });
+});
+
+document.querySelectorAll('.link-container').forEach((linkContainer) => {
+    linkContainer.style.transition = 'all 0.3s ease-in-out';
 });

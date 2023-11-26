@@ -97,13 +97,16 @@ nav {
 
         .link-wrapper{
 
-            h4 {
+            h4 { 
                 border: 2px solid transparent;
                 border-radius: $linkWrapperBorderRadius;
                 text-transform: lowercase;
 
                 padding-left: 0.4rem;
                 padding-right: 0.4rem;
+
+                margin-left: 0.4rem;
+                margin-right: 0.4rem;
             }
 
             .link-container{
@@ -112,9 +115,7 @@ nav {
                 height: 0px;
                 overflow: hidden;
                 padding-left: 0.5rem;
-    
-                transition: all 0.3s ease-in-out;
-                
+                    
                 .link{
                     border: 1px solid transparent;
                     margin-left: 0.4rem;
@@ -131,12 +132,26 @@ nav {
             h4{
                 background-color: $color-3;
                 color: $color-0;
+                box-shadow: black 4px 4px 0 0;
+            }
+
+            .link-container{
+                border-bottom: 1px solid lavender;
             }
         }
 
         .link-wrapper h4:hover{
             cursor: pointer;
             border-color: lavender;
+            background-color: $color-3;
+            color: $color-0;
+            box-shadow: black 4px 4px 0 0;
+        }
+
+        .link-wrapper:hover{
+            .link-container{
+                border-bottom: 1px solid lavender;
+            }
         }
     }
 }
