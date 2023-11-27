@@ -101,3 +101,9 @@ class Fighter(SQLModel,table=True):
     #optional since a fighter may need to still be assessed
     assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
     # assesment: Optional["Assessment"] = Relationship(back_populates="fighters")
+
+class FighterSearchOut(SQLModel):
+    fighter_id: int
+    first_name: str
+    last_name: str
+    weight_class: Optional[WeightClass]

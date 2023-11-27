@@ -315,9 +315,33 @@ def get_fighter(fighter_id:int):
         fighter = session.get(Fighter,fighter_id)
         return fighter
 
-# @app.get("/assessment_styles.css")
-# async def assessment_styles():
-#     return FileResponse("static/styles/assessment_styles.css")
+
+@app.get("/predict")
+async def predictUI(request: Request):
+    context = {"request":request}
+    return templates.TemplateResponse("predict.html",context)
+
+@app.get("/search/",response_model=list[FighterSearchOut])
+async def search(request: Request,search: str):
+    terms = search.split(' ')
+    print('search.terms => ',terms)
+    fname = terms[0]
+    lname = fname
+    if len(terms) > 1:
+        lname = terms[1]
+    with Session(engine) as session:
+        """
+        
+            fname == lname then
+            if not do fname and lname search
+        """
+        fighters = []
+        if fname == lname:
+            fighters = session.query(Fighter).filter(Fighter.first_name.contains(fname) | Fighter.last_name.contains(lname)).limit(5).all()
+        else:
+            fighters = session.query(Fighter).filter(Fighter.first_name.contains(fname),Fighter.last_name.contains(lname)).limit(5).all()
+        return [FighterSearchOut(fighter_id=fighter.id,first_name=fighter.first_name,last_name=fighter.last_name,weight_class=fighter.weight_class) for fighter in fighters]
+
 
 @app.get("/styles.css")
 async def styles():
