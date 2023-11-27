@@ -50,6 +50,9 @@ nav {
   width: -moz-fit-content;
   width: fit-content;
 }
+nav h3 {
+  font-family: PoppinsSemiBold;
+}
 nav .sidebar-container {
   display: flex;
   flex-direction: column;
@@ -106,11 +109,17 @@ nav .sidebar-container .link-wrapper .link-container {
 }
 nav .sidebar-container .link-wrapper .link-container .link {
   border: 1px solid transparent;
+  border-top: 1px solid lavender;
   margin-left: 0.4rem;
+  margin-bottom: 0.3rem;
+  text-align: center;
 }
 nav .sidebar-container .link-wrapper .link-container .link:hover {
   border-top: 1px solid lavender;
-  border-bottom: 1px solid lavender;
+  text-decoration: underline;
+}
+nav .sidebar-container .link-wrapper .link-container :first-child .link {
+  border-top: 1px solid transparent;
 }
 nav .sidebar-container .link-wrapper.active .navbar-heading {
   background-color: #AEC3B0;

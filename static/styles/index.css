@@ -2,17 +2,53 @@ body {
   display: flex;
 }
 
+.title-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.fighter-selector {
+  display: flex;
+  justify-content: center;
+}
+
+.search-suggestion {
+  position: absolute;
+  height: 0px;
+  overflow: visible;
+  z-index: 100;
+}
+.search-suggestion ul {
+  margin: 0px;
+  padding: 0px;
+}
+.search-suggestion ul li {
+  list-style: none;
+  margin: 0px;
+}
+.search-suggestion ul li:hover {
+  cursor: pointer;
+  background-color: hsl(0, 0%, 10%);
+}
+.search-suggestion ul .suggestion p {
+  margin: 0px;
+}
+
+/* fighter-img has rounded corners using crop */
+.fighter-img {
+  border-radius: 10%;
+}
+
 /*horizontally centered event-title*/
 .event-title {
-  text-align: center;
-  margin: 1rem;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0rem;
 }
 
 table {
   border: None;
-  /* fighter-img has rounded corners using crop */
 }
 table tbody {
   border: 2px solid #131b23;
@@ -37,9 +73,6 @@ table tr:hover {
 }
 table tr:hover .weightclass h6 {
   text-decoration: underline;
-}
-table .fighter-img {
-  border-radius: 10%;
 }
 table .fighter-name a {
   width: 18ch;

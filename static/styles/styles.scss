@@ -71,6 +71,10 @@ nav {
     background-color: $cardBorderColor;
     width: fit-content;
 
+    h3{
+        font-family: PoppinsSemiBold;
+    }
+
     .sidebar-container{
         display: flex;
         flex-direction: column;
@@ -133,13 +137,23 @@ nav {
                 overflow: hidden;
                 padding-left: 0.5rem;
                 border-bottom: 1px solid lavender;
+                
                 .link{
                     border: 1px solid transparent;
+                    border-top: 1px solid lavender;
                     margin-left: 0.4rem;
+                    margin-bottom: 0.3rem;
+                    text-align: center;
                 }
                 .link:hover{
                     border-top: 1px solid lavender;
-                    border-bottom: 1px solid lavender;
+                    text-decoration: underline;
+                }
+                
+                :first-child{
+                    .link{
+                        border-top: 1px solid transparent;
+                    }
                 }
             }
 
