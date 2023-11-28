@@ -137,3 +137,24 @@ table {
     }
   }
 }
+
+/* overriding bootstrap style example */
+// .btn{
+//   // $bs-btn-bg: #598392 !important;
+//   --bs-btn-bg: #598392 !important;
+//   // background-color: #598392 !important;
+// }
+
+// .btn:hover {
+//   // color: var(--bs-btn-hover-color);
+//   // background-color: var(--bs-btn-hover-bg);
+//   // border-color: var(--bs-btn-hover-border-color);
+//   --bs-btn-hover-color: lavender !important;
+//   --bs-btn-hover-bg: initial !important;
+//   box-shadow: black 4px 4px 0 0;
+// }
+
+// .btn:active{
+//   box-shadow: black 2px 2px 0 0;
+//   --bs-btn-active-bg: hsl(0, 0%, 90%) !important;
+// }

@@ -62,7 +62,7 @@
               <div class="container-fluid">
                 <!---->
                 <div class="fighter-selector d-flex align-items-center">
-                    <div class="fighter-a d-flex align-items-center">
+                    <div class="fighter-a d-flex align-items-center" data-selected-id="-1" >
                         <img class="fighter-img" src="static/media/sample_50.png" alt="" />
                         <div class="search-container mx-2">
                             <h6>Fighter a</h6>
@@ -79,7 +79,7 @@
                             <div class="search-suggestion" id="searchbox-a">
                               <ul class="list-group"></ul>
                             </div>
-                          </div>
+                        </div>
                     </div>
                   
                   <div class="mx-3">
@@ -112,7 +112,7 @@
                         </ul>
                       </div>
                   </div>
-                  <div class="fighter-b d-flex align-items-center ">
+                  <div class="fighter-b d-flex align-items-center" data-selected-id="-1">
                     <div class="search-container mx-2">
                         <h6 style="text-align: end;">Fighter b</h6>
                         <!--text search box-->
@@ -146,7 +146,7 @@
                         draws
                   -->
                   <h5 class="text-start">Create a fighter</h5>
-                  <form action="/newfighter" method="post">
+                  <form>
                     <div class="row">
                       <div class="col">
                         <label for="first_name" class="form-label">First Name</label>
@@ -221,7 +221,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <button class="btn btn-primary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" type="submit">Create</button>
+                      <button class="btn btn-primary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="createFighter(event)" type="button">Create</button>
                     </div>
                   </form>
                 </div>
@@ -240,7 +240,7 @@
                 data-bs-dismiss="modal">
                 Close
               </button>
-              <button type="button" class="btn btn-primary">
+              <button type="button" class="btn btn-primary" onclick="createMatchup(event)">
                 Create Matchup
               </button>
               
@@ -302,6 +302,35 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"></script>
     <script>
+      var fightEventId = {{event.id}};
+      function createMatchup(event){
+        
+      }
+      
+      function createFighter(event) {
+        event.preventDefault();
+        let form = document.querySelector(".fighter-creator form");
+        let formData = new FormData(form);
+        // console.log(formData);
+        let data = {};
+        for (let [key, value] of formData.entries()) {
+          data[key] = value;
+        }
+        // console.log(data);
+        fetch("/create-fighter", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+              accept: "application/json",
+              "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // console.log(data);
+          });
+      }
+
       //limit reach and height input to max 2 chars
       document.querySelectorAll("input[type='number']").forEach((input) => {
         input.addEventListener("input", (event) => {

@@ -316,24 +316,41 @@ def get_fighter(fighter_id:int):
         return fighter
 
 
-@app.post("/newfighter")
-async def create_fighter(request: Request):
+@app.post("/create-fighter")
+async def create_fighter(request: Request,fighterIn: FighterIn):
     #convert the request body to a json object
     # body = await request.body()
-    # bstr = body.decode("utf-8").split('&')
-    # print(json.loads(body))
+    # print(body,json.loads(body),fighterIn.dict())
+    # fighter = Fighter(**fighterIn.dict())
+    # print(fighter)
+    with Session(engine) as session:
+        fighterAssessment = Assessment()
+        session.add(fighterAssessment)
+        session.commit()
+        
+        fighterIn.weight_class = WeightClass[fighterIn.weight_class]
+        fighter = Fighter(**fighterIn.dict())
+        fighter.assessment_id = fighterAssessment.id
+
+        session.add(fighter)
+        session.commit()
+        session.refresh(fighter)
+        # print(fighter)
+        return fighter
+
+
+@app.post("/create-matchup")
+async def create_matchup(request: Request,event_id: int,fighter_a_id: int,fighter_b_id: int):
+    #convert the request body to a json object
+    print(event_id,fighter_a_id,fighter_b_id)
     # with Session(engine) as session:
-    #     fighterAssessment = Assessment()
-    #     session.add(fighterAssessment)
+    #     matchup = MatchUp(event_id=event_id,fighter_a_id=fighter_a_id,fighter_b_id=fighter_b_id)
+    #     session.add(matchup)
     #     session.commit()
-    #     fighterIn.weight_class = WeightClass[fighterIn.weight_class]
-    #     fighter = Fighter(**fighterIn.dict())
-    #     fighter.assessment_id = fighterAssessment.id
-    #     session.add(fighter)
-    #     session.commit()
-    #     session.refresh(fighter)
-    #     return fighter
-    return {"status":"success"}
+    #     session.refresh(matchup)
+    #     return matchup
+    return {'status':'success'}
+    
 
 @app.get("/predict")
 async def predictUI(request: Request):
