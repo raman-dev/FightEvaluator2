@@ -102,6 +102,16 @@ class Fighter(SQLModel,table=True):
     assessment_id: Optional[int] = Field(default=None, foreign_key="assessment.id")
     # assesment: Optional["Assessment"] = Relationship(back_populates="fighters")
 
+class FighterIn(SQLModel):
+    first_name: str
+    last_name: str
+    nick_name: Optional[str]
+    weight_class: Optional[WeightClass]
+    height: Optional[str]
+    date_of_birth: Optional[date]
+    reach: Optional[str]
+    stance: Optional[str]
+
 class FighterSearchOut(SQLModel):
     fighter_id: int
     first_name: str

@@ -17,6 +17,19 @@ body{
   justify-content: center;
 }
 
+.fighter-creator{
+  height: 0px;
+  opacity: 0;
+  margin: 1rem;
+  padding: 0.4rem;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+}
+
+.fighter-creator.show{
+  opacity: 1;
+}
+
 .search-suggestion{
   position: absolute;
   height: 0px;

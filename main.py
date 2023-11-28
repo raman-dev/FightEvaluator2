@@ -2,7 +2,7 @@ from typing import Optional,Annotated
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 from fastapi import FastAPI, Request,HTTPException, Cookie
-from fastapi.responses import HTMLResponse,FileResponse
+from fastapi.responses import HTMLResponse,FileResponse,RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -315,6 +315,25 @@ def get_fighter(fighter_id:int):
         fighter = session.get(Fighter,fighter_id)
         return fighter
 
+
+@app.post("/newfighter")
+async def create_fighter(request: Request):
+    #convert the request body to a json object
+    # body = await request.body()
+    # bstr = body.decode("utf-8").split('&')
+    # print(json.loads(body))
+    # with Session(engine) as session:
+    #     fighterAssessment = Assessment()
+    #     session.add(fighterAssessment)
+    #     session.commit()
+    #     fighterIn.weight_class = WeightClass[fighterIn.weight_class]
+    #     fighter = Fighter(**fighterIn.dict())
+    #     fighter.assessment_id = fighterAssessment.id
+    #     session.add(fighter)
+    #     session.commit()
+    #     session.refresh(fighter)
+    #     return fighter
+    return {"status":"success"}
 
 @app.get("/predict")
 async def predictUI(request: Request):

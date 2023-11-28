@@ -56,11 +56,7 @@
               <h1 class="modal-title fs-5" id="exampleModalLabel">
                 Add Matchup
               </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="container-fluid">
@@ -69,6 +65,7 @@
                     <div class="fighter-a d-flex align-items-center">
                         <img class="fighter-img" src="static/media/sample_50.png" alt="" />
                         <div class="search-container mx-2">
+                            <h6>Fighter a</h6>
                             <!--text search box-->
                             <div class="search-box" data-target="#searchbox-a">
                               <form method="get">
@@ -88,16 +85,11 @@
                   <div class="mx-3">
                     <div class="weight-class dropdown">
                         <button
-                          class="btn btn-secondary dropdown-toggle"
-                          type="button"
-                          id="dropdownMenuButton1"
-                          data-bs-toggle="dropdown"
+                          class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                           aria-expanded="false">
                           Weight Class
                         </button>
-                        <ul
-                          class="dropdown-menu"
-                          aria-labelledby="dropdownMenuButton1">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                           <li><a class="dropdown-item" href="#">Flyweight</a></li>
                           <li>
                             <a class="dropdown-item" href="#">Bantamweight</a>
@@ -122,6 +114,7 @@
                   </div>
                   <div class="fighter-b d-flex align-items-center ">
                     <div class="search-container mx-2">
+                        <h6 style="text-align: end;">Fighter b</h6>
                         <!--text search box-->
                         <div class="search-box" data-target="#searchbox-b">
                             <form method="get">
@@ -139,9 +132,108 @@
                     <img class="fighter-img" src="static/media/sample_50.png"alt="" />
                   </div>
                 </div>
+                <div class="fighter-creator border rounded">
+                  <!--form to create a fighter
+                        first name
+                        last name
+                        weight class
+                        height
+                        reach
+                        stance
+                        date_of_birth
+                        wins
+                        losses
+                        draws
+                  -->
+                  <h5 class="text-start">Create a fighter</h5>
+                  <form action="/newfighter" method="post">
+                    <div class="row">
+                      <div class="col">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="first_name"
+                          name="first_name"
+                          placeholder="First Name" />
+                      </div>
+                      <div class="col">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="last_name"
+                          name="last_name"
+                          placeholder="Last Name" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <label for="weight_class" class="form-label">Weight Class</label>
+                        <select class="form-select" id="weight_class" name="weight_class">
+                          <option selected>Choose...</option>
+                          <option value="FLYWEIGHT">Flyweight</option>
+                          <option value="BANTAMWEIGHT">Bantamweight</option>
+                          <option value="FEATHERWEIGHT">Featherweight</option>
+                          <option value="LIGHTWEIGHT">Lightweight</option>
+                          <option value="WELTERWEIGHT">Welterweight</option>
+                          <option value="MIDDLEWEIGHT">Middleweight</option>
+                          <option value="LIGHT_HEAVYWEIGHT">Light Heavyweight</option>
+                          <option value="HEAVY_WEIGHT">Heavyweight</option>
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label for="height" class="form-label">Height</label>
+                        <input type="number" class="form-control" name="height" id="height" max="99" maxlength="2"
+                          placeholder="Height" />
+                      </div>
+                      <div class="col">
+                        <label for="reach" class="form-label">Reach</label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="reach"
+                          name="reach"
+                          max="99"
+                          maxlength="2"
+                          placeholder="Reach" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <label for="stance" class="form-label">Stance</label>
+                        <select class="form-select" id="stance" name="stance">
+                          <option selected>Choose...</option>
+                          <option value="orthodox">Orthodox</option>
+                          <option value="southpaw">Southpaw</option>
+                          <option value="switch">Switch</option>
+                          <option value="open_stance">Open Stance</option>
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label for="date_of_birth" class="form-label">Date of Birth</label>
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="date_of_birth"
+                          name="date_of_birth"
+                          placeholder="Date of Birth" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <button class="btn btn-primary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" type="submit">Create</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
             <div class="modal-footer">
+              <div style="margin: 0px; margin-right: auto;">
+                <p class="m-0" style="color: hsl(0 ,0%, 60%);"><small>Fighter not listed?</small></p>
+                <button type="button" class="btn btn-primary" onclick="showFighterCreatorSection()">
+                  add new fighter
+                </button>
+              </div>
               <button
                 type="button"
                 class="btn btn-secondary"
@@ -149,8 +241,9 @@
                 Close
               </button>
               <button type="button" class="btn btn-primary">
-                Save changes
+                Create Matchup
               </button>
+              
             </div>
           </div>
         </div>
@@ -209,6 +302,29 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"></script>
     <script>
+      //limit reach and height input to max 2 chars
+      document.querySelectorAll("input[type='number']").forEach((input) => {
+        input.addEventListener("input", (event) => {
+          //no negative values
+          if (input.value < 0) {
+            input.value = 0;
+          }
+          if (input.value.length > 2) {
+            input.value = input.value.slice(0, 2);
+          }
+        });
+      });
+      function showFighterCreatorSection(){
+        console.log("show fighter creator section");
+        let fighterCreatorSection = document.querySelector(".fighter-creator");
+        fighterCreatorSection.classList.toggle("show");
+        if (fighterCreatorSection.classList.contains("show")) {
+            fighterCreatorSection.style.height = fighterCreatorSection.scrollHeight + "px";
+            return;
+        }
+        fighterCreatorSection.style.height = "0px";
+      }
+
       function onClickSuggestion(){
         //enter this data into the search box
         this.searchBoxInput.value = this.fighter.first_name + " " + this.fighter.last_name;
