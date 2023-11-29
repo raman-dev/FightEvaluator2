@@ -11,12 +11,6 @@ body{
   justify-content: space-between;
   align-items: baseline;
 }
-
-.fighter-selector{
-  display: flex;
-  justify-content: center;
-}
-
 .fighter-creator{
   height: 0px;
   opacity: 0;
@@ -24,6 +18,14 @@ body{
   padding: 0.4rem;
   overflow: hidden;
   transition: all 0.5s ease-in-out;
+}
+ 
+.fighter-selector{
+  display: flex;
+  justify-content: center;
+  .fighter-name{
+    text-transform: capitalize;
+  }
 }
 
 .fighter-creator.show{

@@ -33,6 +33,12 @@ class FightEvent(SQLModel,table=True):
     location: str
     link: Optional[str]
 
+class MatchupIn(SQLModel):
+    event_id: int
+    fighter_a_id: int
+    fighter_b_id: int
+    weight_class: str
+
 class MatchUp(SQLModel,table=True):
     id: int = Field(primary_key=True)
     # date: Optional[date]

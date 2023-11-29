@@ -340,16 +340,25 @@ async def create_fighter(request: Request,fighterIn: FighterIn):
 
 
 @app.post("/create-matchup")
-async def create_matchup(request: Request,event_id: int,fighter_a_id: int,fighter_b_id: int):
+async def create_matchup(request: Request,matchupIn: MatchupIn):
     #convert the request body to a json object
-    print(event_id,fighter_a_id,fighter_b_id)
-    # with Session(engine) as session:
-    #     matchup = MatchUp(event_id=event_id,fighter_a_id=fighter_a_id,fighter_b_id=fighter_b_id)
-    #     session.add(matchup)
-    #     session.commit()
-    #     session.refresh(matchup)
-    #     return matchup
-    return {'status':'success'}
+    # print(matchupIn.dict())
+    with Session(engine) as session:
+        fighterA = session.get(Fighter,matchupIn.fighter_a_id)
+        fighterB = session.get(Fighter,matchupIn.fighter_b_id)
+        matchup = MatchUp(
+            event_id=matchupIn.event_id,
+            fighter_a_id=matchupIn.fighter_a_id,
+            fighter_a=fighterA.first_name+' '+fighterA.last_name,
+            fighter_b_id=matchupIn.fighter_b_id,
+            fighter_b=fighterB.first_name+' '+fighterB.last_name,
+            weight_class=WeightClass[matchupIn.weight_class.upper()]
+            )
+        session.add(matchup)
+        session.commit()
+        session.refresh(matchup)
+        return matchup
+    # return {'status':'success'}
     
 
 @app.get("/predict")
