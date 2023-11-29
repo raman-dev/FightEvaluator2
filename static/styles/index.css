@@ -98,6 +98,7 @@ table .fighter-name a {
 table .fighter-name a h4 {
   margin: 0px;
   color: #dee2e6;
+  text-transform: capitalize;
 }
 table .fighter-name a h4:hover {
   text-decoration: underline;
