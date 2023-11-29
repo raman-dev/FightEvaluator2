@@ -360,6 +360,15 @@ async def create_matchup(request: Request,matchupIn: MatchupIn):
         return matchup
     # return {'status':'success'}
     
+@app.delete("/delete-matchup/{matchup_id}")
+async def delete_matchup(matchup_id: int):
+    with Session(engine) as session:
+        matchup = session.get(MatchUp,matchup_id)
+        if not matchup:
+            raise HTTPException(status_code=404, detail="Matchup not found")
+        session.delete(matchup)
+        session.commit()
+        return {'status':'success'}
 
 @app.get("/predict")
 async def predictUI(request: Request):

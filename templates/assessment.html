@@ -225,6 +225,17 @@
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
       };
 
+      const attribCardOrder= [
+        'head_movement',
+        'gas_tank',
+        'aggression',
+        'desire_to_win',
+        'striking',
+        'chinny',
+        'grappling_offense',
+        'grappling_defense',
+      ]
+
       //set a cookie for the assessment_id so that i know which assessment was viewed last
       document.cookie = `assessment_id=${assessment_id};SameSite=strict;path=/;max-age=31536000`;
       //print all cookies
@@ -246,6 +257,13 @@
           p.textContent = attribInfoMap[key][optionState].description;
         });
       }
+
+      //reorder attrib-cards to match attribCardOrder
+      let attribList = document.querySelector('.fighter-attrib-list');
+      attribCardOrder.forEach((attribName)=>{
+        let attribCard = document.querySelector(`[data-attrib-name="${attribName}"]`);
+        attribList.appendChild(attribCard);
+      });
 
       if (fighterImgLink != null){
         document.querySelector('img').setAttribute('src',fighterImgLink);
@@ -370,7 +388,7 @@
       let notesListUl = document.querySelector(".notes-list ul");
       //fix .fighter-notes to have max height as the height of attribute list
       let notesContainer = document.querySelector(".fighter-notes");
-      let attribList = document.querySelector(".fighter-attrib-list");
+      // let attribList = document.querySelector(".fighter-attrib-list");
       //get padding of notesContainer
       let notesContainerStyle = window.getComputedStyle(notesContainer);
       let paddingMarginOffset = parseInt(notesContainerStyle.paddingBottom) + parseInt(notesContainerStyle.marginBottom);

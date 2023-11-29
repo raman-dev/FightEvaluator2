@@ -92,13 +92,27 @@ table {
     margin: 0px;
   }
 
+  // tr{
+  //   td:last-child{
+  //     // display: none;
+  //     opacity: 0;
+  //   }
+  // }
+
   tr:hover {
     cursor: pointer;
     .weightclass {
-      h6 {
+      h6 { 
         text-decoration: underline;
       }
     }
+    // td:last-child{
+    //   // display: table-cell;
+    //   opacity: 1;
+    //   button{
+    //     // display: block;
+    //   }
+    // }
   }
  
 
