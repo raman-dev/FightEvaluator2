@@ -319,6 +319,7 @@ button:active {
 }
 
 .fighter-notes {
+  max-width: 48ch;
   padding: 1rem;
 }
 .fighter-notes .note-editor-container {

@@ -26,6 +26,7 @@ h5, h6 {
 }
 .fighter-container .fighter-info img {
   margin: auto;
+  max-width: 10rem;
 }
 .fighter-container .fighter-info .fighter-bio > div {
   display: flex;

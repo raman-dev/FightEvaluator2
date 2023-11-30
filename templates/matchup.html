@@ -12,7 +12,7 @@
 
 <body data-bs-theme="dark">
   {% include 'navbar.html' %}
-  <div class="border container-fluid xmain-container">
+  <div class="container-fluid xmain-container">
     
     <!--
                 
@@ -27,18 +27,8 @@
                 attrib n     a.value n  | b.value n
             -->
     
-    <div class="matchup-container d-flex border justify-content-center">
+    <div class="matchup-container justify-content-center">
         <!--contains information about each fighter including fighter img-->
-        <div class="matchup-info">
-            <div class="matchup-weightclass">
-                <h4>
-                    {{ matchup.weight_class|weightClassToStr }}
-                </h4>
-            </div>
-            <div class="matchup-rounds">
-                <h4>{{ matchup.rounds }}</h4>
-            </div>
-        </div>
         <div class="fighter-container">
             <div class="fighter-info m-1 border rounded-2">
                 <img src="{{ fighter_a.data.img_link if fighter_a.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
@@ -68,7 +58,16 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="matchup-info">
+              <div class="matchup-weightclass">
+                  <h4>
+                      {{ matchup.weight_class|weightClassToStr }}
+                  </h4>
+              </div>
+              <div class="matchup-rounds">
+                  <h4>{{ matchup.rounds }}</h4>
+              </div>
+          </div>
             <div class="fighter-info m-1 border rounded-2">
               <div class="fighter-bio">
                 <div class="name">
@@ -179,7 +178,7 @@
     crossorigin="anonymous"></script>
   <script src="{{ url_for('static',path='/js/definitions.js') }}"></script>
   <script>
-    
+    console.log(attribInfoMap);
     //for every attrib row write the correct description based on data-polarity
     const attribRows = document.querySelectorAll('.attrib-row');
     attribRows.forEach((row)=>{
@@ -190,6 +189,12 @@
         const attribDescription = attribInfoMap[attribName][attribValue].description;
         column.querySelector('.attrib-description-container p').textContent = attribDescription;
       });
+    });
+    //reorder attrib-cards to match attribCardOrder
+    let attribList = document.querySelector('.attrib-compare-table');
+      attribCardOrder.forEach((attribName)=>{
+        let attribRow = document.querySelector(`[data-name="${attribName}"]`);
+        attribList.appendChild(attribRow);
     });
   </script>
 </body>

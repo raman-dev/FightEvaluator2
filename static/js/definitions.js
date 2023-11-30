@@ -69,3 +69,14 @@ const attribInfoMap = {
     untested: { "description": "untested", "state": "untested" }
   }
 };
+
+const attribCardOrder = [
+  'head_movement',
+  'gas_tank',
+  'aggression',
+  'desire_to_win',
+  'striking',
+  'chinny',
+  'grappling_offense',
+  'grappling_defense',
+];

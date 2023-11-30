@@ -67,6 +67,18 @@ $color-3: #AEC3B0;
 $color-4: #EFF6E0;
 
 
+.sidebar-collapse-container{
+    // background-color: red;
+    // display:flex;
+    margin-bottom: 30%;
+    .sidebar-expand-btn{
+        float: left;
+    } 
+    .sidebar-collapse-btn{
+        float: right;
+    }  
+} 
+
 nav {
     background-color: $cardBorderColor;
     width: fit-content;
@@ -74,14 +86,15 @@ nav {
     h3{
         font-family: PoppinsSemiBold;
     }
-
+ 
     .sidebar-container{
         display: flex;
         flex-direction: column;
         height: 100%;
 
-        padding-top: 35%;
         border-right: 1px solid lavender;
+
+       
 
         a{
             text-decoration: none;

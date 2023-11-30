@@ -45,6 +45,16 @@ h6 {
   font-family: PoppinsSemiBold;
 }
 
+.sidebar-collapse-container {
+  margin-bottom: 30%;
+}
+.sidebar-collapse-container .sidebar-expand-btn {
+  float: left;
+}
+.sidebar-collapse-container .sidebar-collapse-btn {
+  float: right;
+}
+
 nav {
   background-color: #131b23;
   width: -moz-fit-content;
@@ -57,7 +67,6 @@ nav .sidebar-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-top: 35%;
   border-right: 1px solid lavender;
 }
 nav .sidebar-container a {
