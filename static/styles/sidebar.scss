@@ -1,0 +1,27 @@
+nav{
+    transition: all 0.4s ease;
+    height: 100vh;
+}
+.sidebar-container{
+    width: fit-content;
+}
+.link-text-container{
+    background: hsl(0, 0%, 90%,);
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.4s ease;
+    width: 200px;
+}
+
+.link-icon-container{
+    button{
+        margin-left: auto;
+    }
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+button{
+    // margin-left: auto;
+    width: fit-content;
+}

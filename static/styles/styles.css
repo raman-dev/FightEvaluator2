@@ -45,20 +45,36 @@ h6 {
   font-family: PoppinsSemiBold;
 }
 
-.sidebar-collapse-container {
-  margin-bottom: 30%;
+nav {
+  transition: all 0.4s ease;
+  height: 100vh;
 }
-.sidebar-collapse-container .sidebar-expand-btn {
-  float: left;
+
+.sidebar-container {
+  width: -moz-fit-content;
+  width: fit-content;
 }
-.sidebar-collapse-container .sidebar-collapse-btn {
-  float: right;
+
+.link-text-container {
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.link-icon-container {
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.link-icon-container button {
+  margin-left: auto;
+}
+
+button {
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 nav {
   background-color: #131b23;
-  width: -moz-fit-content;
-  width: fit-content;
 }
 nav h3 {
   font-family: PoppinsSemiBold;

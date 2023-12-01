@@ -1,0 +1,30 @@
+nav {
+  transition: all 0.4s ease;
+  height: 100vh;
+}
+
+.sidebar-container {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.link-text-container {
+  background: hsl(0, 0%, 90%);
+  overflow: hidden;
+  white-space: nowrap;
+  transition: all 0.4s ease;
+  width: 200px;
+}
+
+.link-icon-container {
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.link-icon-container button {
+  margin-left: auto;
+}
+
+button {
+  width: -moz-fit-content;
+  width: fit-content;
+}/*# sourceMappingURL=sidebar.css.map */

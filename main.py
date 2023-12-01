@@ -370,6 +370,11 @@ async def delete_matchup(matchup_id: int):
         session.commit()
         return {'status':'success'}
 
+@app.get("/sidebar")
+async def sidebar(request: Request):
+    context = {"request":request}
+    return templates.TemplateResponse("sidebar.html",context)
+
 @app.get("/predict")
 async def predictUI(request: Request):
     context = {"request":request}

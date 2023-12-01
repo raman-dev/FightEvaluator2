@@ -67,21 +67,34 @@ $color-3: #AEC3B0;
 $color-4: #EFF6E0;
 
 
-.sidebar-collapse-container{
-    // background-color: red;
-    // display:flex;
-    margin-bottom: 30%;
-    .sidebar-expand-btn{
-        float: left;
-    } 
-    .sidebar-collapse-btn{
-        float: right;
-    }  
+nav{
+    transition: all 0.4s ease;
+    height: 100vh;
+}
+.sidebar-container{
+    width: fit-content;
+}
+.link-text-container{
+    overflow: hidden;
+    transition: all 0.4s ease;
+    // width: fit-content;
+}
+
+.link-icon-container{
+    button{
+        margin-left: auto;
+    }
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+button{
+    // margin-left: auto;
+    width: fit-content;
 } 
 
 nav {
     background-color: $cardBorderColor;
-    width: fit-content;
 
     h3{
         font-family: PoppinsSemiBold;
@@ -93,8 +106,6 @@ nav {
         height: 100%;
 
         border-right: 1px solid lavender;
-
-       
 
         a{
             text-decoration: none;
