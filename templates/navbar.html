@@ -1,13 +1,14 @@
 <nav class="border">
   <div class="sidebar-container d-flex flex-column expanded">
-    <div class="link-icon-container border d-flex">
+    <div class="toggle-container border d-flex">
       <button class="btn" onclick="toggleSideBar()">
         toggle
       </button>
     </div>
-    <div class="link-text-container">
+    <!-- <div class=""></div>/ -->
+    <div class="links-wrapper d-flex">
       <!--links list-->
-      <div class="link-container d-flex flex-column">
+      <div class="link-container link-text-container d-flex flex-column">
         <!-- <div class="link"> -->
         <a href="/">
           <div class="link home-link">
@@ -62,7 +63,7 @@
     let sidebar = document.querySelector(".sidebar-container");
     let isOpen = sidebar.classList.contains("expanded");
     let action = isOpen ? "close" : "open";
-    let linkIconContainer = document.querySelector(".link-icon-container");
+    let toggleContainer = document.querySelector(".toggle-container");
     let linkTextContainer = document.querySelector(".link-text-container");
 
     if (action == "open") {

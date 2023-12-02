@@ -80,7 +80,7 @@ nav{
     // width: fit-content;
 }
 
-.link-icon-container{
+.toggle-container{
     button{
         margin-left: auto;
     }
@@ -106,7 +106,13 @@ nav {
         height: 100%;
 
         border-right: 1px solid lavender;
-
+        .link-icon-container{
+            button{
+                svg{
+                    width: 1.4rem; 
+                }
+            }
+        }
         a{
             text-decoration: none;
             color: lavender;

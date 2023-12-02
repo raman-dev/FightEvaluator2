@@ -60,11 +60,11 @@ nav {
   transition: all 0.4s ease;
 }
 
-.link-icon-container {
+.toggle-container {
   overflow: hidden;
   transition: all 0.4s ease;
 }
-.link-icon-container button {
+.toggle-container button {
   margin-left: auto;
 }
 
@@ -84,6 +84,9 @@ nav .sidebar-container {
   flex-direction: column;
   height: 100%;
   border-right: 1px solid lavender;
+}
+nav .sidebar-container .link-icon-container button svg {
+  width: 1.4rem;
 }
 nav .sidebar-container a {
   text-decoration: none;

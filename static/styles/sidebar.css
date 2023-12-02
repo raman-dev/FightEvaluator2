@@ -9,11 +9,9 @@ nav {
 }
 
 .link-text-container {
-  background: hsl(0, 0%, 90%);
   overflow: hidden;
   white-space: nowrap;
   transition: all 0.4s ease;
-  width: 200px;
 }
 
 .link-icon-container {
@@ -27,4 +25,18 @@ nav {
 button {
   width: -moz-fit-content;
   width: fit-content;
+}
+
+.link button {
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.link .dropdown-links-container {
+  width: 0px;
+  overflow: hidden;
+  transition: width 0.4s ease-out;
+}
+.link .dropdown-links-container .dropdown-links {
+  height: 0px;
+  transition: height 0.4s ease-out;
 }/*# sourceMappingURL=sidebar.css.map */
