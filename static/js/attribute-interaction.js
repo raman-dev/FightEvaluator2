@@ -69,15 +69,12 @@ async function attribCommitButtonClickListener(event){
         return;
     }
     let attribName = attribCard.getAttribute('data-attrib-name');
-    let attribState = attribCard.getAttribute('data-attrib-state');
-    /*
-        TODO: check if the data has changed
-    */
+
     let selectedAttribOption = attribCard.querySelector('.attrib-option[selected]');
     let selectedAttribOptionState = selectedAttribOption.getAttribute('data-option-state');
     // console.log(selectedAttribOption,selectedAttribOptionState);
-    let dataStateChanged = selectedAttribOptionState != assessment_data[attribName];
-    if (!dataStateChanged){
+    //value hasn't changed so return 
+    if (selectedAttribOptionState == assessment_data[attribName]){
         return;
     }
     //dataStateChanged try and commit changes to server
@@ -98,6 +95,8 @@ async function attribCommitButtonClickListener(event){
         //reflect change in the card visually
         attribCard.querySelector('.card-state').textContent = attribInfoMap[attribName][assessment_data[attribName]].state;
         attribCard.setAttribute('data-attrib-state',assessment_data[attribName]);
+        //toggle edit mode
+        attribEditButtonClickListener.call({attribCard:attribCard});
     }else{
         console.log('error updating assessment',response);
     }
