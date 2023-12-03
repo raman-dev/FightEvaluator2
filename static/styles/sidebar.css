@@ -1,42 +1,23 @@
 nav {
-  transition: all 0.4s ease;
-  height: 100vh;
+  z-index: 1000;
 }
-
-.sidebar-container {
-  width: -moz-fit-content;
-  width: fit-content;
+nav * {
+  transition: all 0.4s ease-out;
 }
-
-.link-text-container {
-  overflow: hidden;
-  white-space: nowrap;
-  transition: all 0.4s ease;
-}
-
-.link-icon-container {
-  overflow: hidden;
-  transition: all 0.4s ease;
-}
-.link-icon-container button {
-  margin-left: auto;
-}
-
-button {
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
-.link button {
+nav button {
+  min-width: 10ch;
   height: -moz-fit-content;
   height: fit-content;
 }
-.link .dropdown-links-container {
-  width: 0px;
-  overflow: hidden;
-  transition: width 0.4s ease-out;
+nav .sidebar-container {
+  height: 100%;
+  overflow: visible;
+  max-width: 10ch;
 }
-.link .dropdown-links-container .dropdown-links {
-  height: 0px;
-  transition: height 0.4s ease-out;
+nav .sidebar-container .link-container {
+  height: 100%;
+  overflow: hidden;
+  min-width: 10ch;
+  width: 10ch;
+  background-color: red;
 }/*# sourceMappingURL=sidebar.css.map */

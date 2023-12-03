@@ -1,5 +1,6 @@
 /* import font as variable */
 /* poppins thin light and regular bold semi-bold font-face declarations  */
+@import url(sidebar.scss);
 @font-face {
   font-family: PoppinsThin;
   src: url("/static/styles/Poppins/Poppins-Thin.ttf") format("truetype");

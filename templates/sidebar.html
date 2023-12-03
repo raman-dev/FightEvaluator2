@@ -15,28 +15,25 @@
                             toggle
                         </button>
                     </div>
-                    <div class="link-text-container">
+                    <div class="link-text-container link-container d-flex flex-column">
                         <!--links list-->
-                        <div class="link-container d-flex flex-column"> 
-                            <div class="link d-flex">
-                                <!--bootstrap5 dropdown -->
-                                <button>icon</button>
-                                <div class="dropdown-links-container d-flex">
-                                    <div class="dropdown-links d-flex flex-column">
-                                        <a href="#" class="link">Link 1</a>
-                                        <a href="#" class="link">Link 2</a>
-                                        <a href="#" class="link">Link 3</a>
-                                    </div>
-                                    <button class="expand-links-btn">
-                                        show
-                                    </button>
+                        <div class="link d-flex">
+                            <!--bootstrap5 dropdown -->
+                            <button class="btn">
+                                icon
+                            </button>
+                            <div class="dropdown-link-container d-flex">
+                                <div class="dropdown-links d-flex flex-column">
+                                    <a href="#" class="link">Link 1</a>
+                                    <a href="#" class="link">Link 2</a>
+                                    <a href="#" class="link">Link 3</a>
                                 </div>
+                                <button class="expand-links-btn btn">
+                                    show
+                                </button>
                             </div>
-                            <!-- <a href="#" class="link">Link 1</a>
-                            <a href="#" class="link">Link 2</a>
-                            <a href="#" class="link">Link 3</a> -->
-                        </div> 
-                    </div>
+                        </div>
+                    </div> 
                 </div>  
             </nav>
             <div class="content-container container-fluid">
@@ -53,7 +50,7 @@
         <script> 
             document.querySelectorAll(".link-container").forEach((linkContainer)=>{
                 let expandLinksBtn = linkContainer.querySelector(".expand-links-btn");
-                let dropdownLinksContainer = linkContainer.querySelector(".dropdown-links-container .dropdown-links");
+                let dropdownLinksContainer = linkContainer.querySelector(".dropdown-link-container .dropdown-links");
                 let isOpen = dropdownLinksContainer.classList.contains("show");
                 expandLinksBtn.addEventListener("click", ()=>{
                     if(isOpen){
@@ -69,25 +66,21 @@
                     } 
                 });
             });
-            // document.querySelector(".link-text-container").style.width = ;
            
             function toggleSideBar(){
                 let sidebar = document.querySelector(".sidebar-container"); 
                 let isOpen = sidebar.classList.contains("expanded");
-                if(isOpen){
-                    sidebar.classList.remove("expanded");
-                    //close the sidebar
-                    document.querySelectorAll(".dropdown-links-container").forEach((dropdownLinksContainer)=>{
-                        dropdownLinksContainer.style.width = "0px";
-                        // dropdownLinksContainer.querySelector(".dropdown-links").classList.remove("show");
-                    });
-                }else{
+                let action = isOpen ? "close" : "open";
+                let linkContainer = document.querySelector(".link-container");
+
+                if (action == "open") {
                     sidebar.classList.add("expanded");
-                    //open the sidebar
-                    document.querySelectorAll(".dropdown-links-container").forEach((dropdownLinksContainer)=>{
-                        dropdownLinksContainer.style.width = `${dropdownLinksContainer.scrollWidth}px`;
-                        // dropdownLinksContainer.querySelector(".dropdown-links").classList.add("show");
-                    });
+                    //expand the link-container
+                    linkContainer.style.width = `${linkContainer.scrollWidth}px`;
+                } else if (action == "close") {
+                    sidebar.classList.remove("expanded");
+                    //set the link-container to 0 px width
+                    linkContainer.style.width = "0px";
                 }
             } 
         </script>

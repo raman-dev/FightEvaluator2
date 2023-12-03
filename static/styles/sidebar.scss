@@ -1,41 +1,27 @@
 nav{
-    transition: all 0.4s ease;
-    height: 100vh;
-}
-.sidebar-container{
-    width: fit-content;
-}
-.link-text-container{
-    overflow: hidden;
-    white-space: nowrap;
-    transition: all 0.4s ease;
-}
-
-.link-icon-container{
-    button{
-        margin-left: auto;
+    // height: 100%;
+    z-index: 1000;
+    *{
+        transition: all 0.4s ease-out;
     }
-    overflow: hidden;
-    transition: all 0.4s ease;
-}
-
-button{
-    // margin-left: auto;
-    width: fit-content;
-}
-
-.link{
-    button{
+    button{ 
+        min-width: 10ch;
         height: fit-content;
     }
-    .dropdown-links-container{
-        width: 0px;
-        overflow: hidden;
-        transition: width 0.4s ease-out;
-        
-        .dropdown-links{
-            height: 0px;
-            transition: height 0.4s ease-out;
+    .sidebar-container{
+        height: 100%;
+        overflow: visible;
+        max-width: 10ch;
+        .link-container{
+            height: 100%;
+            overflow: hidden;
+            min-width: 10ch;
+            width: 10ch;
+            background-color: red;
+            .dropdown-link-container{
+                // overflow: hidden;
+            }
         }
+        
     }
 }
