@@ -3,61 +3,48 @@ const attribCardSelector = '.attrib-card';
 const attribEditButtonSelector = '.attrib-edit-button';
 const attribCommitButtonSelector = '.attrib-commit-button';
 
+
 function attribEditButtonClickListener(event){
     let attribCard = this.attribCard;
+    let attribCardState = attribCard.getAttribute('data-attrib-state');
     let cardBody = attribCard.querySelector('.card-body');
     let scrollHeight = cardBody.scrollHeight;
     //toggle edit mode      gets previous edit mode then flips it
     let editModeEnabled = !(attribCard.getAttribute('data-edit-mode-enabled') == 'true');
     attribCard.setAttribute('data-edit-mode-enabled',editModeEnabled);
+    //deselect all options
+    attribCard.querySelectorAll('.attrib-option[selected]').forEach((attribOption) => {
+        attribOption.removeAttribute('selected');
+    });
     if (editModeEnabled){
         //show card body
         cardBody.style.height = `${scrollHeight}px`;
         cardBody.style.opacity = '1';
+        // console.log(attribCardState);
+        if (attribCardState == 'null'){
+            attribCardState = 'untested';
+        }
+        //if we had selected anything deselect it if it is not the current state
+        let selectedAttribOption = attribCard.querySelector(`.attrib-option[data-option-state="${attribCardState}"]`);
+        selectedAttribOption.setAttribute('selected','');
+        // we selected something
+        //what am i doing here?
+        //this is on click edit button responsibility is to show options
+        //and show currently selected option if one exists
     }else{
         //hide card body
         cardBody.style.height = '0px';
-        cardBody.style.opacity = '0';
-        let attribCardState = attribCard.getAttribute('data-attrib-state');
-        //if we had selected anything deselect it if it is not the current state
-        let selectedAttribOption = attribCard.querySelector('.attrib-option[selected]');
-        //we selected something
-        // console.log(selectedAttribOption);
-        if (selectedAttribOption != null){        
-            let selectedAttribOptionState = selectedAttribOption.getAttribute('data-option-state');
-            let selectedAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${selectedAttribOptionState}]`);
-            //is the option the same as data-attrib-state
-            if (attribCardState != 'null' && attribCard != 'untested'){
-                //check if the selected option is the same as the current state
-                if (selectedAttribOptionState != attribCardState){
-                    //we selected something that is not the current state
-                    //deselect it
-                    selectedAttribOption.removeAttribute('selected');
-                    selectedAttribOptionDescription.removeAttribute('selected');
-                    //select the corresponding option to the current state
-                    let currentAttribOption = attribCard.querySelector(`.attrib-option[data-option-state=${attribCardState}]`);
-                    let currentAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${attribCardState}]`);
-
-                    currentAttribOption.setAttribute('selected','');
-                    currentAttribOptionDescription.setAttribute('selected','');
-                }
-            }else{
-                //we selected something that is not the current state and the current state is null
-                //simply deselect it
-                selectedAttribOption.removeAttribute('selected');
-                selectedAttribOptionDescription.removeAttribute('selected');
-            }
-        }else{
-            //reselect if the current state is not null
-            if (attribCardState != 'null'){
-                let currentAttribOption = attribCard.querySelector(`.attrib-option[data-option-state=${attribCardState}]`);
-                let currentAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${attribCardState}]`);
-
-                currentAttribOption.setAttribute('selected','');
-                currentAttribOptionDescription.setAttribute('selected','');
-            }
-        }
+        cardBody.style.opacity = '0';   
     }
+}
+
+function dataStateChanged(attribCard,attribName){
+    attribCard.querySelector('.card-state').textContent = attribInfoMap[attribName][assessment_data[attribName]].state;
+    attribCard.setAttribute('data-attrib-state',assessment_data[attribName]);
+    let cardStateDescription = attribCard.querySelector('.card-state-description');
+    cardStateDescription.setAttribute('data-option-state',assessment_data[attribName]);
+    cardStateDescription.textContent = attribInfoMap[attribName][assessment_data[attribName]].description;
+    
 }
 
 async function attribCommitButtonClickListener(event){
@@ -74,7 +61,7 @@ async function attribCommitButtonClickListener(event){
     let selectedAttribOptionState = selectedAttribOption.getAttribute('data-option-state');
     // console.log(selectedAttribOption,selectedAttribOptionState);
     //value hasn't changed so return 
-    if (selectedAttribOptionState == assessment_data[attribName]){
+    if (selectedAttribOptionState == assessment_data[attribName] || selectedAttribOptionState == 'untested' && assessment_data[attribName] == null){
         return;
     }
     //dataStateChanged try and commit changes to server
@@ -93,8 +80,7 @@ async function attribCommitButtonClickListener(event){
         //update the assessment object
         assessment_data[attribName] = responseJson[attribName];
         //reflect change in the card visually
-        attribCard.querySelector('.card-state').textContent = attribInfoMap[attribName][assessment_data[attribName]].state;
-        attribCard.setAttribute('data-attrib-state',assessment_data[attribName]);
+        dataStateChanged(attribCard,attribName);
         //toggle edit mode
         attribEditButtonClickListener.call({attribCard:attribCard});
     }else{
@@ -109,22 +95,17 @@ function attribOptionClickListener(event){
     //if selected deselect
     let attribOption = event.currentTarget;
     let attribOptionState = attribOption.getAttribute('data-option-state');
-    let attribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${attribOptionState}]`);
         
     let currentAttribOption = attribCard.querySelector('.attrib-option[selected]');
     //if they are different then change the state to attribOptionState
     let currentAttribOptionState = currentAttribOption.getAttribute('data-option-state');
-    let currentAttribOptionDescription = attribCard.querySelector(`.attrib-option-description[data-option-state=${currentAttribOptionState}]`);
     if (currentAttribOptionState != attribOptionState){
         attribOption.setAttribute('selected','');
-        attribOptionDescription.setAttribute('selected','');
     }else{
         //select untested attrib-option
         this.untestedOption.setAttribute('selected','');
-        this.untestedOptionDescription.setAttribute('selected','');
     }
     currentAttribOption.removeAttribute('selected');
-    currentAttribOptionDescription.removeAttribute('selected');
 
 }
 
@@ -138,7 +119,7 @@ document.querySelectorAll(attribCardSelector).forEach((attribCard) => {
         attribOption.addEventListener('click',attribOptionClickListener.bind({
             attribCard:attribCard,
             untestedOption:attribCard.querySelector('.attrib-option[data-option-state="untested"]'),
-            untestedOptionDescription:attribCard.querySelector('.attrib-option-description[data-option-state="untested"]')
+            // untestedOptionDescription:attribCard.querySelector('.attrib-option-description[data-option-state="untested"]')
         }));
     });
 });

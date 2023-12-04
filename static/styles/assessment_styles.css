@@ -12,11 +12,7 @@ body {
 }
 
 /*data-polarity color variables*/
-.xmain-container {
-  width: 100% !important;
-  margin-top: 1rem;
-}
-.xmain-container .fighter-grid-container {
+.fighter-grid-container {
   display: flex;
   -moz-column-gap: 1rem;
        column-gap: 1rem;
@@ -198,8 +194,6 @@ button:active {
   display: flex;
 }
 .attrib-card .card-body {
-  display: flex;
-  justify-content: space-evenly;
   height: 0px;
   opacity: 0;
   overflow: hidden;
@@ -208,28 +202,40 @@ button:active {
 .attrib-card .card-body .attrib-option {
   display: flex;
   align-items: center;
-  border-radius: 0.5rem;
-  border: 2px solid lavender;
-  padding: 0.8rem;
   margin: 0.8rem;
   cursor: pointer;
   font-family: PoppinsSemiBold;
   text-transform: uppercase;
 }
-.attrib-card .card-body .attrib-option[selected] {
-  border-color: whitesmoke;
-  color: whitesmoke;
+.attrib-card .card-body .attrib-option .option {
+  margin: 0px;
+  margin-right: 0.5rem;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  border: 2px solid lavender;
 }
-.attrib-card .card-body .attrib-option[data-option-state=positive] {
+.attrib-card .card-body .attrib-option .description {
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  border: 2px solid lavender;
+  text-transform: capitalize;
+}
+.attrib-card .card-body .attrib-option[data-option-state=positive] .option, .attrib-card .card-body .attrib-option[data-option-state=positive] .description {
   border-color: #0d6efd;
+}
+.attrib-card .card-body .attrib-option[data-option-state=positive] .option {
   color: #0d6efd;
 }
-.attrib-card .card-body .attrib-option[data-option-state=neutral] {
+.attrib-card .card-body .attrib-option[data-option-state=neutral] .option, .attrib-card .card-body .attrib-option[data-option-state=neutral] .description {
   border-color: #ffc107;
+}
+.attrib-card .card-body .attrib-option[data-option-state=neutral] .option {
   color: #ffc107;
 }
-.attrib-card .card-body .attrib-option[data-option-state=negative] {
+.attrib-card .card-body .attrib-option[data-option-state=negative] .option, .attrib-card .card-body .attrib-option[data-option-state=negative] .description {
   border-color: #dc3545;
+}
+.attrib-card .card-body .attrib-option[data-option-state=negative] .option {
   color: #dc3545;
 }
 .attrib-card .card-body .attrib-option[data-option-state=positive][selected] {
@@ -247,26 +253,30 @@ button:active {
   color: whitesmoke;
   background-color: #dc3545;
 }
+.attrib-card .card-body .attrib-option[selected] {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
+.attrib-card .card-body .attrib-option[selected] .option {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
 .attrib-card .card-body .attrib-option[data-option-state=untested] {
   display: none;
 }
-.attrib-card .card-footer .attrib-option-description {
-  display: none;
+.attrib-card .card-footer .card-state-description {
   border: 2px solid lavender;
   border-radius: 0.5rem;
   padding: 0.5rem;
 }
-.attrib-card .card-footer .attrib-option-description[data-option-state=positive] {
+.attrib-card .card-footer .card-state-description[data-option-state=positive] {
   border-color: #0d6efd !important;
 }
-.attrib-card .card-footer .attrib-option-description[data-option-state=neutral] {
+.attrib-card .card-footer .card-state-description[data-option-state=neutral] {
   border-color: #ffc107 !important;
 }
-.attrib-card .card-footer .attrib-option-description[data-option-state=negative] {
+.attrib-card .card-footer .card-state-description[data-option-state=negative] {
   border-color: #dc3545 !important;
-}
-.attrib-card .card-footer .attrib-option-description[selected] {
-  display: block;
 }
 
 .attrib-card[data-edit-mode-enabled=false] {
@@ -372,11 +382,4 @@ button:active {
   min-width: 32ch;
   max-width: 100%;
   margin: 0px;
-}
-
-/*greater than */
-@media (max-width: 1200px) {
-  .xmain-container {
-    max-width: 95%;
-  }
 }/*# sourceMappingURL=assessment_styles.css.map */

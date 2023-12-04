@@ -47,15 +47,27 @@ h6 {
   font-family: PoppinsSemiBold;
 }
 
+.main-container {
+  padding-left: 12ch;
+}
+
 nav {
+  position: fixed;
   height: 100%;
   z-index: 1000;
 }
 nav button {
-  min-width: 10ch;
-  width: 10ch;
+  min-width: 8ch;
+  width: 8ch;
   height: -moz-fit-content;
   height: fit-content;
+  text-align: center;
+}
+nav button svg {
+  margin: auto;
+}
+nav .matchup-links button {
+  font-family: PoppinsSemiBold;
 }
 nav .sidebar-container {
   height: 100%;
@@ -68,56 +80,17 @@ nav .sidebar-container .sidebar-links-container {
   min-width: 10ch;
   width: 10ch;
   background-color: #01161E;
-  transition: all 0.5s ease-in-out;
+  transition: width 0.4s ease-in-out;
 }
 nav .sidebar-container .sidebar-links-container .link .home-link {
   text-decoration: none;
-  width: 10ch;
-  max-width: 10ch;
+  width: 8ch;
+  max-width: 8ch;
 }
-nav .sidebar-container .sidebar-links-container .link .dropdown-container .heading-wrapper {
-  padding: 0.4rem;
+nav .sidebar-container .sidebar-links-container .link .dropdown-container {
+  margin-left: 2ch;
 }
 nav .sidebar-container .sidebar-links-container .link .dropdown-container .dropdown-links {
   overflow: hidden;
-  transition: all 0.5s ease-in-out;
-}
-
-/* responsive media queries for table for all standard screen 
-        sizes */
-@media (min-width: 576px) {
-  .main-container {
-    max-width: 100%;
-    margin: auto;
-  }
-}
-@media (min-width: 576px) {
-  .main-container {
-    max-width: 100%;
-    margin: auto;
-  }
-}
-@media (min-width: 992px) {
-  .main-container {
-    max-width: 100%;
-    margin: auto;
-  }
-}
-@media (min-width: 1200px) {
-  .main-container {
-    max-width: 75%;
-    margin: auto;
-  }
-}
-@media (min-width: 1300px) {
-  .main-container {
-    max-width: 70%;
-    margin: auto;
-  }
-}
-@media (min-width: 1400px) {
-  .main-container {
-    max-width: 65%;
-    margin: auto;
-  }
+  transition: all 0.3s ease-in-out;
 }/*# sourceMappingURL=styles.css.map */

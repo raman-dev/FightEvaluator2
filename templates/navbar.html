@@ -1,126 +1,154 @@
-<nav class="border"> 
+<nav class="border">
   <div class="sidebar-container d-flex flex-column">
-      <!-- <div class="link-icon-container border d-flex">
+    <!-- <div class="link-icon-container border d-flex">
           <button class="btn" onclick="toggleSideBar()">
               toggle
           </button>
       </div>  -->
-      <div class="sidebar-links-container d-flex flex-column">
-          <button class="btn" onclick="toggleSideBar()">
-              toggle
-          </button>
+    <div class="sidebar-links-container d-flex flex-column">
+      <button class="btn" onclick="toggleSideBar()">
+        <svg
+          class="menu-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 -960 960 960"
+          width="24">
+          <path
+            fill="whitesmoke"
+            d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg>
+        <svg
+          class="close-icon"
+          style="display: none"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 -960 960 960"
+          width="24">
+          <path
+            fill="whitesmoke"
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+        </svg>
+      </button>
 
-          <div class="link">
-            <button class="home-link btn" >
-              <a href="/">
-                home
-              </a>
-            </button>
-            
+      <div class="link">
+        <button class="home-link btn">
+          <a href="/"> home </a>
+        </button>
+      </div>
+      <!--links list-->
+      <div class="assessment-links link d-flex">
+        <!--bootstrap5 dropdown -->
+        <button class="btn expand-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24">
+            <path
+              fill="whitesmoke"
+              d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+          </svg>
+        </button>
+        <div class="dropdown-container">
+          <!--dropdown heading-->
+          <div class="heading-wrapper d-flex">
+            <h4>assessments</h4>
           </div>
-          <!--links list-->
-          <div class="assessment-links link d-flex"> 
-              <!--bootstrap5 dropdown -->
-              <button class="btn expand-btn">
-                  icon
-              </button>
-              <div class="dropdown-container">
-                  <!--dropdown heading-->
-                  <div class="heading-wrapper d-flex">
-                      <h4>assessments</h4>
-                  </div>
-                  <div class="dropdown-links d-flex flex-column">
-                      <!-- <a href="#">link1</a>
+          <div class="dropdown-links d-flex flex-column">
+            <!-- <a href="#">link1</a>
                       <a href="#">link2</a>
                       <a href="#">link3</a>
                       <a href="#">link4</a>
                       <a href="#">link5</a> -->
-                  </div>
-              </div>
           </div>
-          
-          <div class="matchup-links link d-flex">
-              <!--bootstrap5 dropdown -->
-              <button class="btn expand-btn">
-                  icon
-              </button>
-              <div class="dropdown-container">
-                  <!--dropdown heading-->
-                  <div class="heading-wrapper d-flex">
-                      <h4>matchups</h4>
-                      <!-- <button class="btn expand-btn">
+        </div>
+      </div>
+
+      <div class="matchup-links link d-flex">
+        <!--bootstrap5 dropdown -->
+        <button class="btn expand-btn">1v1</button>
+        <div class="dropdown-container">
+          <!--dropdown heading-->
+          <div class="heading-wrapper d-flex">
+            <h4>matchups</h4>
+            <!-- <button class="btn expand-btn">
                           hide
                       </button> -->
-                  </div>
-                  <div class="dropdown-links d-flex flex-column">
-                      <!-- <a href="#">link1</a>
+          </div>
+          <div class="dropdown-links d-flex flex-column">
+            <!-- <a href="#">link1</a>
                       <a href="#">link2</a>
                       <a href="#">link3</a>
                       <a href="#">link4</a>
                       <a href="#">link5</a> -->
-                  </div>
-              </div>
           </div>
-      </div> 
-  </div>  
+        </div>
+      </div>
+    </div>
+  </div>
 </nav>
-<script> 
-            
+<script>
   //expand dropdown links when clicked
   //every .link has a .dropdown-links-container
   //set the height of the .dropdown-links-container to 0px by default
   //for every .link add an event listener to the .expand-btn
-  document.querySelectorAll('.link').forEach(link => {
-      let expandBtn = link.querySelector(".expand-btn");
-      if (expandBtn == null) return;  
-      expandBtn.innerHTML = "show";
-      let dropdownLinksContainer = link.querySelector(".dropdown-links");
-      dropdownLinksContainer.style.height = "0px";
+  document.querySelectorAll(".link").forEach((link) => {
+    let expandBtn = link.querySelector(".expand-btn");
+    if (expandBtn == null) return;
+    let dropdownLinksContainer = link.querySelector(".dropdown-links");
+    dropdownLinksContainer.style.height = "0px";
   });
 
   let links = document.querySelectorAll(".link");
-  links.forEach(link => {
-      //for every expand 
-      let expandBtn = link.querySelector(".expand-btn");
-      if (expandBtn == null) return;
-      let dropdownLinksContainer = link.querySelector(".dropdown-links");
-      expandBtn.addEventListener("click", () => {
-          //if sidebar is not expanded also call toggleSideBar()
-          let sidebarIsOpen = document.querySelector('.sidebar-container').classList.contains("expanded");
-          if (!sidebarIsOpen) toggleSideBar();
-          let isOpen = dropdownLinksContainer.classList.contains("expanded");
-          let action = isOpen ? "close" : "open";
-          if (action == "open"){
-              //expand the dropdown links
-              dropdownLinksContainer.classList.add("expanded");
-              dropdownLinksContainer.style.height = `${dropdownLinksContainer.scrollHeight}px`;
-              expandBtn.innerHTML = "hide";
-          }else{
-              //close the dropdown links
-              dropdownLinksContainer.classList.remove("expanded");
-              dropdownLinksContainer.style.height = "0px";
-              expandBtn.innerHTML = "show";
-          }
-      });
+  links.forEach((link) => {
+    //for every expand
+    let expandBtn = link.querySelector(".expand-btn");
+    if (expandBtn == null) return;
+    let dropdownLinksContainer = link.querySelector(".dropdown-links");
+    expandBtn.addEventListener("click", () => {
+      //if sidebar is not expanded also call toggleSideBar()
+      let sidebarIsOpen = document
+        .querySelector(".sidebar-container")
+        .classList.contains("expanded");
+      if (!sidebarIsOpen) toggleSideBar();
+      let isOpen = dropdownLinksContainer.classList.contains("expanded");
+      let action = isOpen ? "close" : "open";
+      if (action == "open") {
+        //expand the dropdown links
+        dropdownLinksContainer.classList.add("expanded");
+        dropdownLinksContainer.style.height = `${dropdownLinksContainer.scrollHeight}px`;
+      } else {
+        //close the dropdown links
+        dropdownLinksContainer.classList.remove("expanded");
+        dropdownLinksContainer.style.height = "0px";
+      }
+    });
   });
 
   const linkContainerRightPadding = 16;
-  function toggleSideBar(){
-      let sidebar = document.querySelector(".sidebar-container"); 
-      let isOpen = sidebar.classList.contains("expanded");
-      let action = isOpen ? "close" : "open";
-      let linkContainer = document.querySelector(".sidebar-links-container");
+  function toggleSideBar() {
+    let sidebar = document.querySelector(".sidebar-container");
+    let isOpen = sidebar.classList.contains("expanded");
+    let action = isOpen ? "close" : "open";
+    let linkContainer = document.querySelector(".sidebar-links-container");
 
-      if (action == "open") {
-          sidebar.classList.add("expanded");
-          //expand the link-container
-          linkContainer.style.width = `${linkContainer.scrollWidth + linkContainerRightPadding}px`;
-      } else if (action == "close") {
-          sidebar.classList.remove("expanded");
-          //set the link-container to 0 px width
-          linkContainer.style.width = "0px";
-      }
-  } 
+    if (action == "open") {
+      sidebar.classList.add("expanded");
+      //expand the link-container
+      linkContainer.style.width = `${
+        linkContainer.scrollWidth + linkContainerRightPadding
+      }px`;
+      sidebar.querySelector(".menu-icon").style.display = "none";
+      sidebar.querySelector(".close-icon").style.display = "block";
+    } else if (action == "close") {
+      sidebar.classList.remove("expanded");
+      //set the link-container to 0 px width
+      linkContainer.style.width = "0px";
+
+      sidebar.querySelector(".menu-icon").style.display = "block";
+      sidebar.querySelector(".close-icon").style.display = "none";
+    }
+  }
 </script>
 
 <script>
@@ -206,6 +234,4 @@
     document.querySelector(".matchup-links .dropdown-links"),
     "matchup"
   );
-
-
 </script>

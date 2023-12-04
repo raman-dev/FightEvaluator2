@@ -17,7 +17,7 @@
   </head>
   <body data-bs-theme="dark">
     {% include 'navbar.html' %}
-    <div class="main-container xmain-container">
+    <div class="main-container">
       <div class="fighter-info-container">
         <div class="fighter-card">
           <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
@@ -85,9 +85,12 @@
                 <button class="attrib-commit-button">commit</button>
               </div>
             </div>
-            <div class="card-body">
-                <div class="attrib-option" data-option-state="positive">
-                  Option 0
+            <div class="card-body d-flex flex-column">
+                <div class="attrib-option d-flex" data-option-state="positive">
+                  <h5 class="mx-0">Option-0</h5>
+                  <p class="attrib-description">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit eos unde, qui numquam reiciendis voluptate sint accusamus tempora ullam pariatur, quod distinctio neque veritatis, perferendis quidem. Totam expedita ad accusamus!
+                  </p>
                 </div>
                 <div class="attrib-option" data-option-state="neutral">
                   Option 1
@@ -107,8 +110,8 @@
                 <p>Option 2 description</p>
               </div>
             </div>
-          </div>
-           -->
+          </div> -->
+          
           {% for attrib_name,attrib_value in assessment.__dict__.items() %}
             {% if loop.index != 1 and attrib_name != 'id' %}
               <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value|attribToStr }}" data-attrib-name="{{ attrib_name }}">
@@ -135,34 +138,27 @@
                 <div class="card-body">
                   <!--attribute state options container-->
                     <div class="attrib-option" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }} >
-                      <p>Option 0</p>
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p>
                     </div>
                     {% if attrib_name != 'grappling_offense' and attrib_name !='grappling_defense' %}
                     <div class="attrib-option" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr =="neutral"}} >
-                      <p>Option 1</p>
+                      <h5 class="option">Option 0</h5>
+                      <p class="description"></p>
                     </div>
                     {% endif %}
                     <div class="attrib-option" data-option-state="negative" {{ "selected" if attrib_value|attribToStr =="negative"}} >
-                      <p>Option 2</p>
+                      <h5 class="option">Option 0</h5>
+                      <p class="description"></p>
                     </div>
                     <div class="attrib-option" data-option-state="untested" {{ "selected" if attrib_value|attribToStr =="untested"}} >
-                      <p>untested</p>
+                      <h5 class="option">Option 0</h5>
+                      <p class="description"></p> 
                     </div>
                 </div>
                 <div class="card-footer">
-                  <div class="attrib-option-description" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }}>
+                  <div class="card-state-description" data-option-state="{{ attrib_value|attribToStr }}">
                     <p>Option 0 description</p>
-                  </div>
-                  {% if attrib_name != 'grappling_offense' and attrib_name != 'grappling_defense'  %}
-                  <div class="attrib-option-description" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr=="neutral" }}>
-                    <p>Option 1 description</p>
-                  </div>
-                  {% endif %}
-                  <div class="attrib-option-description" data-option-state="negative" {{ "selected" if attrib_value|attribToStr=="negative" }}>
-                    <p>Option 2 description</p>
-                  </div>
-                  <div class="attrib-option-description" data-option-state="untested" {{ "selected" if attrib_value|attribToStr=="untested" }}>
-                    <p>untested</p>
                   </div>
                 </div>
               </div>
@@ -236,15 +232,24 @@
         attribCard.querySelectorAll('.attrib-option').forEach((attribOption)=>{
           //grab option state
           let optionState = attribOption.getAttribute('data-option-state');
-          attribOption.querySelector('p').textContent = attribInfoMap[key][optionState].state;
+          attribOption.querySelector('.option').textContent = attribInfoMap[key][optionState].state;
+          attribOption.querySelector('.description').textContent = attribInfoMap[key][optionState].description;
         });
+      }
 
-        attribCard.querySelectorAll('.attrib-option-description').forEach((attribDescription)=>{
-          //grab option state
-          let optionState = attribDescription.getAttribute('data-option-state');
-          let p = attribDescription.querySelector('p');
-          p.textContent = attribInfoMap[key][optionState].description;
-        });
+      //for every key in assessment data
+      for (key in assessment_data){
+        if (key == 'id'){
+          continue;
+        }
+        if (assessment_data[key] == null){
+          assessment_data[key] = 'untested';
+        }
+        //grab attrib-card
+        let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
+        //grab card description
+        let cardDescription = attribCard.querySelector('.card-state-description p');
+        cardDescription.textContent = attribInfoMap[key][assessment_data[key]].description;
       }
 
       //reorder attrib-cards to match attribCardOrder

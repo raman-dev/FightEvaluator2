@@ -70,42 +70,60 @@ $color-4: #EFF6E0;
 @import url(sidebar.scss);
 
 $sidebar-width: 10ch;
+$sidebar-button-width: 8ch;
+$main-container-leftpadding: calc($sidebar-width + 2ch);
+.main-container{
+    padding-left: $main-container-leftpadding; 
+}
+
 nav{
+    position: fixed;
     height: 100%;
     z-index: 1000;
     
     button{
-        min-width: $sidebar-width; 
-        width: $sidebar-width;
+        min-width: $sidebar-button-width; 
+        width: $sidebar-button-width;
         height: fit-content;
+        text-align: center;
+        svg{
+            margin: auto; 
+        }
+    }
+    .matchup-links{
+        button{
+            font-family: PoppinsSemiBold;
+        }
     }
     .sidebar-container{
         height: 100%;
         overflow: visible;
         max-width: $sidebar-width;
+
         .sidebar-links-container{
             height: 100%;
             overflow: hidden;
             min-width: $sidebar-width;
             width: $sidebar-width;
             background-color: $color-0;
-            transition: all 0.5s ease-in-out;
+            transition: width 0.4s ease-in-out;
 
             .link{
                 .home-link{
                     text-decoration: none;
-                    width: $sidebar-width;
-                    max-width: $sidebar-width;
+                    width: $sidebar-button-width;
+                    max-width: $sidebar-button-width;
                 }
                 .dropdown-container{
                     //link item list
+                    margin-left: 2ch;
                     .heading-wrapper{
-                       padding: 0.4rem;
+                    //    padding: 0.4rem;
                     }
                     .dropdown-links{
                         // background-color: green;
                         overflow: hidden;
-                        transition: all 0.5s ease-in-out;
+                        transition: all 0.3s ease-in-out;
                     }
                 }
                 
@@ -116,53 +134,3 @@ nav{
 }
     
 
-/* responsive media queries for table for all standard screen 
-        sizes */
-@media (min-width: 576px) {
-    .main-container {
-        max-width: 100%; 
-        margin: auto;
-    }
-}
-
-@media (min-width: 576px) {
-    .main-container {
-        max-width: 100%;
-        margin: auto;
-    }
-}
-
-// @media (min-width: 768px) {
-//     .main-container {
-//         max-width: 85%;
-//         margin: auto;
-//     }
-// }
-
-@media (min-width: 992px) {
-    .main-container {
-        max-width: 100%;
-        margin: auto;
-    }
-}
-
-@media (min-width: 1200px) {
-    .main-container {
-        max-width: 75%;
-        margin: auto;
-    }
-}
-
-@media (min-width: 1300px) {
-    .main-container {
-        max-width: 70%;
-        margin: auto;
-    }
-}
-
-@media (min-width: 1400px) {
-    .main-container {
-        max-width: 65%;
-        margin: auto;
-    }
-}

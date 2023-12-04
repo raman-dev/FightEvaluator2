@@ -36,16 +36,10 @@ body {
 }
 
 /*data-polarity color variables*/
-
-.xmain-container {
-  width: 100% !important;
-  margin-top: 1rem;
-
-  .fighter-grid-container{
-    display: flex;
-    column-gap: 1rem;
-    width: 100%;
-  }
+.fighter-grid-container{
+  display: flex; 
+  column-gap: 1rem;
+  width: 100%;
 }
 
 @media (max-width: 850px){
@@ -273,8 +267,8 @@ button:active{
     }
   }
   .card-body{
-    display: flex;
-    justify-content: space-evenly;
+    // display: flex;
+    // justify-content: space-evenly;
     
     height: 0px;
     opacity: 0;
@@ -286,34 +280,54 @@ button:active{
       display: flex;
       align-items: center;
 
-      border-radius: $borderRadius;
-      border: 2px solid lavender;
-      
-      padding: $optionPadding;
+      // padding: $optionPadding;
       margin: $optionPadding;
       cursor: pointer;
 
       font-family: PoppinsSemiBold;
       text-transform: uppercase;
-    }
 
-    .attrib-option[selected]{
-      border-color: whitesmoke;
-      color: whitesmoke;
+      .option{
+        margin: 0px;  
+        margin-right: 0.5rem;
+        padding: $optionPadding;
+
+        border-radius: $borderRadius;
+        border: 2px solid lavender;
+      }
+
+      .description{
+        padding: $optionPadding;
+        border-radius: $borderRadius;
+        border: 2px solid lavender;
+        text-transform: capitalize;
+      }
     }
 
     .attrib-option[data-option-state="positive"]{
-        border-color: $positiveBg;
-        color: $positiveBg;
+        .option, .description{
+          border-color: $positiveBg;
+        }
+        .option{
+          color: $positiveBg;
+        }
     }
     .attrib-option[data-option-state="neutral"]{
-      border-color: $neutralBg;
-      color: $neutralBg;
+      .option, .description{
+        border-color: $neutralBg;
+      }
+      .option{
+        color: $neutralBg;
+      }
     }
 
     .attrib-option[data-option-state="negative"]{
+      .option, .description{
         border-color: $negativeBg;
+      }
+      .option{
         color: $negativeBg;
+      }
     }
     
     .attrib-option[data-option-state="positive"][selected]{
@@ -332,34 +346,42 @@ button:active{
       background-color: $negativeBg;
     }
 
+    .attrib-option[selected]{
+      border-color: whitesmoke;
+      color: whitesmoke;
+      .option{
+        border-color: whitesmoke;
+        color: whitesmoke;
+      }
+    }
+
     .attrib-option[data-option-state="untested"]{
       display: none; 
     }
   }
 
   .card-footer{
-    .attrib-option-description{
-      display: none;
+    .card-state-description{
       
       border: 2px solid lavender;
       border-radius: $borderRadius;
 
       padding: $descriptionPadding;
     }
-    .attrib-option-description[data-option-state="positive"]{
+    .card-state-description[data-option-state="positive"]{
       border-color: $positiveBg !important;
     }
     
-    .attrib-option-description[data-option-state="neutral"]{
+    .card-state-description[data-option-state="neutral"]{
       border-color: $neutralBg !important;
     }
     
-    .attrib-option-description[data-option-state="negative"]{
+    .card-state-description[data-option-state="negative"]{
       border-color: $negativeBg !important;
     }
-    .attrib-option-description[selected]{
-      display: block;
-    }
+    // .card-state-description[data-option-state="untested"]{
+    //   display: none;
+    // }
   }
 }
 
@@ -483,13 +505,6 @@ button:active{
         }
       }
     }
-  }
-}
-
-/*greater than */
-@media (max-width: 1200px) {
-  .xmain-container{
-    max-width: 95%;
   }
 }
 
