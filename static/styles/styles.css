@@ -75,8 +75,10 @@ nav .sidebar-container .sidebar-links-container .link .home-link {
   width: 10ch;
   max-width: 10ch;
 }
-nav .sidebar-container .sidebar-links-container .link .dropdown-links {
+nav .sidebar-container .sidebar-links-container .link .dropdown-container .heading-wrapper {
   padding: 0.4rem;
+}
+nav .sidebar-container .sidebar-links-container .link .dropdown-container .dropdown-links {
   overflow: hidden;
   transition: all 0.5s ease-in-out;
 }

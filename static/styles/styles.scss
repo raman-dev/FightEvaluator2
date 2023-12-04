@@ -97,12 +97,18 @@ nav{
                     width: $sidebar-width;
                     max-width: $sidebar-width;
                 }
-                .dropdown-links{
-                    // background-color: green;
-                    padding: 0.4rem;
-                    overflow: hidden;
-                    transition: all 0.5s ease-in-out;
+                .dropdown-container{
+                    //link item list
+                    .heading-wrapper{
+                       padding: 0.4rem;
+                    }
+                    .dropdown-links{
+                        // background-color: green;
+                        overflow: hidden;
+                        transition: all 0.5s ease-in-out;
+                    }
                 }
+                
             }
         }
         

@@ -93,7 +93,7 @@
           if (action == "open"){
               //expand the dropdown links
               dropdownLinksContainer.classList.add("expanded");
-              dropdownLinksContainer.style.height = `${Math.max(dropdownLinksContainer.offsetHeight,dropdownLinksContainer.scrollHeight)}px`;
+              dropdownLinksContainer.style.height = `${dropdownLinksContainer.scrollHeight}px`;
               expandBtn.innerHTML = "hide";
           }else{
               //close the dropdown links
@@ -104,7 +104,7 @@
       });
   });
 
-
+  const linkContainerRightPadding = 16;
   function toggleSideBar(){
       let sidebar = document.querySelector(".sidebar-container"); 
       let isOpen = sidebar.classList.contains("expanded");
@@ -114,7 +114,7 @@
       if (action == "open") {
           sidebar.classList.add("expanded");
           //expand the link-container
-          linkContainer.style.width = `${Math.max(linkContainer.offsetWidth,linkContainer.scrollWidth)}px`;
+          linkContainer.style.width = `${linkContainer.scrollWidth + linkContainerRightPadding}px`;
       } else if (action == "close") {
           sidebar.classList.remove("expanded");
           //set the link-container to 0 px width
