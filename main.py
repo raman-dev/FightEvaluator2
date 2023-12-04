@@ -437,4 +437,20 @@ async def create_fighters():
     return {'status':'success'}
 
 
-
+# @app.get("/fix-rounds")
+# async def fix_rounds():
+#     with Session(engine) as session:
+#         #read matchups from database
+#         matchups = session.query(MatchUp).all()
+#         for matchup in matchups:
+#             #round string is like such
+#             # {d} x {d}
+#             if matchup.rounds != None:
+#                 # print(type(matchup.rounds))
+#                 result = re.search(r'[0-9]+ x [0-9]+',matchup.rounds).group(0)
+#                 # print(result)
+#                 matchup.rounds = result
+#                 session.commit()
+#                 session.refresh(matchup)
+        
+#     return {"status":"success"}
