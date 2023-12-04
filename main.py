@@ -90,9 +90,10 @@ def on_start():
     create_db_and_tables()
 
 def getFighterIdByName(session,name):
-    space_index = name.index(' ')
-    first_name = scraper.normalizeString(name[:space_index])#unicodedata.normalize('NFD',name[:space_index]).encode('ascii', 'ignore').decode("ascii").lower()
-    last_name = scraper.normalizeString(name[space_index + 1:])#unicodedata.normalize('NFD',name[space_index + 1:]).encode('ascii', 'ignore').decode("ascii").lower()
+    # space_index = name.index(' ')
+    names = name.split(' ')
+    first_name = scraper.normalizeString(names[0])#unicodedata.normalize('NFD',name[:space_index]).encode('ascii', 'ignore').decode("ascii").lower()
+    last_name = "" if len(names) == 1 else scraper.normalizeString(" ".join(names[1:]))#unicodedata.normalize('NFD',name[space_index + 1:]).encode('ascii', 'ignore').decode("ascii").lower()
     #find fighter id by first_name last_name
     fighter = session.query(Fighter).filter(Fighter.first_name == first_name,Fighter.last_name == last_name).first()        
     if fighter:
@@ -109,7 +110,8 @@ def createFighter(link,session):
     session.add(fighterAssessment)
     session.commit()
     
-    fighter_data['weight_class'] = WeightClass[fighter_data['weight_class']]
+    if fighter_data['weight_class'] in WeightClass.__members__:
+        fighter_data['weight_class'] = WeightClass[fighter_data['weight_class']]
     fighterObj = Fighter(**fighter_data)
     fighterObj.assessment_id = fighterAssessment.id
     
@@ -119,7 +121,7 @@ def createFighter(link,session):
     return fighterObj.id
 
 @app.get("/")
-async def index(request: Request,assessment_id: Annotated[str | None, Cookie()] = None):
+async def index(request: Request):
     #query my database for the next event
     #check the date of the next event
     #if date is upcoming or today load event from database
@@ -228,6 +230,7 @@ def next_event(session):
     #find the next upcoming event
     event = session.query(FightEvent).filter(FightEvent.date >= date.today()).first()
     if not event:
+        print('no event found')
         #if no event is found scrape the next event and create it
         print('fetching from site....')            
         #two commits since id is not created until commit is done

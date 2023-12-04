@@ -36,6 +36,7 @@ $backgroundColor: #212529;
 
 html,
 body {
+    height: 100vh;
     min-height: 800px;
     font-family: PoppinsLight;
     font-size: 16px; 
@@ -68,148 +69,43 @@ $color-4: #EFF6E0;
 
 @import url(sidebar.scss);
 
+$sidebar-width: 10ch;
 nav{
-    transition: all 0.4s ease;
-    height: 100vh;
-}
-.sidebar-container{
-    width: fit-content;
-}
-.link-text-container{
-    overflow: hidden;
-    transition: all 0.4s ease;
-    // width: fit-content;
-}
-
-.toggle-container{
+    height: 100%;
+    z-index: 1000;
+    
     button{
-        margin-left: auto;
+        min-width: $sidebar-width; 
+        width: $sidebar-width;
+        height: fit-content;
     }
-    overflow: hidden;
-    transition: all 0.4s ease;
-}
-
-button{
-    // margin-left: auto;
-    width: fit-content;
-} 
-
-nav {
-    background-color: $cardBorderColor;
-    h3{
-        font-family: PoppinsSemiBold;
-    }
- 
     .sidebar-container{
-        display: flex;
-        flex-direction: column;
         height: 100%;
+        overflow: visible;
+        max-width: $sidebar-width;
+        .sidebar-links-container{
+            height: 100%;
+            overflow: hidden;
+            min-width: $sidebar-width;
+            width: $sidebar-width;
+            background-color: $color-0;
+            transition: all 0.5s ease-in-out;
 
-        border-right: 1px solid lavender;
-        .link-icon-container{
-            button{
-                svg{
-                    width: 1.4rem; 
+            .link{
+                .home-link{
+                    text-decoration: none;
+                    width: $sidebar-width;
+                    max-width: $sidebar-width;
+                }
+                .dropdown-links{
+                    // background-color: green;
+                    padding: 0.4rem;
+                    overflow: hidden;
+                    transition: all 0.5s ease-in-out;
                 }
             }
         }
-        a{
-            text-decoration: none;
-            color: lavender;
-        }
-
-        .link{
-            display: flex;
-            align-items: center;
-            max-width: 24ch;
-            h3{
-                margin: 0px;
-                margin-left: 0.4rem;
-            }
-            svg{
-                margin-left:0.4rem;
-                fill: lavender;
-                width: 2rem;
-                height: 2rem;
-            }
-        }
-
-        .home-link{
-            margin-bottom: 1rem;
-        }
-
-        .link-wrapper{
-            .navbar-heading{
-                padding-left: 0.4rem;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-
-                svg{
-                    fill: $color-0;
-                    width: 2rem;
-                    height: 2rem;
-                }
-                h3{
-                    margin: 0px;
-                    border: 2px solid transparent;
-                    border-radius: $linkWrapperBorderRadius;
-                    text-transform: lowercase;
-
-                    transition: all 0.15s ease;
-                }
-            }
-
-            .link-container{
-                display: flex;
-                flex-direction: column;
-                // height: 0px;
-                overflow: hidden;
-                padding-left: 0.5rem;
-                border-bottom: 1px solid lavender;
-                
-                .link{
-                    border: 1px solid transparent;
-                    border-top: 1px solid lavender;
-                    margin-left: 0.4rem;
-                    margin-bottom: 0.3rem;
-                    text-align: center;
-                }
-                .link:hover{
-                    border-top: 1px solid lavender;
-                    text-decoration: underline;
-                }
-                
-                :first-child{
-                    .link{
-                        border-top: 1px solid transparent;
-                    }
-                }
-            }
-
-        }
-
-        .link-wrapper.active{
-            .navbar-heading{
-                background-color: $color-3;
-                color: $color-0;
-                // box-shadow: black 4px 4px 0 0;
-                text-shadow: 1.5px 1px #EFF6E0, 
-            }
-        }
-
-        .navbar-heading:hover{
-            cursor: pointer;
-            border-color: lavender;
-            background-color: $color-3;
-            color: $color-0;
-        }
-
-        .link-wrapper:hover{
-            .link-container{
-                border-bottom: 1px solid lavender;
-            }
-        }
+        
     }
 }
     

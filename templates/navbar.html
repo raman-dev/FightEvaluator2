@@ -1,80 +1,130 @@
-<nav class="border">
-  <div class="sidebar-container d-flex flex-column expanded">
-    <div class="toggle-container border d-flex">
-      <button class="btn" onclick="toggleSideBar()">
-        toggle
-      </button>
-    </div>
-    <!-- <div class=""></div>/ -->
-    <div class="links-wrapper d-flex">
-      <!--links list-->
-      <div class="link-container link-text-container d-flex flex-column">
-        <!-- <div class="link"> -->
-        <a href="/">
-          <div class="link home-link">
-            <h3>Home</h3>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z" />
-            </svg>
-          </div>
-        </a>
-        <!-- </div> -->
-        <!--collapsible container of last 5 visited assessments-->
-        <div class="link-wrapper assessment-links active">
-          <div class="navbar-heading">
-            <h3>Assessments</h3>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
-            </svg>
-          </div>
+<nav class="border"> 
+  <div class="sidebar-container d-flex flex-column">
+      <!-- <div class="link-icon-container border d-flex">
+          <button class="btn" onclick="toggleSideBar()">
+              toggle
+          </button>
+      </div>  -->
+      <div class="sidebar-links-container d-flex flex-column">
+          <button class="btn" onclick="toggleSideBar()">
+              toggle
+          </button>
 
-          <div class="link-container">
-            <!-- <a href="/assessments class="link">
-                    <div ">
-                        Fighter Name 0
-                    </div>
-                </div>-->
+          <div class="link">
+            <button class="home-link btn" >
+              <a href="/">
+                home
+              </a>
+            </button>
+            
           </div>
-        </div>
-        <!--collapsible container of last 5 visited matchups-->
-        <div class="link-wrapper matchup-links active">
-          <div class="navbar-heading">
-            <h3>Matchups</h3>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
-            </svg>
+          <!--links list-->
+          <div class="assessment-links link d-flex"> 
+              <!--bootstrap5 dropdown -->
+              <button class="btn expand-btn">
+                  icon
+              </button>
+              <div class="dropdown-container">
+                  <!--dropdown heading-->
+                  <div class="heading-wrapper d-flex">
+                      <h4>assessments</h4>
+                  </div>
+                  <div class="dropdown-links d-flex flex-column">
+                      <!-- <a href="#">link1</a>
+                      <a href="#">link2</a>
+                      <a href="#">link3</a>
+                      <a href="#">link4</a>
+                      <a href="#">link5</a> -->
+                  </div>
+              </div>
           </div>
-          <div class="link-container">
+          
+          <div class="matchup-links link d-flex">
+              <!--bootstrap5 dropdown -->
+              <button class="btn expand-btn">
+                  icon
+              </button>
+              <div class="dropdown-container">
+                  <!--dropdown heading-->
+                  <div class="heading-wrapper d-flex">
+                      <h4>matchups</h4>
+                      <!-- <button class="btn expand-btn">
+                          hide
+                      </button> -->
+                  </div>
+                  <div class="dropdown-links d-flex flex-column">
+                      <!-- <a href="#">link1</a>
+                      <a href="#">link2</a>
+                      <a href="#">link3</a>
+                      <a href="#">link4</a>
+                      <a href="#">link5</a> -->
+                  </div>
+              </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
+      </div> 
+  </div>  
 </nav>
+<script> 
+            
+  //expand dropdown links when clicked
+  //every .link has a .dropdown-links-container
+  //set the height of the .dropdown-links-container to 0px by default
+  //for every .link add an event listener to the .expand-btn
+  document.querySelectorAll('.link').forEach(link => {
+      let expandBtn = link.querySelector(".expand-btn");
+      if (expandBtn == null) return;  
+      expandBtn.innerHTML = "show";
+      let dropdownLinksContainer = link.querySelector(".dropdown-links");
+      dropdownLinksContainer.style.height = "0px";
+  });
+
+  let links = document.querySelectorAll(".link");
+  links.forEach(link => {
+      //for every expand 
+      let expandBtn = link.querySelector(".expand-btn");
+      if (expandBtn == null) return;
+      let dropdownLinksContainer = link.querySelector(".dropdown-links");
+      expandBtn.addEventListener("click", () => {
+          //if sidebar is not expanded also call toggleSideBar()
+          let sidebarIsOpen = document.querySelector('.sidebar-container').classList.contains("expanded");
+          if (!sidebarIsOpen) toggleSideBar();
+          let isOpen = dropdownLinksContainer.classList.contains("expanded");
+          let action = isOpen ? "close" : "open";
+          if (action == "open"){
+              //expand the dropdown links
+              dropdownLinksContainer.classList.add("expanded");
+              dropdownLinksContainer.style.height = `${Math.max(dropdownLinksContainer.offsetHeight,dropdownLinksContainer.scrollHeight)}px`;
+              expandBtn.innerHTML = "hide";
+          }else{
+              //close the dropdown links
+              dropdownLinksContainer.classList.remove("expanded");
+              dropdownLinksContainer.style.height = "0px";
+              expandBtn.innerHTML = "show";
+          }
+      });
+  });
+
+
+  function toggleSideBar(){
+      let sidebar = document.querySelector(".sidebar-container"); 
+      let isOpen = sidebar.classList.contains("expanded");
+      let action = isOpen ? "close" : "open";
+      let linkContainer = document.querySelector(".sidebar-links-container");
+
+      if (action == "open") {
+          sidebar.classList.add("expanded");
+          //expand the link-container
+          linkContainer.style.width = `${Math.max(linkContainer.offsetWidth,linkContainer.scrollWidth)}px`;
+      } else if (action == "close") {
+          sidebar.classList.remove("expanded");
+          //set the link-container to 0 px width
+          linkContainer.style.width = "0px";
+      }
+  } 
+</script>
 
 <script>
   // document.querySelector(".link-text-container").style.width = ;
-  function widthInit() {
-    let linkTextContainer = document.querySelector(".link-text-container");
-    linkTextContainer.style.width = `${linkTextContainer.scrollWidth}px`;
-  }
-  widthInit();
-  function toggleSideBar() {
-    let sidebar = document.querySelector(".sidebar-container");
-    let isOpen = sidebar.classList.contains("expanded");
-    let action = isOpen ? "close" : "open";
-    let toggleContainer = document.querySelector(".toggle-container");
-    let linkTextContainer = document.querySelector(".link-text-container");
-
-    if (action == "open") {
-      linkTextContainer.style.width = `${linkTextContainer.scrollWidth}px`;
-      sidebar.classList.add("expanded");
-    } else if (action == "close") {
-      //set the link-text-container to 0 px width
-      document.querySelector(".link-text-container").style.width = "0px";
-      sidebar.classList.remove("expanded");
-    }
-  }
   function stripIdAndStore(stack, storeKey, data) {
     let inStack = false;
     stack.forEach((item) => {
@@ -103,7 +153,7 @@
       let data = stack[i];
       let link = document.createElement("a");
       link.href = `/${path}/${data.id}`;
-      link.innerHTML = `<div class="link">${data.data}</div>`;
+      link.innerHTML = `<div class="">${data.data}</div>`;
       linkContainer.appendChild(link);
     }
   }
@@ -148,46 +198,14 @@
 
   addSideBarLinks(
     assessmentStack,
-    document.querySelector(".assessment-links .link-container"),
+    document.querySelector(".assessment-links .dropdown-links"),
     "assessment"
   );
   addSideBarLinks(
     matchupStack,
-    document.querySelector(".matchup-links .link-container"),
+    document.querySelector(".matchup-links .dropdown-links"),
     "matchup"
   );
 
-  //on click sidebar link wrapper expand to height of content
-  document.querySelectorAll(".sidebar-container .link-wrapper")
-    .forEach((linkWrapper) => {
-      let lc = linkWrapper.querySelector(".link-container");
-      if (linkWrapper.classList.contains("active")) {
-        if (linkWrapper.querySelector(".link-container").children.length == 0) {
-          linkWrapper.classList.remove("active");
-        }
-        lc.style.height = lc.scrollHeight + "px";
-      }
-      linkWrapper.addEventListener("click", (event) => {
-        //check if linkWrapper is already expanded
-        let linkContainer = linkWrapper.querySelector(".link-container");
-        if (linkWrapper.classList.contains("active")) {
-          //if it is expanded, collapse it
-          linkWrapper.classList.remove("active");
-          linkContainer.style.height = "0px";
-          return;
-        }
-        //don't activate if on links to display
-        if (linkContainer.children.length == 0) {
-          return;
-        }
-        linkWrapper.classList.add("active");
-        //get the height of the link-container
-        let linkContainerHeight = linkContainer.scrollHeight;
-        linkContainer.style.height = linkContainerHeight + "px";
-      });
-    });
 
-  document.querySelectorAll(".link-container").forEach((linkContainer) => {
-    linkContainer.style.transition = "all 0.3s ease-in-out";
-  });
 </script>

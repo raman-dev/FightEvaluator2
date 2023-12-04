@@ -1,11 +1,14 @@
-nav {
-  z-index: 1000;
+html, body {
+  height: 100vh;
 }
-nav * {
-  transition: all 0.4s ease-out;
+
+nav {
+  height: 100%;
+  z-index: 1000;
 }
 nav button {
   min-width: 10ch;
+  width: 10ch;
   height: -moz-fit-content;
   height: fit-content;
 }
@@ -14,10 +17,16 @@ nav .sidebar-container {
   overflow: visible;
   max-width: 10ch;
 }
-nav .sidebar-container .link-container {
+nav .sidebar-container .sidebar-links-container {
   height: 100%;
   overflow: hidden;
   min-width: 10ch;
   width: 10ch;
   background-color: red;
+  transition: all 0.5s ease-in-out;
+}
+nav .sidebar-container .sidebar-links-container .link .dropdown-links {
+  background-color: green;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
 }/*# sourceMappingURL=sidebar.css.map */
