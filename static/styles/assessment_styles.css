@@ -57,7 +57,7 @@ body {
     outline-color: #3d7efd;
   }
 }
-button {
+.main-container button {
   outline-offset: 2px;
   border: 2px solid black;
   border-radius: 0.6rem;
@@ -70,11 +70,11 @@ button {
   transition: all 0.1s ease-out;
 }
 
-button:hover {
+.main-container button:hover {
   box-shadow: black 4px 4px 0 0;
 }
 
-button:active {
+.main-container button:active {
   box-shadow: black 2px 2px 0 0;
   background-color: rgba(89, 131, 146, 0.5607843137);
 }

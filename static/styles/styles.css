@@ -90,7 +90,22 @@ nav .sidebar-container .sidebar-links-container .link .home-link {
 nav .sidebar-container .sidebar-links-container .link .dropdown-container {
   margin-left: 2ch;
 }
+nav .sidebar-container .sidebar-links-container .link .dropdown-container .heading-wrapper {
+  align-items: center;
+}
+nav .sidebar-container .sidebar-links-container .link .dropdown-container .heading-wrapper h4 {
+  margin: 0px;
+}
 nav .sidebar-container .sidebar-links-container .link .dropdown-container .dropdown-links {
+  background-color: #598392;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-}/*# sourceMappingURL=styles.css.map */
+}
+nav .sidebar-container .sidebar-links-container .link .dropdown-container .dropdown-links a {
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+/*
+    tailwind responsive media queries
+*//*# sourceMappingURL=styles.css.map */

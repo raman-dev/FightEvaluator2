@@ -90,7 +90,7 @@ $descriptionPadding: 0.5rem;
 $borderRadius: 0.5rem;
 $flickerDuration: 400ms;
 
-button{
+.main-container button{
   // outline: 2px solid lavender;
   outline-offset: 2px;
 
@@ -113,17 +113,15 @@ button{
   background-color: $btnClickBackground;
 }
 
-button:hover{
+.main-container button:hover{
   box-shadow: black 4px 4px 0 0;
 }
 
-button:active{
+.main-container button:active{
   // box-shadow: black 2px 2px 0 0;
   // background-color: $btnClickBackground;
   @include button-active;
 }
-
-
 
 
 .fighter-info-container{

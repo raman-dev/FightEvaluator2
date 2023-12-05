@@ -217,7 +217,7 @@
         striking: {{ assessment.striking|fightAttribQualifier if assessment.striking is not none else 'null' }},
         desire_to_win: {{ assessment.desire_to_win|fightAttribQualifier if assessment.desire_to_win is not none else 'null' }},
         chinny: {{ assessment.chinny|fightAttribQualifier if assessment.chinny is not none else 'null' }},
-        grappling_offense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
+        grappling_offense: {{ assessment.grappling_offense|fightAttribQualifier if assessment.grappling_offense is not none else 'null' }},
         grappling_defense: {{ assessment.grappling_defense|fightAttribQualifier if assessment.grappling_defense is not none else 'null' }},
       };
 
@@ -233,6 +233,7 @@
           //grab option state
           let optionState = attribOption.getAttribute('data-option-state');
           attribOption.querySelector('.option').textContent = attribInfoMap[key][optionState].state;
+          // console.log(key,optionState,attribInfoMap[key][optionState].description);
           attribOption.querySelector('.description').textContent = attribInfoMap[key][optionState].description;
         });
       }

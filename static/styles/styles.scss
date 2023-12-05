@@ -82,6 +82,7 @@ nav{
     z-index: 1000;
     
     button{
+        // border: 1px solid red !important;
         min-width: $sidebar-button-width; 
         width: $sidebar-button-width;
         height: fit-content;
@@ -109,6 +110,7 @@ nav{
             transition: width 0.4s ease-in-out;
 
             .link{
+                // border: 2px solid lavender;
                 .home-link{
                     text-decoration: none;
                     width: $sidebar-button-width;
@@ -116,14 +118,22 @@ nav{
                 }
                 .dropdown-container{
                     //link item list
+                    // border: 1px solid green;
                     margin-left: 2ch;
                     .heading-wrapper{
-                    //    padding: 0.4rem;
+                        align-items: center;
+                        h4{
+                            margin: 0px;
+                        }
                     }
                     .dropdown-links{
-                        // background-color: green;
+                        background-color: $color-2;
                         overflow: hidden;
                         transition: all 0.3s ease-in-out;
+                        a{
+                            color: whitesmoke;
+                            text-decoration: none;
+                        }
                     }
                 }
                 
@@ -134,3 +144,17 @@ nav{
 }
     
 
+/*
+    tailwind responsive media queries
+*/
+// @media (min-width: 640px) {
+   
+// }
+// @media (min-width: 768px) {
+    
+// @media (min-width: 1024px) {
+  
+// }
+// @media (min-width: 1280px) {
+    
+// }
