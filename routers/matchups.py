@@ -6,7 +6,10 @@ from sqlmodel import Session
 from dependencies import get_session,get_templates
 from models import MatchUp,Fighter,WeightClass,Assessment,Note,MatchupIn
 
-router = APIRouter()
+router = APIRouter(
+    tags=["matchup"],
+)
+
 # templates = Jinja2Templates(directory="../templates")
 
 @router.get("/matchup/{matchup_id}")
@@ -31,7 +34,7 @@ async def index(request: Request,matchup_id: int,session: Session = Depends(get_
     return templates.TemplateResponse("matchup.html",context)
 
 
-@router.post("/create-matchup")
+@router.post("/matchup/create-matchup")
 async def create_matchup(request: Request,matchupIn: MatchupIn,session: Session = Depends(get_session)):
     #convert the request body to a json object
     # print(matchupIn.dict())
@@ -52,7 +55,7 @@ async def create_matchup(request: Request,matchupIn: MatchupIn,session: Session 
     return matchup
     # return {'status':'success'}
     
-@router.delete("/delete-matchup/{matchup_id}")
+@router.delete("/matchup/delete-matchup/{matchup_id}")
 async def delete_matchup(matchup_id: int,session: Session = Depends(get_session)):
     matchup = session.get(MatchUp,matchup_id)
     if not matchup:

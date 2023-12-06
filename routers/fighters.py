@@ -6,7 +6,9 @@ from sqlmodel import Session
 from dependencies import get_session,get_templates
 from models import Fighter,WeightClass,Assessment,ImageLinkIn,FighterIn,FighterSearchOut
 
-router = APIRouter()
+router = APIRouter(
+    tags=["fighters"],
+)
 
 @router.patch("/fighters/update/image-link")
 async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
@@ -25,7 +27,7 @@ def get_fighter(fighter_id:int,session: Session = Depends(get_session),templates
     return fighter
 
 
-@router.post("/create-fighter")
+@router.post("/fighters/create-fighter")
 async def create_fighter(request: Request,fighterIn: FighterIn,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     #convert the request body to a json object
     # body = await request.body()
@@ -51,7 +53,7 @@ async def create_fighter(request: Request,fighterIn: FighterIn,session: Session 
 #     context = {"request":request}
 #     return templates.TemplateResponse("predict.html",context)
 
-@router.get("/search/fighters/",response_model=list[FighterSearchOut])
+@router.get("/fighters/search/",response_model=list[FighterSearchOut])
 async def search(request: Request,search: str,session: Session = Depends(get_session)):
     terms = search.split(' ')
     print('search.terms => ',terms)

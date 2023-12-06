@@ -6,8 +6,9 @@ import scraper
 from dependencies import get_session,get_templates
 from models import FightEvent,MatchUp,Fighter,WeightClass,Assessment
 
-router = APIRouter()
-# templates = Jinja2Templates(directory="../templates")
+router = APIRouter(
+    tags=["fightevents"],
+)
 
 @router.get("/")
 async def index(request: Request,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):

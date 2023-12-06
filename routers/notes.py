@@ -1,14 +1,13 @@
 from fastapi import APIRouter,Depends
-from fastapi.templating import Jinja2Templates
 from datetime import datetime
 from sqlmodel import Session
 from dependencies import get_session
 from models import Note,NoteIn
 
 
-router = APIRouter()
-templates = Jinja2Templates(directory="../templates")
-#,session: Session = Depends(get_session)):
+router = APIRouter(
+    tags=["notes"],
+)
 
 @router.get("/notes/{assessment_id}")
 async def get_notes(assessment_id: int,session: Session = Depends(get_session)):

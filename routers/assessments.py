@@ -5,8 +5,9 @@ from models import Fighter,Assessment,AssessmentUpdate,Note
 from fastapi.templating import Jinja2Templates
 
 
-router = APIRouter()
-# templates = Jinja2Templates(directory="../templates")
+router = APIRouter(
+    tags=["assessments"],
+)
 
 
 #assessmnent require fighter id since they cannot exist without a fighter

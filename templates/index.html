@@ -285,7 +285,7 @@
       }
       // console.log(fighterAId, fighterBId, weightClass);
       //send post request to /create-matchup
-      fetch("/create-matchup", {
+      fetch("/matchup/create-matchup", {
         method: "POST",
         body: JSON.stringify({
           fighter_a_id: fighterAId,
@@ -314,7 +314,7 @@
         data[key] = value;
       }
       // console.log(data);
-      fetch("/create-fighter", {
+      fetch("/fighters/create-fighter", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -393,7 +393,7 @@
         );
 
         if (search.length > 0) {
-          fetch(`/search/fighters/?search=${search}`)
+          fetch(`/fighters/search/?search=${search}`)
             .then((response) => response.json())
             .then((data) => {
               searchSuggestion.innerHTML = "";

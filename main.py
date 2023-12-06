@@ -1,9 +1,8 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from models import *
+# from models import *
 from routers import fightevents,assessments,matchups,fighters,notes
 
 app = FastAPI()
