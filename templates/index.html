@@ -393,7 +393,7 @@
         );
 
         if (search.length > 0) {
-          fetch(`/search?search=${search}`)
+          fetch(`/search/fighters/?search=${search}`)
             .then((response) => response.json())
             .then((data) => {
               searchSuggestion.innerHTML = "";

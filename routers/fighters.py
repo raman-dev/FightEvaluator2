@@ -3,16 +3,13 @@ from fastapi.templating import Jinja2Templates
 from datetime import date
 from sqlmodel import Session
 
-from .. import scraper
-from ..dependencies import get_session
-from ..models import Fighter,WeightClass,Assessment,ImageLinkIn,FighterIn
+from dependencies import get_session,get_templates
+from models import Fighter,WeightClass,Assessment,ImageLinkIn,FighterIn,FighterSearchOut
 
 router = APIRouter()
-templates = Jinja2Templates(directory="../templates")
 
-#,session: Session = Depends(get_session)):
-@router.patch("/fighters/updateImageLink")
-async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depends(get_session)):
+@router.patch("/fighters/update/image-link")
+async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     fighter = session.get(Fighter,imgLinkIn.fighter_id)
     if not fighter:
         raise HTTPException(status_code=404, detail="Fighter not found")
@@ -22,14 +19,14 @@ async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depen
     return {'status':'success','img_link':imgLinkIn.img_link}
 
 @router.get("/fighters/{fighter_id}")
-def get_fighter(fighter_id:int,session: Session = Depends(get_session)):
+def get_fighter(fighter_id:int,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     print('getting fighter with id -> ',fighter_id)
     fighter = session.get(Fighter,fighter_id)
     return fighter
 
 
 @router.post("/create-fighter")
-async def create_fighter(request: Request,fighterIn: FighterIn,session: Session = Depends(get_session)):
+async def create_fighter(request: Request,fighterIn: FighterIn,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     #convert the request body to a json object
     # body = await request.body()
     # print(body,json.loads(body),fighterIn.dict())
@@ -48,3 +45,29 @@ async def create_fighter(request: Request,fighterIn: FighterIn,session: Session 
     session.refresh(fighter)
     # print(fighter)
     return fighter
+
+# @app.get("/predict")
+# async def predictUI(request: Request):
+#     context = {"request":request}
+#     return templates.TemplateResponse("predict.html",context)
+
+@router.get("/search/fighters/",response_model=list[FighterSearchOut])
+async def search(request: Request,search: str,session: Session = Depends(get_session)):
+    terms = search.split(' ')
+    print('search.terms => ',terms)
+    fname = terms[0]
+    lname = fname
+    if len(terms) > 1:
+        lname = terms[1]
+    # with Session(engine) as session:
+        """
+            fname == lname then
+            if not do fname and lname search
+        """
+    fighters = []
+    if fname == lname:
+        fighters = session.query(Fighter).filter(Fighter.first_name.contains(fname) | Fighter.last_name.contains(lname)).limit(5).all()
+    else:
+        fighters = session.query(Fighter).filter(Fighter.first_name.contains(fname),Fighter.last_name.contains(lname)).limit(5).all()
+    return [FighterSearchOut(fighter_id=fighter.id,first_name=fighter.first_name,last_name=fighter.last_name,weight_class=fighter.weight_class) for fighter in fighters]
+

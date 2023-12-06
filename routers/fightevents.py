@@ -2,15 +2,15 @@ from fastapi import APIRouter,Depends,Request
 from fastapi.templating import Jinja2Templates
 from datetime import date
 from sqlmodel import Session
-from .. import scraper
-from ..dependencies import get_session
-from ..models import FightEvent,MatchUp,Fighter,WeightClass,Assessment
+import scraper
+from dependencies import get_session,get_templates
+from models import FightEvent,MatchUp,Fighter,WeightClass,Assessment
 
 router = APIRouter()
-templates = Jinja2Templates(directory="../templates")
+# templates = Jinja2Templates(directory="../templates")
 
 @router.get("/")
-async def index(request: Request,session: Session = Depends(get_session)):
+async def index(request: Request,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     #query my database for the next event
     #check the date of the next event
     #if date is upcoming or today load event from database

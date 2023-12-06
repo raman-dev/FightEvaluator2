@@ -1,10 +1,9 @@
-from fastapi import APIRouter,Depends,Request,HTTPException
+from fastapi import APIRouter,Depends
 from fastapi.templating import Jinja2Templates
 from datetime import datetime
 from sqlmodel import Session
-from .. import scraper
-from ..dependencies import get_session
-from ..models import Note,NoteIn
+from dependencies import get_session
+from models import Note,NoteIn
 
 
 router = APIRouter()
@@ -18,7 +17,7 @@ async def get_notes(assessment_id: int,session: Session = Depends(get_session)):
     notes = session.query(Note).filter(Note.assessment_id == assessment_id).all()
     return notes
 
-@router.post("/notes")
+@router.post("/notes/create-note")
 async def create_note(noteIn: NoteIn,session: Session = Depends(get_session)):#,request: Request):
     #add note to database
     # body = await request.body()
@@ -29,7 +28,7 @@ async def create_note(noteIn: NoteIn,session: Session = Depends(get_session)):#,
     session.refresh(note)
     return note
 
-@router.delete("/notes/{note_id}")
+@router.delete("/notes/delete-note/{note_id}")
 async def delete_notes(note_id,session: Session = Depends(get_session)):
     #delete note from database
     note = session.get(Note,note_id)
@@ -40,7 +39,7 @@ async def delete_notes(note_id,session: Session = Depends(get_session)):
     return {'status':'success'}
 
 #add all note delete by assessment id
-@router.delete("/notes/assessment/{assessment_id}")
+@router.delete("/notes/delete-note/assessment/{assessment_id}")
 async def delete_notes_by_assessment(assessment_id,session: Session = Depends(get_session)):
     #delete note from database
     notes = session.query(Note).filter(Note.assessment_id == assessment_id).all()

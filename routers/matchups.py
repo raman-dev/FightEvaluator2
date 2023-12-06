@@ -3,15 +3,14 @@ from fastapi.templating import Jinja2Templates
 from datetime import date
 from sqlmodel import Session
 
-from .. import scraper
-from ..dependencies import get_session
-from ..models import MatchUp,Fighter,WeightClass,Assessment,Note,MatchupIn
+from dependencies import get_session,get_templates
+from models import MatchUp,Fighter,WeightClass,Assessment,Note,MatchupIn
 
 router = APIRouter()
-templates = Jinja2Templates(directory="../templates")
+# templates = Jinja2Templates(directory="../templates")
 
 @router.get("/matchup/{matchup_id}")
-async def index(request: Request,matchup_id: int,session: Session = Depends(get_session)):
+async def index(request: Request,matchup_id: int,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     matchup = session.get(MatchUp,matchup_id)
     if not matchup:
         raise HTTPException(status_code=404, detail="Matchup not found")

@@ -290,7 +290,7 @@
         let noteText = noteEditor.textContent.trim();
         if (noteText.length > 0) {
           //post request to server with new note
-          let response = await fetch("/notes", {
+          let response = await fetch("/notes/create-note", {
             method: "POST",
             headers: {
               accept: "application/json",
@@ -324,7 +324,7 @@
         //send delete request to server
         //remove note from notes-list
         let note_id = parseInt(event.target.getAttribute("data-note-id"));
-        let response = await fetch(`/notes/${note_id}`, {
+        let response = await fetch(`/notes/delete-note/${note_id}`, {
           method: "DELETE",
           headers: {
             accept: "application/json",
@@ -358,7 +358,7 @@
           return;
         }
         //send fighter link update to server
-        let response = await fetch(`/fighters/updateImageLink`, {
+        let response = await fetch(`/fighters/update/image-link`, {
           method: "PATCH",
           headers: {
             accept: "application/json",

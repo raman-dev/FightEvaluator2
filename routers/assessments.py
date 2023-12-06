@@ -1,18 +1,17 @@
 from fastapi import APIRouter,Depends,Request,HTTPException
 from sqlmodel import Session
-from .. import scraper
-from ..dependencies import get_session
-from ..models import Fighter,Assessment,AssessmentUpdate,Note
+from dependencies import get_session,get_templates
+from models import Fighter,Assessment,AssessmentUpdate,Note
 from fastapi.templating import Jinja2Templates
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="../templates")
+# templates = Jinja2Templates(directory="../templates")
 
 
 #assessmnent require fighter id since they cannot exist without a fighter
 @router.get("/assessment/{fighter_id}")
-async def assessment(request: Request,fighter_id: int,session: Session = Depends(get_session)):
+async def assessment(request: Request,fighter_id: int,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     context = {"request":request}
     # context['fighter'] = get_fighter(fighter_id)
     fighter = session.get(Fighter,fighter_id)
