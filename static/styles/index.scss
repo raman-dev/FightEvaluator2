@@ -70,7 +70,13 @@ body{
 $tableBorderRadius: 0.68em;
 $cardBorderColor: #131b23;
 
+.table-container{
+  margin:auto;
+  max-width: 70%;
+}
+
 table {
+
 
   border: None;
   tbody {
@@ -104,20 +110,28 @@ table {
  
 
   .fighter-name {
-
-    a {
-      width: 18ch;
-      text-align: center;
-      text-decoration: none;
-      h4 {
-        margin: 0px;
-        color: #dee2e6;
-        text-transform: capitalize;
+    :first-child{
+      align-items: center;
+      img{
+        height: fit-content;
+        border-radius: 50%;
       }
-      h4:hover {
-        text-decoration: underline;
+      a {
+        width: 18ch;
+        text-align: center;
+        text-decoration: none;
+        h5 {
+          margin: 0px;
+          color: #dee2e6;
+          text-transform: capitalize;
+        }
+        h5:hover {
+          text-decoration: underline;
+        }
       }
     }
+
+    
   }
   .weightclass {
     display: flex;
@@ -131,14 +145,29 @@ table {
   }
 }
 
-@media(max-width: 650px) {
+@media (max-width: 1280px) {
+    .table-container{
+      max-width: 85%;
+    }
+}
+
+@media (max-width: 1024px) {
+  .table-container{
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+   .table-container{
+      max-width: 100%;
+   }
+}
+
+@media (max-width: 640px) {
   table {
     td{
       display: block;
-      // *{
-      //   display: block;
-      // }
-    }
+    }  
   }
 }
 
