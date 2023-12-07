@@ -3,8 +3,6 @@ body {
 }
 
 .title-container {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -55,7 +53,7 @@ body {
 
 /* fighter-img has rounded corners using crop */
 .fighter-img {
-  border-radius: 10%;
+  border-radius: 50%;
 }
 
 /*horizontally centered event-title*/
@@ -70,20 +68,22 @@ body {
 
 table {
   border: None;
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+  margin: auto;
+}
+table caption {
+  caption-side: top;
 }
 table tbody {
   border: 2px solid #131b23;
 }
-table th,
-table td {
+table th, table td {
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem !important;
   vertical-align: middle;
   text-align: center;
 }
-table td {
-  width: -moz-fit-content;
-  width: fit-content;
-}
-table h1 {
+table th h1 {
   text-align: center;
   opacity: 0.5;
   width: 2.2ch;
@@ -94,26 +94,27 @@ table tr:hover {
 }
 table tr:hover .weightclass h6 {
   text-decoration: underline;
+  margin: 0px;
 }
-table .fighter-name :first-child {
+table .fighter :first-child {
   align-items: center;
 }
-table .fighter-name :first-child img {
+table .fighter :first-child img {
   height: -moz-fit-content;
   height: fit-content;
   border-radius: 50%;
 }
-table .fighter-name :first-child a {
+table .fighter :first-child a {
   width: 18ch;
   text-align: center;
   text-decoration: none;
 }
-table .fighter-name :first-child a h5 {
+table .fighter :first-child a .fighter-name {
   margin: 0px;
   color: #dee2e6;
   text-transform: capitalize;
 }
-table .fighter-name :first-child a h5:hover {
+table .fighter :first-child a .fighter-name:hover {
   text-decoration: underline;
 }
 table .weightclass {
@@ -123,6 +124,9 @@ table .weightclass {
   justify-content: center;
 }
 table .weightclass p {
+  margin: 0px;
+}
+table .weightclass h6 {
   margin: 0px;
 }
 

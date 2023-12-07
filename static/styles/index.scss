@@ -5,8 +5,6 @@ body{
 
 
 .title-container{
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -58,7 +56,7 @@ body{
 
  /* fighter-img has rounded corners using crop */
  .fighter-img {
-  border-radius: 10%;
+  border-radius: 50%;
 }
 
 
@@ -77,21 +75,27 @@ $cardBorderColor: #131b23;
 
 table {
 
-
   border: None;
+  width: fit-content !important;
+  margin: auto;
+
+  caption{
+    caption-side: top;
+  }
+
   tbody {
     border: 2px solid $cardBorderColor;
   }
-  th,
-  td {
+  $tdHorizontalPadding: 0.8rem;
+  $tdVerticalPadding: 0.5rem;
+  th,td {
+    // width: fit-content;
+    padding: $tdVerticalPadding $tdHorizontalPadding $tdVerticalPadding $tdHorizontalPadding !important; 
     vertical-align: middle;
     text-align: center;
   }
-  td {
-    width: fit-content;
-  }
 
-  h1 {
+  th h1 {
     text-align: center;
     opacity: 0.5;
     width: 2.2ch;
@@ -104,12 +108,13 @@ table {
     .weightclass {
       h6 { 
         text-decoration: underline;
+        margin: 0px;
       }
     }
   }
  
 
-  .fighter-name {
+  .fighter {
     :first-child{
       align-items: center;
       img{
@@ -120,12 +125,12 @@ table {
         width: 18ch;
         text-align: center;
         text-decoration: none;
-        h5 {
+        .fighter-name {
           margin: 0px;
           color: #dee2e6;
           text-transform: capitalize;
         }
-        h5:hover {
+        .fighter-name:hover {
           text-decoration: underline;
         }
       }
@@ -140,6 +145,9 @@ table {
     justify-content: center;
 
     p {
+      margin: 0px;
+    }
+    h6{
       margin: 0px;
     }
   }
