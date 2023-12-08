@@ -41,6 +41,11 @@ h5, h6{
             .name{
                 text-transform: capitalize;
             }
+            :not(:first-child){
+                p{
+                    margin: 0px;
+                }
+            }
         }
     }
 }

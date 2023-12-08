@@ -37,6 +37,9 @@ h5, h6 {
 .fighter-container .fighter-info .fighter-bio .name {
   text-transform: capitalize;
 }
+.fighter-container .fighter-info .fighter-bio :not(:first-child) p {
+  margin: 0px;
+}
 
 .matchup-container {
   display: flex;
