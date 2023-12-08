@@ -24,8 +24,10 @@ async def index(request: Request,session: Session = Depends(get_session),templat
     context = {"request":request}
     eventData = next_event(session)
     context['event'] = eventData['event']
-    context['matchups'] = eventData['matchups']
-    for matchup in context['matchups']:
+    # context['matchups'] = eventData['matchups']
+    prelims = []
+    main_card = []
+    for matchup in eventData['matchups']:
         if matchup.fighter_a_id == None and matchup.fighter_b_id == None:
             fighter_a_id = getFighterIdByName(session,matchup.fighter_a)
             fighter_b_id = getFighterIdByName(session,matchup.fighter_b)
@@ -39,9 +41,14 @@ async def index(request: Request,session: Session = Depends(get_session),templat
                 matchup.fighter_b_id = createFighter(matchup.fighter_b_link,session)
             elif fighter_b_id != -1:
                 matchup.fighter_b_id = fighter_b_id
+        if matchup.isprelim:
+            prelims.append(matchup)
+        else:
+            main_card.append(matchup)
             session.add(matchup)
             session.commit()
-        
+    #split matchups into two lists one of isprelim is true and one is false
+    context['matchupsList'] = [main_card,prelims]
     return templates.TemplateResponse("index.html",context)#context
 
 def next_event(session):

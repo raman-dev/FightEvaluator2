@@ -61,12 +61,14 @@ body {
   margin: 0rem;
 }
 
-.table-container {
+.table-container, .title-container {
   margin: auto;
   max-width: 70%;
 }
 
 table {
+  /*** bootstrap table style ***/
+  --bs-table-bg: #111921 !important;
   border: None;
   width: -moz-fit-content !important;
   width: fit-content !important;
@@ -75,8 +77,19 @@ table {
 table caption {
   caption-side: top;
 }
+table caption * {
+  margin: 0px;
+}
 table tbody {
-  border: 2px solid #131b23;
+  -webkit-clip-path: inset(0% 0% 0% 0% round 1.4rem);
+          clip-path: inset(0% 0% 0% 0% round 1.4rem);
+}
+table tbody tr {
+  border-radius: 1.4rem;
+  border-bottom: 1px solid lavender;
+}
+table tbody tr:last-child {
+  border-bottom: none;
 }
 table th, table td {
   padding: 0.5rem 0.8rem 0.5rem 0.8rem !important;
@@ -131,17 +144,17 @@ table .weightclass h6 {
 }
 
 @media (max-width: 1280px) {
-  .table-container {
+  .table-container, .title-container {
     max-width: 85%;
   }
 }
 @media (max-width: 1024px) {
-  .table-container {
+  .table-container, .title-container {
     max-width: 90%;
   }
 }
 @media (max-width: 768px) {
-  .table-container {
+  .table-container, .title-container {
     max-width: 100%;
   }
 }

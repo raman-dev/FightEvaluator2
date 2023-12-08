@@ -53,11 +53,30 @@ class MatchUp(SQLModel,table=True):
     fighter_b_id: Optional[int]
 
     rounds: Optional[str]
+    isprelim: Optional[bool]
     #almost always 3 unless main-event or championship fight
     max_rounds: Optional[int]
     #optional foreign key to the fightevent table
     event_id: Optional[int] = Field(default=None, foreign_key="fightevent.id")
     # fighters: List["Fighter"] = Relationship(back_populates="matchup")
+
+class TempMatchUp(SQLModel,table=True):
+    id: int = Field(primary_key=True)
+    weight_class: WeightClass
+    
+    fighter_a: str
+    fighter_a_link: Optional[str]
+    fighter_a_id: Optional[int]
+    
+    fighter_b: str
+    fighter_b_link: Optional[str]
+    fighter_b_id: Optional[int]
+
+    isprelim: Optional[bool]
+    rounds: Optional[str]
+    max_rounds: Optional[int]
+    event_id: Optional[int] = Field(default=None, foreign_key="fightevent.id")
+
 
 
 class AssessmentUpdate(SQLModel):

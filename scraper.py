@@ -114,6 +114,8 @@ def getNextEvent2():
         fighter_b = fightCardBout.find('div',class_='fightCardFighterBout right')
         fightCardMatchup = fightCardBout.find('div',class_='fightCardMatchup')
         rounds = fightCardMatchup.find('td').text.strip()
+        isprelim = rounds.find('Prelim') != -1
+        rounds = re.search(r'[0-9]+ x [0-9]+',rounds).group(0)
         weightclass = fightCardMatchup.find('span',class_='weight').text.strip()
         a = {
             'name': fighter_a.a.text.strip(),
@@ -129,6 +131,7 @@ def getNextEvent2():
             'fighter_a_link':a['link'],
             'fighter_b_link':b['link'],
             'rounds':rounds,
+            'isprelim':isprelim,
             'weight_class':toWeightClass(int(weightclass))
         })
     # print(matchups)

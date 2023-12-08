@@ -244,7 +244,7 @@ $flickerDuration: 400ms;
     .state-container{
       display: flex;
       align-items: center;
-      text-transform: uppercase;
+      text-transform: capitalize;
       h4 {
         margin: 0px;
       }

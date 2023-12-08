@@ -68,23 +68,39 @@ body{
 $tableBorderRadius: 0.68em;
 $cardBorderColor: #131b23;
 
-.table-container{
+.table-container, .title-container{
   margin:auto;
   max-width: 70%;
 }
 
-table {
 
+
+table {
+  /*** bootstrap table style ***/
+  --bs-table-bg: #111921 !important;
+  
   border: None;
   width: fit-content !important;
   margin: auto;
 
   caption{
     caption-side: top;
+    *{
+      margin: 0px;
+    }
   }
 
   tbody {
-    border: 2px solid $cardBorderColor;
+    // border: 2px solid green;
+    clip-path: inset(0% 0% 0% 0% round 1.4rem);
+    tr{
+      border-radius: 1.4rem;
+      border-bottom: 1px solid lavender;
+    }
+    tr:last-child{
+      border-bottom: none;
+    }
+    
   }
   $tdHorizontalPadding: 0.8rem;
   $tdVerticalPadding: 0.5rem;
@@ -154,19 +170,19 @@ table {
 }
 
 @media (max-width: 1280px) {
-    .table-container{
+    .table-container, .title-container{
       max-width: 85%;
     }
 }
 
 @media (max-width: 1024px) {
-  .table-container{
+  .table-container, .title-container{
     max-width: 90%;
   }
 }
 
 @media (max-width: 768px) {
-   .table-container{
+  .table-container, .title-container{
       max-width: 100%;
    }
 }
@@ -175,7 +191,7 @@ table {
   table {
     td{
       display: block;
-    }  
+    }
   }
 }
 
