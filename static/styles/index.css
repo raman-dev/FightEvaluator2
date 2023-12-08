@@ -66,9 +66,18 @@ body {
   max-width: 70%;
 }
 
+.table-container {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  padding-left: 0rem;
+  padding-right: 0rem;
+}
+.table-container table caption {
+  caption-side: top;
+}
+
 table {
   /*** bootstrap table style ***/
-  --bs-table-bg: #111921 !important;
   border: None;
   width: -moz-fit-content !important;
   width: fit-content !important;
@@ -80,29 +89,26 @@ table caption {
 table caption * {
   margin: 0px;
 }
-table tbody {
-  -webkit-clip-path: inset(0% 0% 0% 0% round 1.4rem);
-          clip-path: inset(0% 0% 0% 0% round 1.4rem);
-}
 table tbody tr {
   border-radius: 1.4rem;
-  border-bottom: 1px solid lavender;
+  border-bottom: 1px solid gray;
 }
 table tbody tr:last-child {
   border-bottom: none;
 }
-table th, table td {
+table td {
   padding: 0.5rem 0.8rem 0.5rem 0.8rem !important;
   vertical-align: middle;
   text-align: center;
 }
-table th h1 {
+table td h1 {
   text-align: center;
   opacity: 0.5;
   width: 2.2ch;
   margin: 0px;
 }
 table tr:hover {
+  background-color: hsl(0, 0%, 12%);
   cursor: pointer;
 }
 table tr:hover .weightclass h6 {

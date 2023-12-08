@@ -19,11 +19,6 @@ body {
   width: 100%;
 }
 
-@media (max-width: 850px) {
-  .fighter-grid-container {
-    flex-direction: column;
-  }
-}
 @media (max-width: 720px) {
   .fighter-card {
     width: -moz-fit-content;
@@ -57,6 +52,10 @@ body {
     outline-color: #3d7efd;
   }
 }
+.main-container {
+  width: 100%;
+}
+
 .main-container button {
   outline-offset: 2px;
   border: 2px solid black;
@@ -141,6 +140,9 @@ body {
 .fighter-card .info-wrapper h6 {
   margin: 0px;
 }
+.fighter-card .info-wrapper p {
+  margin: 0px;
+}
 
 .attrib-card[data-attrib-state=positive] .card-state {
   background-color: #0d6efd;
@@ -162,7 +164,7 @@ body {
   border-radius: 0.5rem;
   outline: 3px solid transparent;
   outline-offset: 2px;
-  padding: 0.8rem;
+  padding: 1.2rem;
   margin-bottom: 0.7rem;
 }
 .attrib-card p {
@@ -264,6 +266,9 @@ body {
 .attrib-card .card-body .attrib-option[data-option-state=untested] {
   display: none;
 }
+.attrib-card .card-footer {
+  margin-top: 0.4rem;
+}
 .attrib-card .card-footer .card-state-description {
   border: 2px solid lavender;
   border-radius: 0.5rem;
@@ -347,8 +352,11 @@ body {
   border: 1px solid #343a40;
   border-radius: 0.5rem;
   outline: 0px solid #3d7efd;
+  padding-top: 0.2rem;
+  padding-left: 0.4rem;
+  padding-right: 0.2rem;
   width: 100%;
-  word-break: break-all;
+  word-break: break-word;
   min-height: 4rem;
   transition: outline 0.05s ease-out;
 }
@@ -382,4 +390,24 @@ body {
   min-width: 32ch;
   max-width: 100%;
   margin: 0px;
+}
+
+.content-container {
+  margin: auto;
+  width: 72%;
+}
+
+@media (max-width: 1280px) {
+  .content-container {
+    margin: 0px;
+    width: 100%;
+  }
+}
+@media (max-width: 1024px) {
+  .fighter-grid-container {
+    flex-direction: column;
+  }
+  .fighter-notes {
+    max-width: 100%;
+  }
 }/*# sourceMappingURL=assessment_styles.css.map */

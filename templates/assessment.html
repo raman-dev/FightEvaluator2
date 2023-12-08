@@ -18,189 +18,192 @@
   <body data-bs-theme="dark">
     {% include 'navbar.html' %}
     <div class="main-container">
-      <div class="fighter-info-container">
-        <div class="fighter-card">
-          <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
-          <div class="content-wrapper">
-            <div class="card-content">
-              <div class="card-header">
-                <h2 class="fighter-name">{{ fighter.first_name }} {{ fighter.last_name }}</h2>
-                <div class="info-wrapper">
-                  <h5 class="fighter-weight">{{ fighter.weight_class|weightClassToStr }}</h5>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="info-wrapper">
-                  <label>height:&nbsp;</label>
-                  <h6 class="fighter-height">{{ fighter.height }}</h6>
-                </div>
-                <div class="info-wrapper">
-                  <label>age:&nbsp;</label>
-                  <h6 class="fighter-age">age</h6>
-                </div>
-                <div class="info-wrapper">
-                  <label>record:&nbsp;</label>
-                  <h6 class="fighter-record">{{ fighter.record }}</h6>
-                </div>
-                <div class="info-wrapper">
-                  <label>reach:&nbsp;</label>
-                  <h6 class="fighter-reach">{{ fighter.reach }}</h6>
-                </div>
-                <div class="info-wrapper">
-                  <label>stance:&nbsp;</label>
-                  <h6 class="fighter-stance">{{ fighter.stance }}</h6>
-                </div>
-              </div>
-            </div>
-            <div class="button-container">
-              <button class="bio-edit-button">edit</button>
-              <button class="bio-commit-button" onclick="updateFighterImgLink()">commit</button>
-            </div>
-          </div>
-          
-        </div>
-        <div class="img-link edit-element" >{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}</div>
-      </div>
-      <div class="fighter-grid-container">
-          <!--list of 8 fighter attributes-->
-        <div class="fighter-attrib-list" data-edit-mode-enabled="false">
-          <!-- <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
-            <div class="card-header">
-              <div class="state-container">
-                <h4>Attribute-X</h4>
-                 <svg
-                  class="arrow"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24"
-                    viewBox="0 -960 960 960"
-                    width="24">
-                    <path
-                      fill="white"
-                      d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                  </svg>
-              <div class="card-state">State X</div>
-              </div>
-              <div class="button-container">
-                <button class="attrib-edit-button">edit</button>
-                <button class="attrib-commit-button">commit</button>
-              </div>
-            </div>
-            <div class="card-body d-flex flex-column">
-                <div class="attrib-option d-flex" data-option-state="positive">
-                  <h5 class="mx-0">Option-0</h5>
-                  <p class="attrib-description">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit eos unde, qui numquam reiciendis voluptate sint accusamus tempora ullam pariatur, quod distinctio neque veritatis, perferendis quidem. Totam expedita ad accusamus!
-                  </p>
-                </div>
-                <div class="attrib-option" data-option-state="neutral">
-                  Option 1
-                </div>
-                <div class="attrib-option" data-option-state="negative">
-                  Option 2
-                </div>
-            </div>
-            <div class="card-footer">
-              <div class="attrib-option-description" data-option-state="positive">
-                <p>Option 0 description</p>
-              </div>
-              <div class="attrib-option-description" data-option-state="neutral">
-                <p>Option 1 description</p>
-              </div>
-              <div class="attrib-option-description" data-option-state="negative">
-                <p>Option 2 description</p>
-              </div>
-            </div>
-          </div> -->
-          
-          {% for attrib_name,attrib_value in assessment.__dict__.items() %}
-            {% if loop.index != 1 and attrib_name != 'id' %}
-              <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value|attribToStr }}" data-attrib-name="{{ attrib_name }}">
+      <div class="content-container">
+        <div class="fighter-info-container">
+          <div class="fighter-card">
+            <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
+            <div class="content-wrapper">
+              <div class="card-content">
                 <div class="card-header">
-                  <div class="state-container">
-                    <h4>{{ attrib_name|attribNameToStr }}</h4>
-                     <svg
-                      class="arrow"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24"
-                        viewBox="0 -960 960 960"
-                        width="24">
-                        <path
-                          fill="white"
-                          d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                      </svg>
-                  <div class="card-state">{{ attrib_name|attribToStateStr(attrib_value) }}</div>
-                  </div>
-                  <div class="button-container">
-                    <button class="attrib-edit-button">edit</button>
-                    <button class="attrib-commit-button">commit</button>
+                  <h2 class="fighter-name">{{ fighter.first_name }} {{ fighter.last_name }}</h2>
+                  <div class="info-wrapper">
+                    <h5 class="fighter-weight">{{ fighter.weight_class|weightClassToStr }}</h5>
                   </div>
                 </div>
                 <div class="card-body">
-                  <!--attribute state options container-->
-                    <div class="attrib-option" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }} >
-                        <h5 class="option">Option 0</h5>
-                        <p class="description"></p>
-                    </div>
-                    {% if attrib_name != 'grappling_offense' and attrib_name !='grappling_defense' %}
-                    <div class="attrib-option" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr =="neutral"}} >
-                      <h5 class="option">Option 0</h5>
-                      <p class="description"></p>
-                    </div>
-                    {% endif %}
-                    <div class="attrib-option" data-option-state="negative" {{ "selected" if attrib_value|attribToStr =="negative"}} >
-                      <h5 class="option">Option 0</h5>
-                      <p class="description"></p>
-                    </div>
-                    <div class="attrib-option" data-option-state="untested" {{ "selected" if attrib_value|attribToStr =="untested"}} >
-                      <h5 class="option">Option 0</h5>
-                      <p class="description"></p> 
-                    </div>
-                </div>
-                <div class="card-footer">
-                  <div class="card-state-description" data-option-state="{{ attrib_value|attribToStr }}">
-                    <p>Option 0 description</p>
+                  <div class="info-wrapper">
+                    <h6>height:&nbsp;</h6>
+                    <p class="fighter-height">{{ fighter.height }}</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>age:&nbsp;</h6>
+                    <p class="fighter-age">age</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>record:&nbsp;</h6>
+                    <p class="fighter-record">{{ fighter.record }}</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>reach:&nbsp;</h6>
+                    <p class="fighter-reach">{{ fighter.reach }}</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>stance:&nbsp;</h6>
+                    <p class="fighter-stance">{{ fighter.stance }}</p>
                   </div>
                 </div>
               </div>
-            {% endif %}
-          {% endfor %}
-          
+              <div class="button-container">
+                <button class="bio-edit-button">edit</button>
+                <button class="bio-commit-button" onclick="updateFighterImgLink()">commit</button>
+              </div>
+            </div>
+            
+          </div>
+          <div class="img-link edit-element" >{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}</div>
         </div>
-        <!--additional notes and context info to consider about a particular fighter-->
-        <div class="fighter-notes list-group-item d-flex flex-column">
-          <!--list of text notes about a the fighter in jot note style-->
-          <div class="notes-title">
-            <h4>Notes - Things to consider about this fighter...</h4>
+        <div class="fighter-grid-container">
+            <!--list of 8 fighter attributes-->
+          <div class="fighter-attrib-list" data-edit-mode-enabled="false">
+            <!-- <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
+              <div class="card-header">
+                <div class="state-container">
+                  <h4>Attribute-X</h4>
+                   <svg
+                    class="arrow"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24"
+                      viewBox="0 -960 960 960"
+                      width="24">
+                      <path
+                        fill="white"
+                        d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                    </svg>
+                <div class="card-state">State X</div>
+                </div>
+                <div class="button-container">
+                  <button class="attrib-edit-button">edit</button>
+                  <button class="attrib-commit-button">commit</button>
+                </div>
+              </div>
+              <div class="card-body d-flex flex-column">
+                  <div class="attrib-option d-flex" data-option-state="positive">
+                    <h5 class="mx-0">Option-0</h5>
+                    <p class="attrib-description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit eos unde, qui numquam reiciendis voluptate sint accusamus tempora ullam pariatur, quod distinctio neque veritatis, perferendis quidem. Totam expedita ad accusamus!
+                    </p>
+                  </div>
+                  <div class="attrib-option" data-option-state="neutral">
+                    Option 1
+                  </div>
+                  <div class="attrib-option" data-option-state="negative">
+                    Option 2
+                  </div>
+              </div>
+              <div class="card-footer">
+                <div class="attrib-option-description" data-option-state="positive">
+                  <p>Option 0 description</p>
+                </div>
+                <div class="attrib-option-description" data-option-state="neutral">
+                  <p>Option 1 description</p>
+                </div>
+                <div class="attrib-option-description" data-option-state="negative">
+                  <p>Option 2 description</p>
+                </div>
+              </div>
+            </div> -->
+            
+            {% for attrib_name,attrib_value in assessment.__dict__.items() %}
+              {% if loop.index != 1 and attrib_name != 'id' %}
+                <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value|attribToStr }}" data-attrib-name="{{ attrib_name }}">
+                  <div class="card-header">
+                    <div class="state-container">
+                      <h4>{{ attrib_name|attribNameToStr }}</h4>
+                       <svg
+                        class="arrow"
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="24"
+                          viewBox="0 -960 960 960"
+                          width="24">
+                          <path
+                            fill="white"
+                            d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                        </svg>
+                    <div class="card-state">{{ attrib_name|attribToStateStr(attrib_value) }}</div>
+                    </div>
+                    <div class="button-container">
+                      <button class="attrib-edit-button">edit</button>
+                      <button class="attrib-commit-button">commit</button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <!--attribute state options container-->
+                      <div class="attrib-option" data-option-state="positive" {{ "selected" if attrib_value|attribToStr=="positive" }} >
+                          <h5 class="option">Option 0</h5>
+                          <p class="description"></p>
+                      </div>
+                      {% if attrib_name != 'grappling_offense' and attrib_name !='grappling_defense' %}
+                      <div class="attrib-option" data-option-state="neutral" {{ "selected" if attrib_value|attribToStr =="neutral"}} >
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p>
+                      </div>
+                      {% endif %}
+                      <div class="attrib-option" data-option-state="negative" {{ "selected" if attrib_value|attribToStr =="negative"}} >
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p>
+                      </div>
+                      <div class="attrib-option" data-option-state="untested" {{ "selected" if attrib_value|attribToStr =="untested"}} >
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p> 
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                    <div class="card-state-description" data-option-state="{{ attrib_value|attribToStr }}">
+                      <p>Option 0 description</p>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+            
           </div>
-          <!--unordered scrollable list of p tags wrapped in li-->
-          <!--textarea made with div and contenteditable -->
-          <div class="note-editor-container d-flex flex-column">
-            <button
-              class="btn btn-success note-submit-btn"
-              onclick="addNote(event)">
-              submit
-            </button>
-            <div
-              class="note-editor align-self-center"
-              contenteditable="plaintext-only"></div>
-          </div>
-          <div class="notes-list align-self-center mt-4">
-            <ul class="dx-none">
-              {% for note in notes %}
-              <li class="note" data-note-id="{{ note.id }}">
-                <p>{{ note.data }}</p>
-                <!-- <button
-                  class="btn btn-danger note-delete-btn"
-                  data-note-id="{{ note.id }}"
-                  onclick="deleteNote(event)">
-                  delete
-                </button> -->
-              </li>
-              {% endfor %}
-            </ul>
+          <!--additional notes and context info to consider about a particular fighter-->
+          <div class="fighter-notes list-group-item d-flex flex-column">
+            <!--list of text notes about a the fighter in jot note style-->
+            <div class="notes-title">
+              <h4>Notes - Things to consider about this fighter...</h4>
+            </div>
+            <!--unordered scrollable list of p tags wrapped in li-->
+            <!--textarea made with div and contenteditable -->
+            <div class="note-editor-container d-flex flex-column">
+              <button
+                class="btn btn-success note-submit-btn"
+                onclick="addNote(event)">
+                submit
+              </button>
+              <div
+                class="note-editor align-self-center"
+                contenteditable="plaintext-only"></div>
+            </div>
+            <div class="notes-list align-self-center mt-4">
+              <ul class="dx-none">
+                {% for note in notes %}
+                <li class="note" data-note-id="{{ note.id }}">
+                  <p>{{ note.data }}</p>
+                  <!-- <button
+                    class="btn btn-danger note-delete-btn"
+                    data-note-id="{{ note.id }}"
+                    onclick="deleteNote(event)">
+                    delete
+                  </button> -->
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
+      
       
     </div>
     <script src="{{ url_for('static',path='/js/definitions.js')}}"></script>

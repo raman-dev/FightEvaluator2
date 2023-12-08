@@ -218,10 +218,9 @@
       </div>
     </div>
     <!--main card fighter table-->
-    
     {% for matchups in matchupsList %}
     <div class="table-container">
-      <table class="table table-hover table-borderless" id="#{{ 'main-card' if loop.index == 1 else 'prelims' }}">
+      <table class="" id="#{{ 'main-card' if loop.index == 1 else 'prelims' }}">
         <caption>
           {% if loop.index == 1 %}
           <h4>Main Card</h4>
@@ -233,9 +232,9 @@
         <tbody>
           {% for matchup in matchups %}
           <tr class="matchup" data-matchup-id="{{matchup.id}}">
-            <th scope="row">
+            <td>
               <h1>{{loop.index}}</h1>
-            </th>
+            </td>
             <!-- <td>
               <img class="fighter-img" src="static/media/sample_50.png" alt="" />
             </td> -->
@@ -261,17 +260,13 @@
                 <img class="fighter-img" src="static/media/sample_50.png" alt="" />
               </div>
             </td>
-            <!-- <td>
-              <button class="btn btn-danger" onclick="deleteMatchup({{matchup.id}})">
-                delete
-              </button>
-            </td> -->
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
     {% endfor %}
+
      
   </div>
 

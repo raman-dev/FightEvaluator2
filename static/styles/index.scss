@@ -72,12 +72,31 @@ $cardBorderColor: #131b23;
   margin:auto;
   max-width: 70%;
 }
+ 
+
+.table-container{
+  // border: 2px solid red;
+  // border-radius: 2rem;
+  margin-bottom: 1rem;
+
+  padding: 1rem;
+  padding-left: 0rem;
+  padding-right: 0rem;
+
+  table{
+    // background-color: green;
+    // width: 100%;
+    caption{
+      caption-side: top
+    };
+  }
+}
 
 
 
 table {
   /*** bootstrap table style ***/
-  --bs-table-bg: #111921 !important;
+  // --bs-table-bg: #111921 !important;
   
   border: None;
   width: fit-content !important;
@@ -91,11 +110,9 @@ table {
   }
 
   tbody {
-    // border: 2px solid green;
-    clip-path: inset(0% 0% 0% 0% round 1.4rem);
     tr{
       border-radius: 1.4rem;
-      border-bottom: 1px solid lavender;
+      border-bottom: 1px solid gray;
     }
     tr:last-child{
       border-bottom: none;
@@ -104,14 +121,13 @@ table {
   }
   $tdHorizontalPadding: 0.8rem;
   $tdVerticalPadding: 0.5rem;
-  th,td {
-    // width: fit-content;
+  td {
     padding: $tdVerticalPadding $tdHorizontalPadding $tdVerticalPadding $tdHorizontalPadding !important; 
     vertical-align: middle;
     text-align: center;
   }
 
-  th h1 {
+  td h1 {
     text-align: center;
     opacity: 0.5;
     width: 2.2ch;
@@ -120,6 +136,7 @@ table {
 
 
   tr:hover {
+    background-color: hsl(0, 0%, 12%);
     cursor: pointer;
     .weightclass {
       h6 { 

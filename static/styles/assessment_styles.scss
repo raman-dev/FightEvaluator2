@@ -42,11 +42,6 @@ body {
   width: 100%;
 }
 
-@media (max-width: 850px){
-  .fighter-grid-container{
-    flex-direction: column;
-  }
-}
 
 @media(max-width: 720px){
   .fighter-card{
@@ -83,12 +78,16 @@ body {
   }
 }
 
-$cardPadding: 0.8rem;
+$cardPadding: 1.2rem;
 $cardStatePadding: 0.3rem;
 $optionPadding: 0.8rem;
 $descriptionPadding: 0.5rem;
 $borderRadius: 0.5rem;
 $flickerDuration: 400ms;
+
+.main-container{
+  width: 100%;
+}
 
 .main-container button{
   // outline: 2px solid lavender;
@@ -197,6 +196,9 @@ $flickerDuration: 400ms;
     h6{
       margin: 0px;
     }
+    p{
+      margin: 0px;
+    } 
   }
 }
 
@@ -359,6 +361,7 @@ $flickerDuration: 400ms;
   }
 
   .card-footer{
+    margin-top: 0.4rem;
     .card-state-description{
       
       border: 2px solid lavender;
@@ -460,10 +463,13 @@ $flickerDuration: 400ms;
       border: 1px solid #343a40;
       border-radius: 0.5rem;
       outline: 0px solid #3d7efd;
+      padding-top: 0.2rem;
+      padding-left: 0.4rem;
+      padding-right: 0.2rem;
 
       width: 100%;
       // max-width: 32ch;
-      word-break: break-all;
+      word-break: break-word;
       min-height: 4rem;
       transition: outline 0.05s ease-out;
     }
@@ -504,5 +510,34 @@ $flickerDuration: 400ms;
       }
     }
   }
+}
+
+.content-container{
+  margin: auto;
+  width: 72%;
+}
+
+@media (max-width: 1280px) {
+  .content-container{
+    margin: 0px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .fighter-grid-container{
+    flex-direction: column;
+  }
+  .fighter-notes{
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+
+}
+
+@media (max-width: 640px) {
+
 }
 
