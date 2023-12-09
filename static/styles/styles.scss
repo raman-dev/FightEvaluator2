@@ -34,13 +34,13 @@
 /* use font as variable */
 $backgroundColor: #212529;
 
-html,
-body {
-    height: 100vh;
+html, body {
+    height: 100%;
     min-height: 800px;
     font-family: PoppinsLight;
     font-size: 16px; 
     background-color: $backgroundColor;
+    overflow: hidden;
 }
 
 h1,
@@ -73,11 +73,10 @@ $sidebar-width: 10ch;
 $sidebar-button-width: 8ch;
 $main-container-leftpadding: calc($sidebar-width + 2ch);
 .main-container{
-    padding-left: $main-container-leftpadding; 
+    overflow: auto;
 }
 
 nav{
-    position: fixed;
     height: 100%;
     z-index: 1000;
     

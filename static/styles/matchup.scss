@@ -29,7 +29,7 @@ h5, h6{
     
     .fighter-info{
         display: flex;
-        padding: 0.8rem;
+        padding: 1.2rem;
         border-radius: 1rem;
         img{
             margin: auto;
@@ -39,7 +39,7 @@ h5, h6{
         .fighter-bio > div{
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: start;
             margin: 0.5rem;
         }
         .fighter-bio{
@@ -57,6 +57,7 @@ h5, h6{
             }
         }
     }
+    
 }
 
 .matchup-container{
@@ -132,7 +133,7 @@ h5, h6{
 
 .content-grid{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     
     .notes-section{
         .fighter-name{
@@ -164,16 +165,16 @@ h5, h6{
 
     .notes-left{
         // grid-row: 1;
-        grid-column: 1;
+        grid-column: span 1;
     }
     .notes-right{
         // grid-row: 1;
-        grid-column: 5;
+        grid-column: 4;
     }
 
     .attrib-compare-table{
         // grid-row: 1;
-        grid-column:  span 3/5;
+        grid-column: 2/4; 
     }
 }
 

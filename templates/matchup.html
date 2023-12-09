@@ -67,6 +67,8 @@
               </div>
           </div>
             <div class="fighter-info m-1 border">
+              <img src="{{ fighter_b.data.img_link if fighter_b.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
+
               <div class="fighter-bio">
                 <div class="name">
                     <h5>
@@ -89,8 +91,7 @@
                     <h6 class="reach-label">reach:&nbsp;</h6>
                     <p>{{fighter_b.data.reach}}</p>
                 </div>
-            </div>
-                <img src="{{ fighter_b.data.img_link if fighter_b.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
+              </div>
             </div>
         </div>
     </div>

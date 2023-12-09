@@ -26,13 +26,13 @@
   src: url("/static/styles/Poppins/Poppins-SemiBold.ttf") format("truetype");
 }
 /* use font as variable */
-html,
-body {
-  height: 100vh;
+html, body {
+  height: 100%;
   min-height: 800px;
   font-family: PoppinsLight;
   font-size: 16px;
   background-color: #212529;
+  overflow: hidden;
 }
 
 h1,
@@ -47,11 +47,10 @@ h6 {
 }
 
 .main-container {
-  padding-left: 12ch;
+  overflow: auto;
 }
 
 nav {
-  position: fixed;
   height: 100%;
   z-index: 1000;
 }

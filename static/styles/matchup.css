@@ -25,7 +25,7 @@ h5, h6 {
 }
 .fighter-container .fighter-info {
   display: flex;
-  padding: 0.8rem;
+  padding: 1.2rem;
   border-radius: 1rem;
 }
 .fighter-container .fighter-info img {
@@ -36,7 +36,7 @@ h5, h6 {
 .fighter-container .fighter-info .fighter-bio > div {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   margin: 0.5rem;
 }
 .fighter-container .fighter-info .fighter-bio .name {
@@ -113,7 +113,7 @@ h5, h6 {
 
 .content-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 .content-grid .notes-section .fighter-name {
   text-transform: capitalize;
@@ -141,13 +141,13 @@ h5, h6 {
   margin: 0px;
 }
 .content-grid .notes-left {
-  grid-column: 1;
+  grid-column: span 1;
 }
 .content-grid .notes-right {
-  grid-column: 5;
+  grid-column: 4;
 }
 .content-grid .attrib-compare-table {
-  grid-column: span 3/5;
+  grid-column: 2/4;
 }
 
 @media (max-width: 1280px) {
