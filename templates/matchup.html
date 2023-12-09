@@ -30,7 +30,7 @@
     <div class="matchup-container justify-content-center">
         <!--contains information about each fighter including fighter img-->
         <div class="fighter-container">
-            <div class="fighter-info m-1 border rounded-2">
+            <div class="fighter-info m-1 border">
                 <img src="{{ fighter_a.data.img_link if fighter_a.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
                 <div class="fighter-bio">
                     <div class="name">
@@ -66,7 +66,7 @@
                   <h4>{{ matchup.rounds }}</h4>
               </div>
           </div>
-            <div class="fighter-info m-1 border rounded-2">
+            <div class="fighter-info m-1 border">
               <div class="fighter-bio">
                 <div class="name">
                     <h5>

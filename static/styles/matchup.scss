@@ -24,22 +24,31 @@ h5, h6{
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     
     .fighter-info{
         display: flex;
+        padding: 0.8rem;
+        border-radius: 1rem;
         img{
             margin: auto;
             max-width: 10rem;
+            border-radius: 1rem;
         }
         .fighter-bio > div{
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0.8rem;
+            margin: 0.5rem;
         }
         .fighter-bio{
             .name{
                 text-transform: capitalize;
+                a{
+                    text-decoration: none;
+                    color: lavender;
+                }
             }
             :not(:first-child){
                 p{
@@ -168,7 +177,7 @@ h5, h6{
     }
 }
 
-@media (max-width: 991px){
+@media (max-width: 1280px){
     .content-grid{
         grid-template-columns: 1fr 1fr 1fr 1fr;
         .attrib-compare-table{
@@ -182,3 +191,16 @@ h5, h6{
     }
 
 }
+
+// @media (min-width: 1024px) {
+  
+// }
+
+// @media (min-width: 768px) {
+    
+// }
+
+// @media (min-width: 640px) {
+   
+// }
+
