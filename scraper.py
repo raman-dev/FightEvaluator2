@@ -43,6 +43,11 @@ def extractLinkAndDate(url):
             continue
         data = row.findAll('td')
         #get href value from data object
+        data_event_title = data[0].a.text.strip()
+        #skip non fight nights and non ppvs
+        if re.search(r'(UFC\s+([0-9]+))|UFC\s+Fight\s+Night',data_event_title) == None:
+            # print(data_event_title,'not a ufc event')
+            continue
         data_link = data[0].a['href']
         #get date from data object
         data_date = datetime.strptime(data[2].text.strip(),"%Y.%m.%d").date()

@@ -69,79 +69,14 @@ $color-4: #EFF6E0;
 
 @import url(sidebar.scss);
 
-$sidebar-width: 10ch;
+$sidebar-width: 15ch;
 $sidebar-button-width: 8ch;
+$sidebar-sublink-title-width: 11ch;
 $main-container-leftpadding: calc($sidebar-width + 2ch);
 .main-container{
     overflow: auto;
 }
 
-nav{
-    height: 100%;
-    z-index: 1000;
-    
-    button{
-        // border: 1px solid red !important;
-        min-width: $sidebar-button-width; 
-        width: $sidebar-button-width;
-        height: fit-content;
-        text-align: center;
-        svg{
-            margin: auto; 
-        }
-    }
-    .matchup-links{
-        button{
-            font-family: PoppinsSemiBold;
-        }
-    }
-    .sidebar-container{
-        height: 100%;
-        overflow: visible;
-        max-width: $sidebar-width;
-
-        .sidebar-links-container{
-            height: 100%;
-            overflow: hidden;
-            min-width: $sidebar-width;
-            width: $sidebar-width;
-            background-color: $color-0;
-            transition: width 0.4s ease-in-out;
-
-            .link{
-                // border: 2px solid lavender;
-                .home-link{
-                    text-decoration: none;
-                    width: $sidebar-button-width;
-                    max-width: $sidebar-button-width;
-                }
-                .dropdown-container{
-                    //link item list
-                    // border: 1px solid green;
-                    margin-left: 2ch;
-                    .heading-wrapper{
-                        align-items: center;
-                        h4{
-                            margin: 0px;
-                        }
-                    }
-                    .dropdown-links{
-                        background-color: $color-2;
-                        overflow: hidden;
-                        transition: all 0.3s ease-in-out;
-                        a{
-                            color: whitesmoke;
-                            text-decoration: none;
-                        }
-                    }
-                }
-                
-            }
-        }
-        
-    }
-}
-    
 
 /*
     tailwind responsive media queries

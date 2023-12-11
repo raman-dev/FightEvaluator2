@@ -50,60 +50,6 @@ h6 {
   overflow: auto;
 }
 
-nav {
-  height: 100%;
-  z-index: 1000;
-}
-nav button {
-  min-width: 8ch;
-  width: 8ch;
-  height: -moz-fit-content;
-  height: fit-content;
-  text-align: center;
-}
-nav button svg {
-  margin: auto;
-}
-nav .matchup-links button {
-  font-family: PoppinsSemiBold;
-}
-nav .sidebar-container {
-  height: 100%;
-  overflow: visible;
-  max-width: 10ch;
-}
-nav .sidebar-container .sidebar-links-container {
-  height: 100%;
-  overflow: hidden;
-  min-width: 10ch;
-  width: 10ch;
-  background-color: #01161E;
-  transition: width 0.4s ease-in-out;
-}
-nav .sidebar-container .sidebar-links-container .link .home-link {
-  text-decoration: none;
-  width: 8ch;
-  max-width: 8ch;
-}
-nav .sidebar-container .sidebar-links-container .link .dropdown-container {
-  margin-left: 2ch;
-}
-nav .sidebar-container .sidebar-links-container .link .dropdown-container .heading-wrapper {
-  align-items: center;
-}
-nav .sidebar-container .sidebar-links-container .link .dropdown-container .heading-wrapper h4 {
-  margin: 0px;
-}
-nav .sidebar-container .sidebar-links-container .link .dropdown-container .dropdown-links {
-  background-color: #598392;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-}
-nav .sidebar-container .sidebar-links-container .link .dropdown-container .dropdown-links a {
-  color: whitesmoke;
-  text-decoration: none;
-}
-
 /*
     tailwind responsive media queries
 *//*# sourceMappingURL=styles.css.map */

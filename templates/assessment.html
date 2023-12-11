@@ -21,7 +21,20 @@
       <div class="content-container">
         <div class="fighter-info-container">
           <div class="fighter-card">
-            <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
+            <div class="img-wrapper">
+              <img class="fighter-image" src="{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}"alt="">
+              <div class="next-matchup">
+                    {% if nextMatchup %}
+                    <a href="/matchup/{{ nextMatchup.matchup_id }}">
+                      {{ nextMatchup.fighter_a.capitalize() }} vs {{ nextMatchup.fighter_b.capitalize() }}
+                    </a>
+                    {% else %}
+                    <a href="#">
+                      no upcoming matchup
+                    {% endif %}
+                    </a>
+              </div>
+            </div>
             <div class="content-wrapper">
               <div class="card-content">
                 <div class="card-header">

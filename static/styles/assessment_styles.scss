@@ -146,7 +146,32 @@ $flickerDuration: 400ms;
   border-radius: $borderRadius;
   border: 1px solid $cardBorderColor;
   padding: 1rem;
-  .fighter-image{
+
+  .img-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .img-wrapper .next-matchup{
+    margin-top: 0.4rem;
+    padding: 0.2rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    
+    border-radius: 99rem;
+    border: 2px solid lavender;
+    
+    a{
+      margin: 0px;
+      text-decoration: none;
+      color: whitesmoke;
+    }
+  }
+
+  .img-wrapper .fighter-image{
     clip-path: inset(0% 0% round 0.8rem);
     max-width: 10rem;
     max-height: 10rem;
@@ -160,7 +185,7 @@ $flickerDuration: 400ms;
     background-color: $cardColor;
 
     margin-left: 0.8rem;
-    padding: 0.8rem;
+    padding: 1.2rem;
     .button-container{
       display: flex;
       align-items: start;
@@ -169,6 +194,7 @@ $flickerDuration: 400ms;
   .card-content{
     margin-left: 0.8rem;
     .card-header{
+      margin-bottom: 0.5rem;
       .fighter-name{
         margin: 0px;
       }
@@ -449,6 +475,10 @@ $flickerDuration: 400ms;
 .fighter-notes {
   max-width: 48ch;
   padding: 1rem;
+
+  .notes-title{
+    padding: 0.5rem;
+  }
 
   .note-editor-container {
     row-gap: 0.5rem;
