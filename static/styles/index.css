@@ -61,9 +61,9 @@ body {
   margin: 0rem;
 }
 
-.table-container, .title-container {
+.title-container {
   margin: auto;
-  max-width: 70%;
+  width: 100%;
 }
 
 .table-container {
@@ -72,101 +72,84 @@ body {
   padding-left: 0rem;
   padding-right: 0rem;
 }
-.table-container table caption {
-  caption-side: top;
+
+.tables-wrapper {
+  margin: auto;
+  max-width: 52%;
 }
 
-table {
-  /*** bootstrap table style ***/
-  border: None;
-  width: -moz-fit-content !important;
-  width: fit-content !important;
-  margin: auto;
+#watchlist .table-note {
+  border-top: 1px solid whitesmoke;
 }
-table caption {
-  caption-side: top;
+
+.matchups-container {
+  margin-bottom: 1.4rem;
 }
-table caption * {
+.matchups-container .matchup {
+  padding: 0.4rem;
+  border-radius: 0.8rem;
+}
+.matchups-container .matchup h1 {
   margin: 0px;
 }
-table tbody tr {
-  border-radius: 1.4rem;
-  border-bottom: 1px solid gray;
-}
-table tbody tr:last-child {
-  border-bottom: none;
-}
-table td {
-  padding: 0.5rem 0.8rem 0.5rem 0.8rem !important;
-  vertical-align: middle;
-  text-align: center;
-}
-table td h1 {
-  text-align: center;
-  opacity: 0.5;
-  width: 2.2ch;
-  margin: 0px;
-}
-table tr:hover {
-  background-color: hsl(0, 0%, 12%);
-  cursor: pointer;
-}
-table tr:hover .weightclass h6 {
-  text-decoration: underline;
-  margin: 0px;
-}
-table .fighter :first-child {
+.matchups-container .matchup .fighter {
   align-items: center;
 }
-table .fighter :first-child img {
+.matchups-container .matchup .fighter img {
   height: -moz-fit-content;
   height: fit-content;
   border-radius: 50%;
 }
-table .fighter :first-child a {
+.matchups-container .matchup .fighter a {
   width: 18ch;
   text-align: center;
   text-decoration: none;
 }
-table .fighter :first-child a .fighter-name {
+.matchups-container .matchup .fighter a .fighter-name {
   margin: 0px;
   color: #dee2e6;
   text-transform: capitalize;
 }
-table .fighter :first-child a .fighter-name:hover {
+.matchups-container .matchup .fighter a .fighter-name:hover {
   text-decoration: underline;
 }
-table .weightclass {
+.matchups-container .matchup .weightclass {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-table .weightclass p {
+.matchups-container .matchup .weightclass p {
   margin: 0px;
 }
-table .weightclass h6 {
+.matchups-container .matchup .weightclass h6 {
   margin: 0px;
+}
+.matchups-container .matchup:hover {
+  background-color: hsl(0, 0%, 12%);
+  cursor: pointer;
+}
+.matchups-container .matchup:hover .weightclass h6 {
+  text-decoration: underline;
+  margin: 0px;
+}
+.matchups-container .matchup.active {
+  border-color: #598392 !important;
 }
 
 @media (max-width: 1280px) {
-  .table-container, .title-container {
+  .tables-wrapper, .title-container {
     max-width: 85%;
   }
 }
 @media (max-width: 1024px) {
-  .table-container, .title-container {
+  .tables-wrapper, .title-container {
     max-width: 90%;
   }
 }
 @media (max-width: 768px) {
-  .table-container, .title-container {
+  .tables-wrapper, .title-container {
     max-width: 100%;
-  }
-}
-@media (max-width: 640px) {
-  table td {
-    display: block;
   }
 }
 /* overriding bootstrap style example *//*# sourceMappingURL=index.css.map */

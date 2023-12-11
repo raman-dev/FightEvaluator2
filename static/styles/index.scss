@@ -68,9 +68,9 @@ body{
 $tableBorderRadius: 0.68em;
 $cardBorderColor: #131b23;
 
-.table-container, .title-container{
+.title-container{
   margin:auto;
-  max-width: 70%;
+  width: 100%;
 }
  
 
@@ -82,73 +82,28 @@ $cardBorderColor: #131b23;
   padding: 1rem;
   padding-left: 0rem;
   padding-right: 0rem;
+}
 
-  table{
-    // background-color: green;
-    // width: 100%;
-    caption{
-      caption-side: top
-    };
+.tables-wrapper{
+  margin: auto;
+  max-width: 52%;
+}
+
+#watchlist {
+  .table-note{
+    border-top: 1px solid whitesmoke ;
   }
 }
 
-
-
-table {
-  /*** bootstrap table style ***/
-  // --bs-table-bg: #111921 !important;
-  
-  border: None;
-  width: fit-content !important;
-  margin: auto;
-
-  caption{
-    caption-side: top;
-    *{
+.matchups-container{
+  margin-bottom: 1.4rem;
+  .matchup {
+    padding: 0.4rem;
+    border-radius: 0.8rem;
+    h1{
       margin: 0px;
     }
-  }
-
-  tbody {
-    tr{
-      border-radius: 1.4rem;
-      border-bottom: 1px solid gray;
-    }
-    tr:last-child{
-      border-bottom: none;
-    }
-    
-  }
-  $tdHorizontalPadding: 0.8rem;
-  $tdVerticalPadding: 0.5rem;
-  td {
-    padding: $tdVerticalPadding $tdHorizontalPadding $tdVerticalPadding $tdHorizontalPadding !important; 
-    vertical-align: middle;
-    text-align: center;
-  }
-
-  td h1 {
-    text-align: center;
-    opacity: 0.5;
-    width: 2.2ch;
-    margin: 0px;
-  }
-
-
-  tr:hover {
-    background-color: hsl(0, 0%, 12%);
-    cursor: pointer;
-    .weightclass {
-      h6 { 
-        text-decoration: underline;
-        margin: 0px;
-      }
-    }
-  }
- 
-
-  .fighter {
-    :first-child{
+    .fighter {
       align-items: center;
       img{
         height: fit-content;
@@ -168,48 +123,56 @@ table {
         }
       }
     }
-
-    
+    .weightclass {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+      p {
+        margin: 0px;
+      }
+      h6{
+        margin: 0px;
+      }
+    }
   }
-  .weightclass {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    p {
-      margin: 0px;
+  .matchup:hover {
+    background-color: hsl(0, 0%, 12%);
+    cursor: pointer;
+    .weightclass {
+      h6 { 
+        text-decoration: underline;
+        margin: 0px;
+      }
     }
-    h6{
-      margin: 0px;
-    }
+  }
+  .matchup.active{
+    border-color: #598392 !important;
+    // border-bottom: 1px solid gray;
   }
 }
 
 @media (max-width: 1280px) {
-    .table-container, .title-container{
+    .tables-wrapper, .title-container{
       max-width: 85%;
     }
 }
 
 @media (max-width: 1024px) {
-  .table-container, .title-container{
+  .tables-wrapper, .title-container{
     max-width: 90%;
   }
 }
 
 @media (max-width: 768px) {
-  .table-container, .title-container{
+  .tables-wrapper, .title-container{
       max-width: 100%;
    }
 }
 
 @media (max-width: 640px) {
-  table {
-    td{
-      display: block;
-    }
-  }
+
 }
 
 /* overriding bootstrap style example */
