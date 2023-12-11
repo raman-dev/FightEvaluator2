@@ -136,6 +136,55 @@ body {
 .matchups-container .matchup.active {
   border-color: #598392 !important;
 }
+.matchups-container .matchup.watching {
+  background-color: hsla(0, 0%, 12%, 0.5);
+}
+
+.xmodal {
+  position: absolute;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0);
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+}
+.xmodal .xmodal-container {
+  z-index: 10001;
+  position: relative;
+  display: flex;
+  width: 50%;
+  height: max(20%, 180px);
+  margin-left: auto;
+  margin-right: auto;
+  top: 80%;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+.xmodal .xmodal-container .matchup-actions {
+  width: 100%;
+}
+
+.xmodal.show {
+  pointer-events: all;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.xmodal.show .xmodal-container {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.xmodal.hide {
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+.xmodal.hide .xmodal-container {
+  opacity: 0;
+  transform: translateY(100%);
+}
 
 @media (max-width: 1280px) {
   .tables-wrapper, .title-container {
