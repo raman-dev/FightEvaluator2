@@ -266,7 +266,6 @@
     </div>
   </div>
 
-  <!-- <button onclick="toggleXModal()">matchup</button> -->
   <!--modal containing matchup edit options-->
   <div class="xmodal hide" data-matchup-id="-1">
     <div class="xmodal-container bg-dark flex-column">
@@ -292,28 +291,6 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
   <script>
-
-    function onClickMatchup(){
-      // const matchupId = matchup.dataset.matchupId;
-        // window.location.href = `/matchup/${matchupId}`;
-        //check if clicked element is matchup type
-        let matchup = this.matchup;
-        //if current already contained active then deactivate
-        if (matchup.classList.contains("active")) {
-          matchup.classList.remove("active");
-          return;
-        }
-        //if not then deactivate all other matchups
-        document.querySelectorAll(".matchup").forEach((matchup) => {
-          matchup.classList.remove("active");
-        });
-        //then activate this matchup
-        matchup.classList.add("active");
-        //check if matchup is in watchlist
-        let inWatchList = document.querySelector(`#watchlist .matchups .matchup[data-matchup-id="${matchup.dataset.matchupId}"]`) != null;
-        //show xmodal
-        toggleXModal.bind({matchupId: matchup.dataset.matchupId,inWatchList: inWatchList})();
-    }
 
     var fightEventId = {{ event.id }};
     function createMatchup(event) {
@@ -421,10 +398,7 @@
       this.fighterElement.querySelector(".search-container").classList.add("d-none");
     }
     //for every matchup add on click listener that takes them to /matchup/data-matchup-id
-    const matchups = document.querySelectorAll(".matchup");
-    matchups.forEach((matchup) => {
-      matchup.addEventListener("click",onClickMatchup.bind({matchup: matchup}));
-    });
+    
     //search box functionality
     document.querySelectorAll(".fighter-selector .fighter").forEach((fighterElement) => {
       let searchBox = fighterElement.querySelector(".search-box");
@@ -474,50 +448,101 @@
     });
   </script>
   <script>
+    //get watchlist items array from localstorage
+    let watchListItems = JSON.parse(localStorage.getItem("watchlist"));
+    if (watchListItems == null) watchListItems = [];
     //if watchlist tablle is empty show the table note
-    
+    document.querySelectorAll(".matchup").forEach((matchup) => {
+      matchup.addEventListener("click",(event) => {
+        onClickMatchup.bind({matchup: matchup},event)();
+      });
+    });
 
-    function onWatchListChanged(){
+    function onClickMatchup(event){
+        //has different behavior depending on what was clicked
+        if (event.target.classList.contains("fighter-name")){
+          return;
+        }
+        //check if clicked element is matchup type
+        const matchup = this.matchup;
+        //if current already contained active then deactivate
+        // if (matchup.classList.contains("active")) {
+        //   matchup.classList.remove("active");
+        //   return;
+        // }
+        //if not then deactivate all other matchups
+        document.querySelectorAll(".matchup").forEach((matchup) => {
+          matchup.classList.remove("active");
+        });
+        //then activate this matchup
+        matchup.classList.add("active");
+        //check if matchup is in watchlist
+        let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
+        //show xmodal
+        toggleXModal.bind({matchupId: matchup.dataset.matchupId})();
+    }
+
+    function initWatchList(){
+      //add all matchups in watchlist to watchlist table
+      watchListItems.forEach((matchupId) => {
+        let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
+        let watchListMatchup = matchup.cloneNode(true);
+        watchListMatchup.classList.remove("active");//since no longer active
+        watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
+        document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
+        matchup.classList.add('watching');
+      });
       let tableNote = document.querySelector(".table-note");
-      let watchlist = document.querySelector("#watchlist .matchups");
-      if (watchlist.childNodes.length == 0) {
+      if (watchListItems.length == 0) {
         tableNote.classList.remove("d-none");
       } else {
         tableNote.classList.add("d-none");
       }
     }
 
-    onWatchListChanged();
+    function onWatchListChanged(add, matchupId){
+      //item added or removed from watchlist
+      localStorage.setItem("watchlist", JSON.stringify(watchListItems));
+      //if an item has been added to watchlist then add the matchup to the watchlist table
+      if (add){
+        let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
+        let watchListMatchup = matchup.cloneNode(true);
+        watchListMatchup.classList.remove("active");//since no longer active
+        watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
+        document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
+        matchup.classList.add('watching');
+      }else{
+        //if an item has been removed from watchlist then remove the matchup from the watchlist table
+        document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`).remove();
+        document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`).classList.remove('watching');
+      }
+      //if watchlist is empty show table note
+      let tableNote = document.querySelector(".table-note");
+      if (watchListItems.length == 0) {
+        tableNote.classList.remove("d-none");
+      } else {
+        tableNote.classList.add("d-none");
+      }
+    }
+
+    initWatchList();
 
     function toggleWatchListItem(){
       //get matchup id
       let xmodal = document.querySelector(".xmodal");
       let matchupId = xmodal.dataset.matchupId;
       //check if matchup is in watchlist
-      let inWatchList = document.querySelector(`#watchlist .matchups .matchup[data-matchup-id="${matchupId}"]`) != null;
+      let inWatchList = watchListItems.includes(matchupId);
       if (inWatchList){
         //remove from watchlist
-        //remove matchup from watchlist
-        let matchup = document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`);
-        matchup.classList.remove('watching');
-        matchup.remove();
-        //unwatch in original list
-        document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`).classList.remove('watching');
+        watchListItems = watchListItems.filter((id) => id != matchupId);
+        onWatchListChanged(false, matchupId);
       }else{
-        //add matchup to watchlist
-        //grab matchup data from matchups
-        let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
-        //add a copy of the element to watchlist table
-        let watchListMatchup = matchup.cloneNode(true);
-        matchup.classList.add('watching');
-        //add click listener for the watchlist matchuo
-        watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
-        //add to watchlist table
-        watchListMatchup.classList.remove("active");
-        document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
+        //add to watchlist
+        watchListItems.push(matchupId);//
+        onWatchListChanged(true, matchupId);
       }
       toggleXModal();
-      onWatchListChanged();
     }
 
     function toggleXModal(){
@@ -525,7 +550,7 @@
       let action = xmodal.classList.contains("hide") ? "show" : "hide";
       //these variables are defined only when showing the modal
       let matchupId = this.matchupId;//guaranteed to be there when showing
-      let inWatchList = this.inWatchList;
+      let inWatchList = watchListItems.includes(matchupId);
       // console.log(matchup);
       if (action == "show"){
         //show the modal

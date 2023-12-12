@@ -71,6 +71,9 @@ $cardBorderColor: #131b23;
 .title-container{
   margin:auto;
   width: 100%;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  padding: 0rem;
 }
  
 
@@ -84,7 +87,7 @@ $cardBorderColor: #131b23;
   padding-right: 0rem;
 }
 
-.tables-wrapper{
+.tables-wrapper, .title-container{
   margin: auto;
   max-width: 52%;
 }

@@ -64,6 +64,9 @@ body {
 .title-container {
   margin: auto;
   width: 100%;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  padding: 0rem;
 }
 
 .table-container {
@@ -73,7 +76,7 @@ body {
   padding-right: 0rem;
 }
 
-.tables-wrapper {
+.tables-wrapper, .title-container {
   margin: auto;
   max-width: 52%;
 }

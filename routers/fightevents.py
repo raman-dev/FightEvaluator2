@@ -90,7 +90,7 @@ def getFighterIdByName(session,name):
     #find fighter id by first_name last_name
     fighter = session.query(Fighter).filter(Fighter.first_name == first_name,Fighter.last_name == last_name).first()        
     if fighter:
-        print(first_name,last_name,fighter.id)
+        # print(first_name,last_name,fighter.id)
         return fighter.id
     print(first_name,last_name,-1)
     return -1
