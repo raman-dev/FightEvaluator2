@@ -154,6 +154,14 @@ $cardBorderColor: #131b23;
   .matchup.watching{
     //overlay darkens
     background-color: hsl(0, 0%, 12%, 0.5);
+    pointer-events: none;
+    //change all colors to greyed out versions of them selves
+    color: darkslategray;
+    .fighter{
+      .fighter-name{
+          color: darkslategray;
+      }
+    }
   }
 }
 
@@ -169,23 +177,37 @@ $cardBorderColor: #131b23;
   //rises up from bottom
   .xmodal-container{
     z-index: 10001;
-    position: relative;
+    position: absolute;
     display: flex;
-    
-    width: 50%;
-    height: max(20%,180px);
+    width: fit-content;
+    padding: 1rem;
+    right: 1rem;
+    bottom: 0px;
 
-    margin-left: auto;
-    margin-right: auto;
-    top: 80%;
-    
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
+    
     opacity: 0;
     transition: all 0.3s ease-in-out;
 
     .matchup-actions{
       width: 100%;
+      .action-wrapper{
+        display: flex;
+        align-items: center;
+        padding: 0.2rem;
+        border-bottom: 1px solid whitesmoke;
+        :first-child{
+          min-width: 7ch;
+        }
+        p{
+          margin: 0px;
+          margin-left: 0.5rem;
+        }
+      }
+      .action-wrapper:last-child{
+        border-bottom: none;
+      }
     }
   }
   

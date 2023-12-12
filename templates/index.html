@@ -270,14 +270,20 @@
   <!--modal containing matchup edit options-->
   <div class="xmodal hide" data-matchup-id="-1">
     <div class="xmodal-container bg-dark flex-column">
-      <div class="modal-title p-2 text-center">
+      <div class="modal-title p-2">
         <h4>Actions</h4>
       </div>
-      <div class="matchup-actions d-flex align-items-center justify-content-around">
-        <a class="analyze btn btn-primary" href="#">
-          analyze
-        </a>
-        <button class="watch btn btn-primary">watch</button>
+      <div class="matchup-actions d-flex flex-column">
+        <div class="action-wrapper">
+          <a class="analyze btn btn-primary" href="#">
+            analyze
+          </a>
+          <p>view fighter assessments comparison</p>
+        </div>
+        <div class="action-wrapper">
+          <button class="watch btn btn-primary">watch</button>
+          <p>add to watchlist</p>
+        </div>
       </div>
     </div>
   </div>
@@ -303,8 +309,10 @@
         });
         //then activate this matchup
         matchup.classList.add("active");
+        //check if matchup is in watchlist
+        let inWatchList = document.querySelector(`#watchlist .matchups .matchup[data-matchup-id="${matchup.dataset.matchupId}"]`) != null;
         //show xmodal
-        toggleXModal.bind({matchupId: matchup.dataset.matchupId})();
+        toggleXModal.bind({matchupId: matchup.dataset.matchupId,inWatchList: inWatchList})();
     }
 
     var fightEventId = {{ event.id }};
@@ -467,34 +475,57 @@
   </script>
   <script>
     //if watchlist tablle is empty show the table note
-    let tableNote = document.querySelector(".table-note");
-    var watchlist = document.querySelector("#watchlist .matchups");
-    if (watchlist.childNodes.length == 0) {
-      tableNote.classList.remove("d-none");
-    } else {
-      tableNote.classList.add("d-none");
+    
+
+    function onWatchListChanged(){
+      let tableNote = document.querySelector(".table-note");
+      let watchlist = document.querySelector("#watchlist .matchups");
+      if (watchlist.childNodes.length == 0) {
+        tableNote.classList.remove("d-none");
+      } else {
+        tableNote.classList.add("d-none");
+      }
     }
 
-    function onClickAddToWatchlist(){
+    onWatchListChanged();
+
+    function toggleWatchListItem(){
       //get matchup id
       let xmodal = document.querySelector(".xmodal");
       let matchupId = xmodal.dataset.matchupId;
-      //add matchup to watchlist
-      //grab matchup data from matchups
-      let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
-      //add a copy of the element to watchlist table
-      let watchListMatchup = matchup.cloneNode(true);
-      matchup.classList.add('watching');
-      //add to watchlist table
-      watchListMatchup.classList.remove("active");
-      watchlist.appendChild(watchListMatchup);
+      //check if matchup is in watchlist
+      let inWatchList = document.querySelector(`#watchlist .matchups .matchup[data-matchup-id="${matchupId}"]`) != null;
+      if (inWatchList){
+        //remove from watchlist
+        //remove matchup from watchlist
+        let matchup = document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`);
+        matchup.classList.remove('watching');
+        matchup.remove();
+        //unwatch in original list
+        document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`).classList.remove('watching');
+      }else{
+        //add matchup to watchlist
+        //grab matchup data from matchups
+        let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
+        //add a copy of the element to watchlist table
+        let watchListMatchup = matchup.cloneNode(true);
+        matchup.classList.add('watching');
+        //add click listener for the watchlist matchuo
+        watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
+        //add to watchlist table
+        watchListMatchup.classList.remove("active");
+        document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
+      }
       toggleXModal();
+      onWatchListChanged();
     }
 
     function toggleXModal(){
       let xmodal = document.querySelector(".xmodal");
       let action = xmodal.classList.contains("hide") ? "show" : "hide";
+      //these variables are defined only when showing the modal
       let matchupId = this.matchupId;//guaranteed to be there when showing
+      let inWatchList = this.inWatchList;
       // console.log(matchup);
       if (action == "show"){
         //show the modal
@@ -504,22 +535,28 @@
         //populate the modal with this matchup's data
         //extract matchup id from matchup
         //set the link href to /matchup/matchupId
+        let watchButton = xmodal.querySelector("button.watch");
         xmodal.querySelector(".analyze").href = `/matchup/${matchupId}`;
-
+        if (inWatchList){
+          watchButton.textContent = "unwatch";
+        }else{
+          watchButton.textContent = "watch";
+        }
       } else {
         //hide the modal
         xmodal.classList.remove("show");
         xmodal.classList.add("hide");
         xmodal.dataset.matchupId = "-1";
         //deactivate the matchup
-        document.querySelector(".matchup.active").classList.remove("active");
+        let activeMatchup = document.querySelector(".matchup.active");
+        if (activeMatchup != null) activeMatchup.classList.remove("active");
       }
       
     }
 
     let xmodal = document.querySelector(".xmodal");
     let watchButton = xmodal.querySelector(".watch");
-    watchButton.addEventListener("click", onClickAddToWatchlist);
+    watchButton.addEventListener("click", toggleWatchListItem);
     //xmodal on click hide
     xmodal.addEventListener("click", (event) => {
       if (event.target == event.currentTarget){
