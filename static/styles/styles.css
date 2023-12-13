@@ -35,6 +35,11 @@ html, body {
   overflow: hidden;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 h1,
 h2,
 h3 {
