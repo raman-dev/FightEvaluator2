@@ -22,30 +22,20 @@ async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depen
     return {'status':'success','img_link':imgLinkIn.img_link}
 
 @router.patch("/fighters/update-fighter")
-async def x(request: Request,fighterIn: FighterUpdateIn):
-    # print(request.body())
-    body = await request.body()
-    print(body,request.headers,fighterIn)
-    return {"status":"success"}
-
-# @router.patch("/fighters/update-fighter")
-# async def update_fighter(fighterIn: FighterUpdateIn,session: Session = Depends(get_session)):
-#     fighter = session.get(Fighter,fighterIn.id)
-#     if not fighter:
-#         raise HTTPException(status_code=404, detail="Fighter not found")
-#     fighter.first_name = fighterIn.first_name
-#     fighter.last_name = fighterIn.last_name
-#     fighter.weight_class = WeightClass[fighterIn.weight_class]
-#     fighter.date_of_birth = fighterIn.date_of_birth
-#     fighter.height = fighterIn.height
-#     fighter.reach = fighterIn.reach
-#     fighter.stance = fighterIn.stance
-#     fighter.record = fighterIn.record
-#     fighter.img_link = fighterIn.img_link
-#     print(fighter)
-#     # session.commit() 
-#     # session.refresh(fighter)
-#     return fighter 
+async def update_fighter(fighterIn: FighterUpdateIn, session: Session = Depends(get_session)):
+    fighter = session.get(Fighter,fighterIn.id)
+    if not fighter:
+        raise HTTPException(status_code=404, detail="Fighter not found")
+    #update fighter object if fighterIn key exists
+    fighterUpdateDict = fighterIn.dict()
+    for inkey in fighterUpdateDict.keys():
+        if fighterUpdateDict[inkey] != None:
+            if inkey == 'weight_class':
+                fighterUpdateDict['weight_class'] = WeightClass[fighterIn.weight_class]
+            setattr(fighter,inkey,fighterUpdateDict[inkey])
+    session.commit()
+    session.refresh(fighter)
+    return fighter
  
 @router.get("/fighters/{fighter_id}")
 def get_fighter(fighter_id:int,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):

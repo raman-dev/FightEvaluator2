@@ -269,7 +269,7 @@
               <div class="col">
                 <label for="weight_class" class="form-label">Weight Class</label>
                 <select class="form-select" id="weight_class" name="weight_class">
-                  <option selected>Choose...</option>
+                  <option value="" selected>Choose...</option>
                   <option value="FLYWEIGHT">Flyweight</option>
                   <option value="BANTAMWEIGHT">Bantamweight</option>
                   <option value="FEATHERWEIGHT">Featherweight</option>
@@ -283,7 +283,7 @@
               <div class="col">
                 <label for="stance" class="form-label">Stance</label>
                 <select class="form-select" id="stance" name="stance">
-                  <option selected>Choose...</option>
+                  <option value="" selected>Choose...</option>
                   <option value="ORTHODOX">Orthodox</option>
                   <option value="SOUTHPAW">Southpaw</option>
                   <option value="SWITCH">Switch</option>
@@ -471,25 +471,34 @@
         //read and validate values from form
         let form = document.querySelector(".fighter-creator form");
         let input_data = {};
-        for (let key in fighter_data) {
-          if (key == "assessment_id" || key=="nick_name"){
+        // for (let key in fighter_data) {
+        //   if (key == "assessment_id" || key=="nick_name"){
+        //     continue;
+        //   }
+        //   if (key == "id") {
+        //     input_data[key] = fighter_data[key];
+        //     continue;
+        //   }
+        //   console.log(key);
+        //   let input = form.querySelector(`[name="${key}"]`);
+        //   input_data[key] = input.value;
+        //   if (key == "weight_class" || key == "stance"){
+        //     input_data[key] = input_data[key].toUpperCase();
+        //   }else if (key == "first_name" || key == "last_name"){
+        //     input_data[key] = input_data[key].toLowerCase();
+        //   }
+        // }
+        let formData = new FormData(form);
+        for (let key of formData.keys()){
+          let data = formData.get(key).trim();
+          if (data == ""){
             continue;
           }
-          if (key == "id") {
-            input_data[key] = fighter_data[key];
-            continue;
-          }
-          console.log(key);
-          let input = form.querySelector(`[name="${key}"]`);
-          input_data[key] = input.value;
-          if (key == "weight_class" || key == "stance"){
-            input_data[key] = input_data[key].toUpperCase();
-          }else if (key == "first_name" || key == "last_name"){
-            input_data[key] = input_data[key].toLowerCase();
-          }
+          input_data[key] = formData.get(key).trim();
         }
-        console.log(JSON.stringify(input_data));
+        input_data['id'] = fighter_id;
         //send fighter link update to server
+        console.log(JSON.stringify(input_data));
         let response = await fetch(`/fighters/update-fighter`, {
           method: "PATCH",
           headers: {
@@ -504,19 +513,20 @@
           //read fighter data from response
           let fighterData = await response.json();
           //update fighter_data object
-          for (let key in fighter_data) {
-            if (key == "id" || fighter_data[key] == null || key == "assessment_id") {
-              continue;
-            }
-            // console.log(key, fighter_data[key]);
-            let input = form.querySelector(`[name="${key}"]`);
-            fighter_data[key] = input.value;
-            if (key == "weight_class" || key == "stance"){
-              fighter_data[key] = fighter_data[key].toLowerCase();
-            }else if (key == "first_name" || key == "last_name"){
-              fighter_data[key] = fighter_data[key].toLowerCase();
-            }
-          }
+          console.log(fighterData);
+          // for (let key in fighter_data) {
+          //   if (key == "id" || fighter_data[key] == null || key == "assessment_id") {
+          //     continue;
+          //   }
+          //   // console.log(key, fighter_data[key]);
+          //   let input = form.querySelector(`[name="${key}"]`);
+          //   fighter_data[key] = input.value;
+          //   if (key == "weight_class" || key == "stance"){
+          //     fighter_data[key] = fighter_data[key].toLowerCase();
+          //   }else if (key == "first_name" || key == "last_name"){
+          //     fighter_data[key] = fighter_data[key].toLowerCase();
+          //   }
+          // }
         }
         
       }

@@ -142,7 +142,7 @@ class FighterUpdateIn(SQLModel):
     first_name: Optional[str]
     last_name: Optional[str]
     nick_name: Optional[str] 
-    weight_class: Optional[WeightClass]
+    weight_class: Optional[str]
     height: Optional[str]
     date_of_birth: Optional[date]
     reach: Optional[str]

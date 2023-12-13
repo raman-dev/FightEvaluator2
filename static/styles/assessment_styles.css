@@ -82,6 +82,9 @@ body {
   background-color: rgba(89, 131, 146, 0.5607843137);
 }
 
+.fighter-info-container {
+  margin-bottom: 1rem;
+}
 .fighter-info-container .img-link {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;

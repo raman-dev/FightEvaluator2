@@ -84,6 +84,9 @@ def custom_dump(obj, **kwargs):
         keyValues['reach'] = '99'
     if height:
         keyValues['height'] = '99'
+    date_of_birth = keyValues['date_of_birth']
+    if date_of_birth:
+        keyValues['date_of_birth'] = date_of_birth.isoformat()
     return json.dumps(keyValues)
 
 templates.env.policies['json.dumps_function'] =  custom_dump
