@@ -2,6 +2,7 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 from fastapi.templating import Jinja2Templates
 from models import WeightClass,AttributeQualifier
 from datetime import date,datetime
+import json
 
 
 attribValueStateMap = {
@@ -66,6 +67,27 @@ def fightLinkFilter(link:str):
     return '`' + link+ '`'
 
 templates = Jinja2Templates(directory="templates")
+
+def custom_dump(obj, **kwargs):
+    #create a dict from obj using all instance variable name-values
+    keyValues = vars(obj)
+    #convert to values of keyvalues to strs
+    del keyValues['_sa_instance_state']
+    weightClass = keyValues['weight_class']
+    reach = keyValues['reach']
+    height = keyValues['height']
+    if weightClass:
+        keyValues['weight_class'] = weightClass.value.__str__()
+    #convert entire dict to json object
+    if reach:
+        #convert from ft ' in to just inches
+        keyValues['reach'] = '99'
+    if height:
+        keyValues['height'] = '99'
+    return json.dumps(keyValues)
+
+templates.env.policies['json.dumps_function'] =  custom_dump
+
 templates.env.filters['weightClassToStr'] = weightClassToStr
 templates.env.filters['none2Null'] = none2Null
 templates.env.filters['fightAttribQualifier'] = fightAttribQualifier

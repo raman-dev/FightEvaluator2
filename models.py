@@ -137,6 +137,19 @@ class FighterIn(SQLModel):
     reach: Optional[str]
     stance: Optional[str]
 
+class FighterUpdateIn(SQLModel):
+    id: int
+    first_name: Optional[str]
+    last_name: Optional[str]
+    nick_name: Optional[str] 
+    weight_class: Optional[WeightClass]
+    height: Optional[str]
+    date_of_birth: Optional[date]
+    reach: Optional[str]
+    stance: Optional[str]
+    record: Optional[str]
+    img_link: Optional[str]
+
 class FighterSearchOut(SQLModel):
     fighter_id: int
     first_name: str

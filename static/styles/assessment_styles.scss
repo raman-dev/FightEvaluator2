@@ -111,6 +111,10 @@ $flickerDuration: 400ms;
   background-color: $btnClickBackground;
 }
 
+.bio-edit-button.active{
+  @include button-active;
+}
+
 .main-container button:hover{
   box-shadow: black 4px 4px 0 0;
 }
@@ -544,6 +548,57 @@ $flickerDuration: 400ms;
 .content-container{
   margin: auto;
   width: 72%;
+}
+
+
+.xmodal{
+  position: absolute;
+  z-index: 10000; 
+  background-color: rgba($color: #000000, $alpha: 0);
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //rises up from bottom
+  .xmodal-container{
+    z-index: 10001;
+    display: flex;
+    width: fit-content;
+    
+    padding: 1.5rem; 
+    border-radius: 0.5rem;
+    
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+  }
+}
+.xmodal.show {
+    pointer-events: all;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+    .xmodal-container{
+      opacity: 1;
+      transform: translateY(0%);
+    }
+}
+
+.xmodal.hide {
+  background-color: rgba($color: #000000, $alpha: 0);
+  pointer-events: none;
+  .xmodal-container{
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+.fighter-creator form{
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
 }
 
 @media (max-width: 1280px) {

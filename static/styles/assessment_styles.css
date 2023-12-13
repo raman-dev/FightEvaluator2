@@ -68,6 +68,11 @@ body {
   transition: all 0.1s ease-out;
 }
 
+.bio-edit-button.active {
+  box-shadow: black 2px 2px 0 0;
+  background-color: rgba(89, 131, 146, 0.5607843137);
+}
+
 .main-container button:hover {
   box-shadow: black 4px 4px 0 0;
 }
@@ -420,6 +425,54 @@ body {
 .content-container {
   margin: auto;
   width: 72%;
+}
+
+.xmodal {
+  position: absolute;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0);
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.xmodal .xmodal-container {
+  z-index: 10001;
+  display: flex;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.xmodal.show {
+  pointer-events: all;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.xmodal.show .xmodal-container {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.xmodal.hide {
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+.xmodal.hide .xmodal-container {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.fighter-creator form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
 }
 
 @media (max-width: 1280px) {

@@ -67,13 +67,10 @@
                 </div>
               </div>
               <div class="button-container">
-                <button class="bio-edit-button">edit</button>
-                <button class="bio-commit-button" onclick="updateFighterImgLink()">commit</button>
+                <button class="bio-edit-button" onclick="onEditFighter(event)">edit</button>
               </div>
             </div>
-            
           </div>
-          <div class="img-link edit-element" >{{ fighter.img_link if fighter.img_link !=None else url_for('static',path='/media/sample_150.png') }}</div>
         </div>
         <div class="fighter-grid-container">
             <!--list of 8 fighter attributes-->
@@ -216,13 +213,108 @@
           </div>
         </div>
       </div>
-      
-      
     </div>
+      <!--modal containing matchup edit options-->
+    <div class="xmodal hide" >
+      <div class="xmodal-container bg-dark flex-column">
+        <div class="fighter-creator">
+          <!--form to create a fighter
+                  first name
+                  last name
+                  weight class
+                  height
+                  reach
+                  stance
+                  date_of_birth
+                  wins
+                  losses
+                  draws
+            -->
+          <h3 class="text-start mb-2">Edit Fighter</h3>
+          <form class="border rounded p-2">
+            <div class="row">
+              <div class="col">
+                <label for="first_name" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name"
+                  placeholder="First Name" />
+              </div>
+              <div class="col">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" />
+              </div>
+              <div class="col">
+                <label for="date_of_birth" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
+                  placeholder="Date of Birth" />
+              </div>
+            </div>
+            <div class="row">    
+              <div class="col">
+                <label for="height" class="form-label">Height</label>
+                <input type="number" class="form-control" name="height" id="height" max="99" maxlength="2"
+                  placeholder="Height" />
+              </div>
+              <div class="col">
+                <label for="reach" class="form-label">Reach</label>
+                <input type="number" class="form-control" id="reach" name="reach" max="99" maxlength="2"
+                  placeholder="Reach" />
+              </div>
+              <div class="col">
+                <!--fighter record-->
+                <label for="record" class="form-label">Record</label>
+                <input type="text" class="form-control" id="record" name="record" placeholder="Record" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="weight_class" class="form-label">Weight Class</label>
+                <select class="form-select" id="weight_class" name="weight_class">
+                  <option selected>Choose...</option>
+                  <option value="FLYWEIGHT">Flyweight</option>
+                  <option value="BANTAMWEIGHT">Bantamweight</option>
+                  <option value="FEATHERWEIGHT">Featherweight</option>
+                  <option value="LIGHTWEIGHT">Lightweight</option>
+                  <option value="WELTERWEIGHT">Welterweight</option>
+                  <option value="MIDDLEWEIGHT">Middleweight</option>
+                  <option value="LIGHT_HEAVYWEIGHT">Light Heavyweight</option>
+                  <option value="HEAVY_WEIGHT">Heavyweight</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="stance" class="form-label">Stance</label>
+                <select class="form-select" id="stance" name="stance">
+                  <option selected>Choose...</option>
+                  <option value="ORTHODOX">Orthodox</option>
+                  <option value="SOUTHPAW">Southpaw</option>
+                  <option value="SWITCH">Switch</option>
+                  <option value="OPEN_STANCE">Open Stance</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <!--img-link-->
+                <label for="img_link" class="form-label">Image Link</label>
+                <input type="text" class="form-control img-link" id="img_link" name="img_link" placeholder="Image Link" />
+              </div>
+            </div>
+            <div class="row">
+              <!--close button-->
+              <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="toggleXModal(event)" type="button">Close</button>
+              <button class="btn btn-primary my-2 w-auto" style="margin-right: 1rem;"
+                onclick="updateFighter(event)" type="button">Save Changes</button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script src="{{ url_for('static',path='/js/definitions.js')}}"></script>
     <script>
       var editModeEnabled = false;
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
+      const fighter_data = {{ fighter|tojson }};//contains fighter bio info
       const assessment_id = {{ assessment.id }};
       var fighterImgLink = {{ fighter.img_link|fightLinkFilter if assessment.img_link is not none else 'null' }};
       const assessment_data = {
@@ -280,24 +372,6 @@
         document.querySelector('img').setAttribute('src',fighterImgLink);
       }
 
-      //grab bio edit button
-      let bioEditButton = document.querySelector(".bio-edit-button");
-      bioEditButton.addEventListener("click", (event) => {
-        //toggle edit mode
-        editModeEnabled = !editModeEnabled;
-        let fighterCard = document.querySelector(".fighter-card");
-        let link = document.querySelector('.img-link');
-        if (editModeEnabled){
-          //make img-link editable
-          link.style.opacity = '1';
-          link.setAttribute('contenteditable','plaintext-only');
-          fighterCard.setAttribute("data-edit-mode-enabled", "true");
-        }else{
-          link.removeAttribute('contenteditable');
-          link.style.opacity = '0';
-          fighterCard.setAttribute("data-edit-mode-enabled", "false");
-        }
-      });
       //grab content from note-editor and send it to the server
       //update the notes-list with the new note
       async function addNote(event) {
@@ -365,35 +439,7 @@
       let fighterAge = document.querySelector(".fighter-age");
       fighterAge.textContent = dobToAge('{{ fighter.date_of_birth }}');
 
-      async function updateFighterImgLink(){
-        if (!editModeEnabled){
-          return;
-        }
-        let newLink = document.querySelector('.img-link').textContent;
-        if (newLink == fighterImgLink){
-          return;
-        }
-        //send fighter link update to server
-        let response = await fetch(`/fighters/update/image-link`, {
-          method: "PATCH",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fighter_id: fighter_id,
-            img_link: newLink,
-          }),
-        });
-
-        if (response.status == 200){
-          console.log('img link updated');
-          //update imglink in page
-          let imgLink = document.querySelector('.img-link');
-          fighterImgLink = newLink;
-        }
-        
-      }
+      
       
       let notesList = document.querySelector('.notes-list');
       let notesListUl = document.querySelector(".notes-list ul");
@@ -416,5 +462,107 @@
       integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"></script>
+    <script>
+      function onEditFighter(event){
+        event.currentTarget.classList.toggle('active');
+        toggleXModal();
+      }
+      async function updateFighter(){
+        //read and validate values from form
+        let form = document.querySelector(".fighter-creator form");
+        let input_data = {};
+        for (let key in fighter_data) {
+          if (key == "assessment_id" || key=="nick_name"){
+            continue;
+          }
+          if (key == "id") {
+            input_data[key] = fighter_data[key];
+            continue;
+          }
+          console.log(key);
+          let input = form.querySelector(`[name="${key}"]`);
+          input_data[key] = input.value;
+          if (key == "weight_class" || key == "stance"){
+            input_data[key] = input_data[key].toUpperCase();
+          }else if (key == "first_name" || key == "last_name"){
+            input_data[key] = input_data[key].toLowerCase();
+          }
+        }
+        console.log(JSON.stringify(input_data));
+        //send fighter link update to server
+        let response = await fetch(`/fighters/update-fighter`, {
+          method: "PATCH",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(input_data),
+        });
+
+        if (response.status == 200){
+          // console.log('img link updated');
+          //read fighter data from response
+          let fighterData = await response.json();
+          //update fighter_data object
+          for (let key in fighter_data) {
+            if (key == "id" || fighter_data[key] == null || key == "assessment_id") {
+              continue;
+            }
+            // console.log(key, fighter_data[key]);
+            let input = form.querySelector(`[name="${key}"]`);
+            fighter_data[key] = input.value;
+            if (key == "weight_class" || key == "stance"){
+              fighter_data[key] = fighter_data[key].toLowerCase();
+            }else if (key == "first_name" || key == "last_name"){
+              fighter_data[key] = fighter_data[key].toLowerCase();
+            }
+          }
+        }
+        
+      }
+
+      function toggleXModal(){
+        let xmodal = document.querySelector(".xmodal");
+        let action = xmodal.classList.contains("hide") ? "show" : "hide";
+        //these variables are defined only when showing the modal
+        if (action == "show"){
+          //show the modal
+          xmodal.classList.remove("hide");
+          xmodal.classList.add("show");
+          updateEditorForm();
+        } else {
+          //hide the modal
+          xmodal.classList.remove("show");
+          xmodal.classList.add("hide");
+          document.querySelector('.bio-edit-button').classList.remove('active');
+        }
+      }
+      let xmodal = document.querySelector(".xmodal");
+      //xmodal on click hide
+      xmodal.addEventListener("click", (event) => {
+        if (event.target == event.currentTarget){
+          toggleXModal();
+        }
+      });
+      updateEditorForm();
+      function updateEditorForm(){
+        //write values from fighter_data to the form
+        let form = document.querySelector(".fighter-creator form");
+        for (let key in fighter_data) {
+          if (key == "id" || fighter_data[key] == null || key == "assessment_id") {
+            continue;
+          }
+          // console.log(key, fighter_data[key]);
+          let input = form.querySelector(`[name="${key}"]`);
+          input.value = fighter_data[key];
+          if (key == "weight_class" || key == "stance"){
+            input.value = fighter_data[key].toUpperCase();
+          }else if (key == "first_name" || key == "last_name"){
+            // input.value = fighter_data[key].capitalize();
+            input.style.textTransform = 'capitalize';
+          }
+        }
+      }
+    </script>
   </body>
 </html>

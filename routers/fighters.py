@@ -4,11 +4,12 @@ from datetime import date
 from sqlmodel import Session
 
 from dependencies import get_session,get_templates
-from models import Fighter,WeightClass,Assessment,ImageLinkIn,FighterIn,FighterSearchOut
+from models import Fighter,WeightClass,Assessment,ImageLinkIn,FighterIn,FighterUpdateIn,FighterSearchOut
 
 router = APIRouter(
     tags=["fighters"],
 )
+
 
 @router.patch("/fighters/update/image-link")
 async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
@@ -20,6 +21,32 @@ async def update_fighter_imglink(imgLinkIn: ImageLinkIn,session: Session = Depen
     session.refresh(fighter)
     return {'status':'success','img_link':imgLinkIn.img_link}
 
+@router.patch("/fighters/update-fighter")
+async def x(request: Request,fighterIn: FighterUpdateIn):
+    # print(request.body())
+    body = await request.body()
+    print(body,request.headers,fighterIn)
+    return {"status":"success"}
+
+# @router.patch("/fighters/update-fighter")
+# async def update_fighter(fighterIn: FighterUpdateIn,session: Session = Depends(get_session)):
+#     fighter = session.get(Fighter,fighterIn.id)
+#     if not fighter:
+#         raise HTTPException(status_code=404, detail="Fighter not found")
+#     fighter.first_name = fighterIn.first_name
+#     fighter.last_name = fighterIn.last_name
+#     fighter.weight_class = WeightClass[fighterIn.weight_class]
+#     fighter.date_of_birth = fighterIn.date_of_birth
+#     fighter.height = fighterIn.height
+#     fighter.reach = fighterIn.reach
+#     fighter.stance = fighterIn.stance
+#     fighter.record = fighterIn.record
+#     fighter.img_link = fighterIn.img_link
+#     print(fighter)
+#     # session.commit() 
+#     # session.refresh(fighter)
+#     return fighter 
+ 
 @router.get("/fighters/{fighter_id}")
 def get_fighter(fighter_id:int,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
     print('getting fighter with id -> ',fighter_id)
@@ -28,12 +55,12 @@ def get_fighter(fighter_id:int,session: Session = Depends(get_session),templates
 
 
 @router.post("/fighters/create-fighter")
-async def create_fighter(request: Request,fighterIn: FighterIn,session: Session = Depends(get_session),templates: Jinja2Templates = Depends(get_templates)):
+async def create_fighter(request: Request,fighterIn: FighterIn,session: Session = Depends(get_session)):
     #convert the request body to a json object
     # body = await request.body()
     # print(body,json.loads(body),fighterIn.dict())
     # fighter = Fighter(**fighterIn.dict())
-    # print(fighter)
+    # print(fighter) 
     fighterAssessment = Assessment()
     session.add(fighterAssessment)
     session.commit()
@@ -45,7 +72,7 @@ async def create_fighter(request: Request,fighterIn: FighterIn,session: Session 
     session.add(fighter)
     session.commit()
     session.refresh(fighter)
-    # print(fighter)
+    # print(fighter)  
     return fighter
 
 # @app.get("/predict")
@@ -72,4 +99,3 @@ async def search(request: Request,search: str,session: Session = Depends(get_ses
     else:
         fighters = session.query(Fighter).filter(Fighter.first_name.contains(fname),Fighter.last_name.contains(lname)).limit(5).all()
     return [FighterSearchOut(fighter_id=fighter.id,first_name=fighter.first_name,last_name=fighter.last_name,weight_class=fighter.weight_class) for fighter in fighters]
-
