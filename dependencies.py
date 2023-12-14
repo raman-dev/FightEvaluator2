@@ -74,16 +74,9 @@ def custom_dump(obj, **kwargs):
     #convert to values of keyvalues to strs
     del keyValues['_sa_instance_state']
     weightClass = keyValues['weight_class']
-    reach = keyValues['reach']
-    height = keyValues['height']
     if weightClass:
         keyValues['weight_class'] = weightClass.value.__str__()
     #convert entire dict to json object
-    if reach:
-        #convert from ft ' in to just inches
-        keyValues['reach'] = '99'
-    if height:
-        keyValues['height'] = '99'
     date_of_birth = keyValues['date_of_birth']
     if date_of_birth:
         keyValues['date_of_birth'] = date_of_birth.isoformat()

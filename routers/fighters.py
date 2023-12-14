@@ -5,6 +5,7 @@ from sqlmodel import Session
 
 from dependencies import get_session,get_templates
 from models import Fighter,WeightClass,Assessment,ImageLinkIn,FighterIn,FighterUpdateIn,FighterSearchOut
+import re
 
 router = APIRouter(
     tags=["fighters"],
@@ -72,6 +73,7 @@ async def create_fighter(request: Request,fighterIn: FighterIn,session: Session 
 
 @router.get("/fighters/search/",response_model=list[FighterSearchOut])
 async def search(request: Request,search: str,session: Session = Depends(get_session)):
+
     terms = search.split(' ')
     print('search.terms => ',terms)
     fname = terms[0]
@@ -89,3 +91,20 @@ async def search(request: Request,search: str,session: Session = Depends(get_ses
     else:
         fighters = session.query(Fighter).filter(Fighter.first_name.contains(fname),Fighter.last_name.contains(lname)).limit(5).all()
     return [FighterSearchOut(fighter_id=fighter.id,first_name=fighter.first_name,last_name=fighter.last_name,weight_class=fighter.weight_class) for fighter in fighters]
+
+# @router.get("/fighters/fix-height/")
+# async def fix_height(session: Session = Depends(get_session)):
+#     fighters = session.query(Fighter).all()
+#     #change fighter height format from 5' 11" to 71" 
+#     for fighter in fighters:
+#         # print(fighter)
+#         height = fighter.height
+#         #check if height exists 
+#         if height and re.search(r'\d\' \d+\"',height):
+#             feet = int(height.split(' ')[0].replace("'",""))
+#             inches = int(height.split(' ')[1].replace('"',''))
+#             height = (feet * 12) + inches
+#             fighter.height = str(height)+"\""
+#             session.commit()
+#         # return fighter
+#     return {'status':'success'}

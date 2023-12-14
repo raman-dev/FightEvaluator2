@@ -495,6 +495,9 @@
             continue;
           }
           input_data[key] = formData.get(key).trim();
+          if (key == "height"){
+            input_data[key] += "\"";
+          }
         }
         input_data['id'] = fighter_id;
         //send fighter link update to server
@@ -559,17 +562,20 @@
         //write values from fighter_data to the form
         let form = document.querySelector(".fighter-creator form");
         for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key == "assessment_id" || key=="height" || key=="reach") {
+          if (key == "id" || fighter_data[key] == null || key == "assessment_id" || key=="reach") {
             continue;
           }
-          // console.log(key, fighter_data[key]);
+          console.log(key, fighter_data[key]);
           let input = form.querySelector(`[name="${key}"]`);
-          input.value = fighter_data[key];
           if (key == "weight_class" || key == "stance"){
             input.value = fighter_data[key].toUpperCase();
           }else if (key == "first_name" || key == "last_name"){
             // input.value = fighter_data[key].capitalize();
             input.style.textTransform = 'capitalize';
+          }else if (key == "height"){
+            input.value = fighter_data[key].split('"')[0];
+          }else{
+            input.value = fighter_data[key];
           }
         }
       }
