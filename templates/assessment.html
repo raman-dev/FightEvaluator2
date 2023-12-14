@@ -559,7 +559,7 @@
         //write values from fighter_data to the form
         let form = document.querySelector(".fighter-creator form");
         for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key == "assessment_id") {
+          if (key == "id" || fighter_data[key] == null || key == "assessment_id" || key=="height" || key=="reach") {
             continue;
           }
           // console.log(key, fighter_data[key]);
