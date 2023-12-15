@@ -47,7 +47,8 @@ async def create_matchup(request: Request,matchupIn: MatchupIn,session: Session 
         fighter_a=fighterA.first_name+' '+fighterA.last_name,
         fighter_b_id=matchupIn.fighter_b_id,
         fighter_b=fighterB.first_name+' '+fighterB.last_name,
-        weight_class=WeightClass[matchupIn.weight_class.upper()]
+        weight_class=WeightClass[matchupIn.weight_class.upper()],
+        rounds=matchupIn.rounds,
         )
     session.add(matchup)
     session.commit()

@@ -206,6 +206,37 @@
   transform: translateY(100%);
 }
 
+.confirmation-dialog {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 20000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.confirmation-dialog .dialog-container {
+  padding: 1.4rem;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.confirmation-dialog .dialog-container .dialog-title {
+  margin-right: 1rem;
+}
+.confirmation-dialog .dialog-container .dialog-body p {
+  text-transform: capitalize;
+  text-align: center;
+}
+.confirmation-dialog .dialog-container .dialog-actions {
+  display: flex;
+  justify-content: end;
+}
+.confirmation-dialog .dialog-container .dialog-actions .cancel {
+  margin-right: 0.8rem;
+}
+
 @media (max-width: 1280px) {
   .tables-wrapper, .title-container {
     max-width: 85%;

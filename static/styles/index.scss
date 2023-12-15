@@ -227,6 +227,40 @@ $cardBorderColor: #131b23;
   }
 }
 
+.confirmation-dialog{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+
+  width: 100%;
+  height: 100%;
+  z-index: 20000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .dialog-container{
+    padding: 1.4rem;
+    width: fit-content;
+    .dialog-title{
+      margin-right: 1rem;
+    } 
+    .dialog-body{
+      p{
+        text-transform: capitalize;
+        text-align: center;
+      }
+    }
+    .dialog-actions{
+      display: flex;
+      justify-content: end;
+      .cancel{
+        margin-right: 0.8rem;
+      }
+    }
+  }
+}
+
 @media (max-width: 1280px) {
     .tables-wrapper, .title-container{
       max-width: 85%;

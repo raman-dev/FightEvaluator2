@@ -38,6 +38,7 @@ class MatchupIn(SQLModel):
     fighter_a_id: int
     fighter_b_id: int
     weight_class: str
+    rounds: str
 
 class MatchUp(SQLModel,table=True):
     id: int = Field(primary_key=True)

@@ -310,6 +310,21 @@
     </div>
   </div>
 
+  <div class="confirmation-dialog d-none" data-matchup-id="-1">
+    <div class="dialog-container bg-dark rounded-2">
+      <div class="dialog-title">
+        <h4>Delete following MatchUp.</h4>
+      </div>
+      <div class="dialog-body border p-1 my-3">
+        <p class="m-0">Matchup name.</p>
+      </div>
+      <div class="dialog-actions">
+        <button class="cancel btn btn-secondary">cancel</button>
+        <button class="confirm btn btn-primary">confirm</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
@@ -321,6 +336,7 @@
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
       let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
       let weightClass = document.querySelector(".weight-class .dropdown-toggle").textContent;
+      let rounds = document.querySelector("input[name='rounds']:checked").value;
       //make sure both fighter id's are not -1
       if (fighterAId == -1 || fighterBId == -1) {
         alert("Please select two fighters");
@@ -331,7 +347,8 @@
         alert("Please select a weight class");
         return;
       }
-      // console.log(fighterAId, fighterBId, weightClass);
+      // console.log(fighterAId, fighterBId, weightClass,rounds);
+      // return;
       //send post request to /create-matchup
       fetch("/matchup/create-matchup", {
         method: "POST",
@@ -339,7 +356,8 @@
           fighter_a_id: fighterAId,
           fighter_b_id: fighterBId,
           weight_class: weightClass,
-          event_id: fightEventId
+          rounds: rounds,
+          event_id: fightEventId,
         }),
         headers: {
           accept: "application/json",
@@ -426,6 +444,11 @@
     document.querySelectorAll(".fighter-selector .fighter").forEach((fighterElement) => {
       let searchBox = fighterElement.querySelector(".search-box");
       searchBox.addEventListener("keyup", async (event) => {
+        //check if modal is visible
+        let isModalVisible = document.querySelector(".modal.show") != null;
+        console.log(isModalVisible);
+        if (!isModalVisible) return;
+        // console.log(event);
         let input = searchBox.querySelector("input");
         let search = input.value;
         search = search.split(" ").join("+");
@@ -460,7 +483,6 @@
         }
       });
     });
-
 
     //on click weightclass dropdown item set the dropdown button text to the item clicked
     document.querySelectorAll(".weight-class .dropdown-item").forEach((dropDownItem) => {
@@ -602,19 +624,7 @@
       
     }
 
-    let xmodal = document.querySelector(".xmodal");
-    let watchButton = xmodal.querySelector(".watch");
-    watchButton.addEventListener("click", toggleWatchListItem);
-    //xmodal on click hide
-    xmodal.addEventListener("click", (event) => {
-      if (event.target == event.currentTarget){
-        toggleXModal();
-      }
-    });
-    let deleteButton = xmodal.querySelector(".delete");
-    deleteButton.addEventListener("click", (event) => {
-      //send delete request to /matchup/delete-matchup
-      let matchupId = xmodal.dataset.matchupId;
+    function deleteMatchup(matchupId){
       fetch(`/matchup/delete-matchup/${matchupId}`, {
         method: "DELETE",
         headers: {
@@ -629,8 +639,43 @@
           document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"]`).forEach((matchup) => {
             matchup.remove();
           });
+          //hide confirmation dialog
+          document.querySelector(".confirmation-dialog").dataset.matchupId = "-1";
+          document.querySelector(".confirmation-dialog").classList.add("d-none");
           toggleXModal();
         });
+    }
+
+    let xmodal = document.querySelector(".xmodal");
+    let watchButton = xmodal.querySelector(".watch");
+    watchButton.addEventListener("click", toggleWatchListItem);
+    //xmodal on click hide
+    xmodal.addEventListener("click", (event) => {
+      if (event.target == event.currentTarget){
+        toggleXModal();
+      }
+    });
+    let deleteButton = xmodal.querySelector(".delete");
+    deleteButton.addEventListener("click", (event) => {
+      //send delete request to /matchup/delete-matchup
+      let matchupId = xmodal.dataset.matchupId;
+      //show confirmation dialog
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      confirmationDialog.dataset.matchupId = matchupId;
+      //set the matchup name
+      let nameElements = document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"] .fighter .fighter-name`);
+      confirmationDialog.querySelector(".dialog-body p").textContent = `\"${nameElements[0].textContent} vs ${nameElements[1].textContent}\"`;
+      confirmationDialog.classList.remove("d-none");
+    });
+    let confirmDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .confirm");
+    confirmDeleteButton.addEventListener("click", (event) => {
+      deleteMatchup(document.querySelector(".confirmation-dialog").dataset.matchupId);
+    });
+    let cancelDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .cancel");
+    cancelDeleteButton.addEventListener("click", (event) => {
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      confirmationDialog.dataset.matchupId = "-1";
+      document.querySelector(".confirmation-dialog").classList.add("d-none");
     });
   </script>
 </body>
