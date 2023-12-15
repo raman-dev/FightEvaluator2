@@ -597,7 +597,10 @@ $flickerDuration: 400ms;
   display: flex;
   flex-direction: column;
   row-gap: 0.8rem;
-}
+  input#first_name, input#last_name{
+    text-transform: capitalize;
+  } 
+} 
 
 @media (max-width: 1280px) {
   .content-container{

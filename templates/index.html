@@ -83,33 +83,52 @@
                       <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                     </button>
                   </div>
-                  <div class="weight-class dropdown mt-3">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                      data-bs-toggle="dropdown" aria-expanded="false">
-                      Weight Class
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="#">Flyweight</a></li>
-                      <li>
-                        <a class="dropdown-item" href="#">Bantamweight</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">Featherweight</a>
-                      </li>
-                      <li><a class="dropdown-item" href="#">Lightweight</a></li>
-                      <li>
-                        <a class="dropdown-item" href="#">Welterweight</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">Middleweight</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">Light Heavyweight</a>
-                      </li>
-                      <li><a class="dropdown-item" href="#">Heavyweight</a></li>
-                      <li><a class="dropdown-item" href="#">Catchweight</a></li>
-                    </ul>
+                  <div class="matchup-info-wrapper d-flex align-items-center justify-content-between">
+                    <div class="weight-class dropdown mt-3">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Weight Class
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">Flyweight</a></li>
+                        <li>
+                          <a class="dropdown-item" href="#">Bantamweight</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Featherweight</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Lightweight</a></li>
+                        <li>
+                          <a class="dropdown-item" href="#">Welterweight</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Middleweight</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Light Heavyweight</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Heavyweight</a></li>
+                        <li><a class="dropdown-item" href="#">Catchweight</a></li>
+                      </ul>
+                    </div>
+                    <div class="rounds-wrapper d-flex mt-3">
+                      <p class="m-0">Rounds</p>
+                      <!--2 radio buttons for 3 or 5 rounds-->
+                      <div class="form-check mx-2">
+                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3 x 5" checked>
+                        <label class="form-check-label" for="rounds">
+                          3
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5 x 5">
+                        <label class="form-check-label" for="rounds">
+                          5
+                        </label>
+                      </div>
+                    </div>
                   </div>
+                  
                 </div>
               </div>
               <div class="fighter-creator border rounded">
@@ -282,6 +301,10 @@
         <div class="action-wrapper">
           <button class="watch btn btn-primary">watch</button>
           <p>add to watchlist</p>
+        </div>
+        <div class="action-wrapper">
+          <button class="delete btn btn-danger">delete</button>
+          <p>delete matchup</p>
         </div>
       </div>
     </div>
@@ -587,6 +610,27 @@
       if (event.target == event.currentTarget){
         toggleXModal();
       }
+    });
+    let deleteButton = xmodal.querySelector(".delete");
+    deleteButton.addEventListener("click", (event) => {
+      //send delete request to /matchup/delete-matchup
+      let matchupId = xmodal.dataset.matchupId;
+      fetch(`/matchup/delete-matchup/${matchupId}`, {
+        method: "DELETE",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          //remove matchup from table
+          document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"]`).forEach((matchup) => {
+            matchup.remove();
+          });
+          toggleXModal();
+        });
     });
   </script>
 </body>

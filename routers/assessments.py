@@ -32,14 +32,19 @@ async def assessment(request: Request,fighter_id: int,session: Session = Depends
     #grab latest fightevent
     nextFightEvent = session.query(FightEvent).order_by(FightEvent.date.desc()).first()
     #get all matchups in that event
-    matchups = session.query(MatchUp).filter(MatchUp.event_id == nextFightEvent.id).all()
     #filter matchups for fighter name
     #get fighter name
     fighter_name = fighter.first_name.capitalize() + " " + fighter.last_name.capitalize()
     #filter matchups for fighter name
-    matchups = [matchup for matchup in matchups if fighter_name in matchup.fighter_a or fighter_name in matchup.fighter_b]
-    if matchups != []:
-        nextMatchup = matchups[0]
+    nextMatchup = session.query(MatchUp).filter(
+        MatchUp.event_id == nextFightEvent.id).filter(
+            MatchUp.fighter_a_id == fighter.id).all()
+    if not nextMatchup:
+        nextMatchup = session.query(MatchUp).filter(
+        MatchUp.event_id == nextFightEvent.id).filter(
+            MatchUp.fighter_b_id == fighter.id).all()
+    if nextMatchup:
+        nextMatchup = nextMatchup[0]
         context['nextMatchup'] = {
             'matchup_id': nextMatchup.id,
             'fighter_a': nextMatchup.fighter_a.split(" ")[-1],#only last name

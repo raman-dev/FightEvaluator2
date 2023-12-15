@@ -498,6 +498,9 @@
           if (key == "height"){
             input_data[key] += "\"";
           }
+          if (key == "first_name" || key == "last_name"){
+            input_data[key] = input_data[key].toLowerCase();
+          }
         }
         input_data['id'] = fighter_id;
         //send fighter link update to server
@@ -514,22 +517,31 @@
         if (response.status == 200){
           // console.log('img link updated');
           //read fighter data from response
-          let fighterData = await response.json();
+          let latestFighterData = await response.json();
           //update fighter_data object
-          console.log(fighterData);
-          // for (let key in fighter_data) {
-          //   if (key == "id" || fighter_data[key] == null || key == "assessment_id") {
-          //     continue;
-          //   }
-          //   // console.log(key, fighter_data[key]);
-          //   let input = form.querySelector(`[name="${key}"]`);
-          //   fighter_data[key] = input.value;
-          //   if (key == "weight_class" || key == "stance"){
-          //     fighter_data[key] = fighter_data[key].toLowerCase();
-          //   }else if (key == "first_name" || key == "last_name"){
-          //     fighter_data[key] = fighter_data[key].toLowerCase();
-          //   }
-          // }
+          // console.log(latestFighterData);
+          // console.log(fighter_data);
+          for (let key in latestFighterData){
+            fighter_data[key] = latestFighterData[key];
+            //update bio stuff
+            //fighter-name
+            document.querySelector('.fighter-name').textContent = `${fighter_data.first_name} ${fighter_data.last_name}`;
+            //fighter-weight
+            document.querySelector('.fighter-weight').textContent = fighter_data.weight_class;
+            //fighter-height
+            document.querySelector('.fighter-height').textContent = fighter_data.height;
+            //fighter-age
+            document.querySelector('.fighter-age').textContent = dobToAge(fighter_data.date_of_birth);
+            //fighter-record
+            document.querySelector('.fighter-record').textContent = fighter_data.record;
+            //fighter-reach
+            document.querySelector('.fighter-reach').textContent = fighter_data.reach;
+            //fighter-stance
+            document.querySelector('.fighter-stance').textContent = fighter_data.stance;
+            //fighter-image
+            document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
+          }
+
         }
         
       }
@@ -569,9 +581,6 @@
           let input = form.querySelector(`[name="${key}"]`);
           if (key == "weight_class" || key == "stance"){
             input.value = fighter_data[key].toUpperCase();
-          }else if (key == "first_name" || key == "last_name"){
-            // input.value = fighter_data[key].capitalize();
-            input.style.textTransform = 'capitalize';
           }else if (key == "height"){
             input.value = fighter_data[key].split('"')[0];
           }else{

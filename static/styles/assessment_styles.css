@@ -477,6 +477,9 @@ body {
   flex-direction: column;
   row-gap: 0.8rem;
 }
+.fighter-creator form input#first_name, .fighter-creator form input#last_name {
+  text-transform: capitalize;
+}
 
 @media (max-width: 1280px) {
   .content-container {
