@@ -531,6 +531,11 @@
       //add all matchups in watchlist to watchlist table
       watchListItems.forEach((matchupId) => {
         let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
+        if (matchup == null){
+          //remove from watchlist
+          watchListItems = watchListItems.filter((id) => id != matchupId);
+          return;
+        }
         let watchListMatchup = matchup.cloneNode(true);
         watchListMatchup.classList.remove("active");//since no longer active
         watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
@@ -642,6 +647,9 @@
           //hide confirmation dialog
           document.querySelector(".confirmation-dialog").dataset.matchupId = "-1";
           document.querySelector(".confirmation-dialog").classList.add("d-none");
+          watchListItems = watchListItems.filter((id) => id != matchupId);//remove from localStorage watchlsit
+          localStorage.setItem("watchlist", JSON.stringify(watchListItems));//update localStorage
+          // onWatchListChanged(false, matchupId);//remove from watchlist table
           toggleXModal();
         });
     }
