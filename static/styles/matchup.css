@@ -19,6 +19,9 @@ h5, h6 {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+.fighter-container .vs-wrapper {
+  margin: 1rem;
+}
 .fighter-container .fighter-info {
   display: flex;
   padding: 1.2rem;
@@ -50,12 +53,13 @@ h5, h6 {
   display: flex;
   flex-direction: column;
 }
-.matchup-container .matchup-info {
+
+.matchup-info {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  margin: 1rem;
+}
+.matchup-info h4 {
+  text-align: center;
 }
 
 .attrib-row {
@@ -157,5 +161,10 @@ h5, h6 {
   .content-grid .notes-section {
     grid-row: 2;
     grid-column: span 2;
+  }
+}
+@media (max-width: 640px) {
+  .fighter-container {
+    flex-direction: column;
   }
 }/*# sourceMappingURL=matchup.css.map */

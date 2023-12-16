@@ -26,7 +26,11 @@
                    .
                 attrib n     a.value n  | b.value n
             -->
-    
+    <div class="matchup-info">
+        <h4>
+            {{ matchup.weight_class|weightClassToStr }} | Rounds: {{ matchup.rounds }} 
+        </h4>
+    </div>
     <div class="matchup-container justify-content-center">
         <!--contains information about each fighter including fighter img-->
         <div class="fighter-container">
@@ -56,16 +60,16 @@
                     </div>
                 </div>
             </div>
-            <div class="matchup-info">
-              <div class="matchup-weightclass">
+            <!-- <div class="matchup-info"> -->
+              <!-- <div class="matchup-weightclass">
                   <h4>
                       {{ matchup.weight_class|weightClassToStr }}
                   </h4>
+              </div> -->
+              <div class="vs-wrapper">
+                  <h4>vs</h4>
               </div>
-              <div class="matchup-rounds">
-                  <h4>{{ matchup.rounds }}</h4>
-              </div>
-          </div>
+          <!-- </div> -->
             <div class="fighter-info m-1 border">
               <img src="{{ fighter_b.data.img_link if fighter_b.data.img_link !=None else url_for('static',path='/media/sample_150.png') }}" alt="">
 
