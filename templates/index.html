@@ -12,7 +12,6 @@
 </head>
 
 <body data-bs-theme="dark">
-  {% include 'navbar.html' %}
 
   <!--container-->
   <div class="container-fluid main-container">
@@ -227,6 +226,31 @@
       </div>
     </div>
 
+    <!-- <div class="action-bar d-flex align-items-center">
+      <a href="/">
+        <div class="home-link btn">
+          <p class="m-0">home</p>
+        </div>
+      </a>
+      <div class="matchup-actions d-flex w-100 justify-content-center my-2 border py-2 px-0 rounded-2 ">
+        <div class="action-wrapper">
+          <a class="analyze btn btn-primary" href="#">
+            analyze
+          </a>
+          <p class="m-0">&nbsp;- assessment comparison</p>
+        </div>
+        <div class="action-wrapper">
+          <button class="watch btn btn-primary">watch</button>
+          <p>&nbsp;- add to watchlist</p>
+        </div>
+        <div class="action-wrapper">
+          <button class="delete btn btn-danger">delete</button>
+          <p>&nbsp;- delete matchup</p>
+        </div>
+      </div>
+    </div> -->
+    
+
     <div class="container-fluid title-container">
       <h3 class="event-title">{{event.name}}</h3>
       <div class="button-container">
@@ -236,7 +260,7 @@
         </button>
       </div>
     </div>
-
+  
     <div class="tables-wrapper">
       <div class="matchups-container watchlist" id="watchlist">
           <div class="matchups-header">

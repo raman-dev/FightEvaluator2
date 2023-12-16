@@ -237,6 +237,15 @@
   margin-right: 0.8rem;
 }
 
+.action-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+.action-wrapper p {
+  margin: 0px;
+}
+
 @media (max-width: 1280px) {
   .tables-wrapper, .title-container {
     max-width: 85%;
