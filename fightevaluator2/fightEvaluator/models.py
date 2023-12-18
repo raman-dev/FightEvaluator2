@@ -22,7 +22,19 @@ class Stance(models.TextChoices):
     SIDE_STANCE = "Side Stance"
     SQUARE_STANCE = "Square Stance"
 
-# Create your models here.
+
+class AttributeQualifier(models.TextChoices):
+    # POSITIVE = 3,"Positive"
+    # NEUTRAL = 2,"Neutral"
+    # NEGATIVE = 1,"Negative"
+    UNTESTED = (0,"Untested")
+
+class Assessment(models.Model):
+    #when the fighter is deleted the corresponding assessment is also deleted
+    fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
+    # head_movement = models.IntegerField(default=AttributeQualifier.UNTESTED,max_length=100,choices=AttributeQualifier.choices)
+
+# Create your models here.;locl
 class Fighter(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
