@@ -13,6 +13,7 @@ pony = "*"
 sqlmodel = "*"
 jinja2 = "*"
 selenium = "*"
+django = "*"
 
 [dev-packages]
 
