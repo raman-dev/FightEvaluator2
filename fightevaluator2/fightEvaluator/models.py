@@ -22,17 +22,32 @@ class Stance(models.TextChoices):
     SIDE_STANCE = "Side Stance"
     SQUARE_STANCE = "Square Stance"
 
+class AttributeQualifier(models.IntegerChoices):
+        UNTESTED = 0
+        NEGATIVE = 1
+        NEUTRAL = 2
+        POSITIVE = 3
 
-class AttributeQualifier(models.TextChoices):
-    # POSITIVE = 3,"Positive"
-    # NEUTRAL = 2,"Neutral"
-    # NEGATIVE = 1,"Negative"
-    UNTESTED = (0,"Untested")
+class Note(models.Model):
+    assessment = models.ForeignKey('Assessment',on_delete=models.CASCADE)
+    note = models.CharField(null=True,blank=True,max_length=256)
+    tag = models.IntegerField(default=AttributeQualifier.NEUTRAL,choices=AttributeQualifier)
+    createdAt = models.DateTimeField(auto_now_add=True)
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
-    # head_movement = models.IntegerField(default=AttributeQualifier.UNTESTED,max_length=100,choices=AttributeQualifier.choices)
+    head_movement = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    gas_tank = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    aggression = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    desire_to_win = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    striking = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    chinny = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    grappling_offense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    grappling_defense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+
+    def __str__(self):
+        return self.fighter.first_name + " "+self.fighter.last_name +" | Assessment"
 
 # Create your models here.;locl
 class Fighter(models.Model):
