@@ -59,6 +59,9 @@ class FightEvent(models.Model):
      location = models.CharField(default=None,null=True,max_length=256)#location of event
      link = models.CharField(default=None,null=True,max_length=256)#link to event information
 
+     def __str__(self) -> str:
+          return self.title + " | " + str(self.date)
+
 class MatchUp(models.Model):
      fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
      fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
@@ -87,6 +90,7 @@ class Assessment(models.Model):
 # Create your models here
 class Fighter(models.Model):
     first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(default="",max_length=100,null=True)#optional
     last_name = models.CharField(max_length=100)
     nick_name = models.CharField(default="N/A",max_length=100)
     weight_class = models.CharField(max_length=100,choices=WeightClass.choices)
@@ -100,7 +104,7 @@ class Fighter(models.Model):
 
     stance = models.CharField(default=Stance.NA,null=True,max_length=100,choices=Stance.choices)
     date_of_birth = models.DateField(default=None, null=True)
-    data_api_link = models.CharField(max_length=256,null=True)
+    data_api_link = models.CharField(default="",max_length=256,null=True)
     img_link = models.CharField(max_length=256,null=True)
     assessment_id = models.IntegerField(default=0)
 
