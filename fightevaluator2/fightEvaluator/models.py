@@ -27,12 +27,47 @@ class AttributeQualifier(models.IntegerChoices):
         NEGATIVE = 1
         NEUTRAL = 2
         POSITIVE = 3
-
+    
 class Note(models.Model):
     assessment = models.ForeignKey('Assessment',on_delete=models.CASCADE)
-    note = models.CharField(null=True,blank=True,max_length=256)
+    data = models.CharField(null=True,blank=True,max_length=256)
     tag = models.IntegerField(default=AttributeQualifier.NEUTRAL,choices=AttributeQualifier)
     createdAt = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+         return self.data + " | " + str(self.createdAt)
+
+
+class Note2(models.Model):
+    data = models.CharField(null=True,blank=True,max_length=256)
+    tag = models.IntegerField(default=AttributeQualifier.NEUTRAL,choices=AttributeQualifier)
+    createdAt = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+         return self.data + " | " + str(self.createdAt)
+
+class AssessmentNote(Note2):
+     owner = models.ForeignKey('Assessment',on_delete=models.CASCADE)
+    
+class MatchupNote(Note2):
+     owner = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+
+class FightEvent(models.Model):
+     title = models.CharField(max_length=256)#name of event     
+     date = models.DateField()#date of event
+     #one to many relationship one fightevent has many matchups
+     location = models.CharField(default=None,null=True,max_length=256)#location of event
+     link = models.CharField(default=None,null=True,max_length=256)#link to event information
+
+class MatchUp(models.Model):
+     fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
+     fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
+     #optional number of rounds
+     rounds = models.IntegerField(default=3, null=True)
+     #optional date of bout
+     scheduled = models.DateField(default=None, null=True)
+     #optional event 
+     event = models.ForeignKey('FightEvent',default=None, null=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
@@ -49,7 +84,7 @@ class Assessment(models.Model):
     def __str__(self):
         return self.fighter.first_name + " "+self.fighter.last_name +" | Assessment"
 
-# Create your models here.;locl
+# Create your models here
 class Fighter(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
