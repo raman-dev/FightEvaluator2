@@ -63,6 +63,16 @@ class FightEvent(models.Model):
           return self.title + " | " + str(self.date)
 
 class MatchUp(models.Model):
+     class MatchUpResult(models.TextChoices):
+            WIN = "Win"
+            LOSS = "Loss"
+            DRAW = "Draw"
+            NO_CONTEST = "No Contest"
+            CANCELLED = "Cancelled"
+            POSTPONED = "Postponed"
+            UPCOMING = "Upcoming"
+            NA = "N/A"
+
      fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
      fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
      #optional number of rounds
@@ -71,6 +81,8 @@ class MatchUp(models.Model):
      scheduled = models.DateField(default=None, null=True)
      #optional event 
      event = models.ForeignKey('FightEvent',default=None, null=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
+     #optional result
+     result = models.CharField(default=MatchUpResult.NA,null=True,max_length=256,choices=MatchUpResult.choices)
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
