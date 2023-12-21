@@ -14,7 +14,11 @@
 </head>
 
 <body data-bs-theme="dark">
-
+  <form action="/test_post" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+  </form>
   <!--container-->
   <div class="container-fluid main-container">
     <!--6 column table
@@ -116,13 +120,13 @@
                       <p class="m-0">Rounds</p>
                       <!--2 radio buttons for 3 or 5 rounds-->
                       <div class="form-check mx-2">
-                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3 x 5" checked>
+                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3" checked>
                         <label class="form-check-label" for="rounds">
                           3
                         </label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5 x 5">
+                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5">
                         <label class="form-check-label" for="rounds">
                           5
                         </label>
@@ -147,6 +151,7 @@
                   -->
                 <h5 class="text-start">Create a fighter</h5>
                 <form>
+                  {% csrf_token %}
                   <div class="row">
                     <div class="col">
                       <label for="first_name" class="form-label">First Name</label>
@@ -350,6 +355,7 @@
       </div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
@@ -357,6 +363,11 @@
   <script>
 
     var fightEventId = {{ event.id }};
+    const postHeaders = {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      "X-CSRFToken": Cookies.get('csrftoken'),
+    }
     function createMatchup(event) {
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
@@ -375,6 +386,7 @@
       }
       // console.log(fighterAId, fighterBId, weightClass,rounds);
       // return;
+
       //send post request to /create-matchup
       fetch("/matchup/create-matchup", {
         method: "POST",
@@ -385,10 +397,7 @@
           rounds: rounds,
           event_id: fightEventId,
         }),
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: postHeaders,
       })
         .then((response) => response.json())
         .then((data) => {
@@ -409,10 +418,7 @@
       fetch("/fighters/create-fighter", {
         method: "POST",
         body: JSON.stringify(data),
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: postHeaders
       })
         .then((response) => response.json())
         .then((data) => {
@@ -461,7 +467,7 @@
       // this.fighterElement.querySelector(".fighter-img").src = this.fighter.image_url;
       this.fighterElement.querySelector(".fighter-name").textContent = this.fighter.first_name + " " + this.fighter.last_name;
       this.fighterElement.querySelector(".fighter-name").classList.remove("d-none");
-      this.fighterElement.dataset.selectedId = this.fighter.fighter_id;
+      this.fighterElement.dataset.selectedId = this.fighter.id;
       this.fighterElement.querySelector(".search-container").classList.add("d-none");
     }
     //for every matchup add on click listener that takes them to /matchup/data-matchup-id
@@ -472,7 +478,7 @@
       searchBox.addEventListener("keyup", async (event) => {
         //check if modal is visible
         let isModalVisible = document.querySelector(".modal.show") != null;
-        console.log(isModalVisible);
+        // console.log(isModalVisible);
         if (!isModalVisible) return;
         // console.log(event);
         let input = searchBox.querySelector("input");
@@ -495,9 +501,9 @@
                 let li = document.createElement("li");
                 li.classList.add("list-group-item");
                 li.innerHTML = `
-                                    <div class="suggestion">
-                                        <p class="name">${fighter.first_name} ${fighter.last_name}, id:${fighter.id}</p>
-                                    </div>`;
+                    <div class="suggestion">
+                        <p class="name">${fighter.first_name} ${fighter.last_name}, id:${fighter.id}</p>
+                    </div>`;
                 searchSuggestion.appendChild(li);
                 li.addEventListener('click', onClickSuggestion.bind({
                   fighter: fighter,
