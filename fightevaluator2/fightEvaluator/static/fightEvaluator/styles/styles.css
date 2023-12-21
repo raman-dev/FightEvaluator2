@@ -1,0 +1,64 @@
+/* import font as variable */
+/* poppins thin light and regular bold semi-bold font-face declarations  */
+@import url(sidebar.scss);
+@font-face {
+  font-family: PoppinsThin;
+  src: url("Poppins/Poppins-Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsLight;
+  src: url("Poppins/Poppins-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsRegular;
+  src: url("Poppins/Poppins-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsMedium;
+  src: url("Poppins/Poppins-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsBold;
+  src: url("Poppins/Poppins-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsSemiBold;
+  src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+/* use font as variable */
+html, body {
+  height: 100%;
+  min-height: 800px;
+  font-family: PoppinsLight;
+  font-size: 16px;
+  background-color: #212529;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3 {
+  font-family: PoppinsBold;
+}
+
+h4 {
+  font-family: PoppinsSemiBold;
+}
+
+h5,
+h6 {
+  font-family: PoppinsMedium;
+}
+
+.main-container {
+  overflow: auto;
+}
+
+/*
+    tailwind responsive media queries
+*//*# sourceMappingURL=styles.css.map */

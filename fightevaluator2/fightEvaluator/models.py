@@ -1,6 +1,7 @@
 from django.db import models
 
 class WeightClass(models.TextChoices):
+    NA = "N/A"
     ATOMWEIGHT = "Atomweight"
     STRAWWEIGHT = "Strawweight"
     FLYWEIGHT = "Flyweight"
@@ -56,8 +57,8 @@ class FightEvent(models.Model):
      title = models.CharField(max_length=256)#name of event     
      date = models.DateField()#date of event
      #one to many relationship one fightevent has many matchups
-     location = models.CharField(default=None,null=True,max_length=256)#location of event
-     link = models.CharField(default=None,null=True,max_length=256)#link to event information
+     location = models.CharField(default=None,null=True,blank=True,max_length=256)#location of event
+     link = models.CharField(default=None,null=True,blank=True,max_length=256)#link to event information
 
      def __str__(self) -> str:
           return self.title + " | " + str(self.date)
@@ -75,14 +76,17 @@ class MatchUp(models.Model):
 
      fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
      fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
+     weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
      #optional number of rounds
-     rounds = models.IntegerField(default=3, null=True)
+     rounds = models.IntegerField(default=3, null=True,blank=True)
      #optional date of bout
-     scheduled = models.DateField(default=None, null=True)
+     scheduled = models.DateField(default=None, null=True,blank=True)
      #optional event 
-     event = models.ForeignKey('FightEvent',default=None, null=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
+     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
      #optional result
-     result = models.CharField(default=MatchUpResult.NA,null=True,max_length=256,choices=MatchUpResult.choices)
+     result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
+     #optional boolean isprelim
+     isprelim = models.BooleanField(default=True,null=True,blank=True)
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
@@ -102,7 +106,7 @@ class Assessment(models.Model):
 # Create your models here
 class Fighter(models.Model):
     first_name = models.CharField(max_length=100)
-    middle_name = models.CharField(default="",max_length=100,null=True)#optional
+    middle_name = models.CharField(default="",max_length=100,null=True,blank=True)#optional
     last_name = models.CharField(max_length=100)
     nick_name = models.CharField(default="N/A",max_length=100)
     weight_class = models.CharField(max_length=100,choices=WeightClass.choices)
@@ -114,11 +118,15 @@ class Fighter(models.Model):
     losses = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
 
-    stance = models.CharField(default=Stance.NA,null=True,max_length=100,choices=Stance.choices)
-    date_of_birth = models.DateField(default=None, null=True)
-    data_api_link = models.CharField(default="",max_length=256,null=True)
-    img_link = models.CharField(max_length=256,null=True)
+    stance = models.CharField(default=Stance.NA,null=True,blank=True,max_length=100,choices=Stance.choices)
+    date_of_birth = models.DateField(default=None, null=True,blank=True)
+    data_api_link = models.CharField(default="",max_length=256,null=True,blank=True)
+    img_link = models.CharField(max_length=256,null=True,blank=True)
     assessment_id = models.IntegerField(default=0)
+
+    @property
+    def name(self):
+        return self.first_name.capitalize() + " " + self.last_name.capitalize()
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)

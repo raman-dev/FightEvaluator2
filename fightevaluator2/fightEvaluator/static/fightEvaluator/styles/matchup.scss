@@ -1,0 +1,209 @@
+/*data-polarity color variables*/
+$positiveBg: #0d6efd;
+$negativeBg: #dc3545;
+$neutralBg: #ffc107;
+
+/*horizontally centered event-title*/
+.event-title {
+    text-align: center;
+    margin: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h5, h6{
+    margin: 0px;
+}
+
+.fighter-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    .vs-wrapper{
+        margin: 1rem;
+    }
+    
+    .fighter-info{
+        display: flex;
+        padding: 1.2rem;
+        border-radius: 1rem;
+        img{
+            margin: auto;
+            max-width: 10rem;
+            border-radius: 1rem;
+        }
+        .fighter-bio > div{
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            margin: 0.5rem;
+        }
+        .fighter-bio{
+            .name{
+                text-transform: capitalize;
+                a{
+                    text-decoration: none;
+                    color: lavender;
+                }
+            }
+            :not(:first-child){
+                p{
+                    margin: 0px;
+                }
+            }
+        }
+    }
+    
+}
+
+.matchup-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.matchup-info{
+    display: flex;
+    justify-content: center;
+    h4{
+        text-align: center; 
+    }
+}
+
+
+.attrib-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+
+    h3{
+        text-align: center;
+        grid-column: span 2;
+    }
+
+    .attrib-col{
+        border: 3px solid lavender;
+        border-radius: 0.8rem;
+        margin: 0.4rem;
+        padding : 0.3rem;
+        
+    }
+
+    .attrib-left{
+        text-align: end;
+    }
+
+    div[data-polarity="positive"]{
+        border-color: $positiveBg;
+        h5{
+            background-color: $positiveBg;
+        }
+    }
+    div[data-polarity="negative"]{
+        border-color: $negativeBg;
+        h5{
+            background-color: $negativeBg;
+        }
+    }
+    div[data-polarity="neutral"]{
+        border-color: $neutralBg;
+        .state-container{
+            background-color: $neutralBg;
+            h5{
+                color: black;
+            }
+        }
+    }
+
+    div[data-polarity="null"]{
+        .state-container{
+            background-color: lightgray;
+            h5{
+                color: darkslategray;
+            }
+        }
+    }
+}
+
+.content-grid > *{
+    grid-row: 1;
+}
+
+.content-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    
+    .notes-section{
+        .fighter-name{
+            text-transform: capitalize;
+        }
+        .notes{
+            list-style: none;
+            padding: 0px;
+            li p{
+                max-width: 36ch;
+            }
+            .note {
+                background-color: #212529;
+                border: 2px solid lavender;
+                border-radius: 0.6rem;
+                list-style: None;
+                display: flex;
+                padding: 1rem;
+                margin: 0.6rem; 
+                p {
+                  word-break: break-word;
+                  text-wrap: wrap;
+                  max-width: 32ch;
+                  margin: 0px;
+                }
+            }
+        }
+    }
+
+    .notes-left{
+        // grid-row: 1;
+        grid-column: span 1;
+    }
+    .notes-right{
+        // grid-row: 1;
+        grid-column: 4;
+    }
+
+    .attrib-compare-table{
+        // grid-row: 1;
+        grid-column: 2/4; 
+    }
+}
+
+@media (max-width: 1280px){
+    .content-grid{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        .attrib-compare-table{
+            grid-row: 1;
+            grid-column:  span 4;
+        }
+        .notes-section{
+            grid-row: 2;
+            grid-column: span 2;
+        }
+    }
+
+}
+
+// @media (min-width: 1024px) {
+  
+// }
+
+// @media (min-width: 768px) {
+    
+// }
+
+@media (max-width: 640px) {
+   .fighter-container{
+    flex-direction: column;
+   }
+}
+

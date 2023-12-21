@@ -1,0 +1,40 @@
+html, body{
+    height: 100vh;
+} 
+
+$sidebar-width: 10ch;
+
+nav{
+    height: 100%;
+    z-index: 1000;
+    // *{
+    //     transition: all 0.5s ease-in-out;
+    // }
+    button{
+        min-width: $sidebar-width; 
+        width: $sidebar-width;
+        height: fit-content;
+    }
+    .sidebar-container{
+        height: 100%;
+        overflow: visible;
+        max-width: $sidebar-width;
+        .sidebar-links-container{
+            height: 100%;
+            overflow: hidden;
+            min-width: $sidebar-width;
+            width: $sidebar-width;
+            background-color: red;
+            transition: all 0.5s ease-in-out;
+
+            .link{
+                .dropdown-links{
+                    background-color: green;
+                    overflow: hidden;
+                    transition: all 0.5s ease-in-out;
+                }
+            }
+        }
+        
+    }
+}
