@@ -2,27 +2,27 @@ from django.db import models
 from django import forms
 
 class WeightClass(models.TextChoices):
-    NA = "N/A"
-    ATOMWEIGHT = "Atomweight"
-    STRAWWEIGHT = "Strawweight"
-    FLYWEIGHT = "Flyweight"
-    BANTAMWEIGHT = "Bantamweight"
-    FEATHERWEIGHT = "Featherweight"
-    LIGHTWEIGHT = "Lightweight"
-    WELTERWEIGHT = "Welterweight"
-    MIDDLEWEIGHT = "Middleweight"
-    LIGHT_HEAVYWEIGHT = "Light Heavyweight"
-    HEAVYWEIGHT = "Heavyweight"
-    CATCH_WEIGHT = "Catch weight"
+    NA = "n/a"
+    ATOMWEIGHT = "atomweight"
+    STRAWWEIGHT = "strawweight"
+    FLYWEIGHT = "flyweight"
+    BANTAMWEIGHT = "bantamweight"
+    FEATHERWEIGHT = "featherweight"
+    LIGHTWEIGHT = "lightweight"
+    WELTERWEIGHT = "welterweight"
+    MIDDLEWEIGHT = "middleweight"
+    LIGHT_HEAVYWEIGHT = "light heavyweight"
+    HEAVYWEIGHT = "heavyweight"
+    CATCH_WEIGHT = "catch weight"
 
 class Stance(models.TextChoices):
-    NA = "N\\/A"
-    ORTHODOX = "Orthodox"
-    SOUTHPAW = "Southpaw"
-    SWITCH = "Switch"
-    OPEN_STANCE = "Open Stance"
-    SIDE_STANCE = "Side Stance"
-    SQUARE_STANCE = "Square Stance"
+    NA = "n/a"
+    ORTHODOX = "orthodox"
+    SOUTHPAW = "southpaw"
+    SWITCH = "switch"
+    OPEN_STANCE = "open stance"
+    SIDE_STANCE = "side stance"
+    SQUARE_STANCE = "square stance"
 
 class AttributeQualifier(models.IntegerChoices):
         UNTESTED = 0
@@ -109,15 +109,15 @@ class Fighter(models.Model):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(default="",max_length=100,null=True,blank=True)#optional
     last_name = models.CharField(max_length=100)
-    nick_name = models.CharField(default="N/A",max_length=100)
-    weight_class = models.CharField(max_length=100,choices=WeightClass.choices)
+    nick_name = models.CharField(default="N/A",max_length=100,null=True,blank=True)#optional
+    weight_class = models.CharField(max_length=100,choices=WeightClass.choices) 
     
     height = models.IntegerField(default=0)#in inches
     reach = models.IntegerField(default=0)#in inches
 
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    draws = models.IntegerField(default=0)
+    wins = models.IntegerField(default=0,null=True,blank=True)
+    losses = models.IntegerField(default=0,null=True,blank=True)
+    draws = models.IntegerField(default=0,null=True,blank=True)
 
     stance = models.CharField(default=Stance.NA,null=True,blank=True,max_length=100,choices=Stance.choices)
     date_of_birth = models.DateField(default=None, null=True,blank=True)

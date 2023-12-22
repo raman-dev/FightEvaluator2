@@ -14,11 +14,7 @@
 </head>
 
 <body data-bs-theme="dark">
-  <form action="/test_post" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-  </form>
+  
   <!--container-->
   <div class="container-fluid main-container">
     <!--6 column table
@@ -401,7 +397,10 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
+          //update matchup table
+          let matchup = data["matchup"];
+          let matchupElement = document.createElement("div");
         });
     }
 
@@ -670,6 +669,7 @@
         headers: {
           accept: "application/json",
           "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get('csrftoken'),
         },
       })
         .then((response) => response.json())
