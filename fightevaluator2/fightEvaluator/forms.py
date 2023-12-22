@@ -1,7 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter
+from .models import Fighter,Note
+
+class NoteForm(forms.Form):
+    assessment_id = forms.IntegerField(label='Assessment Id')
+    data = forms.CharField(label='Data',max_length=256)
 
 class FighterForm(ModelForm):
     class Meta:

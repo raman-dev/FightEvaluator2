@@ -25,10 +25,10 @@ class Stance(models.TextChoices):
     SQUARE_STANCE = "square stance"
 
 class AttributeQualifier(models.IntegerChoices):
-        UNTESTED = 0
-        NEGATIVE = 1
-        NEUTRAL = 2
-        POSITIVE = 3
+        UNTESTED = (0,"untested")
+        NEGATIVE = (1,"negative")
+        NEUTRAL = (2,"neutral")
+        POSITIVE = (3,"positive")
     
 class Note(models.Model):
     assessment = models.ForeignKey('Assessment',on_delete=models.CASCADE)
@@ -101,6 +101,19 @@ class Assessment(models.Model):
     grappling_offense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
     grappling_defense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
 
+    @property
+    def attrib_map(self):
+        return {
+            'head_movement':self.get_head_movement_display(),
+            'gas_tank':self.get_gas_tank_display(),
+            'aggression':self.get_aggression_display(),
+            'desire_to_win':self.get_desire_to_win_display(),
+            'striking':self.get_striking_display(),
+            'chinny':self.get_chinny_display(),
+            'grappling_offense':self.get_grappling_offense_display(),
+            'grappling_defense':self.get_grappling_defense_display()
+        }
+
     def __str__(self):
         return self.fighter.first_name + " "+self.fighter.last_name +" | Assessment"
 
@@ -124,6 +137,10 @@ class Fighter(models.Model):
     data_api_link = models.CharField(default="",max_length=256,null=True,blank=True)
     img_link = models.CharField(max_length=256,null=True,blank=True)
     assessment_id = models.IntegerField(default=0)
+
+    @property
+    def record(self):
+        return str(self.wins) + "-" + str(self.losses) + "-" + str(self.draws)
 
     @property
     def name(self):

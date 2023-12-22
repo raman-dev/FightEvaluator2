@@ -2,11 +2,10 @@ from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse,QueryDict
 from django.db.models import Q
 from django.forms.models import model_to_dict
-from django.core import serializers
-
+from django.views.decorators.http import require_POST,require_http_methods
 
 from .models import FightEvent,MatchUp,Fighter,Assessment
-from .forms import MatchUpForm,FighterForm
+from .forms import *
 import json
 import datetime
 
@@ -51,6 +50,7 @@ def fighter_search(request):
     fighters = Fighter.objects.filter(query)[:5].values(*fighterQueryValues)#*list means non keyword arguments passed in
     return JsonResponse({'fighters':list(fighters)})
 
+@require_POST
 def create_fighter(request):
     #get query params from request object
     fighterInput = json.loads(request.body)
@@ -64,6 +64,15 @@ def create_fighter(request):
     else:
         print('invalid fighter input')
     return JsonResponse({'fighter':model_to_dict(fighterForm.instance)})
+
+@require_http_methods(["PATCH"])
+def update_fighter(request,fighterId):
+    fighter = get_object_or_404(Fighter,id=fighterId)
+    #get query params from request object
+    fighterInput = json.loads(request.body)
+    #since attrs are optional we need to check if they exist
+    #validate optional fields if they exist
+    
 
 def create_matchup(request):
     #get body parameters from request object
@@ -98,7 +107,7 @@ def delete_matchup(request,matchupId):
     matchup.delete()
     return JsonResponse({"success":"true"})
 
-def assessment_index(request,fighterId):
+def assessment_index(request,fighterId): 
     fighter = get_object_or_404(Fighter,id=fighterId)
     assessment = Assessment.objects.get(fighter=fighter)
     nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('scheduled').first()
@@ -108,7 +117,32 @@ def assessment_index(request,fighterId):
         'fighter':fighter,
         'fighterjson': fighterjson,
         'assessment':assessment,
-        'attribs':assessment.__dict__.items(),
+        'attribs':assessment.attrib_map.items(),
         'nextMatchup':nextMatchup,
     }
     return render(request,"fightEvaluator/assessment.html",context)
+
+@require_POST
+def create_note(request):
+    #get body parameters from request object
+    #convert body bytes to json object
+    inputBody = json.loads(request.body)
+    form = NoteForm(inputBody)#use django form object for data validation
+    #takes a querydict class as input querydict is a subclass of dict so a normal dict will suffice
+    #create matchup
+    note = None
+    if form.is_valid():
+        print('note.form is valid') 
+        assessment =get_object_or_404(Assessment,id=form.cleaned_data['assessment_id'])   
+        note = Note(assessment=assessment,data=form.cleaned_data['data'])
+        note.save()
+    else:
+        print('invalid')
+        #raise validation error
+    return JsonResponse({'note':model_to_dict(note)})
+
+@require_http_methods(["DELETE"])
+def delete_note(_,noteId):
+    note = get_object_or_404(Note,id=noteId)
+    note.delete()
+    return JsonResponse({"success":"true","noteId":noteId})
