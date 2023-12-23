@@ -142,6 +142,7 @@ def getFighterJSON(fighter: Fighter):
 def assessment_index(request,fighterId): 
     fighter = get_object_or_404(Fighter,id=fighterId)
     assessment = Assessment.objects.get(fighter=fighter)
+    notes = Note.objects.filter(assessment=assessment)
     nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('scheduled').first()
     fighterjson = getFighterJSON(fighter)
     fighterjson = str(fighterjson)#need string for template writing
@@ -150,6 +151,7 @@ def assessment_index(request,fighterId):
         'fighter':fighter,
         'fighterjson': fighterjson,
         'assessment':assessment,
+        'notes':notes,
         'attribs':assessment.attrib_map.items(),
         'nextMatchup':nextMatchup,
     }

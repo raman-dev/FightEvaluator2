@@ -535,7 +535,9 @@
           //fighter-stance
           document.querySelector('.fighter-stance').textContent = fighter_data.stance;
           //fighter-image
-          document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
+          if (fighter_data.img_link != null && fighter_data.img_link != ""){
+            document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
+          }
         }
         
       }
