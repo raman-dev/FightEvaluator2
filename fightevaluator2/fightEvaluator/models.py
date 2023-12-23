@@ -39,7 +39,6 @@ class Note(models.Model):
     def __str__(self) -> str:
          return self.data + " | " + str(self.createdAt)
 
-
 class Note2(models.Model):
     data = models.CharField(null=True,blank=True,max_length=256)
     tag = models.IntegerField(default=AttributeQualifier.NEUTRAL,choices=AttributeQualifier)

@@ -1,4 +1,17 @@
 //on click attrib-edit-button show card body
+const attribLabelValueMap = {
+    'untested':0,
+    'negative':1,
+    'neutral':2,
+    'positive':3
+}
+const attribValueLabelMap = {
+    0:'untested',
+    1:'negative',
+    2:'neutral',
+    3:'positive'
+}
+
 const attribCardSelector = '.attrib-card';
 const attribEditButtonSelector = '.attrib-edit-button';
 const attribCommitButtonSelector = '.attrib-commit-button';
@@ -21,9 +34,9 @@ function attribEditButtonClickListener(event){
         cardBody.style.height = `${scrollHeight}px`;
         cardBody.style.opacity = '1';
         // console.log(attribCardState);
-        if (attribCardState == 'null'){
-            attribCardState = 'untested';
-        }
+        // if (attribCardState == 'null'){
+        //     attribCardState = 'untested'; this never happens since django sets the state to untested if it is null
+        // }
         //if we had selected anything deselect it if it is not the current state
         let selectedAttribOption = attribCard.querySelector(`.attrib-option[data-option-state="${attribCardState}"]`);
         selectedAttribOption.setAttribute('selected','');
@@ -44,7 +57,6 @@ function dataStateChanged(attribCard,attribName){
     let cardStateDescription = attribCard.querySelector('.card-state-description');
     cardStateDescription.setAttribute('data-option-state',assessment_data[attribName]);
     cardStateDescription.textContent = attribInfoMap[attribName][assessment_data[attribName]].description;
-    
 }
 
 async function attribCommitButtonClickListener(event){
@@ -67,18 +79,25 @@ async function attribCommitButtonClickListener(event){
     //dataStateChanged try and commit changes to server
     let data = structuredClone(assessment_data);
     data[attribName] = selectedAttribOptionState;
+    for (let key in data){   
+        if (data[key] in attribLabelValueMap){
+            data[key] = attribLabelValueMap[data[key]];
+        }
+    }
     let response = await fetch('/assessment/update',{
         method:'PATCH',
         headers:{
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'X-CSRFToken':Cookies.get('csrftoken')
         },
         body:JSON.stringify(data)
     });
     let responseJson = await response.json();
     // console.log(responseJson);
     if (response.status == 200){
+        // console.log(responseJson[attribName])
         //update the assessment object
-        assessment_data[attribName] = responseJson[attribName];
+        assessment_data[attribName] = attribValueLabelMap[responseJson[attribName]];
         //reflect change in the card visually
         dataStateChanged(attribCard,attribName);
         //toggle edit mode

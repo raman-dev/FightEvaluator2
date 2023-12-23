@@ -1,7 +1,14 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Note
+from .models import Fighter,Note,Assessment
+
+
+class AssessmentForm(ModelForm):
+    class Meta:
+        model = Assessment
+        fields = ['head_movement','gas_tank','aggression','desire_to_win','striking','chinny','grappling_offense','grappling_defense']
+
 
 class NoteForm(forms.Form):
     assessment_id = forms.IntegerField(label='Assessment Id')

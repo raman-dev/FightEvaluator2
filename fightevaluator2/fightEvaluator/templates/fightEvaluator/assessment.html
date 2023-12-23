@@ -308,6 +308,8 @@
         </div>
       </div>
     </div>
+    <script src="{% static 'fightEvaluator/js/attribute-interaction.js' %}"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
 
     <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
@@ -337,6 +339,8 @@
         //grab attrib-card
         let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
         // console.log(key);
+        let cardState = attribCard.querySelector('.card-state');
+        cardState.textContent = attribInfoMap[key][assessment_data[key]].state;
         attribCard.querySelectorAll('.attrib-option').forEach((attribOption)=>{
           //grab option state
           let optionState = attribOption.getAttribute('data-option-state');
@@ -458,7 +462,6 @@
     
     
     </script>
-    <script src="{% static 'fightEvaluator/js/attribute-interaction.js' %}"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
       integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="
@@ -571,20 +574,19 @@
           toggleXModal();
         }
       });
-      // updateEditorForm();
+      updateEditorForm();
       function updateEditorForm(){
         //write values from fighter_data to the form
         let form = document.querySelector(".fighter-creator form");
         for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key == "assessment_id" || key=="reach") {
+          if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name" || key=="reach") {
             continue;
           }
           console.log(key, fighter_data[key]);
           let input = form.querySelector(`[name="${key}"]`);
           if (key == "weight_class" || key == "stance"){
             input.value = fighter_data[key].toUpperCase();
-          }else if (key == "height"){
-            input.value = fighter_data[key].split('"')[0];
+            // input.value = fighter_data[key].split('"')[0];
           }else{
             input.value = fighter_data[key];
           }
