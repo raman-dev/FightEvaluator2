@@ -11,18 +11,18 @@ class WeightClass(models.TextChoices):
     LIGHTWEIGHT = "lightweight"
     WELTERWEIGHT = "welterweight"
     MIDDLEWEIGHT = "middleweight"
-    LIGHT_HEAVYWEIGHT = "light heavyweight"
+    LIGHT_HEAVYWEIGHT = "light_heavyweight"
     HEAVYWEIGHT = "heavyweight"
-    CATCH_WEIGHT = "catch weight"
+    CATCH_WEIGHT = "catch_weight"
 
 class Stance(models.TextChoices):
     NA = "n/a"
     ORTHODOX = "orthodox"
     SOUTHPAW = "southpaw"
     SWITCH = "switch"
-    OPEN_STANCE = "open stance"
-    SIDE_STANCE = "side stance"
-    SQUARE_STANCE = "square stance"
+    OPEN_STANCE = "open_stance"
+    SIDE_STANCE = "side_stance"
+    SQUARE_STANCE = "square_stance"
 
 class AttributeQualifier(models.IntegerChoices):
         UNTESTED = (0,"untested")

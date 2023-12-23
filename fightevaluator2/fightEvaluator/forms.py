@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Note,Assessment
+from .models import Fighter,Assessment
 
 
 class AssessmentForm(ModelForm):
@@ -17,7 +17,7 @@ class NoteForm(forms.Form):
 class FighterForm(ModelForm):
     class Meta:
         model = Fighter
-        fields = ['first_name','last_name','nick_name','height','weight_class','reach','stance','date_of_birth','wins','losses','draws']
+        fields = ['first_name','last_name','height','weight_class','reach','stance','date_of_birth','wins','losses','draws','img_link']
     
 
 class MatchUpForm(forms.Form):

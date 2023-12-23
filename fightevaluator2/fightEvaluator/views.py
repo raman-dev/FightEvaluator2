@@ -2,9 +2,9 @@ from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse,QueryDict
 from django.db.models import Q
 from django.forms.models import model_to_dict
-from django.views.decorators.http import require_POST,require_http_methods
+from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from .models import FightEvent,MatchUp,Fighter,Assessment
+from .models import FightEvent,MatchUp,Fighter,Assessment,Note,WeightClass,Stance
 from .forms import *
 import json
 import datetime
@@ -72,8 +72,30 @@ def update_fighter(request,fighterId):
     fighterInput = json.loads(request.body)
     #since attrs are optional we need to check if they exist
     #validate optional fields if they exist
-    
+    print(fighterInput)
+    form = FighterForm(fighterInput)
+    if form.is_valid():
+        # print('fighter valid input')
+        # form.save(commit=True)#did this work?
+        fighter.first_name = form.cleaned_data['first_name']
+        fighter.last_name = form.cleaned_data['last_name']
+        fighter.height = form.cleaned_data['height']
+        fighter.weight_class = WeightClass[form.cleaned_data['weight_class'].upper()]
+        fighter.reach = form.cleaned_data['reach']
+        fighter.stance = Stance[form.cleaned_data['stance'].upper()]
+        fighter.date_of_birth = form.cleaned_data['date_of_birth']
+        fighter.wins = form.cleaned_data['wins']
+        fighter.losses = form.cleaned_data['losses']
+        fighter.draws = form.cleaned_data['draws']
+        fighter.img_link = form.cleaned_data['img_link']
+        fighter.save()
+    else:
+        print('invalid fighter input')
+        # return JsonResponse({'error':'invalid form'})
 
+    return JsonResponse(getFighterJSON(fighter))
+
+@require_POST
 def create_matchup(request):
     #get body parameters from request object
     #convert body bytes to json object
@@ -100,6 +122,7 @@ def create_matchup(request):
         print('invalid')
     return JsonResponse(model_to_dict(matchup))
 
+@require_http_methods(["DELETE"])
 def delete_matchup(request,matchupId):
     # MatchUp.objects.filter(id=matchupId).delete()#delete matchup with id
     #get object 404 if not found
@@ -107,11 +130,21 @@ def delete_matchup(request,matchupId):
     matchup.delete()
     return JsonResponse({"success":"true"})
 
+def getFighterJSON(fighter: Fighter):
+    fighterjson = model_to_dict(fighter)
+    fighterjson['stance'] = fighterjson['stance'].replace(' ','_').lower()
+    fighterjson['weight_class'] = fighterjson['weight_class'].replace(' ','_').lower()
+    if fighterjson['date_of_birth'] != None:
+        fighterjson['date_of_birth'] = fighterjson['date_of_birth'].strftime('%Y-%m-%d')
+    return fighterjson
+
+@require_GET
 def assessment_index(request,fighterId): 
     fighter = get_object_or_404(Fighter,id=fighterId)
     assessment = Assessment.objects.get(fighter=fighter)
     nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('scheduled').first()
-    fighterjson = str(model_to_dict(fighter))
+    fighterjson = getFighterJSON(fighter)
+    fighterjson = str(fighterjson)#need string for template writing
     fighterjson = fighterjson.replace('None','null')
     context = {
         'fighter':fighter,

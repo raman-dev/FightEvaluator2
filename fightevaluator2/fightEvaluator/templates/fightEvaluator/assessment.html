@@ -258,10 +258,19 @@
                 <input type="number" class="form-control" id="reach" name="reach" max="99" maxlength="2"
                   placeholder="Reach" />
               </div>
-              <div class="col">
-                <!--fighter record-->
-                <label for="record" class="form-label">Record</label>
-                <input type="text" class="form-control" id="record" name="record" placeholder="Record" />
+            </div>
+            <div class="row record-edit justify-content-around">
+               <div class="col col-3">
+                <label for="wins" class="form-label ">Wins</label>
+                <input type="number" class="form-control" id="wins" name="wins" placeholder="Wins"/>  
+               </div>
+              <div class="col col-3">
+                <label for="losses" class="form-label ">Losses</label>
+                <input type="number" class="form-control" id="losses" name="losses" placeholder="Losses"/>
+              </div>
+              <div class="col col-3">
+                <label for="draws" class="form-label ">Draws</label>
+                <input type="number" class="form-control" id="draws" name="draws" placeholder="Draws"/>
               </div>
             </div>
             <div class="row">
@@ -269,24 +278,24 @@
                 <label for="weight_class" class="form-label">Weight Class</label>
                 <select class="form-select" id="weight_class" name="weight_class">
                   <option value="" selected>Choose...</option>
-                  <option value="FLYWEIGHT">Flyweight</option>
-                  <option value="BANTAMWEIGHT">Bantamweight</option>
-                  <option value="FEATHERWEIGHT">Featherweight</option>
-                  <option value="LIGHTWEIGHT">Lightweight</option>
-                  <option value="WELTERWEIGHT">Welterweight</option>
-                  <option value="MIDDLEWEIGHT">Middleweight</option>
-                  <option value="LIGHT_HEAVYWEIGHT">Light Heavyweight</option>
-                  <option value="HEAVY_WEIGHT">Heavyweight</option>
+                  <option value="flyweight">Flyweight</option>
+                  <option value="bantamweight">Bantamweight</option>
+                  <option value="featherweight">Featherweight</option>
+                  <option value="lightweight">Lightweight</option>
+                  <option value="welterweight">Welterweight</option>
+                  <option value="middleweight">Middleweight</option>
+                  <option value="light_heavyweight">Light Heavyweight</option>
+                  <option value="heavy_weight">Heavyweight</option>
                 </select>
               </div>
               <div class="col">
                 <label for="stance" class="form-label">Stance</label>
                 <select class="form-select" id="stance" name="stance">
                   <option value="" selected>Choose...</option>
-                  <option value="ORTHODOX">Orthodox</option>
-                  <option value="SOUTHPAW">Southpaw</option>
-                  <option value="SWITCH">Switch</option>
-                  <option value="OPEN_STANCE">Open Stance</option>
+                  <option value="orthodox">Orthodox</option>
+                  <option value="southpaw">Southpaw</option>
+                  <option value="switch">Switch</option>
+                  <option value="open_stance">Open Stance</option>
                 </select>
               </div>
             </div>
@@ -476,23 +485,6 @@
         //read and validate values from form
         let form = document.querySelector(".fighter-creator form");
         let input_data = {};
-        // for (let key in fighter_data) {
-        //   if (key == "assessment_id" || key=="nick_name"){
-        //     continue;
-        //   }
-        //   if (key == "id") {
-        //     input_data[key] = fighter_data[key];
-        //     continue;
-        //   }
-        //   console.log(key);
-        //   let input = form.querySelector(`[name="${key}"]`);
-        //   input_data[key] = input.value;
-        //   if (key == "weight_class" || key == "stance"){
-        //     input_data[key] = input_data[key].toUpperCase();
-        //   }else if (key == "first_name" || key == "last_name"){
-        //     input_data[key] = input_data[key].toLowerCase();
-        //   }
-        // }
         let formData = new FormData(form);
         for (let key of formData.keys()){
           let data = formData.get(key).trim();
@@ -500,9 +492,6 @@
             continue;
           }
           input_data[key] = formData.get(key).trim();
-          if (key == "height"){
-            input_data[key] += "\"";
-          }
           if (key == "first_name" || key == "last_name"){
             input_data[key] = input_data[key].toLowerCase();
           }
@@ -510,11 +499,12 @@
         input_data['id'] = fighter_id;
         //send fighter link update to server
         console.log(JSON.stringify(input_data));
-        let response = await fetch(`/fighters/update-fighter`, {
+        let response = await fetch(`/fighters/update-fighter/${fighter_id}`, {
           method: "PATCH",
           headers: {
             accept: "application/json",
             "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get("csrftoken"),
           },
           body: JSON.stringify(input_data),
         });
@@ -528,25 +518,24 @@
           // console.log(fighter_data);
           for (let key in latestFighterData){
             fighter_data[key] = latestFighterData[key];
-            //update bio stuff
-            //fighter-name
-            document.querySelector('.fighter-name').textContent = `${fighter_data.first_name} ${fighter_data.last_name}`;
-            //fighter-weight
-            document.querySelector('.fighter-weight').textContent = fighter_data.weight_class;
-            //fighter-height
-            document.querySelector('.fighter-height').textContent = fighter_data.height;
-            //fighter-age
-            document.querySelector('.fighter-age').textContent = dobToAge(fighter_data.date_of_birth);
-            //fighter-record
-            document.querySelector('.fighter-record').textContent = fighter_data.record;
-            //fighter-reach
-            document.querySelector('.fighter-reach').textContent = fighter_data.reach;
-            //fighter-stance
-            document.querySelector('.fighter-stance').textContent = fighter_data.stance;
-            //fighter-image
-            document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
           }
-
+           //update bio stuff
+          //fighter-name
+          document.querySelector('.fighter-name').textContent = `${fighter_data.first_name} ${fighter_data.last_name}`;
+          //fighter-weight
+          document.querySelector('.fighter-weight').textContent = fighter_data.weight_class;
+          //fighter-height
+          document.querySelector('.fighter-height').textContent = fighter_data.height;
+          //fighter-age
+          document.querySelector('.fighter-age').textContent = dobToAge(fighter_data.date_of_birth);
+          //fighter-record
+          document.querySelector('.fighter-record').textContent = fighter_data.wins + "-" + fighter_data.losses + "-" + fighter_data.draws;
+          //fighter-reach
+          document.querySelector('.fighter-reach').textContent = fighter_data.reach;
+          //fighter-stance
+          document.querySelector('.fighter-stance').textContent = fighter_data.stance;
+          //fighter-image
+          document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
         }
         
       }
@@ -579,17 +568,12 @@
         //write values from fighter_data to the form
         let form = document.querySelector(".fighter-creator form");
         for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name" || key=="reach") {
+          if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name") {
             continue;
           }
           console.log(key, fighter_data[key]);
           let input = form.querySelector(`[name="${key}"]`);
-          if (key == "weight_class" || key == "stance"){
-            input.value = fighter_data[key].toUpperCase();
-            // input.value = fighter_data[key].split('"')[0];
-          }else{
-            input.value = fighter_data[key];
-          }
+          input.value = fighter_data[key];
         }
       }
     </script>
