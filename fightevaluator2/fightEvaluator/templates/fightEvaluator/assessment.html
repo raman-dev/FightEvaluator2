@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="{% static  'fightEvaluator/styles/assessment_styles.css' %}" />
 
   </head>
+  {% load custom_filters %}
   <body data-bs-theme="dark">
+    {% include 'fightEvaluator/navbar.html' %}
     <div class="main-container">
       <div class="content-container">
         <div class="fighter-info-container">
@@ -25,7 +27,7 @@
               <img class="fighter-image" src={% if fighter.img_link %}"{{fighter.img_link}}"{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}  alt="">
               <div class="next-matchup d-flex">
                     {% if nextMatchup %}
-                    <a class="text-center" href="/matchup/{{ nextMatchup.matchup_id }}">
+                    <a class="text-center" href="/matchup/{{ nextMatchup.id }}">
                       <p class="m-0">{{ nextMatchup.fighter_a.last_name }} vs {{ nextMatchup.fighter_b.last_name }}</p>
                     </a>
                     {% else %}
@@ -40,7 +42,7 @@
                 <div class="card-header">
                   <h2 class="fighter-name">{{ fighter.first_name }} {{ fighter.last_name }}</h2>
                   <div class="info-wrapper">
-                    <h5 class="fighter-weight">{{ fighter.weight_class }}</h5>
+                    <h5 class="fighter-weight">{{ fighter.weight_class|rmscores }}</h5>
                   </div>
                 </div>
                 <div class="card-body">
@@ -122,7 +124,6 @@
                 </div>
               </div>
             </div> -->
-            {% load custom_filters %}
             {% for attrib_name,attrib_value in attribs %}
                 <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value }}" data-attrib-name="{{ attrib_name }}">
                   <div class="card-header">
@@ -327,7 +328,6 @@
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
       const fighter_data = {{ fighterjson|safe }};//contains fighter bio info
       const assessment_id = {{ assessment.id }};
-      var fighterImgLink = {{ fighter.img_link|default:"null" }};
       const assessment_data = {
         id: {{ assessment.id }},
         head_movement: '{{ assessment.get_head_movement_display }}',
@@ -382,9 +382,6 @@
         attribList.appendChild(attribCard);
       });
 
-      if (fighterImgLink != null){
-        document.querySelector('img').setAttribute('src',fighterImgLink);
-      }
 
       //grab content from note-editor and send it to the server
       //update the notes-list with the new note
@@ -523,7 +520,7 @@
           //fighter-name
           document.querySelector('.fighter-name').textContent = `${fighter_data.first_name} ${fighter_data.last_name}`;
           //fighter-weight
-          document.querySelector('.fighter-weight').textContent = fighter_data.weight_class;
+          document.querySelector('.fighter-weight').textContent = fighter_data.weight_class.replace("_"," ");
           //fighter-height
           document.querySelector('.fighter-height').textContent = fighter_data.height;
           //fighter-age

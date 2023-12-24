@@ -1,0 +1,205 @@
+<html>
+
+<head>
+  <title>MatchUp:&nbsp;{{ fighter_a.last_name.capitalize }} vs {{ fighter_b.last_name.capitalize }}</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+  {% load static %}
+    <link rel="stylesheet" href="{% static 'fightEvaluator/styles/styles.css' %}" />
+  <link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup.css' %}" />
+</head>
+
+<body data-bs-theme="dark">
+  {% include 'fightEvaluator/navbar.html' %}
+  <div class="container-fluid xmain-container main-container">
+    
+    <!--
+                
+                |    fighter a  |     fighter b    |
+                                            <div class="">attrib 5</div>
+     a.value 0   | b.value 0
+                attrib 1     a.value 1   | b.value 1
+                attrib 2     a.value 2   | b.value 2
+                   .
+                   .
+                   .
+                attrib n     a.value n  | b.value n
+            -->
+    {% load custom_filters %}
+    <div class="matchup-info">
+        <h4>
+            {{ matchup.weight_class|rmscores }} | Rounds: {{ matchup.rounds }} 
+        </h4>
+    </div>
+    <div class="matchup-container justify-content-center">
+        <!--contains information about each fighter including fighter img-->
+        <div class="fighter-container">
+            <div class="fighter-info m-1 border">
+                <img src="{{ fighter_a.img_link }}" alt="">
+                <div class="fighter-bio">
+                    <div class="name">
+                        <h5>
+                          <a href="/assessment/{{ fighter_a.id }}">{{ fighter_a.first_name }} {{ fighter_a.last_name }}</a>
+                        </h5>
+                    </div>
+                    <div class="age">
+                        <h6 class="age-label">age:&nbsp;</h6>
+                        <p class="age">{{ fighter_a.date_of_birth }}</p>
+                    </div>
+                    <div class="record">
+                        <h6 class="record-label">record:&nbsp;</h6>
+                        <p class="record">{{ fighter_a.record }}</p>
+                    </div>
+                    <div class="height">
+                        <h6 class="height-label">height:&nbsp;</h6>
+                        <p>{{fighter_a.height}}</p>
+                    </div>
+                    <div class="reach">
+                        <h6 class="reach-label">reach:&nbsp;</h6>
+                        <p>{{fighter_a.reach}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="matchup-info"> -->
+              <!-- <div class="matchup-weightclass">
+                  <h4>
+                  </h4>
+              </div> -->
+              <div class="vs-wrapper">
+                  <h4>vs</h4>
+              </div>
+          <!-- </div> -->
+            <div class="fighter-info m-1 border">
+              <img src="{{ fighter_b.img_link }}" alt="">
+
+              <div class="fighter-bio">
+                <div class="name">
+                    <h5>
+                      <a href="/assessment/{{ fighter_b.id }}">{{ fighter_b.first_name }} {{ fighter_b.last_name }}</a>
+                    </h5>
+                </div>
+                <div class="age">
+                    <h6 class="age-label">age:&nbsp;</h6>
+                    <p class="age">{{ fighter_b.date_of_birth }}</p>
+                </div>
+                <div class="record">
+                    <h6 class="record-label">record:&nbsp;</h6>
+                    <p class="record">{{ fighter_b.record }}</p>
+                </div>
+                <div class="height">
+                    <h6 class="height-label">height:&nbsp;</h6>
+                    <p>{{fighter_b.height}}</p>
+                </div>
+                <div class="reach">
+                    <h6 class="reach-label">reach:&nbsp;</h6>
+                    <p>{{fighter_b.reach}}</p>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-grid">
+      <div class="attrib-compare-table">
+        {% for attribName,value_a,value_b in attribComparison %}
+          <div class="attrib-row" data-name="{{ attribName }}">
+            <h3>{{ attribName|rmscores }}</h3>
+            <div class="attrib-col attrib-left" data-polarity="{{ value_a }}">
+              <div class="state-container">
+                <h5>
+                  {{ value_a }}
+                </h5>
+              </div>
+              <div class="attrib-description-container">
+                <p></p>
+              </div>
+            </div>
+            <div class="attrib-col attrib-right" data-polarity="{{ value_b }}">
+              <div class="state-container">
+                <h5>
+                  {{ value_b }}
+                </h5>
+              </div>
+              <div class="attrib-description-container">
+                <p></p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="notes-section notes-left">
+        <h3 class="fighter-name">{{ fighter_a.first_name }} {{ fighter_a.last_name }} - Notes</h3>
+        <!-- text container of notes  -->
+        <div class="notes-container">
+          <ul class="notes">
+            {% for note in fighter_a_notes %}
+              <li class="note">
+                <p>{{ note.data }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="notes-section notes-right">
+        <h3 class="fighter-name">{{ fighter_b.first_name }} {{ fighter_b.last_name }} - Notes</h3>
+        <!-- text container of notes  -->
+        <div class="notes-container">
+          <ul class="notes">
+            <!-- <li class="note">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+                voluptatum, quibusdam, quia, quod voluptate voluptatem
+                exercitationem quas voluptatibus quos doloribus quae. Quisquam
+                voluptatum, quibusdam, quia, quod voluptate voluptatem
+                exercitationem quas voluptatibus quos doloribus quae.
+              </p>
+            </li> -->
+            {% for note in fighter_b_notes %}
+              <li class="note">
+               <p>
+                {{ note.data }}
+               </p> 
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+    crossorigin="anonymous"></script>
+  <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
+  <script>
+    // console.log(attribInfoMap);
+    //for every attrib row write the correct description based on data-polarity
+    const attribRows = document.querySelectorAll('.attrib-row');
+    attribRows.forEach((row)=>{
+      const attribName = row.dataset.name;
+      //for every attrib-col
+      row.querySelectorAll('.attrib-col').forEach((column) => {
+        column.dataset.polarity = attribValueLabelMap[column.dataset.polarity];
+        let attribValue = column.dataset.polarity;
+        let h5 = column.querySelector('h5');
+        h5.textContent = attribInfoMap[attribName][attribValue].state;
+        const attribDescription = attribInfoMap[attribName][attribValue].description;
+        column.querySelector('.attrib-description-container p').textContent = attribDescription;
+      });
+    });
+    //reorder attrib-cards to match attribCardOrder
+    let attribList = document.querySelector('.attrib-compare-table');
+      attribCardOrder.forEach((attribName)=>{
+        let attribRow = document.querySelector(`[data-name="${attribName}"]`);
+        attribList.appendChild(attribRow);
+    });
+  </script>
+</body>
+
+</html>

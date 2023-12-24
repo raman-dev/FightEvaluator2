@@ -227,6 +227,9 @@ $flickerDuration: 400ms;
       margin: 0px;
     } 
   }
+  .info-wrapper .fighter-stance{ 
+    text-transform: capitalize;
+  }
 }
 
 .attrib-card[data-attrib-state="positive"]{

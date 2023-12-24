@@ -173,6 +173,9 @@ body {
 .fighter-card .info-wrapper p {
   margin: 0px;
 }
+.fighter-card .info-wrapper .fighter-stance {
+  text-transform: capitalize;
+}
 
 .attrib-card[data-attrib-state=positive] .card-state {
   background-color: #0d6efd;

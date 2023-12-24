@@ -72,7 +72,7 @@ def update_fighter(request,fighterId):
     fighterInput = json.loads(request.body)
     #since attrs are optional we need to check if they exist
     #validate optional fields if they exist
-    print(fighterInput)
+    # print(fighterInput)
     form = FighterForm(fighterInput)
     if form.is_valid():
         # print('fighter valid input')
@@ -94,6 +94,28 @@ def update_fighter(request,fighterId):
         # return JsonResponse({'error':'invalid form'})
 
     return JsonResponse(getFighterJSON(fighter))
+
+@require_GET
+def matchup_index(request,matchupId):
+    matchup = get_object_or_404(MatchUp,id=matchupId)
+    attribComparison = []
+    fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
+    fighterB_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_b))
+    # print(fighterA_assessment)
+    for k in fighterA_assessment.keys():
+        if k == 'id' or k == 'fighter':
+            continue            
+        attribComparison.append((k,fighterA_assessment[k],fighterB_assessment[k]))
+    # print(attribComparison)
+    context = {
+        'matchup':matchup,
+        'fighter_a':matchup.fighter_a,
+        'fighter_b':matchup.fighter_b,
+        'fighter_a_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_a)).order_by('-createdAt'),
+        'fighter_b_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt'),
+        'attribComparison':attribComparison
+    }
+    return render(request,"fightEvaluator/matchup.html",context)
 
 @require_POST
 def create_matchup(request):
@@ -130,6 +152,7 @@ def delete_matchup(request,matchupId):
     matchup.delete()
     return JsonResponse({"success":"true"})
 
+
 def getFighterJSON(fighter: Fighter):
     fighterjson = model_to_dict(fighter)
     fighterjson['stance'] = fighterjson['stance'].replace(' ','_').lower()
@@ -142,11 +165,13 @@ def getFighterJSON(fighter: Fighter):
 def assessment_index(request,fighterId): 
     fighter = get_object_or_404(Fighter,id=fighterId)
     assessment = Assessment.objects.get(fighter=fighter)
-    notes = Note.objects.filter(assessment=assessment)
+    #order in latest note first
+    notes = Note.objects.filter(assessment=assessment).order_by('-createdAt')
     nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('scheduled').first()
     fighterjson = getFighterJSON(fighter)
     fighterjson = str(fighterjson)#need string for template writing
     fighterjson = fighterjson.replace('None','null')
+
     context = {
         'fighter':fighter,
         'fighterjson': fighterjson,
@@ -155,6 +180,7 @@ def assessment_index(request,fighterId):
         'attribs':assessment.attrib_map.items(),
         'nextMatchup':nextMatchup,
     }
+
     return render(request,"fightEvaluator/assessment.html",context)
 
 @require_http_methods(["PATCH"])
