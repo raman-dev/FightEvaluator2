@@ -249,9 +249,7 @@
 
 .action-bar .matchup-actions {
   padding: 1rem;
-}
-.action-bar .matchup-actions .action-wrapper {
-  margin: 0rem;
+  gap: 0.4rem;
 }
 .action-bar .matchup-actions .action-wrapper p {
   white-space: nowrap;

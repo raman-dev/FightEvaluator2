@@ -233,12 +233,12 @@
     <div class="container-fluid title-container d-flex flex-column">
       <h3 class="event-title">{{event.title}}</h3>
       <div class="action-bar d-flex align-items-center w-100">
-        <div class="matchup-actions w-100 d-flex justify-content-around my-2 border rounded-2 ">
+        <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
           <div class="action-wrapper">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
               add
             </button>
-            <p>&nbsp;add matchup</p>
+            <p>&nbsp;- add matchup</p>
           </div>
           <div class="action-wrapper">
             <a class="analyze btn btn-primary" href="#">
@@ -303,31 +303,6 @@
         </div>
       </div>
       {% endfor %}  
-    </div>
-  </div>
-
-  <!--modal containing matchup edit options-->
-  <div class="xmodal hide" data-matchup-id="-1">
-    <div class="xmodal-container bg-dark flex-column">
-      <div class="modal-title p-2">
-        <h4>Actions</h4>
-      </div>
-      <div class="matchup-actions d-flex flex-column">
-        <div class="action-wrapper">
-          <a class="analyze btn btn-primary" href="#">
-            analyze
-          </a>
-          <p>view fighter assessments comparison</p>
-        </div>
-        <div class="action-wrapper">
-          <button class="watch btn btn-primary">watch</button>
-          <p>add to watchlist</p>
-        </div>
-        <div class="action-wrapper">
-          <button class="delete btn btn-danger">delete</button>
-          <p>delete matchup</p>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -431,6 +406,7 @@
         }
       });
     });
+
     function showFighterCreatorSection() {
       console.log("show fighter creator section");
       let fighterCreatorSection = document.querySelector(".fighter-creator");
@@ -451,6 +427,7 @@
       fighterElement.querySelector(".search-container").classList.remove("d-none");
       fighterElement.querySelector(`.search-box input`).value = "";
     }
+
     function onClickSuggestion() {
       //enter this data into the search box
       this.searchBoxInput.value = this.fighter.first_name + " " + this.fighter.last_name;
@@ -538,11 +515,19 @@
         }
         //check if clicked element is matchup type
         const matchup = this.matchup;
+        //check if matchup is in watchlist
+        let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
+        if (inWatchList){
+          document.querySelector(".watch").textContent = "unwatch";
+        }
         //if current already contained active then deactivate
-        // if (matchup.classList.contains("active")) {
-        //   matchup.classList.remove("active");
-        //   return;
-        // }
+        if (matchup.classList.contains("active")) {
+          matchup.classList.remove("active");
+          document.querySelector(".analyze").href = "#";
+          return;
+        }
+        
+        document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
         //if not then deactivate all other matchups
         document.querySelectorAll(".matchup").forEach((matchup) => {
           matchup.classList.remove("active");
@@ -550,9 +535,7 @@
         //then activate this matchup
         matchup.classList.add("active");
         //check if matchup is in watchlist
-        let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
-        //show xmodal
-        toggleXModal.bind({matchupId: matchup.dataset.matchupId})();
+        // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
     }
 
     function initWatchList(){
@@ -607,8 +590,8 @@
 
     function toggleWatchListItem(){
       //get matchup id
-      let xmodal = document.querySelector(".xmodal");
-      let matchupId = xmodal.dataset.matchupId;
+      let activeMatchup = document.querySelector(".matchup.active");
+      let matchupId = activeMatchup.dataset.matchupId;
       //check if matchup is in watchlist
       let inWatchList = watchListItems.includes(matchupId);
       if (inWatchList){
@@ -620,42 +603,9 @@
         watchListItems.push(matchupId);//
         onWatchListChanged(true, matchupId);
       }
-      toggleXModal();
+      document.querySelector(".watch").textContent = "watch";
     }
 
-    function toggleXModal(){
-      let xmodal = document.querySelector(".xmodal");
-      let action = xmodal.classList.contains("hide") ? "show" : "hide";
-      //these variables are defined only when showing the modal
-      let matchupId = this.matchupId;//guaranteed to be there when showing
-      let inWatchList = watchListItems.includes(matchupId);
-      // console.log(matchup);
-      if (action == "show"){
-        //show the modal
-        xmodal.classList.remove("hide");
-        xmodal.classList.add("show");
-        xmodal.dataset.matchupId = matchupId;
-        //populate the modal with this matchup's data
-        //extract matchup id from matchup
-        //set the link href to /matchup/matchupId
-        let watchButton = xmodal.querySelector("button.watch");
-        xmodal.querySelector(".analyze").href = `/matchup/${matchupId}`;
-        if (inWatchList){
-          watchButton.textContent = "unwatch";
-        }else{
-          watchButton.textContent = "watch";
-        }
-      } else {
-        //hide the modal
-        xmodal.classList.remove("show");
-        xmodal.classList.add("hide");
-        xmodal.dataset.matchupId = "-1";
-        //deactivate the matchup
-        let activeMatchup = document.querySelector(".matchup.active");
-        if (activeMatchup != null) activeMatchup.classList.remove("active");
-      }
-      
-    }
 
     function deleteMatchup(matchupId){
       fetch(`/matchup/delete-matchup/${matchupId}`, {
@@ -679,23 +629,25 @@
           watchListItems = watchListItems.filter((id) => id != matchupId);//remove from localStorage watchlsit
           localStorage.setItem("watchlist", JSON.stringify(watchListItems));//update localStorage
           // onWatchListChanged(false, matchupId);//remove from watchlist table
-          toggleXModal();
         });
     }
 
-    let xmodal = document.querySelector(".xmodal");
-    let watchButton = xmodal.querySelector(".watch");
+    
+    let watchButton = document.querySelector(".watch");
+    let deleteButton = document.querySelector(".delete");
+    let confirmDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .confirm");
+    let cancelDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .cancel");
+
     watchButton.addEventListener("click", toggleWatchListItem);
-    //xmodal on click hide
-    xmodal.addEventListener("click", (event) => {
-      if (event.target == event.currentTarget){
-        toggleXModal();
-      }
-    });
-    let deleteButton = xmodal.querySelector(".delete");
     deleteButton.addEventListener("click", (event) => {
+      //check if matchup selected
+      let activeMatchup = document.querySelector(".matchup.active");
+      if (activeMatchup == null){
+        alert("Please select a matchup");
+        return;
+      }
       //send delete request to /matchup/delete-matchup
-      let matchupId = xmodal.dataset.matchupId;
+      let matchupId = activeMatchup.dataset.matchupId;
       //show confirmation dialog
       let confirmationDialog = document.querySelector(".confirmation-dialog");
       confirmationDialog.dataset.matchupId = matchupId;
@@ -704,11 +656,11 @@
       confirmationDialog.querySelector(".dialog-body p").textContent = `\"${nameElements[0].textContent} vs ${nameElements[1].textContent}\"`;
       confirmationDialog.classList.remove("d-none");
     });
-    let confirmDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .confirm");
+    
     confirmDeleteButton.addEventListener("click", (event) => {
       deleteMatchup(document.querySelector(".confirmation-dialog").dataset.matchupId);
     });
-    let cancelDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .cancel");
+    
     cancelDeleteButton.addEventListener("click", (event) => {
       let confirmationDialog = document.querySelector(".confirmation-dialog");
       confirmationDialog.dataset.matchupId = "-1";

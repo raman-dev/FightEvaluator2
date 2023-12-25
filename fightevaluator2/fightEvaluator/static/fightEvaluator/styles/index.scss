@@ -273,11 +273,13 @@ $cardBorderColor: #131b23;
 }
 
 .action-bar{
+
   .matchup-actions{
     padding: 1rem;
+    gap: 0.4rem;
+
   }
   .matchup-actions .action-wrapper{
-    margin: 0rem;
     p{
       white-space: nowrap;
     }
