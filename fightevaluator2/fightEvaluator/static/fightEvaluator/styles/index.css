@@ -247,6 +247,16 @@
   margin: 0px;
 }
 
+.action-bar .matchup-actions {
+  padding: 1rem;
+}
+.action-bar .matchup-actions .action-wrapper {
+  margin: 0rem;
+}
+.action-bar .matchup-actions .action-wrapper p {
+  white-space: nowrap;
+}
+
 @media (max-width: 1280px) {
   .tables-wrapper, .title-container {
     max-width: 85%;

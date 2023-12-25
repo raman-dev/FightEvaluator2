@@ -37,7 +37,7 @@
         <!--contains information about each fighter including fighter img-->
         <div class="fighter-container">
             <div class="fighter-info m-1 border">
-                <img src="{{ fighter_a.img_link }}" alt="">
+                <img src= {% if fighter_a.img_link %}"{{fighter_a.img_link}}"{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
                 <div class="fighter-bio">
                     <div class="name">
                         <h5>
@@ -72,7 +72,7 @@
               </div>
           <!-- </div> -->
             <div class="fighter-info m-1 border">
-              <img src="{{ fighter_b.img_link }}" alt="">
+              <img src={% if fighter_b.img_linkk %}{{ fighter_b.img_link }}{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}alt="">
 
               <div class="fighter-bio">
                 <div class="name">

@@ -272,6 +272,18 @@ $cardBorderColor: #131b23;
   }
 }
 
+.action-bar{
+  .matchup-actions{
+    padding: 1rem;
+  }
+  .matchup-actions .action-wrapper{
+    margin: 0rem;
+    p{
+      white-space: nowrap;
+    }
+  }
+}
+
 @media (max-width: 1280px) {
     .tables-wrapper, .title-container{
       max-width: 85%;

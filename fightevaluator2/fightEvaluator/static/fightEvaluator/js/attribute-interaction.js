@@ -1,16 +1,4 @@
 //on click attrib-edit-button show card body
-const attribLabelValueMap = {
-    'untested':0,
-    'negative':1,
-    'neutral':2,
-    'positive':3
-}
-const attribValueLabelMap = {
-    0:'untested',
-    1:'negative',
-    2:'neutral',
-    3:'positive'
-}
 
 const attribCardSelector = '.attrib-card';
 const attribEditButtonSelector = '.attrib-edit-button';

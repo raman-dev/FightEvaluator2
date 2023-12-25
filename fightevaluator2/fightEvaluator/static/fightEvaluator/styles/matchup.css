@@ -67,6 +67,7 @@ h5, h6 {
   grid-template-columns: 1fr 1fr;
 }
 .attrib-row h3 {
+  text-transform: capitalize;
   text-align: center;
   grid-column: span 2;
 }
