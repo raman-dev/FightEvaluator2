@@ -74,7 +74,7 @@
 
 .tables-wrapper, .title-container {
   margin: auto;
-  max-width: 52%;
+  max-width: 57%;
 }
 
 #watchlist .table-note {
@@ -217,14 +217,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: hsla(0, 0%, 10%, 0.75);
 }
 .confirmation-dialog .dialog-container {
+  border: 2px solid #dc3545;
   padding: 1.4rem;
   width: -moz-fit-content;
   width: fit-content;
 }
 .confirmation-dialog .dialog-container .dialog-title {
   margin-right: 1rem;
+}
+.confirmation-dialog .dialog-container .dialog-body {
+  border-color: #dc3545 !important;
 }
 .confirmation-dialog .dialog-container .dialog-body p {
   text-transform: capitalize;
@@ -262,7 +267,7 @@
 }
 @media (max-width: 1024px) {
   .tables-wrapper, .title-container {
-    max-width: 90%;
+    max-width: 100%;
   }
 }
 @media (max-width: 768px) {

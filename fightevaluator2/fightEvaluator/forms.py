@@ -1,7 +1,14 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Assessment
+from .models import Fighter,Assessment,WeightClass
+
+"""
+    **NOTE**************************************************
+    IF ALL REQUIRED FIELDS ARE NOT PRESENT FOR A ModelForm,
+    THEN FORM.SAVE() WILL NOT WORK
+    *********************************************************
+"""
 
 class AssessmentForm(ModelForm):
     class Meta:

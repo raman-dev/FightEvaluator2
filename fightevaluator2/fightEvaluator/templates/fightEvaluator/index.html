@@ -248,7 +248,7 @@
           </div>
           <div class="action-wrapper">
             <button class="watch btn btn-primary">watch</button>
-            <p>&nbsp;- add watchlist</p>
+            <p>&nbsp;- add to watchlist</p>
           </div>
           <div class="action-wrapper">
             <button class="delete btn btn-danger">delete</button>
@@ -307,7 +307,7 @@
   </div>
 
   <div class="confirmation-dialog d-none" data-matchup-id="-1">
-    <div class="dialog-container bg-dark rounded-2">
+    <div class="dialog-container bg-dark rounded-3">
       <div class="dialog-title">
         <h4>Delete following MatchUp.</h4>
       </div>
@@ -508,36 +508,6 @@
       });
     });
 
-    function onClickMatchup(event){
-        //has different behavior depending on what was clicked
-        if (event.target.classList.contains("fighter-name")){
-          return;
-        }
-        //check if clicked element is matchup type
-        const matchup = this.matchup;
-        //check if matchup is in watchlist
-        let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
-        if (inWatchList){
-          document.querySelector(".watch").textContent = "unwatch";
-        }
-        //if current already contained active then deactivate
-        if (matchup.classList.contains("active")) {
-          matchup.classList.remove("active");
-          document.querySelector(".analyze").href = "#";
-          return;
-        }
-        
-        document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
-        //if not then deactivate all other matchups
-        document.querySelectorAll(".matchup").forEach((matchup) => {
-          matchup.classList.remove("active");
-        });
-        //then activate this matchup
-        matchup.classList.add("active");
-        //check if matchup is in watchlist
-        // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
-    }
-
     function initWatchList(){
       //add all matchups in watchlist to watchlist table
       watchListItems.forEach((matchupId) => {
@@ -560,7 +530,6 @@
         tableNote.classList.add("d-none");
       }
     }
-
     function onWatchListChanged(add, matchupId){
       //item added or removed from watchlist
       localStorage.setItem("watchlist", JSON.stringify(watchListItems));
@@ -572,6 +541,7 @@
         watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
         document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
         matchup.classList.add('watching');
+        matchup.classList.remove('active');
       }else{
         //if an item has been removed from watchlist then remove the matchup from the watchlist table
         document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`).remove();
@@ -586,6 +556,63 @@
       }
     }
 
+
+    function onClickWatch(event){
+      toggleWatchListItem();
+    }
+
+    function onClickMatchup(event){
+        //has different behavior depending on what was clicked
+        if (event.target.classList.contains("fighter-name")){
+          return;
+        }
+        //check if clicked element is matchup type
+        const matchup = this.matchup;
+        //check if matchup is in watchlist
+        let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
+        if (inWatchList){
+          document.querySelector(".watch").textContent = "unwatch";
+        }else{
+          document.querySelector(".watch").textContent = "watch";
+        }
+        //if current already contained active then deactivate
+        if (matchup.classList.contains("active")) {
+          matchup.classList.remove("active");
+          document.querySelector(".analyze").href = "#";
+          document.querySelector(".watch").textContent = "watch";
+          return;
+        }
+        
+        document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
+        //if not then deactivate all other matchups
+        document.querySelectorAll(".matchup").forEach((matchup) => {
+          matchup.classList.remove("active");
+        });
+        //then activate this matchup
+        matchup.classList.add("active");
+        //check if matchup is in watchlist
+        // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
+    }
+ 
+    function onClickDelete(event){
+      //check if matchup selected
+      let activeMatchup = document.querySelector(".matchup.active");
+      if (activeMatchup == null){
+        alert("Please select a matchup");
+        return;
+      }
+      //send delete request to /matchup/delete-matchup
+      let matchupId = activeMatchup.dataset.matchupId;
+      //show confirmation dialog
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      confirmationDialog.dataset.matchupId = matchupId;
+      //set the matchup name
+      let nameElements = document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"] .fighter .fighter-name`);
+      confirmationDialog.querySelector(".dialog-body p").textContent = `\"${nameElements[0].textContent} vs ${nameElements[1].textContent}\"`;
+      confirmationDialog.classList.remove("d-none");
+    }
+
+   
     initWatchList();
 
     function toggleWatchListItem(){
@@ -638,24 +665,8 @@
     let confirmDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .confirm");
     let cancelDeleteButton = document.querySelector(".confirmation-dialog .dialog-actions .cancel");
 
-    watchButton.addEventListener("click", toggleWatchListItem);
-    deleteButton.addEventListener("click", (event) => {
-      //check if matchup selected
-      let activeMatchup = document.querySelector(".matchup.active");
-      if (activeMatchup == null){
-        alert("Please select a matchup");
-        return;
-      }
-      //send delete request to /matchup/delete-matchup
-      let matchupId = activeMatchup.dataset.matchupId;
-      //show confirmation dialog
-      let confirmationDialog = document.querySelector(".confirmation-dialog");
-      confirmationDialog.dataset.matchupId = matchupId;
-      //set the matchup name
-      let nameElements = document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"] .fighter .fighter-name`);
-      confirmationDialog.querySelector(".dialog-body p").textContent = `\"${nameElements[0].textContent} vs ${nameElements[1].textContent}\"`;
-      confirmationDialog.classList.remove("d-none");
-    });
+    watchButton.addEventListener("click", onClickWatch);
+    deleteButton.addEventListener("click", onClickDelete);
     
     confirmDeleteButton.addEventListener("click", (event) => {
       deleteMatchup(document.querySelector(".confirmation-dialog").dataset.matchupId);

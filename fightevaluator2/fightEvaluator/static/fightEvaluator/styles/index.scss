@@ -83,7 +83,7 @@ $cardBorderColor: #131b23;
 
 .tables-wrapper, .title-container{
   margin: auto;
-  max-width: 52%;
+  max-width: 57%;  
 }
 
 #watchlist {
@@ -240,13 +240,19 @@ $cardBorderColor: #131b23;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  background-color: hsla(0, 0, 10%, 0.75);
+
   .dialog-container{
+    border:2px solid #dc3545;
     padding: 1.4rem;
     width: fit-content;
     .dialog-title{
       margin-right: 1rem;
     } 
     .dialog-body{
+      // border-width: 1px !important;
+      border-color: #dc3545 !important;
       p{
         text-transform: capitalize;
         text-align: center;
@@ -294,7 +300,7 @@ $cardBorderColor: #131b23;
 
 @media (max-width: 1024px) {
   .tables-wrapper, .title-container{
-    max-width: 90%;
+    max-width: 100%;
   }
 }
 

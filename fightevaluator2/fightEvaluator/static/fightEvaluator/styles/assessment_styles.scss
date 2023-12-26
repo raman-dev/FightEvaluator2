@@ -42,22 +42,7 @@ body {
 }
 
 
-@media(max-width: 720px){
-  .fighter-card{
-    width: fit-content;
-    margin: auto;
-    row-gap: 1rem;
-    .content-wrapper{
-      flex-direction: column;
-    }
-  }
-}
 
-@media(max-width: 576px){
-  .fighter-card{
-    flex-direction: column;
-  }
-}
 
 /*
   blinking outline animation called flicker
@@ -604,6 +589,25 @@ $flickerDuration: 400ms;
     text-transform: capitalize;
   } 
 } 
+
+
+@media(max-width: 720px){
+  .fighter-card{
+    width: 100%;
+    margin: auto;
+    row-gap: 1rem;
+    .content-wrapper{
+      justify-content: space-around;
+      width: 100%;
+    }
+  }
+}
+
+@media(max-width: 576px){
+  .fighter-card{
+    flex-direction: column;
+  }
+}
 
 @media (max-width: 1280px) {
   .content-container{
