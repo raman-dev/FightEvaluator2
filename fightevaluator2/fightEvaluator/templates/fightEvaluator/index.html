@@ -24,6 +24,51 @@
             column 4: vs
             column 5: fighter-b-name
             column 6: fighter-b-image
+
+
+            element extends HTMLElement{
+              active = false
+              activateListeners = {}
+              deactivateListeners = {}
+              stateReceiverQueue = []
+
+              function activate(){
+                active = true;
+                //for every listener call it
+                for (let listener of activateListeners){
+                  listener();
+                }
+                for (let element of stateReceiverQueue){
+                  //call activate on element
+                  element.activate();
+                }
+              }
+              function deactivate(){
+                active = false;
+                //for every listener call it
+                for (let listener of deactivateListeners){
+                  listener();
+                }
+
+                for (let element of stateReceiverQueue){
+                  //call deactivate on element
+                  element.deactivate();
+                }
+              }
+              
+              //have a list of functions to call when activated
+              addOnActivateListener(name,listener){
+                activateListeners.put(name,listener);
+              }
+              addOnDeactivateListener(name,listener){
+                deactivateListeners.put(name,listener);
+              }
+
+              //or propagate activation to other elements 
+              addStateReceiver(element){
+                stateReceiverQueue.push(element);
+              }
+            }
         -->
     
     <!-- Modal -->
@@ -240,6 +285,13 @@
             </button>
             <p>&nbsp;- add matchup</p>
           </div>
+          <!--edit matchup action-->
+          <div class="action-wrapper">
+            <a class="edit btn btn-primary disabled" href="#">
+              edit
+            </a>
+            <p>&nbsp;- edit matchup</p>
+          </div>
           <div class="action-wrapper">
             <a class="analyze btn btn-primary" href="#">
               analyze
@@ -251,7 +303,7 @@
             <p>&nbsp;- add to watchlist</p>
           </div>
           <div class="action-wrapper">
-            <button class="delete btn btn-danger">delete</button>
+            <button class="delete btn btn-danger disabled">delete</button>
             <p>&nbsp;- delete matchup</p>
           </div>
         </div>
@@ -325,7 +377,80 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
-  <script>
+ <script>
+    //define a custom htmlelement subclass
+
+ 
+    class StateHandler {
+      constructor(element){
+        this.element = element;
+        this.active = false;
+        this.activateListeners = {};
+        this.deactivateListeners = {};
+        this.stateReceiverQueue = [];
+      }
+
+      activate() {
+        active = true;
+        //for every listener call it
+        for (let listener of activateListeners){
+          listener();
+        }
+        for (let element of stateReceiverQueue){
+          //call activate on element
+          element.activate();
+        }
+      }
+
+      deactivate() {
+        active = false;
+        //for every listener call it
+        for (let listener of deactivateListeners){
+          listener();
+        }
+
+        for (let element of stateReceiverQueue){
+          //call deactivate on element
+          element.deactivate();
+        }
+      }
+      
+      //have a list of functions to call when activated
+      addOnActivateListener(name,listener){
+        activateListeners.put(name,listener);
+      }
+      addOnDeactivateListener(name,listener){
+        deactivateListeners.put(name,listener);
+      }
+
+      //or propagate activation to other elements 
+      addStateReceiver(element){
+        stateReceiverQueue.push(element);
+      }
+    }
+
+    //create statehandler
+    let stateHandler = new StateHandler(document.querySelector(".matchup"));
+    console.log(stateHandler.element);
+    console.log(typeof stateHandler);
+    class MatchupManager{
+      constructor(){
+        this.watchlist = [];
+        this.mainCard = [];
+        this.prelims = [];
+      }
+
+
+      //some matchup has been clicked
+      matchupClick(event){
+
+      }
+    }
+
+
+ </script>
+ 
+ <script>
 
     var fightEventId = {{ event.id }};
     const postHeaders = {
@@ -537,7 +662,7 @@
       if (add){
         let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
         let watchListMatchup = matchup.cloneNode(true);
-        watchListMatchup.classList.remove("active");//since no longer active
+        // watchListMatchup.classList.remove("active");//since no longer active
         watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
         document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
         matchup.classList.add('watching');
@@ -546,6 +671,7 @@
         //if an item has been removed from watchlist then remove the matchup from the watchlist table
         document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`).remove();
         document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`).classList.remove('watching');
+        document.querySelector('.delete').classList.add('disabled');
       }
       //if watchlist is empty show table note
       let tableNote = document.querySelector(".table-note");
@@ -570,6 +696,7 @@
         const matchup = this.matchup;
         //check if matchup is in watchlist
         let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
+        let deleteButton = document.querySelector(".delete");
         if (inWatchList){
           document.querySelector(".watch").textContent = "unwatch";
         }else{
@@ -580,9 +707,10 @@
           matchup.classList.remove("active");
           document.querySelector(".analyze").href = "#";
           document.querySelector(".watch").textContent = "watch";
+          deleteButton.classList.add("disabled");
           return;
         }
-        
+        deleteButton.classList.remove("disabled");
         document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
         //if not then deactivate all other matchups
         document.querySelectorAll(".matchup").forEach((matchup) => {
@@ -597,10 +725,11 @@
     function onClickDelete(event){
       //check if matchup selected
       let activeMatchup = document.querySelector(".matchup.active");
-      if (activeMatchup == null){
-        alert("Please select a matchup");
-        return;
-      }
+      //no longer need this since it is not clickable if no matchup is selected
+      // if (activeMatchup == null){
+      //   alert("Please select a matchup");
+      //   return;
+      // }
       //send delete request to /matchup/delete-matchup
       let matchupId = activeMatchup.dataset.matchupId;
       //show confirmation dialog
@@ -655,7 +784,6 @@
           document.querySelector(".confirmation-dialog").classList.add("d-none");
           watchListItems = watchListItems.filter((id) => id != matchupId);//remove from localStorage watchlsit
           localStorage.setItem("watchlist", JSON.stringify(watchListItems));//update localStorage
-          // onWatchListChanged(false, matchupId);//remove from watchlist table
         });
     }
 
