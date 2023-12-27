@@ -233,7 +233,7 @@ def create_note(request):
     else:
         print('invalid')
         #raise validation error
-    return JsonResponse({'note':model_to_dict(note)})
+    return JsonResponse(model_to_dict(note))
 
 @require_http_methods(["DELETE"])
 def delete_note(_,noteId):

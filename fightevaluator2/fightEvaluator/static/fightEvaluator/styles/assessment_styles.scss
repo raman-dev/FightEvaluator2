@@ -42,8 +42,6 @@ body {
 }
 
 
-
-
 /*
   blinking outline animation called flicker
 */
@@ -73,7 +71,12 @@ $flickerDuration: 400ms;
   width: 100%;
 }
 
-.main-container button{
+.attrib-card button, .bio-edit-button{
+  background-color: $btnBackgroundColor;  
+}
+
+.main-container button {
+
   // outline: 2px solid lavender;
   outline-offset: 2px;
 
@@ -85,7 +88,6 @@ $flickerDuration: 400ms;
   padding-left: 1rem;
   padding-right: 1rem;
 
-  background-color: $btnBackgroundColor;
   font-family: PoppinsSemiBold;
 
   transition: all 0.1s ease-out;
@@ -104,9 +106,8 @@ $flickerDuration: 400ms;
   box-shadow: black 4px 4px 0 0;
 }
 
+
 .main-container button:active{
-  // box-shadow: black 2px 2px 0 0;
-  // background-color: $btnClickBackground;
   @include button-active;
 }
 
@@ -500,6 +501,11 @@ $flickerDuration: 400ms;
     }
   }
 
+  .note-editor-container .note-editor-actions{
+    display: flex; 
+    justify-content: end;
+  }
+
   .notes-list {
     width: 100%;
 
@@ -518,7 +524,8 @@ $flickerDuration: 400ms;
         list-style: None;
         display: flex;
         padding: 1rem;
-        margin: 0.6rem;
+        margin: 1rem;
+
         p {
           word-break: break-word; 
           text-wrap: wrap;
@@ -526,6 +533,15 @@ $flickerDuration: 400ms;
           max-width: 100%;
           margin: 0px;
         }
+      }
+
+      .note.active{
+        outline: 3px solid #3d7efd;
+        outline-offset: 2px;
+      }
+
+      .note:hover{
+        cursor: pointer;
       }
     }
   }

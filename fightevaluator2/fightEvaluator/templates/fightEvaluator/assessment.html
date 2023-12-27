@@ -185,11 +185,21 @@
             <!--unordered scrollable list of p tags wrapped in li-->
             <!--textarea made with div and contenteditable -->
             <div class="note-editor-container d-flex flex-column">
-              <button
-                class="btn btn-success note-submit-btn"
-                onclick="addNote(event)">
-                submit
-              </button>
+              <div class="note-editor-actions">
+                <div class="action-wrapper">
+                  <button
+                  class="btn btn-success note-submit-btn"
+                  onclick="addNote(event)">
+                  submit
+                </button>
+                </div>
+                <div class="action-wrapper">
+                  <button class="btn btn-danger note-delete-btn disabled" onclick="deleteNote(event)">
+                    delete
+                  </button>
+                </div>
+
+              </div>
               <div
                 class="note-editor align-self-center"
                 contenteditable="plaintext-only"></div>
@@ -409,9 +419,10 @@
           //create a new li element with the noteText
           let newNote = document.createElement("li");
           newNote.classList.add("note");
-          newNote.setAttribute("data-note-id", noteData.id);
+          // newNote.setAttribute("data-note-id", noteData.id);
           newNote.innerHTML = "<p>" + noteText + "</p>";
-          newNote.setAttribute("data-note-id", noteData.id);
+          newNote.dataset.noteId = noteData.id;
+          newNote.addEventListener('click',onClickNote);
           //append the new li element to the notes-list
           let notesList = document.querySelector(".notes-list ul");
           notesList.classList.remove('dx-none');//if there are no notes, remove the d-none class
@@ -425,15 +436,23 @@
         //get the note id from the note element
         //send delete request to server
         //remove note from notes-list
-        let note_id = parseInt(event.target.getAttribute("data-note-id"));
+        let activeNote = document.querySelector('.notes-list .active');
+        let note_id = parseInt(activeNote.getAttribute("data-note-id"));
+        // console.log(note_id);
         let response = await fetch(`/notes/delete-note/${note_id}`, {
           method: "DELETE",
           headers: {
             accept: "application/json",
             "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get("csrftoken"),
           },
         });
-        console.log(response);
+        // console.log(response);
+        if (response.status == 200){
+          activeNote.remove();
+          //disable delete button
+          document.querySelector('.note-delete-btn').classList.add('disabled');
+        }
       }
 
       function dobToAge(dob) {
@@ -465,8 +484,31 @@
       if (notesListUl.children.length > 0){
         notesListUl.classList.remove('dx-none');
       }
-    
-    
+
+      function onClickNote(event){
+        // console.log(event);
+        //remove active class from all notes
+        let currentNote = event.currentTarget;
+        let list = event.currentTarget.parentElement;
+        let active = list.querySelector('.active');
+        if (active != null){
+          active.classList.remove('active');
+        }
+        if (active == currentNote){
+          document.querySelector('.note-delete-btn').classList.add('disabled');
+          return;//do nothing we only deactivated this note
+        }
+        //add active class to clicked note
+        currentNote.classList.add('active');
+        //enable delete button
+        document.querySelector('.note-delete-btn').classList.remove('disabled');
+      }
+      
+      //on click a note make it active and enable delete button
+      for (const note of notesListUl.children){
+        note.addEventListener('click',onClickNote);
+      }
+      
     </script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
@@ -570,11 +612,12 @@
           if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name") {
             continue;
           }
-          console.log(key, fighter_data[key]);
+          // console.log(key, fighter_data[key]);
           let input = form.querySelector(`[name="${key}"]`);
           input.value = fighter_data[key];
         }
       }
+    
     </script>
   </body>
 </html>
