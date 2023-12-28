@@ -377,79 +377,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
- <script>
-    //define a custom htmlelement subclass
 
- 
-    class StateHandler {
-      constructor(element){
-        this.element = element;
-        this.active = false;
-        this.activateListeners = {};
-        this.deactivateListeners = {};
-        this.stateReceiverQueue = [];
-      }
-
-      activate() {
-        active = true;
-        //for every listener call it
-        for (let listener of activateListeners){
-          listener();
-        }
-        for (let element of stateReceiverQueue){
-          //call activate on element
-          element.activate();
-        }
-      }
-
-      deactivate() {
-        active = false;
-        //for every listener call it
-        for (let listener of deactivateListeners){
-          listener();
-        }
-
-        for (let element of stateReceiverQueue){
-          //call deactivate on element
-          element.deactivate();
-        }
-      }
-      
-      //have a list of functions to call when activated
-      addOnActivateListener(name,listener){
-        activateListeners.put(name,listener);
-      }
-      addOnDeactivateListener(name,listener){
-        deactivateListeners.put(name,listener);
-      }
-
-      //or propagate activation to other elements 
-      addStateReceiver(element){
-        stateReceiverQueue.push(element);
-      }
-    }
-
-    //create statehandler
-    let stateHandler = new StateHandler(document.querySelector(".matchup"));
-    console.log(stateHandler.element);
-    console.log(typeof stateHandler);
-    class MatchupManager{
-      constructor(){
-        this.watchlist = [];
-        this.mainCard = [];
-        this.prelims = [];
-      }
-
-
-      //some matchup has been clicked
-      matchupClick(event){
-
-      }
-    }
-
-
- </script>
- 
  <script>
 
     var fightEventId = {{ event.id }};
@@ -565,8 +493,6 @@
       this.fighterElement.dataset.selectedId = this.fighter.id;
       this.fighterElement.querySelector(".search-container").classList.add("d-none");
     }
-    //for every matchup add on click listener that takes them to /matchup/data-matchup-id
-    
     //search box functionality
     document.querySelectorAll(".fighter-selector .fighter").forEach((fighterElement) => {
       let searchBox = fighterElement.querySelector(".search-box");
@@ -623,13 +549,57 @@
     });
   </script>
   <script>
-    //get watchlist items array from localstorage
+    class MatchupInteractManager{
+      constructor (){
+      }
+
+      toggleState(matchup){
+        // console.log('toggleState', matchup);
+        if (this.activeMatchup == matchup){
+          this.deactivate(matchup);
+          return {active:false,activeMatchup: null};
+        }
+        this.activate(matchup);
+        return {active:true,activeMatchup: matchup}
+      }
+
+      activate(matchup){
+        // console.log('activate', matchup);
+        if (this.activeMatchup != null){
+          this.activeMatchup.classList.remove('active');
+        }
+        //activate this matchup
+        matchup.classList.add("active");
+        this.activeMatchup = matchup;
+      }
+
+      deactivate(matchup){
+        matchup.classList.remove("active");
+        this.activeMatchup = null;
+      }
+   }
+
+   class MatchupActionStateManager{
+      constructor(){}
+      toggleState(result){
+        if (result.active){
+          this.activate(result.activeMatchup);
+          return;
+        }
+        this.deactivate();
+      }
+   }
+    
+    const matchupInteractManager = new MatchupInteractManager();
+   //get watchlist items array from localstorage
     let watchListItems = JSON.parse(localStorage.getItem("watchlist"));
     if (watchListItems == null) watchListItems = [];
     //if watchlist tablle is empty show the table note
     document.querySelectorAll(".matchup").forEach((matchup) => {
       matchup.addEventListener("click",(event) => {
-        onClickMatchup.bind({matchup: matchup},event)();
+        let result = matchupInteractManager.toggleState(event.currentTarget);
+        // onClickMatchup.bind({matchup: matchup},event)();
+        matchupActionStateManager.toggleState(result);
       });
     });
 
@@ -681,7 +651,6 @@
         tableNote.classList.add("d-none");
       }
     }
-
 
     function onClickWatch(event){
       toggleWatchListItem();
@@ -806,6 +775,8 @@
       document.querySelector(".confirmation-dialog").classList.add("d-none");
     });
   </script> 
+  
+ 
 </body>
 
 </html>
