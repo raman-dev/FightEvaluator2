@@ -18,6 +18,28 @@
   .fighter-name{
     text-transform: capitalize;
   }
+  .matchup-info-wrapper{
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    
+    .rounds-wrapper, .prelims-wrapper{
+      grid-column: 1;
+    }
+
+    .rounds-wrapper{
+      grid-row: 1;
+
+      display: flex;
+      align-items: center;
+    }
+
+    .weight-class{
+      grid-column: 2;
+    }
+
+  }
 }
 
 .fighter-creator.show{

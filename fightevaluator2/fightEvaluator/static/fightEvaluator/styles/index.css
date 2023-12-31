@@ -20,6 +20,23 @@
 .fighter-selector .fighter-name {
   text-transform: capitalize;
 }
+.fighter-selector .matchup-info-wrapper {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.fighter-selector .matchup-info-wrapper .rounds-wrapper, .fighter-selector .matchup-info-wrapper .prelims-wrapper {
+  grid-column: 1;
+}
+.fighter-selector .matchup-info-wrapper .rounds-wrapper {
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+}
+.fighter-selector .matchup-info-wrapper .weight-class {
+  grid-column: 2;
+}
 
 .fighter-creator.show {
   opacity: 1;

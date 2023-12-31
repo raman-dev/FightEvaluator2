@@ -75,8 +75,8 @@
                       <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                     </button>
                   </div>
-                  <div class="matchup-info-wrapper d-flex align-items-center justify-content-between">
-                    <div class="weight-class dropdown mt-3">
+                  <div class="matchup-info-wrapper">
+                    <div class="weight-class dropdown">
                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Weight Class
@@ -103,7 +103,7 @@
                         <li><a class="dropdown-item" href="#">Catchweight</a></li>
                       </ul>
                     </div>
-                    <div class="rounds-wrapper d-flex mt-3">
+                    <div class="rounds-wrapper">
                       <p class="m-0">Rounds</p>
                       <!--2 radio buttons for 3 or 5 rounds-->
                       <div class="form-check mx-2">
@@ -116,6 +116,15 @@
                         <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5">
                         <label class="form-check-label" for="rounds">
                           5
+                        </label>
+                      </div>
+                    </div>
+                    <div class="prelims-wrapper">
+                      <!--bootstrap5 checkbox-->
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="isprelim">
+                        <label class="form-check-label" for="isprelim">
+                          On Prelims
                         </label>
                       </div>
                     </div>
@@ -338,6 +347,7 @@
       let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
       let weightClass = document.querySelector(".weight-class .dropdown-toggle").textContent;
       let rounds = document.querySelector("input[name='rounds']:checked").value;
+      let isprelim = document.querySelector("#isprelim").checked;
       //make sure both fighter id's are not -1
       if (fighterAId == -1 || fighterBId == -1) {
         alert("Please select two fighters");
@@ -360,15 +370,17 @@
           weight_class: weightClass,
           rounds: rounds,
           event_id: fightEventId,
+          isprelim: isprelim,
         }),
         headers: postHeaders,
       })
         .then((response) => response.json())
         .then((data) => {
-          // console.log(data);
+          console.log(data);
           //update matchup table
           let matchup = data["matchup"];
           let matchupElement = document.createElement("div");
+          //reflect change in matchup table
         });
     }
 
@@ -495,12 +507,48 @@
     });
   </script>
   <script>
-    class MatchupInteractManager{
+    /*
+
+      class StateHandler{
+        constructor(){
+          this.states = {};
+          this.stateReceivers = {};//map state -> receiver_callback
+        }
+
+        addState(state,defaultValue){
+          this.states[state] = defaultValue;
+        }
+
+        addStateReceiver(state,receiver){
+          this.stateReceivers[state].push(receiver);
+        }
+
+        removeState(state){
+          delete this.states[state];
+          this.stateReceivers[state] = null;//remove all state receivers
+        }
+
+        modify(state,value){
+          this.states[state] = value;
+          this.stateReceivers[state].forEach((receiver) => {
+            receiver.receive(this.states[state]);
+          });
+        }
+
+        receive(state){
+          //respond to state change
+        }
+
+      }
+    
+    */
+
+   class MatchupElementStateHandler{
       constructor (){
       }
 
       toggleState(matchup){
-        // console.log('toggleState', matchup);
+        // console.log('toggleState', matchup,this.activeMatchup);
         if (this.activeMatchup == matchup){
           this.deactivate(matchup);
           return {active:false,activeMatchup: null};
@@ -517,15 +565,17 @@
         //activate this matchup
         matchup.classList.add("active");
         this.activeMatchup = matchup;
+        return {active:true,activeMatchup: matchup}
       }
 
       deactivate(matchup){
         matchup.classList.remove("active");
         this.activeMatchup = null;
+        return {active:false,activeMatchup: null};
       }
    }
 
-   class MatchupActionStateManager{
+   class MatchupUIActionStateManager{
       constructor(){}
 
       toggleState(result){
@@ -572,8 +622,8 @@
       }
    }
     
-    const matchupInteractManager = new MatchupInteractManager();
-    const matchupActionStateManager = new MatchupActionStateManager();
+    const matchupElementStateHandler = new MatchupElementStateHandler();
+    const matchupUIStateManager = new MatchupUIActionStateManager();
    //get watchlist items array from localstorage
     let watchListItems = JSON.parse(localStorage.getItem("watchlist"));
     if (watchListItems == null) watchListItems = [];
@@ -610,24 +660,25 @@
       //if an item has been added to watchlist then add the matchup to the watchlist table
       if (add){
         let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
+
         let watchListMatchup = matchup.cloneNode(true);
-        // watchListMatchup.classList.remove("active");//since no longer active
-        watchListMatchup.addEventListener("click", onClickMatchup);//onClickMatchup.bind({matchup: watchListMatchup}));
+        watchListMatchup.addEventListener("click", onClickMatchup);
+        
+        matchupElementStateHandler.deactivate(matchup);//deactivate
+        matchupUIStateManager.toggleState(
+          matchupElementStateHandler.activate(watchListMatchup)
+        );//activate
+
         document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
-        let watchButton = document.querySelector('.watch');
-        console.log(watchButton);
-        watchButton.textContent = "unwatch";
         matchup.classList.add('watching');
-        matchup.classList.remove('active');
       }else{
         //if an item has been removed from watchlist then remove the matchup from the watchlist table
         let watchListMatchup = document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`);
-        let result = matchupInteractManager.toggleState(watchListMatchup);
+        let result = matchupElementStateHandler.toggleState(watchListMatchup);
         watchListMatchup.remove();
-        matchupActionStateManager.toggleState(result);
+        matchupUIStateManager.toggleState(result);
         //unwatch
         document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`).classList.remove('watching');
-        // document.querySelector('.delete').classList.add('disabled');
       }
       //if watchlist is empty show table note
       let tableNote = document.querySelector(".table-note");
@@ -638,14 +689,30 @@
       }
     }
 
+    function toggleWatchListItem(){
+      //get matchup id
+      let activeMatchup = document.querySelector(".matchup.active");
+      let matchupId = activeMatchup.dataset.matchupId;
+      //check if matchup is in watchlist
+      let inWatchList = watchListItems.includes(matchupId);
+      if (inWatchList){
+        //remove from watchlist
+        watchListItems = watchListItems.filter((id) => id != matchupId);
+        onWatchListChanged(false, matchupId);
+      }else{
+        //add to watchlist
+        watchListItems.push(matchupId);//
+        onWatchListChanged(true, matchupId);
+      }
+    }
+
     function onClickWatch(event){
       toggleWatchListItem();
     }
 
     function onClickMatchup(event){
-      let result = matchupInteractManager.toggleState(event.currentTarget);
-        // onClickMatchup.bind({matchup: matchup},event)();
-      matchupActionStateManager.toggleState(result);
+      let result = matchupElementStateHandler.toggleState(event.currentTarget);
+      matchupUIStateManager.toggleState(result);
     }
  
     function onClickDelete(event){
@@ -669,25 +736,6 @@
 
    
     initWatchList();
-
-    function toggleWatchListItem(){
-      //get matchup id
-      let activeMatchup = document.querySelector(".matchup.active");
-      let matchupId = activeMatchup.dataset.matchupId;
-      //check if matchup is in watchlist
-      let inWatchList = watchListItems.includes(matchupId);
-      if (inWatchList){
-        //remove from watchlist
-        watchListItems = watchListItems.filter((id) => id != matchupId);
-        onWatchListChanged(false, matchupId);
-      }else{
-        //add to watchlist
-        watchListItems.push(matchupId);//
-        onWatchListChanged(true, matchupId);
-      }
-      document.querySelector(".watch").textContent = "watch";
-    }
-
 
     function deleteMatchup(matchupId){
       fetch(`/matchup/delete-matchup/${matchupId}`, {
