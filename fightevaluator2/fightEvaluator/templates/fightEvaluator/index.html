@@ -646,38 +646,6 @@
       let result = matchupInteractManager.toggleState(event.currentTarget);
         // onClickMatchup.bind({matchup: matchup},event)();
       matchupActionStateManager.toggleState(result);
-        // //has different behavior depending on what was clicked
-        // if (event.target.classList.contains("fighter-name")){
-        //   return;
-        // }
-        // //check if clicked element is matchup type
-        // const matchup = this.matchup;
-        // //check if matchup is in watchlist
-        // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
-        // let deleteButton = document.querySelector(".delete");
-        // if (inWatchList){
-        //   document.querySelector(".watch").textContent = "unwatch";
-        // }else{
-        //   document.querySelector(".watch").textContent = "watch";
-        // }
-        // //if current already contained active then deactivate
-        // if (matchup.classList.contains("active")) {
-        //   matchup.classList.remove("active");
-        //   document.querySelector(".analyze").href = "#";
-        //   document.querySelector(".watch").textContent = "watch";
-        //   deleteButton.classList.add("disabled");
-        //   return;
-        // }
-        // deleteButton.classList.remove("disabled");
-        // document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
-        // //if not then deactivate all other matchups
-        // document.querySelectorAll(".matchup").forEach((matchup) => {
-        //   matchup.classList.remove("active");
-        // });
-        // //then activate this matchup
-        // matchup.classList.add("active");
-        //check if matchup is in watchlist
-        // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
     }
  
     function onClickDelete(event){
