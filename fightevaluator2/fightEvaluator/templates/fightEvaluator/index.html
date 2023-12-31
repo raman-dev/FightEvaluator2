@@ -17,60 +17,6 @@
   {% include 'fightEvaluator/navbar.html' %}
   <!--container-->
   <div class="container-fluid main-container">
-    <!--6 column table
-            column 1: matchup-number
-            column 2: fighter-a-image
-            column 3: fighter-a-name
-            column 4: vs
-            column 5: fighter-b-name
-            column 6: fighter-b-image
-
-
-            element extends HTMLElement{
-              active = false
-              activateListeners = {}
-              deactivateListeners = {}
-              stateReceiverQueue = []
-
-              function activate(){
-                active = true;
-                //for every listener call it
-                for (let listener of activateListeners){
-                  listener();
-                }
-                for (let element of stateReceiverQueue){
-                  //call activate on element
-                  element.activate();
-                }
-              }
-              function deactivate(){
-                active = false;
-                //for every listener call it
-                for (let listener of deactivateListeners){
-                  listener();
-                }
-
-                for (let element of stateReceiverQueue){
-                  //call deactivate on element
-                  element.deactivate();
-                }
-              }
-              
-              //have a list of functions to call when activated
-              addOnActivateListener(name,listener){
-                activateListeners.put(name,listener);
-              }
-              addOnDeactivateListener(name,listener){
-                deactivateListeners.put(name,listener);
-              }
-
-              //or propagate activation to other elements 
-              addStateReceiver(element){
-                stateReceiverQueue.push(element);
-              }
-            }
-        -->
-    
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
@@ -279,8 +225,8 @@
       <h3 class="event-title">{{event.title}}</h3>
       <div class="action-bar d-flex align-items-center w-100">
         <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
-          <div class="action-wrapper">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <div class="action-wrapper" >
+            <button type="button" class="btn btn-primary active-independent" data-bs-toggle="modal" data-bs-target="#exampleModal">
               add
             </button>
             <p>&nbsp;- add matchup</p>
@@ -293,13 +239,13 @@
             <p>&nbsp;- edit matchup</p>
           </div>
           <div class="action-wrapper">
-            <a class="analyze btn btn-primary" href="#">
+            <a class="analyze btn btn-primary disabled" href="#">
               analyze
             </a>
             <p class="m-0">&nbsp;- view matchup</p>
           </div>
           <div class="action-wrapper">
-            <button class="watch btn btn-primary">watch</button>
+            <button class="watch btn btn-primary disabled">watch</button>
             <p>&nbsp;- add to watchlist</p>
           </div>
           <div class="action-wrapper">
@@ -581,6 +527,7 @@
 
    class MatchupActionStateManager{
       constructor(){}
+
       toggleState(result){
         if (result.active){
           this.activate(result.activeMatchup);
@@ -588,19 +535,51 @@
         }
         this.deactivate();
       }
+
+      activate(matchup){
+        // console.log('activate matchup.actions', matchup);
+        let matchupId = matchup.dataset.matchupId;
+        let analyzeButton = document.querySelector(".analyze");
+        let watchButton = document.querySelector(".watch");
+        let deleteButton = document.querySelector(".delete");
+
+        watchButton.classList.remove("disabled");
+        analyzeButton.classList.remove("disabled");
+        deleteButton.classList.remove("disabled");
+
+        analyzeButton.href = `/matchup/${matchupId}`;
+        //check if in watchlist
+        let inWatchList = watchListItems.includes(matchupId);
+        if (inWatchList){
+          watchButton.textContent = "unwatch";
+        }else{
+          watchButton.textContent = "watch";
+        }
+
+      }
+
+      deactivate(){
+        //disable all actions
+        let analyzeButton = document.querySelector(".analyze");
+        let watchButton = document.querySelector(".watch");
+
+        analyzeButton.classList.add("disabled");
+        watchButton.classList.add("disabled");
+
+        analyzeButton.href = "#";
+        watchButton.textContent = "watch";
+        document.querySelector(".delete").classList.add("disabled");
+      }
    }
     
     const matchupInteractManager = new MatchupInteractManager();
+    const matchupActionStateManager = new MatchupActionStateManager();
    //get watchlist items array from localstorage
     let watchListItems = JSON.parse(localStorage.getItem("watchlist"));
     if (watchListItems == null) watchListItems = [];
     //if watchlist tablle is empty show the table note
     document.querySelectorAll(".matchup").forEach((matchup) => {
-      matchup.addEventListener("click",(event) => {
-        let result = matchupInteractManager.toggleState(event.currentTarget);
-        // onClickMatchup.bind({matchup: matchup},event)();
-        matchupActionStateManager.toggleState(result);
-      });
+      matchup.addEventListener("click",onClickMatchup);
     });
 
     function initWatchList(){
@@ -614,7 +593,7 @@
         }
         let watchListMatchup = matchup.cloneNode(true);
         watchListMatchup.classList.remove("active");//since no longer active
-        watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
+        watchListMatchup.addEventListener("click", onClickMatchup);//onClickMatchup.bind({matchup: watchListMatchup}));
         document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
         matchup.classList.add('watching');
       });
@@ -633,15 +612,22 @@
         let matchup = document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`);
         let watchListMatchup = matchup.cloneNode(true);
         // watchListMatchup.classList.remove("active");//since no longer active
-        watchListMatchup.addEventListener("click", onClickMatchup.bind({matchup: watchListMatchup}));
+        watchListMatchup.addEventListener("click", onClickMatchup);//onClickMatchup.bind({matchup: watchListMatchup}));
         document.querySelector('#watchlist .matchups').appendChild(watchListMatchup);
+        let watchButton = document.querySelector('.watch');
+        console.log(watchButton);
+        watchButton.textContent = "unwatch";
         matchup.classList.add('watching');
         matchup.classList.remove('active');
       }else{
         //if an item has been removed from watchlist then remove the matchup from the watchlist table
-        document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`).remove();
+        let watchListMatchup = document.querySelector(`#watchlist .matchup[data-matchup-id="${matchupId}"]`);
+        let result = matchupInteractManager.toggleState(watchListMatchup);
+        watchListMatchup.remove();
+        matchupActionStateManager.toggleState(result);
+        //unwatch
         document.querySelector(`.matchup[data-matchup-id="${matchupId}"]`).classList.remove('watching');
-        document.querySelector('.delete').classList.add('disabled');
+        // document.querySelector('.delete').classList.add('disabled');
       }
       //if watchlist is empty show table note
       let tableNote = document.querySelector(".table-note");
@@ -657,36 +643,39 @@
     }
 
     function onClickMatchup(event){
-        //has different behavior depending on what was clicked
-        if (event.target.classList.contains("fighter-name")){
-          return;
-        }
-        //check if clicked element is matchup type
-        const matchup = this.matchup;
-        //check if matchup is in watchlist
-        let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
-        let deleteButton = document.querySelector(".delete");
-        if (inWatchList){
-          document.querySelector(".watch").textContent = "unwatch";
-        }else{
-          document.querySelector(".watch").textContent = "watch";
-        }
-        //if current already contained active then deactivate
-        if (matchup.classList.contains("active")) {
-          matchup.classList.remove("active");
-          document.querySelector(".analyze").href = "#";
-          document.querySelector(".watch").textContent = "watch";
-          deleteButton.classList.add("disabled");
-          return;
-        }
-        deleteButton.classList.remove("disabled");
-        document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
-        //if not then deactivate all other matchups
-        document.querySelectorAll(".matchup").forEach((matchup) => {
-          matchup.classList.remove("active");
-        });
-        //then activate this matchup
-        matchup.classList.add("active");
+      let result = matchupInteractManager.toggleState(event.currentTarget);
+        // onClickMatchup.bind({matchup: matchup},event)();
+      matchupActionStateManager.toggleState(result);
+        // //has different behavior depending on what was clicked
+        // if (event.target.classList.contains("fighter-name")){
+        //   return;
+        // }
+        // //check if clicked element is matchup type
+        // const matchup = this.matchup;
+        // //check if matchup is in watchlist
+        // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
+        // let deleteButton = document.querySelector(".delete");
+        // if (inWatchList){
+        //   document.querySelector(".watch").textContent = "unwatch";
+        // }else{
+        //   document.querySelector(".watch").textContent = "watch";
+        // }
+        // //if current already contained active then deactivate
+        // if (matchup.classList.contains("active")) {
+        //   matchup.classList.remove("active");
+        //   document.querySelector(".analyze").href = "#";
+        //   document.querySelector(".watch").textContent = "watch";
+        //   deleteButton.classList.add("disabled");
+        //   return;
+        // }
+        // deleteButton.classList.remove("disabled");
+        // document.querySelector(".analyze").href = `/matchup/${matchup.dataset.matchupId}`;
+        // //if not then deactivate all other matchups
+        // document.querySelectorAll(".matchup").forEach((matchup) => {
+        //   matchup.classList.remove("active");
+        // });
+        // //then activate this matchup
+        // matchup.classList.add("active");
         //check if matchup is in watchlist
         // let inWatchList = watchListItems.includes(matchup.dataset.matchupId);
     }
