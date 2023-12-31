@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Assessment,WeightClass
+from .models import Fighter,Assessment,WeightClass,FightEvent
 
 """
     **NOTE**************************************************
@@ -9,6 +9,12 @@ from .models import Fighter,Assessment,WeightClass
     THEN FORM.SAVE() WILL NOT WORK
     *********************************************************
 """
+
+class FightEvent(ModelForm):
+    class Meta:
+        model = FightEvent
+        fields = ['title','date','location','link']
+
 
 class AssessmentForm(ModelForm):
     class Meta:
