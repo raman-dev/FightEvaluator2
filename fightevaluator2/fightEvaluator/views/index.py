@@ -19,7 +19,6 @@ def index(request):
         fightEventForm = FightEventForm(fightEventData.eventData)
         # for matchupData in fightEventData.matchups:
             #get fighter from matchup data aswell
-            
         nextEvent = fightEventForm.instance
     #if next event is in the  past use webscraper to grab next event
     #retreive matchups for next event

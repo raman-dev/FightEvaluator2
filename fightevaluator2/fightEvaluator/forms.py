@@ -10,7 +10,7 @@ from .models import Fighter,Assessment,WeightClass,FightEvent
     *********************************************************
 """
 
-class FightEvent(ModelForm):
+class FightEventForm(ModelForm):
     class Meta:
         model = FightEvent
         fields = ['title','date','location','link']
