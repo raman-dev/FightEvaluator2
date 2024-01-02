@@ -17,8 +17,9 @@ def index(request):
     if not nextEvent:
         fightEventData = getUpcomingFightEvent()
         fightEventForm = FightEventForm(fightEventData.eventData)
-        # for matchupData in fightEventData.matchups:
-            #get fighter from matchup data aswell
+        if not fightEventForm.is_valid():
+            return render(request,"fightEvaluator/index.html",{'error':fightEventForm.errors})
+        fightEventForm.save()
         nextEvent = fightEventForm.instance
     #if next event is in the  past use webscraper to grab next event
     #retreive matchups for next event
