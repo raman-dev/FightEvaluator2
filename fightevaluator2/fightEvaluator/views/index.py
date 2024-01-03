@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from django.http import JsonResponse
 
 from ..models import FightEvent,MatchUp
-from ..forms import FightEventForm,MatchUpForm
+from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
 from ..scraper import getUpcomingFightEvent
@@ -16,11 +17,18 @@ def index(request):
     #compare current date and next event date
     if not nextEvent:
         fightEventData = getUpcomingFightEvent()
-        fightEventForm = FightEventForm(fightEventData.eventData)
+        fightEventForm = FightEventForm(fightEventData['eventData'])
+        
         if not fightEventForm.is_valid():
-            return render(request,"fightEvaluator/index.html",{'error':fightEventForm.errors})
-        fightEventForm.save()
-        nextEvent = fightEventForm.instance
+            return JsonResponse({'fightEventForm':'FUCKED','error':fightEventForm.errors})
+        nextEvent = fightEventForm.save()
+        
+        for matchup in fightEventData['matchups']:
+            matchup['event'] = nextEvent
+            matchupForm = MatchUpFormMF(matchup)
+            if not matchupForm.is_valid():
+                return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
+            matchupForm.save()
     #if next event is in the  past use webscraper to grab next event
     #retreive matchups for next event
     matchups = MatchUp.objects.filter(event=nextEvent)

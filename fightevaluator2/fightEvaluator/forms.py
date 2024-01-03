@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Assessment,WeightClass,FightEvent
+from .models import Fighter,Assessment,WeightClass,FightEvent,MatchUp
 
 """
     **NOTE**************************************************
@@ -31,6 +31,12 @@ class FighterForm(ModelForm):
         model = Fighter
         fields = ['first_name','last_name','height','weight_class','reach','stance','date_of_birth','wins','losses','draws','img_link']
     
+
+class MatchUpFormMF(ModelForm):
+    class Meta:
+        model = MatchUp
+        fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim']
+
 
 class MatchUpForm(forms.Form):
     fighter_a_id = forms.IntegerField(label='Fighter A Id')
