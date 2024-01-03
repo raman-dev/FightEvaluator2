@@ -60,6 +60,7 @@ h5, h6 {
 }
 .matchup-info h4 {
   text-align: center;
+  text-transform: capitalize;
 }
 
 .attrib-row {

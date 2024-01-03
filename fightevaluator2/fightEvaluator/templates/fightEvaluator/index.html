@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="{% static  'fightEvaluator/styles/index.css' %}" />
 </head>
 
+{% load custom_filters %}
+
 <body data-bs-theme="dark">
   {% include 'fightEvaluator/navbar.html' %}
   <!--container-->
@@ -229,7 +231,6 @@
       </div>
     </div>
     
-
     <div class="container-fluid title-container d-flex flex-column">
       <h3 class="event-title">{{event.title}}</h3>
       <div class="action-bar d-flex align-items-center w-100">
@@ -296,8 +297,8 @@
               </a>
             </div>
             <div class="col col-3 weightclass">
-              <h6>{{ matchup.weight_class }}</h6>
-              <p>{{ matchup.rounds }}</p>
+              <h6>{{ matchup.weight_class|rmscores }}</h6>
+              <p>{{ matchup.rounds }} x 5</p>
             </div>
             <div class="col col-4 d-flex fighter justify-content-end">
               <a href="/assessment/{{ matchup.fighter_b.id }}">

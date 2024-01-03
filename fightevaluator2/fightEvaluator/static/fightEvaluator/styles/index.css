@@ -141,6 +141,7 @@
 .matchups-container .matchup .weightclass h6 {
   margin: 0px;
   text-align: center;
+  text-transform: capitalize;
 }
 .matchups-container .matchup:hover {
   background-color: hsl(0, 0%, 12%);
