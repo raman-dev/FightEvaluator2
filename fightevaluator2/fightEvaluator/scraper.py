@@ -9,7 +9,7 @@ import re
 import unicodedata
 
 from django.db.models import Q
-from .models import WeightClass,Fighter
+from .models import WeightClass,Fighter,Assessment
 from .forms import FightEventForm,FighterForm
 
 EVENTS_URL = "http://ufcstats.com/statistics/events/completed"
@@ -120,6 +120,11 @@ def generateMatchupFighterObjs(matchups):
                 if fighterForm.is_valid():
                     #create fighter object
                     fighterObj = fighterForm.save()
+                    
+                    assessment = Assessment(fighter=fighterObj)
+                    assessment.save()
+
+                    fighterObj.assessment = assessment
                     print(fighterObj)
                 else:
                     print(fighterForm.errors)
