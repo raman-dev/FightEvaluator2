@@ -181,10 +181,12 @@ h5, h6{
 }
 
 .outcomes-container{
-    display: flex;
-    align-items: center;
-    .outcome-card{
-        border: 1px solid lavender; 
+    .outcomes-wrapper{
+        display: flex;
+        align-items: center;
+        .outcome-card{
+            border: 1px solid lavender; 
+        }
     }
 }
 

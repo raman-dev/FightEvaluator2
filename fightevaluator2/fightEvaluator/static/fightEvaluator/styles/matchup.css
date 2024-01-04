@@ -152,11 +152,11 @@ h5, h6 {
   grid-column: 2/4;
 }
 
-.outcomes-container {
+.outcomes-container .outcomes-wrapper {
   display: flex;
   align-items: center;
 }
-.outcomes-container .outcome-card {
+.outcomes-container .outcomes-wrapper .outcome-card {
   border: 1px solid lavender;
 }
 
