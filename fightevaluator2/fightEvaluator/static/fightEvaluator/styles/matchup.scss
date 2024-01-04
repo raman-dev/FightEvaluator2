@@ -180,6 +180,14 @@ h5, h6{
     }
 }
 
+.outcomes-container{
+    display: flex;
+    align-items: center;
+    .outcome-card{
+        border: 1px solid lavender; 
+    }
+}
+
 @media (max-width: 1280px){
     .content-grid{
         grid-template-columns: 1fr 1fr 1fr 1fr;
