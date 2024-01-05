@@ -101,7 +101,7 @@
         </div>
     </div>
     
-    <div class="outcomes-container">
+    <div class="outcomes-container my-4">
       <!--
         what are possible outcomes that are easy to predict for me?
         win-loss
@@ -110,9 +110,41 @@
         
       -->
       <h2>Possible Outcomes</h2>
-      <div class="outcomes-wrapper">
-        <div class="outcome-card">
-          <h6>Win</h6>
+      <div class="outcomes-wrapper row">
+        <div class="outcome-card col-2">
+          <div class="outcome">
+            <div class="wrapper">
+              <h6>win</h6>
+            </div>
+            <label for="confidence-win-a" class="form-label">Confidence</label>
+<input type="range" class="form-range" min="0" max="10" step="1" id="confidence-win-a">
+
+            <p>{{ fighter_a.last_name }}</p>
+          </div>
+        </div>
+        <div class="outcome-card col-2">
+          <div class="outcome">
+            <div class="wrapper">
+              <h6>1.5 > rnds</h6>
+            </div>
+            <p>fight lasts more than 1.5 rounds</p>
+          </div>
+        </div>
+        <div class="outcome-card col-2">
+          <div class="outcome">
+            <div class="wrapper">
+              <h6>no</h6>
+            </div>
+            <p>fight doesn't go the distance</p>
+          </div>
+        </div>
+        <div class="outcome-card col-2">
+          <div class="outcome">
+            <div class="wrapper">
+              <h6>win</h6>
+            </div>
+            <p>{{ fighter_b.last_name }}</p>
+          </div>
         </div>
       </div>
     </div>

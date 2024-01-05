@@ -147,3 +147,24 @@ class Fighter(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
+
+# #fight outcomes
+# class Outcome(models.Model):
+#     class OutcomeType(models.TextChoices):
+#         KO = "KO"
+#         TKO = "TKO"
+#         SUBMISSION = "Submission"
+#         DECISION = "Decision"
+#         DRAW = "Draw"
+#         NO_CONTEST = "No Contest"
+#         CANCELLED = "Cancelled"
+#         POSTPONED = "Postponed"
+#         UPCOMING = "Upcoming"
+#         NA = "N/A"
+
+#     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
+#     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+#     outcome_type = models.CharField(default=OutcomeType.NA,max_length=100,choices=OutcomeType.choices)
+#     round = models.IntegerField(default=0)#round of fight
+#     time = models.CharField(default="0:00",max_length=100)#time of outcome
+#     method = models.CharField(default="N/A",max_length=100)#method of outcome
