@@ -116,7 +116,7 @@
             <div class="wrapper">
               <h6>win</h6>
             </div>
-            <label for="confidence-win-a" class="form-label">Confidence</label>
+            <label for="confidence-win-a" class="form-label my-0 mt-1">confidence</label>
 <input type="range" class="form-range" min="0" max="10" step="1" id="confidence-win-a">
 
             <p>{{ fighter_a.last_name }}</p>
@@ -224,7 +224,15 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
     integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
     crossorigin="anonymous"></script>
-  <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
+   
+    <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
+    <script>
+      //listen for changes in the slider
+      const confidenceSlider = document.querySelector('#confidence-win-a');
+      confidenceSlider.addEventListener('input', (e)=>{
+        
+      });
+    </script>
   <script>
     // console.log(attribInfoMap);
     //for every attrib row write the correct description based on data-polarity
