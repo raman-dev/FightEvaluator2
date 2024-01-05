@@ -162,9 +162,17 @@ h6 {
   flex-direction: column;
   border: 1px solid lavender;
 }
+.outcomes-container .outcomes-wrapper .outcome datalist {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  writing-mode: vertical-lr;
+}
+.outcomes-container .outcomes-wrapper .outcome datalist option {
+  padding: 0;
+}
 .outcomes-container .outcomes-wrapper .outcome input[type=range] {
   height: 25px;
-  margin: 10px 0;
   width: 100%;
 }
 .outcomes-container .outcomes-wrapper .outcome input[type=range]::-webkit-slider-runnable-track {
@@ -172,23 +180,22 @@ h6 {
   height: 5px;
   cursor: pointer;
   box-shadow: 0px 0px 0px #000000;
-  background: #2497e3;
+  background: linear-gradient(90deg, rgb(255, 0, 0) 0%, rgb(0, 255, 0) 100%);
   border-radius: 1px;
   border: 0px solid #000000;
+  margin: 0px;
 }
 .outcomes-container .outcomes-wrapper .outcome input[type=range]::-webkit-slider-thumb {
   box-shadow: 0px 0px 0px #000000;
   border: 1px solid #2497e3;
-  height: 18px;
-  width: 18px;
-  border-radius: 25px;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 0px;
   background: #a1d0ff;
   cursor: pointer;
   -webkit-appearance: none;
-  margin-top: -7px;
-}
-.outcomes-container .outcomes-wrapper .outcome input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #2497e3;
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 25%, 50% 100%, 0% 25%, 0% 0%);
+          clip-path: polygon(0% 0%, 100% 0%, 100% 25%, 50% 100%, 0% 25%, 0% 0%);
 }
 .outcomes-container .outcomes-wrapper .outcome .wrapper {
   margin: auto;

@@ -109,6 +109,9 @@
         fight doesn't go the distance
         
       -->
+      <!--0 to 10 datalist-->
+      
+
       <h2>Possible Outcomes</h2>
       <div class="outcomes-wrapper row">
         <div class="outcome-card col-2">
@@ -117,8 +120,14 @@
               <h6>win</h6>
             </div>
             <label for="confidence-win-a" class="form-label my-0 mt-1">confidence</label>
-<input type="range" class="form-range" min="0" max="10" step="1" id="confidence-win-a">
-
+            <input type="range" class="form-range" id="confidence-win-a" min="1" max="5" step="1" value="1" list="confidence-labels">
+            <datalist id="confidence-labels">
+              <option value="1" label="very unlikely"></option>
+              <option value="2" label="somewhat unlikely"></option>
+              <option value="3" label="neutral"></option>
+              <option value="4" label="somewhat likely"></option>
+              <option value="5" label="very likely"></option>
+            </datalist>
             <p>{{ fighter_a.last_name }}</p>
           </div>
         </div>
