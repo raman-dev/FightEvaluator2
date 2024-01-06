@@ -241,6 +241,14 @@ h6 {
           @include thumb-shape;
         }
       }
+
+      .confidence-option-wrapper{
+        display: flex;
+        align-items: center;
+        label{
+            width: fit-content;
+        }
+      }
      
       .wrapper {
         margin: auto;
