@@ -111,35 +111,56 @@
       -->
       <!--0 to 10 datalist-->
       
+      
 
       <h2>Possible Outcomes</h2>
       <div class="outcomes-wrapper row">
-        <div class="outcome-card col-2">
+        <div class="outcome-card col-sm-4 col-md-3 col-lg-2">
           <div class="outcome">
             <div class="wrapper">
               <h6>win</h6>
             </div>
-            <label for="confidence-win-a" class="form-label my-0 mt-1">confidence</label>
-            <input type="range" class="form-range" id="confidence-win-a" min="1" max="5" step="1" value="1" list="confidence-labels">
-            <datalist id="confidence-labels">
-              <option value="1" label="very unlikely"></option>
-              <option value="2" label="somewhat unlikely"></option>
-              <option value="3" label="neutral"></option>
-              <option value="4" label="somewhat likely"></option>
-              <option value="5" label="very likely"></option>
-            </datalist>
             <p>{{ fighter_a.last_name }}</p>
+            <div class="slider-wrapper">
+              <label for="confidence-win-a" class="form-label my-0 mt-1">confidence</label>
+              <input type="range" class="form-range" id="confidence-win-a" min="1" max="5" step="1" value="1" list="confidence-labels" orient="vertical">
+              
+              <datalist id="confidence-labels">
+                <option value="1" label="very unlikely"></option>
+                <option value="2" label="somewhat unlikely"></option>
+                <option value="3" label="neutral"></option>
+                <option value="4" label="somewhat likely"></option>
+                <option value="5" label="very likely"></option>
+              </datalist>
+            </div>
+            
           </div>
         </div>
-        <div class="outcome-card col-2">
+        <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
           <div class="outcome">
             <div class="wrapper">
               <h6>1.5 > rnds</h6>
             </div>
             <p>fight lasts more than 1.5 rounds</p>
+            <div class="outcome-option-wrapper d-flex flex-column">
+              <input type="radio" class="btn-check" name="options-base" id="option5" autocomplete="off" checked>
+              <label class="btn" for="option5">very likely</label>
+
+              <input type="radio" class="btn-check" name="options-base" id="option6" autocomplete="off">
+              <label class="btn" for="option6">likely</label>
+
+              <input type="radio" class="btn-check" name="options-base" id="option8" autocomplete="off">
+              <label class="btn" for="option8">50/50</label>
+              
+              <input type="radio" class="btn-check" name="options-base" id="option9" autocomplete="off">
+              <label class="btn" for="option9">unlikely</label>
+              
+              <input type="radio" class="btn-check" name="options-base" id="option10" autocomplete="off">
+              <label class="btn" for="option10">very unlikely</label>
+            </div>
           </div>
         </div>
-        <div class="outcome-card col-2">
+        <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
           <div class="outcome">
             <div class="wrapper">
               <h6>no</h6>
@@ -147,7 +168,7 @@
             <p>fight doesn't go the distance</p>
           </div>
         </div>
-        <div class="outcome-card col-2">
+        <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
           <div class="outcome">
             <div class="wrapper">
               <h6>win</h6>

@@ -162,20 +162,24 @@ h6 {
   flex-direction: column;
   border: 1px solid lavender;
 }
-.outcomes-container .outcomes-wrapper .outcome datalist {
+.outcomes-container .outcomes-wrapper .outcome .slider-wrapper {
+  transform: rotateZ(-90deg);
+}
+.outcomes-container .outcomes-wrapper .outcome .slider-wrapper datalist {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   writing-mode: vertical-lr;
 }
-.outcomes-container .outcomes-wrapper .outcome datalist option {
+.outcomes-container .outcomes-wrapper .outcome .slider-wrapper datalist option {
   padding: 0;
 }
-.outcomes-container .outcomes-wrapper .outcome input[type=range] {
+.outcomes-container .outcomes-wrapper .outcome .slider-wrapper input[type=range] {
   height: 25px;
   width: 100%;
 }
-.outcomes-container .outcomes-wrapper .outcome input[type=range]::-webkit-slider-runnable-track {
+.outcomes-container .outcomes-wrapper .outcome .slider-wrapper input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 5px;
   cursor: pointer;
@@ -185,7 +189,7 @@ h6 {
   border: 0px solid #000000;
   margin: 0px;
 }
-.outcomes-container .outcomes-wrapper .outcome input[type=range]::-webkit-slider-thumb {
+.outcomes-container .outcomes-wrapper .outcome .slider-wrapper input[type=range]::-webkit-slider-thumb {
   box-shadow: 0px 0px 0px #000000;
   border: 1px solid #2497e3;
   height: 1rem;
@@ -193,7 +197,6 @@ h6 {
   border-radius: 0px;
   background: #a1d0ff;
   cursor: pointer;
-  -webkit-appearance: none;
   -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 25%, 50% 100%, 0% 25%, 0% 0%);
           clip-path: polygon(0% 0%, 100% 0%, 100% 25%, 50% 100%, 0% 25%, 0% 0%);
 }
