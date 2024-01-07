@@ -7,14 +7,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
   {% load static %}
-    <link rel="stylesheet" href="{% static 'fightEvaluator/styles/styles.css' %}" />
+  <link rel="stylesheet" href="{% static 'fightEvaluator/styles/styles.css' %}" />
   <link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup.css' %}" />
 </head>
 
 <body data-bs-theme="dark">
   {% include 'fightEvaluator/navbar.html' %}
   <div class="container-fluid xmain-container main-container">
-    
+
     <!--
                 
                 |    fighter a  |     fighter b    |
@@ -29,78 +29,80 @@
             -->
     {% load custom_filters %}
     <div class="matchup-info">
-        <h4>
-            {{ matchup.weight_class|rmscores }} | Rounds: {{ matchup.rounds }} 
-        </h4>
+      <h4>
+        {{ matchup.weight_class|rmscores }} | Rounds: {{ matchup.rounds }}
+      </h4>
     </div>
     <div class="matchup-container justify-content-center">
-        <!--contains information about each fighter including fighter img-->
-        <div class="fighter-container">
-            <div class="fighter-info m-1 border">
-                <img src= {% if fighter_a.img_link %}"{{fighter_a.img_link}}"{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
-                <div class="fighter-bio">
-                    <div class="name">
-                        <h5>
-                          <a href="/assessment/{{ fighter_a.id }}">{{ fighter_a.first_name }} {{ fighter_a.last_name }}</a>
-                        </h5>
-                    </div>
-                    <div class="age">
-                        <h6 class="age-label">age:&nbsp;</h6>
-                        <p class="age">{{ fighter_a.date_of_birth }}</p>
-                    </div>
-                    <div class="record">
-                        <h6 class="record-label">record:&nbsp;</h6>
-                        <p class="record">{{ fighter_a.record }}</p>
-                    </div>
-                    <div class="height">
-                        <h6 class="height-label">height:&nbsp;</h6>
-                        <p>{{fighter_a.height}}</p>
-                    </div>
-                    <div class="reach">
-                        <h6 class="reach-label">reach:&nbsp;</h6>
-                        <p>{{fighter_a.reach}}</p>
-                    </div>
-                </div>
+      <!--contains information about each fighter including fighter img-->
+      <div class="fighter-container">
+        <div class="fighter-info m-1 border">
+          <img src={% if fighter_a.img_link %}"{{fighter_a.img_link}}"{% else %}{%
+            static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
+          <div class="fighter-bio">
+            <div class="name">
+              <h5>
+                <a href="/assessment/{{ fighter_a.id }}">{{ fighter_a.first_name }} {{ fighter_a.last_name }}</a>
+              </h5>
             </div>
-            <!-- <div class="matchup-info"> -->
-              <!-- <div class="matchup-weightclass">
+            <div class="age">
+              <h6 class="age-label">age:&nbsp;</h6>
+              <p class="age">{{ fighter_a.date_of_birth }}</p>
+            </div>
+            <div class="record">
+              <h6 class="record-label">record:&nbsp;</h6>
+              <p class="record">{{ fighter_a.record }}</p>
+            </div>
+            <div class="height">
+              <h6 class="height-label">height:&nbsp;</h6>
+              <p>{{fighter_a.height}}</p>
+            </div>
+            <div class="reach">
+              <h6 class="reach-label">reach:&nbsp;</h6>
+              <p>{{fighter_a.reach}}</p>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="matchup-info"> -->
+        <!-- <div class="matchup-weightclass">
                   <h4>
                   </h4>
               </div> -->
-              <div class="vs-wrapper">
-                  <h4>vs</h4>
-              </div>
-          <!-- </div> -->
-            <div class="fighter-info m-1 border">
-              <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}alt="">
-
-              <div class="fighter-bio">
-                <div class="name">
-                    <h5>
-                      <a href="/assessment/{{ fighter_b.id }}">{{ fighter_b.first_name }} {{ fighter_b.last_name }}</a>
-                    </h5>
-                </div>
-                <div class="age">
-                    <h6 class="age-label">age:&nbsp;</h6>
-                    <p class="age">{{ fighter_b.date_of_birth }}</p>
-                </div>
-                <div class="record">
-                    <h6 class="record-label">record:&nbsp;</h6>
-                    <p class="record">{{ fighter_b.record }}</p>
-                </div>
-                <div class="height">
-                    <h6 class="height-label">height:&nbsp;</h6>
-                    <p>{{fighter_b.height}}</p>
-                </div>
-                <div class="reach">
-                    <h6 class="reach-label">reach:&nbsp;</h6>
-                    <p>{{fighter_b.reach}}</p>
-                </div>
-              </div>
-            </div>
+        <div class="vs-wrapper">
+          <h4>vs</h4>
         </div>
+        <!-- </div> -->
+        <div class="fighter-info m-1 border">
+          <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}"{%
+            static 'fightEvaluator/media/sample_150.png' %}"{% endif %}alt="">
+
+          <div class="fighter-bio">
+            <div class="name">
+              <h5>
+                <a href="/assessment/{{ fighter_b.id }}">{{ fighter_b.first_name }} {{ fighter_b.last_name }}</a>
+              </h5>
+            </div>
+            <div class="age">
+              <h6 class="age-label">age:&nbsp;</h6>
+              <p class="age">{{ fighter_b.date_of_birth }}</p>
+            </div>
+            <div class="record">
+              <h6 class="record-label">record:&nbsp;</h6>
+              <p class="record">{{ fighter_b.record }}</p>
+            </div>
+            <div class="height">
+              <h6 class="height-label">height:&nbsp;</h6>
+              <p>{{fighter_b.height}}</p>
+            </div>
+            <div class="reach">
+              <h6 class="reach-label">reach:&nbsp;</h6>
+              <p>{{fighter_b.reach}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    
+
     <div class="outcomes-container my-4">
       <!--
         what are possible outcomes that are easy to predict for me?
@@ -108,20 +110,7 @@
         over 1.5 rounds
         fight doesn't go the distance
         
-      -->
-      <!--0 to 10 datalist-->
-      
-      
-
-      <h2>Possible Outcomes</h2>
-      <div class="outcomes-wrapper row">
-        <div class="outcome-card col-sm-4 col-md-3 col-lg-2">
-          <div class="outcome">
-            <div class="wrapper">
-              <h6>win</h6>
-            </div>
-            <p>{{ fighter_a.last_name }}</p>
-            <div class="slider-wrapper">
+        <div class="slider-wrapper">
               <label for="confidence-win-a" class="form-label my-0 mt-1">confidence</label>
               <input type="range" class="form-range" id="confidence-win-a" min="1" max="5" step="1" value="1" list="confidence-labels" orient="vertical">
               
@@ -132,8 +121,38 @@
                 <option value="4" label="somewhat likely"></option>
                 <option value="5" label="very likely"></option>
               </datalist>
+          </div> 
+      -->
+
+      <!--0 to 10 datalist-->
+
+
+
+      <h2>Possible Outcomes</h2>
+      <div class="outcomes-wrapper row">
+        <div class="outcome-card col-sm-4 col-md-3 col-lg-2">
+          <div class="outcome">
+            <div class="wrapper">
+              <h6>win</h6>
             </div>
-            
+            <p>{{ fighter_a.last_name }}</p>
+            <div class="confidence-selector">
+              <div class="current-confidence d-flex align-items-center">
+                <p class="confidence my-0 w-100 bg-warning" style="color:black;">neutral</p>
+                <button class="btn show-confidence-list-btn w-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
+                  </svg>
+                </button>
+              </div>
+              <ul class="confidence-list">
+                <li>very likely</li>
+                <li>somewhat likely</li>
+                <li>neutral</li>
+                <li>somewhat unlikely</li>
+                <li selected>very unlikely</li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
@@ -142,22 +161,7 @@
               <h6>1.5 > rnds</h6>
             </div>
             <p>fight lasts more than 1.5 rounds</p>
-            <div class="confidence-option-wrapper d-flex flex-column">
-              <input type="radio" class="btn-check" name="options-base" id="option5" autocomplete="off" checked>
-              <label class="btn btn-outline-success " for="option5">very likely</label>
 
-              <input type="radio" class="btn-check" name="options-base" id="option6" autocomplete="off">
-              <label class="btn btn-outline-primary" for="option6">likely</label>
-
-              <input type="radio" class="btn-check" name="options-base" id="option8" autocomplete="off">
-              <label class="btn btn-outline-warning" for="option8">50/50</label>
-              
-              <input type="radio" class="btn-check" name="options-base" id="option9" autocomplete="off">
-              <label class="btn" for="option9">unlikely</label>
-              
-              <input type="radio" class="btn-check" name="options-base" id="option10" autocomplete="off">
-              <label class="btn btn-outline-danger " for="option10">very unlikely</label>
-            </div>
           </div>
         </div>
         <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
@@ -182,29 +186,29 @@
 
       <div class="attrib-compare-table">
         {% for attribName,value_a,value_b in attribComparison %}
-          <div class="attrib-row" data-name="{{ attribName }}">
-            <h3>{{ attribName|rmscores }}</h3>
-            <div class="attrib-col attrib-left" data-polarity="{{ value_a }}">
-              <div class="state-container">
-                <h5>
-                  {{ value_a }}
-                </h5>
-              </div>
-              <div class="attrib-description-container">
-                <p></p>
-              </div>
+        <div class="attrib-row" data-name="{{ attribName }}">
+          <h3>{{ attribName|rmscores }}</h3>
+          <div class="attrib-col attrib-left" data-polarity="{{ value_a }}">
+            <div class="state-container">
+              <h5>
+                {{ value_a }}
+              </h5>
             </div>
-            <div class="attrib-col attrib-right" data-polarity="{{ value_b }}">
-              <div class="state-container">
-                <h5>
-                  {{ value_b }}
-                </h5>
-              </div>
-              <div class="attrib-description-container">
-                <p></p>
-              </div>
+            <div class="attrib-description-container">
+              <p></p>
             </div>
           </div>
+          <div class="attrib-col attrib-right" data-polarity="{{ value_b }}">
+            <div class="state-container">
+              <h5>
+                {{ value_b }}
+              </h5>
+            </div>
+            <div class="attrib-description-container">
+              <p></p>
+            </div>
+          </div>
+        </div>
         {% endfor %}
       </div>
       <div class="notes-section notes-left">
@@ -213,9 +217,9 @@
         <div class="notes-container">
           <ul class="notes">
             {% for note in fighter_a_notes %}
-              <li class="note">
-                <p>{{ note.data }}</p>
-              </li>
+            <li class="note">
+              <p>{{ note.data }}</p>
+            </li>
             {% endfor %}
           </ul>
         </div>
@@ -235,11 +239,11 @@
               </p>
             </li> -->
             {% for note in fighter_b_notes %}
-              <li class="note">
-               <p>
+            <li class="note">
+              <p>
                 {{ note.data }}
-               </p> 
-              </li>
+              </p>
+            </li>
             {% endfor %}
           </ul>
         </div>
@@ -254,20 +258,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
     integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
     crossorigin="anonymous"></script>
-   
-    <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
-    <script>
-      //listen for changes in the slider
-      const confidenceSlider = document.querySelector('#confidence-win-a');
-      confidenceSlider.addEventListener('input', (e)=>{
-        
-      });
-    </script>
+
+  <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
+  <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
   <script>
     // console.log(attribInfoMap);
     //for every attrib row write the correct description based on data-polarity
     const attribRows = document.querySelectorAll('.attrib-row');
-    attribRows.forEach((row)=>{
+    attribRows.forEach((row) => {
       const attribName = row.dataset.name;
       //for every attrib-col
       row.querySelectorAll('.attrib-col').forEach((column) => {
@@ -281,9 +279,9 @@
     });
     //reorder attrib-cards to match attribCardOrder
     let attribList = document.querySelector('.attrib-compare-table');
-      attribCardOrder.forEach((attribName)=>{
-        let attribRow = document.querySelector(`[data-name="${attribName}"]`);
-        attribList.appendChild(attribRow);
+    attribCardOrder.forEach((attribName) => {
+      let attribRow = document.querySelector(`[data-name="${attribName}"]`);
+      attribList.appendChild(attribRow);
     });
   </script>
 </body>
