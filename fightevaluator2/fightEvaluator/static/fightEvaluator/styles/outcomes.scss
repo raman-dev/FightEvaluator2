@@ -1,9 +1,44 @@
+/*
+   5 colors representing very likely, likely, neutral, unlikely, very unlikely
+  */
+  .likely-5 {
+    background-color: #dc3545;
+  }
+  
+  .likely-4 {
+    background-color: #ed7b26;
+  }
+
+  .likely-3 {
+    background-color: #ffc107;
+  }
+  
+  .likely-2 {
+    background-color: #80ff00;
+  }
+
+  .likely-1 {
+    background-color: #00ff00;
+  }
+
 ul.confidence-list {
   list-style-type: none;
   height: 0px;
   overflow: hidden;
   padding: 0px;
   transition: all 0.3s ease-in-out;
+
+  li{
+    // border: 1px solid lavender;
+    margin-bottom: 0.5rem;
+    color: black;
+  }
+  
+  li:hover{
+    cursor: pointer;
+  }
+
+
 }
 
 .outcomes-container {
@@ -38,7 +73,6 @@ ul.confidence-list {
       }
 
       p {
-        border: 1px solid lavender;
         border-radius: 0.5rem;
 
         margin: 0px;

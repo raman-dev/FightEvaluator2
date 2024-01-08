@@ -138,7 +138,7 @@
             <p>{{ fighter_a.last_name }}</p>
             <div class="confidence-selector">
               <div class="current-confidence d-flex align-items-center">
-                <p class="confidence my-0 w-100 bg-warning" style="color:black;">neutral</p>
+                <p class="confidence my-0 w-100 likely-3" style="color:black;">neutral</p>
                 <button class="btn show-confidence-list-btn w-0">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                     <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
@@ -146,11 +146,11 @@
                 </button>
               </div>
               <ul class="confidence-list">
-                <li>very likely</li>
-                <li>somewhat likely</li>
-                <li>neutral</li>
-                <li>somewhat unlikely</li>
-                <li selected>very unlikely</li>
+                <li class="likely-1">very likely</li>
+                <li class="likely-2">somewhat likely</li>
+                <li class="likely-3 active">neutral</li>
+                <li class="likely-4">somewhat unlikely</li>
+                <li class="likely-5">very unlikely</li>
               </ul>
             </div>
           </div>
