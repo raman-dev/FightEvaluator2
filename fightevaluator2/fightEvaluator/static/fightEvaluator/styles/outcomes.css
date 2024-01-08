@@ -1,6 +1,30 @@
 /*
    5 colors representing very likely, likely, neutral, unlikely, very unlikely
   */
+@font-face {
+  font-family: PoppinsThin;
+  src: url("Poppins/Poppins-Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsLight;
+  src: url("Poppins/Poppins-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsRegular;
+  src: url("Poppins/Poppins-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsMedium;
+  src: url("Poppins/Poppins-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsBold;
+  src: url("Poppins/Poppins-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsSemiBold;
+  src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
 .likely-5 {
   background-color: #dc3545;
 }
@@ -22,20 +46,41 @@
 }
 
 ul.confidence-list {
+  margin-top: 0.4rem;
   list-style-type: none;
   height: 0px;
   overflow: hidden;
   padding: 0px;
   transition: all 0.3s ease-in-out;
+  font-family: PoppinsSemiBold;
 }
 ul.confidence-list li {
   margin-bottom: 0.5rem;
   color: black;
 }
+ul.confidence-list li .likelihood {
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+  text-align: center;
+  text-transform: capitalize;
+}
 ul.confidence-list li:hover {
   cursor: pointer;
 }
+ul.confidence-list li.active .likelihood {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
 
+.outcomes-container .confidence {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+  text-align: center;
+  text-transform: capitalize;
+  font-family: PoppinsSemiBold;
+}
 .outcomes-container .outcomes-wrapper {
   display: flex;
   justify-content: space-evenly;
@@ -44,6 +89,7 @@ ul.confidence-list li:hover {
   display: flex;
   flex-direction: column;
   border: 1px solid lavender;
+  padding: 0.2rem;
 }
 .outcomes-container .outcomes-wrapper .outcome .wrapper {
   margin: auto;

@@ -9,18 +9,27 @@ document.querySelectorAll('.confidence-selector').forEach(item => {
     confidenceList.querySelectorAll('li').forEach(li => {
         li.addEventListener('click', (event) => {
             let listItem = event.currentTarget;
+            let likelihood = listItem.querySelector('.likelihood');
             if (listItem.classList.contains('active')) {
                 //if clicked list item is active, remove active class
                 return;
             }
             let currentConfidence = confidenceList.querySelector('.active');
+            let oldLikelihoodElement = currentConfidence.querySelector('.likelihood');
+            let oldLikelihood = oldLikelihoodElement.classList[oldLikelihoodElement.classList.length - 1];
+            
             currentConfidence.classList.remove('active');
             listItem.classList.add('active');
-            confidence.textContent = listItem.textContent;
-            confidence.classList.remove(currentConfidence.classList[0]);
-            confidence.classList.add(listItem.classList[0]);    
+
+            // console.log(likelihood,currentLikelihood);
+            console.log(likelihood.classList[likelihood.classList.length - 1], oldLikelihood);
+
+            confidence.textContent = likelihood.textContent;
+            confidence.classList.remove(oldLikelihood);
+            confidence.classList.add(likelihood.classList[likelihood.classList.length - 1]);    
         });
     });
+
     showConfidenceListBtn.addEventListener('click', (event) => {
         //check if confidenceList is expanded
         let isOpen = confidenceList.classList.contains('expanded');

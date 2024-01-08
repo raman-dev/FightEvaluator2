@@ -1,47 +1,99 @@
 /*
    5 colors representing very likely, likely, neutral, unlikely, very unlikely
   */
-  .likely-5 {
-    background-color: #dc3545;
-  }
-  
-  .likely-4 {
-    background-color: #ed7b26;
-  }
+@font-face {
+  font-family: PoppinsThin;
+  src: url("Poppins/Poppins-Thin.ttf") format("truetype");
+}
 
-  .likely-3 {
-    background-color: #ffc107;
-  }
-  
-  .likely-2 {
-    background-color: #80ff00;
-  }
+@font-face {
+  font-family: PoppinsLight;
+  src: url("Poppins/Poppins-Light.ttf") format("truetype");
+}
 
-  .likely-1 {
-    background-color: #00ff00;
-  }
+@font-face {
+  font-family: PoppinsRegular;
+  src: url("Poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: PoppinsMedium;
+  src: url("Poppins/Poppins-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: PoppinsBold;
+  src: url("Poppins/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: PoppinsSemiBold;
+  src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+
+.likely-5 {
+  background-color: #dc3545;
+}
+
+.likely-4 {
+  background-color: #ed7b26;
+}
+
+.likely-3 {
+  background-color: #ffc107;
+}
+
+.likely-2 {
+  background-color: #80ff00;
+}
+
+.likely-1 {
+  background-color: #00ff00;
+}
 
 ul.confidence-list {
+  margin-top: 0.4rem;
   list-style-type: none;
   height: 0px;
   overflow: hidden;
   padding: 0px;
   transition: all 0.3s ease-in-out;
+  font-family: PoppinsSemiBold;
 
-  li{
-    // border: 1px solid lavender;
+  li {
     margin-bottom: 0.5rem;
     color: black;
   }
-  
-  li:hover{
+
+  li .likelihood {
+    border-radius: 0.4rem;
+    padding: 0.3rem;
+    text-align: center;
+    text-transform: capitalize;
+  }
+
+  li:hover {
     cursor: pointer;
   }
 
-
+  li.active .likelihood{
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
 }
 
 .outcomes-container {
+
+  .confidence {
+    min-width: fit-content;
+    border-radius: 0.4rem;
+    padding: 0.3rem;
+    text-align: center;
+    text-transform: capitalize;
+    font-family: PoppinsSemiBold;
+
+  }
+
   .outcomes-wrapper {
     display: flex;
     justify-content: space-evenly;
@@ -50,6 +102,7 @@ ul.confidence-list {
       flex-direction: column;
       // justify-content: center;
       border: 1px solid lavender;
+      padding: 0.2rem;
       .wrapper {
         margin: auto;
         width: 4rem;
