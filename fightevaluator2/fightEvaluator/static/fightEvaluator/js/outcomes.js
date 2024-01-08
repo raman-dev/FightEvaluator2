@@ -21,9 +21,6 @@ document.querySelectorAll('.confidence-selector').forEach(item => {
             currentConfidence.classList.remove('active');
             listItem.classList.add('active');
 
-            // console.log(likelihood,currentLikelihood);
-            console.log(likelihood.classList[likelihood.classList.length - 1], oldLikelihood);
-
             confidence.textContent = likelihood.textContent;
             confidence.classList.remove(oldLikelihood);
             confidence.classList.add(likelihood.classList[likelihood.classList.length - 1]);    
@@ -36,7 +33,6 @@ document.querySelectorAll('.confidence-selector').forEach(item => {
         if (isOpen) {
             //if confidenceList is expanded, collapse it
             confidenceList.classList.remove('expanded');
-            //set height to 0
             confidenceList.style.height = '0px';
         } else {
             //if confidenceList is collapsed, expand it

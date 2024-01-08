@@ -88,6 +88,9 @@ class MatchUp(models.Model):
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True)
 
+     def __str__(self) -> str:
+          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
+
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
@@ -148,23 +151,26 @@ class Fighter(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
 
-# #fight outcomes
-# class Outcome(models.Model):
-#     class OutcomeType(models.TextChoices):
-#         KO = "KO"
-#         TKO = "TKO"
-#         SUBMISSION = "Submission"
-#         DECISION = "Decision"
-#         DRAW = "Draw"
-#         NO_CONTEST = "No Contest"
-#         CANCELLED = "Cancelled"
-#         POSTPONED = "Postponed"
-#         UPCOMING = "Upcoming"
-#         NA = "N/A"
+class MatchUpOutcome(models.Model):
 
-#     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
-#     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
-#     outcome_type = models.CharField(default=OutcomeType.NA,max_length=100,choices=OutcomeType.choices)
-#     round = models.IntegerField(default=0)#round of fight
-#     time = models.CharField(default="0:00",max_length=100)#time of outcome
-#     method = models.CharField(default="N/A",max_length=100)#method of outcome
+    class Outcomes(models.TextChoices):
+        WIN = "Win","Fighter wins"
+        GEQ_ONE_AND_HALF_ROUNDS = "1.5 >= Rnds","Fight lasts more than 1.5 rounds"
+        DOES_NOT_GO_THE_DISTANCE = "No","Fight Does Not Go the Distance"
+
+    class Likelihood(models.IntegerChoices):
+        UNLIKELY = (5,"Very Unlikely")
+        POSSIBLE = (4,"Somewhat Unlikely")
+        NEUTRAL = (3,"Neutral")
+        LIKELY = (2,"Likely")
+        VERY_LIKELY = (1,"Very Likely")
+        NOT_PREDICTED = (0,"Not Predicted")
+
+
+    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
+    outcome = models.CharField(choices=Outcomes.choices,max_length=256)
+    likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
+
+    def __str__(self):
+        return "|" + self.outcome + "|" + str(self.likelihood)

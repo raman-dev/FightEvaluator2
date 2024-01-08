@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,WeightClass,Stance
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome
 from ..forms import *
 import json
 import datetime
@@ -12,6 +12,19 @@ import datetime
 @require_GET
 def matchup_index(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
+    matchupOutcomes = MatchUpOutcome.objects.filter(matchup=matchup)
+
+    if len(matchupOutcomes) == 0:
+        #create the 4 outcomes i am interested in
+        matchupOutcomes = [
+            MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_a,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
+            MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_b,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
+            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS,likelihood=MatchUpOutcome.Likelihood.LIKELY),
+            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE,likelihood=MatchUpOutcome.Likelihood.LIKELY),
+        ]
+        for outcome in matchupOutcomes:
+            outcome.save()
+
     attribComparison = []
     fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
     fighterB_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_b))
@@ -20,14 +33,15 @@ def matchup_index(request,matchupId):
         if k == 'id' or k == 'fighter':
             continue            
         attribComparison.append((k,fighterA_assessment[k],fighterB_assessment[k]))
-    # print(attribComparison)
+    
     context = {
         'matchup':matchup,
         'fighter_a':matchup.fighter_a,
         'fighter_b':matchup.fighter_b,
         'fighter_a_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_a)).order_by('-createdAt'),
         'fighter_b_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt'),
-        'attribComparison':attribComparison
+        'attribComparison':attribComparison,
+        'outcomes' : matchupOutcomes,
     }
     return render(request,"fightEvaluator/matchup.html",context)
 

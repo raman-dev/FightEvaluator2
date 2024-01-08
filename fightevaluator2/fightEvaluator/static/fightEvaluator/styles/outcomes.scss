@@ -51,17 +51,32 @@
   background-color: #00ff00;
 }
 
+.confidence-selector{
+  border: 1px solid lavender;
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+
+  .current-confidence{
+    margin-bottom: 0.1rem;
+    margin-top: 0.1rem;
+  }
+}
+
 ul.confidence-list {
-  margin-top: 0.4rem;
   list-style-type: none;
-  height: 0px;
-  overflow: hidden;
+  
   padding: 0px;
+  margin-bottom: 0rem;
+  height: 0px;
+
+  overflow: hidden;
+  
   transition: all 0.3s ease-in-out;
   font-family: PoppinsSemiBold;
 
   li {
-    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    margin-bottom: 0.1rem;
     color: black;
   }
 
@@ -100,8 +115,7 @@ ul.confidence-list {
     .outcome {
       display: flex;
       flex-direction: column;
-      // justify-content: center;
-      border: 1px solid lavender;
+      // border: 1px solid lavender;
       padding: 0.2rem;
       .wrapper {
         margin: auto;

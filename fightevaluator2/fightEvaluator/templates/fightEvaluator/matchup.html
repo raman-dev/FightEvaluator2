@@ -130,66 +130,50 @@
 
       <h2>Possible Outcomes</h2>
       <div class="outcomes-wrapper row">
-        <div class="outcome-card col-sm-4 col-md-3 col-lg-2">
+        {% for outcome in outcomes %}
+        <div class="outcome-card col col-3">
           <div class="outcome">
             <div class="wrapper">
-              <h6>win</h6>
+              <h6>{{ outcome.outcome }}</h6>
             </div>
-            <p>{{ fighter_a.last_name }}</p>
+            <p>
+              {% if outcome.fighter %} 
+                {{ outcome.fighter.last_name }}
+              {% else %}
+                {{ outcome.get_outcome_display }}
+              {% endif %}
+            </p>
             <div class="confidence-selector">
               <div class="current-confidence d-flex align-items-center">
-                <p class="confidence my-0 w-100 likely-3" style="color:black;">neutral</p>
+                <p class="confidence my-0 w-100 likely-{{outcome.likelihood}}" style="color:black;">{{outcome.get_likelihood_display}}</p>
                 <button class="btn show-confidence-list-btn w-0">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                     <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
                   </svg>
                 </button>
               </div>
-              <ul class="confidence-list">
-                <li>
-                  <div class="likelihood likely-1" >very likely</div>
+              <ul class="confidence-list">                
+                <li class="{% if outcome.likelihood == 1 %} active {% endif %}">
+                  <div class="likelihood likely-1">very likely</div>
                 </li>
-                <li class="">
+                <li class="{% if outcome.likelihood == 2 %} active {% endif %}">
                   <div class="likelihood likely-2">somewhat likely</div>
                 </li>
-                <li class="active">
+                <li class="{% if outcome.likelihood == 3 %} active {% endif %}">
                   <div class="likelihood likely-3">neutral</div>
                 </li>
-                <li class="">
+                <li class="{% if outcome.likelihood == 4 %} active {% endif %}">
                   <div class="likelihood likely-4">somewhat unlikely</div>
                 </li>
-                <li class="">
+                <li class="{% if outcome.likelihood == 5 %} active {% endif %}">
                   <div class="likelihood likely-5">very unlikely</div>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
-          <div class="outcome">
-            <div class="wrapper">
-              <h6>1.5 > rnds</h6>
-            </div>
-            <p>fight lasts more than 1.5 rounds</p>
-
-          </div>
-        </div>
-        <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
-          <div class="outcome">
-            <div class="wrapper">
-              <h6>no</h6>
-            </div>
-            <p>fight doesn't go the distance</p>
-          </div>
-        </div>
-        <div class="outcome-card col-2 col-sm-4 col-md-3 col-lg-2">
-          <div class="outcome">
-            <div class="wrapper">
-              <h6>win</h6>
-            </div>
-            <p>{{ fighter_b.last_name }}</p>
-          </div>
-        </div>
+        {% endfor %}
+        
       </div>
     </div>
     <div class="content-grid">

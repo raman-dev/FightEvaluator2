@@ -45,17 +45,28 @@
   background-color: #00ff00;
 }
 
+.confidence-selector {
+  border: 1px solid lavender;
+  border-radius: 0.4rem;
+  padding: 0.3rem;
+}
+.confidence-selector .current-confidence {
+  margin-bottom: 0.1rem;
+  margin-top: 0.1rem;
+}
+
 ul.confidence-list {
-  margin-top: 0.4rem;
   list-style-type: none;
+  padding: 0px;
+  margin-bottom: 0rem;
   height: 0px;
   overflow: hidden;
-  padding: 0px;
   transition: all 0.3s ease-in-out;
   font-family: PoppinsSemiBold;
 }
 ul.confidence-list li {
-  margin-bottom: 0.5rem;
+  padding: 0.3rem;
+  margin-bottom: 0.1rem;
   color: black;
 }
 ul.confidence-list li .likelihood {
@@ -88,7 +99,6 @@ ul.confidence-list li.active .likelihood {
 .outcomes-container .outcomes-wrapper .outcome {
   display: flex;
   flex-direction: column;
-  border: 1px solid lavender;
   padding: 0.2rem;
 }
 .outcomes-container .outcomes-wrapper .outcome .wrapper {
