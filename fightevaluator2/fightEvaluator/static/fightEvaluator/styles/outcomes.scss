@@ -126,6 +126,13 @@ ul.confidence-list {
       flex-direction: column;
       // border: 1px solid lavender;
       padding: 0.2rem;
+      position: relative;
+
+      .save-outcome-btn{
+        position: absolute;
+        right: 0px;
+      }
+
       .wrapper {
         margin: auto;
         width: 4rem;
@@ -142,10 +149,7 @@ ul.confidence-list {
           width: fit-content;
           text-align: center;
         }
-      }
-
-      .wrapper:hover {
-        cursor: pointer;
+      
       }
 
       p {

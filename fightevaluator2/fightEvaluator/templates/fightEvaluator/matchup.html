@@ -112,15 +112,16 @@
       <!--0 to 10 datalist-->
 
 
-
+      {% csrf_token %}
       <h2>Possible Outcomes</h2>
       <div class="outcomes-wrapper row">
         {% for outcome in outcomes %}
         <div class="outcome-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
-          <div class="outcome">
+          <div class="outcome" data-id="{{ outcome.id }}" data-likelihood="{{ outcome.likelihood }}">
             <div class="wrapper">
-              <h6>{{ outcome.outcome }}</h6>
+                <h6>{{ outcome.outcome }}</h6>
             </div>
+            <button class="save-outcome-btn btn btn-primary disabled">save</button>
             <p>
               {% if outcome.fighter %} 
                 {{ outcome.fighter.last_name }}
@@ -129,7 +130,7 @@
               {% endif %}
             </p>
             <div class="confidence-selector">
-              <div class="current-confidence d-flex align-items-center">
+              <div class="current-confidence d-flex align-items-center" data-likelihood="{{outcome.likelihood}}">
                 <p class="confidence my-0 w-100 likely-{{outcome.likelihood}}" style="color:black;">{{outcome.get_likelihood_display}}</p>
                 <button class="btn show-confidence-list-btn w-0">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -138,19 +139,19 @@
                 </button>
               </div>
               <ul class="confidence-list">                
-                <li class="{% if outcome.likelihood == 1 %} active {% endif %}">
+                <li class="{% if outcome.likelihood == 1 %} active {% endif %}" data-likelihood="1">
                   <div class="likelihood likely-1">very likely</div>
                 </li>
-                <li class="{% if outcome.likelihood == 2 %} active {% endif %}">
+                <li class="{% if outcome.likelihood == 2 %} active {% endif %}" data-likelihood="2">
                   <div class="likelihood likely-2">somewhat likely</div>
                 </li>
-                <li class="{% if outcome.likelihood == 3 %} active {% endif %}">
+                <li class="{% if outcome.likelihood == 3 %} active {% endif %}" data-likelihood="3">
                   <div class="likelihood likely-3">neutral</div>
                 </li>
-                <li class="{% if outcome.likelihood == 4 %} active {% endif %}">
+                <li class="{% if outcome.likelihood == 4 %} active {% endif %}" data-likelihood="4">
                   <div class="likelihood likely-4">somewhat unlikely</div>
                 </li>
-                <li class="{% if outcome.likelihood == 5 %} active {% endif %}">
+                <li class="{% if outcome.likelihood == 5 %} active {% endif %}" data-likelihood="5">
                   <div class="likelihood likely-5">very unlikely</div>
                 </li>
               </ul>
@@ -237,6 +238,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
     integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
 
   <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
   <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>

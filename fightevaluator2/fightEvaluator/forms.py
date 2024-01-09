@@ -59,3 +59,6 @@ class MatchUpForm(forms.Form):
         #valid weight_class string
         self.cleaned_data['weight_class'] = weight_class
         return True
+
+class MatchUpOutcomeUpdateLikelihood(forms.Form):
+    likelihood = forms.IntegerField(label='Likelihood',min_value=1,max_value=5)

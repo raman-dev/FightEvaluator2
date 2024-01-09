@@ -81,3 +81,17 @@ def delete_matchup(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     matchup.delete()
     return JsonResponse({"success":"true"})
+
+@require_http_methods(["PATCH"])
+def updateMatchUpOutcomeLikelihood(request,outcomeId):
+    matchupOutcome = get_object_or_404(MatchUpOutcome,id=outcomeId)
+    inputBody = json.loads(request.body)
+    
+    matchupOutcomeUpdateForm = MatchUpOutcomeUpdateLikelihood(inputBody)
+    if matchupOutcomeUpdateForm.is_valid():
+        matchupOutcome.likelihood = matchupOutcomeUpdateForm.cleaned_data['likelihood']
+        matchupOutcome.save()
+    else:
+        return JsonResponse({"success":"false","errors":matchupOutcomeUpdateForm.errors})
+
+    return JsonResponse(model_to_dict(matchupOutcome))

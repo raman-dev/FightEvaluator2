@@ -110,6 +110,11 @@ ul.confidence-list li.active .likelihood {
   display: flex;
   flex-direction: column;
   padding: 0.2rem;
+  position: relative;
+}
+.outcomes-container .outcomes-wrapper .outcome .save-outcome-btn {
+  position: absolute;
+  right: 0px;
 }
 .outcomes-container .outcomes-wrapper .outcome .wrapper {
   margin: auto;
@@ -126,9 +131,6 @@ ul.confidence-list li.active .likelihood {
   width: -moz-fit-content;
   width: fit-content;
   text-align: center;
-}
-.outcomes-container .outcomes-wrapper .outcome .wrapper:hover {
-  cursor: pointer;
 }
 .outcomes-container .outcomes-wrapper .outcome p {
   border-radius: 0.5rem;
