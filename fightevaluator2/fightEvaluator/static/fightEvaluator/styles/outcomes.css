@@ -83,6 +83,15 @@ ul.confidence-list li.active .likelihood {
   outline-offset: 2px;
 }
 
+.outcome-card {
+  background-color: #12161A;
+  border-radius: 0.8rem;
+  padding-bottom: 0.8rem;
+  padding-top: 0.8rem;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 .outcomes-container .confidence {
   min-width: -moz-fit-content;
   min-width: fit-content;
@@ -95,6 +104,7 @@ ul.confidence-list li.active .likelihood {
 .outcomes-container .outcomes-wrapper {
   display: flex;
   justify-content: space-evenly;
+  gap: 0.6rem;
 }
 .outcomes-container .outcomes-wrapper .outcome {
   display: flex;
@@ -125,4 +135,5 @@ ul.confidence-list li.active .likelihood {
   margin: 0px;
   margin-top: 1rem;
   text-align: center;
+  text-transform: capitalize;
 }/*# sourceMappingURL=outcomes.css.map */

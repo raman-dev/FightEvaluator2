@@ -97,6 +97,14 @@ ul.confidence-list {
   }
 }
 
+.outcome-card{
+  background-color: #12161A;
+  border-radius: 0.8rem;
+  padding-bottom: 0.8rem;
+  padding-top: 0.8rem;
+  height: fit-content;
+}
+
 .outcomes-container {
 
   .confidence {
@@ -112,6 +120,7 @@ ul.confidence-list {
   .outcomes-wrapper {
     display: flex;
     justify-content: space-evenly;
+    gap: 0.6rem;
     .outcome {
       display: flex;
       flex-direction: column;
@@ -146,6 +155,7 @@ ul.confidence-list {
         margin-top: 1rem;
 
         text-align: center;
+        text-transform: capitalize;
       }
     }
   }
