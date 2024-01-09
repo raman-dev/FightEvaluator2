@@ -36,9 +36,8 @@
     <div class="matchup-container justify-content-center">
       <!--contains information about each fighter including fighter img-->
       <div class="fighter-container">
-        <div class="fighter-info m-1 border">
-          <img src={% if fighter_a.img_link %}"{{fighter_a.img_link}}"{% else %}{%
-            static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
+        <div class="fighter-info m-1">
+          <img src={% if fighter_a.img_link %}"{{fighter_a.img_link}}"{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
           <div class="fighter-bio">
             <div class="name">
               <h5>
@@ -72,9 +71,8 @@
           <h4>vs</h4>
         </div>
         <!-- </div> -->
-        <div class="fighter-info m-1 border">
-          <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}"{%
-            static 'fightEvaluator/media/sample_150.png' %}"{% endif %}alt="">
+        <div class="fighter-info m-1">
+          <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}alt="">
 
           <div class="fighter-bio">
             <div class="name">
@@ -109,19 +107,6 @@
         win-loss
         over 1.5 rounds
         fight doesn't go the distance
-        
-        <div class="slider-wrapper">
-              <label for="confidence-win-a" class="form-label my-0 mt-1">confidence</label>
-              <input type="range" class="form-range" id="confidence-win-a" min="1" max="5" step="1" value="1" list="confidence-labels" orient="vertical">
-              
-              <datalist id="confidence-labels">
-                <option value="1" label="very unlikely"></option>
-                <option value="2" label="somewhat unlikely"></option>
-                <option value="3" label="neutral"></option>
-                <option value="4" label="somewhat likely"></option>
-                <option value="5" label="very likely"></option>
-              </datalist>
-          </div> 
       -->
 
       <!--0 to 10 datalist-->
