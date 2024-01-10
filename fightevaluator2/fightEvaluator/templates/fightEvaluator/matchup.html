@@ -157,6 +157,16 @@
               </ul>
             </div>
           </div>
+          <div class="justification">
+            <!--a list of notes referencing attributes and fights,mentality,history...-->
+            <ul class="notes">
+              {% for note in outcome.notes.all %}
+              <li class="note">
+                <p>{{ note.data }}</p>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
         {% endfor %}
         
