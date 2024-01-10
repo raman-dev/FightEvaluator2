@@ -157,15 +157,21 @@
               </ul>
             </div>
           </div>
-          <div class="justification">
+          <div class="justification border">
+            <div class="title-wrapper">            
+              <h5>Justification</h5>
+              <button class="btn show-justification-btn w-0">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                  <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
+                </svg>
+              </button>
+            </div>
             <!--a list of notes referencing attributes and fights,mentality,history...-->
-            <ul class="notes">
-              {% for note in outcome.notes.all %}
-              <li class="note">
-                <p>{{ note.data }}</p>
-              </li>
-              {% endfor %}
-            </ul>
+            <div class="justification-container">
+              <p contenteditable="true">
+                justification statements and conclusions
+              </p>  
+            </div>
           </div>
         </div>
         {% endfor %}

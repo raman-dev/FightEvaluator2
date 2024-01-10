@@ -138,4 +138,17 @@ ul.confidence-list li.active .likelihood {
   margin-top: 1rem;
   text-align: center;
   text-transform: capitalize;
+}
+
+.justification {
+  padding: 0.3rem;
+}
+.justification .title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.justification .justification-container {
+  border: 1px solid lavender;
+  border-radius: 0.4rem;
 }/*# sourceMappingURL=outcomes.css.map */

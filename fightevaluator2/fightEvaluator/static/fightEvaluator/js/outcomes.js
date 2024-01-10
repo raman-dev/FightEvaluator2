@@ -44,9 +44,11 @@ function toggleConfidenceList(expandList,confidenceList){
 
 document.querySelectorAll('.outcome').forEach(outcome => {
     let confidenceSelector= outcome.querySelector('.confidence-selector');
-    let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
-    let confidenceList = confidenceSelector.querySelector('.confidence-list');
     
+    let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
+    let showJustifactionBtn = confidenceSelector.querySelector('.show-justification-btn');
+
+    let confidenceList = confidenceSelector.querySelector('.confidence-list');
     let currentConfidence = confidenceSelector.querySelector('.current-confidence');
     let confidenceTextElement = currentConfidence.querySelector('p');
 

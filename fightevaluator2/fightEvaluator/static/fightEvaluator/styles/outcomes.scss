@@ -144,6 +144,7 @@ ul.confidence-list {
 
         border: 1px solid lavender;
         border-radius: 99rem;
+
         h6 {
           text-transform: capitalize;
           width: fit-content;
@@ -162,5 +163,19 @@ ul.confidence-list {
         text-transform: capitalize;
       }
     }
+  }
+}
+
+.justification{
+  padding: 0.3rem;
+  .title-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .justification-container{
+    border: 1px solid lavender;
+    border-radius: 0.4rem;
   }
 }

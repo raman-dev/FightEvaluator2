@@ -171,6 +171,7 @@ class MatchUpOutcome(models.Model):
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
     outcome = models.CharField(choices=Outcomes.choices,max_length=256)
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
+    justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
 
     def __str__(self):
         return "|" + self.outcome + "|" + str(self.likelihood)
