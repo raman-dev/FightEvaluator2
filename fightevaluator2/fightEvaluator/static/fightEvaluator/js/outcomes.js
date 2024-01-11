@@ -5,9 +5,11 @@ async function updateLikelihood(){
     let outcome_id = this.outcome.dataset.id;
     let newLikelihood = this.outcome.querySelector('.current-confidence').dataset.likelihood;
     let saveOutcomeBtn = this.outcome.querySelector('.save-outcome-btn');
+    let newJustification = this.outcome.querySelector('.justification .editor-wrapper .editor').textContent
 
     input_data = {
         "likelihood": newLikelihood,
+        "justification": newJustification,
     };
 
     let response = await fetch(`/matchup/update-outcome/${outcome_id}`, {
@@ -25,6 +27,8 @@ async function updateLikelihood(){
         //update outcome likelihood
         this.outcome.dataset.likelihood = output.likelhood;
         //disable save button
+        this.outcome.querySelector('.justification .editor-wrapper .editor').textContent = output.justification;
+        justificationMap[outcome_id] = output.justification;
         saveOutcomeBtn.classList.add('disabled');//disable save button
         toggleConfidenceList(false,this.outcome.querySelector('.confidence-list'));
     }
@@ -42,11 +46,32 @@ function toggleConfidenceList(expandList,confidenceList){
     }
 }
 
+function toggleJustification(expandJustification,justificationEditor){
+    if (expandJustification){
+        //if justificationEditor is collapsed, expand it
+        justificationEditor.classList.add('expanded');
+        justificationEditor.style.height = `${justificationEditor.scrollHeight}px`;
+    }else{
+        //if justificationEditor is expanded, collapse it
+        justificationEditor.classList.remove('expanded');
+        justificationEditor.style.height = '0px';
+    }
+}
+
+//for every key value in a dictionary 
+//add key value pair to FormData
+for (const [key, value] of Object.entries(justificationMap)) {
+    document.querySelector(`[data-id='${key}'] .editor-wrapper .editor`).textContent = value;
+}
+
 document.querySelectorAll('.outcome').forEach(outcome => {
     let confidenceSelector= outcome.querySelector('.confidence-selector');
     
     let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
-    let showJustifactionBtn = confidenceSelector.querySelector('.show-justification-btn');
+    let showJustifactionBtn = outcome.querySelector('.show-justification-btn');
+
+    let justifactionEditorWrapper = outcome.querySelector('.justification .editor-wrapper');
+    let justifactionEditor = justifactionEditorWrapper.querySelector('.editor');
 
     let confidenceList = confidenceSelector.querySelector('.confidence-list');
     let currentConfidence = confidenceSelector.querySelector('.current-confidence');
@@ -91,12 +116,27 @@ document.querySelectorAll('.outcome').forEach(outcome => {
     showConfidenceListBtn.addEventListener('click', (event) => {
         //check if confidenceList is expanded
         let isOpen = confidenceList.classList.contains('expanded');
-        if (isOpen) {
-            toggleConfidenceList(false,confidenceList);
-        } else {
-            toggleConfidenceList(true,confidenceList);
+        toggleJustification(!isOpen,confidenceList);
+    });
+
+    justifactionEditor.addEventListener('input', (event) => {
+        let justification = event.currentTarget.textContent.trim();
+        //enable save button iff justification is different to outcome.dataset.justification
+        if (justification != outcome.dataset.justification){
+            //enable save button
+            saveOutcomeBtn.classList.remove('disabled');
+        }else{
+            //disable save button
+            if (!saveOutcomeBtn.classList.contains('disabled')){
+                saveOutcomeBtn.classList.add('disabled');
+            }
         }
     });
+
+    // showJustifactionBtn.addEventListener('click', (event) => {
+    //     let isOpen = justifactionEditorWrapper.classList.contains('expanded');
+    //     toggleJustification(!isOpen,justifactionEditorWrapper);
+    // });
 
     saveOutcomeBtn.addEventListener('click',updateLikelihood.bind({outcome:outcome}));
 });

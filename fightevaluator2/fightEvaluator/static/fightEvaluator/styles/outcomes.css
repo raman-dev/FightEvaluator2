@@ -148,7 +148,18 @@ ul.confidence-list li.active .likelihood {
   align-items: center;
   justify-content: space-between;
 }
-.justification .justification-container {
+.justification .justification-container .editor-wrapper {
   border: 1px solid lavender;
   border-radius: 0.4rem;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+.justification .justification-container .editor-wrapper .editor {
+  margin: 0px;
+  padding: 0.3rem;
+  width: 100%;
+  text-transform: capitalize;
+  text-align: left;
+  word-break: break-word;
+  min-height: 4rem;
 }/*# sourceMappingURL=outcomes.css.map */

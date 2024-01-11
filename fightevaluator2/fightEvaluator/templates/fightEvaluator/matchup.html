@@ -156,23 +156,25 @@
                 </li>
               </ul>
             </div>
-          </div>
-          <div class="justification border">
-            <div class="title-wrapper">            
-              <h5>Justification</h5>
-              <button class="btn show-justification-btn w-0">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                  <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
-                </svg>
-              </button>
+            <div class="justification">
+              <div class="title-wrapper">            
+                <h5>Justification</h5>
+                <button class="btn show-justification-btn w-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
+                  </svg>
+                </button>
+              </div>
+              <!--a list of notes referencing attributes and fights,mentality,history...-->
+              <div class="justification-container">
+                <div class="editor-wrapper">
+                  <div class="editor"  contenteditable="plaintext-only">
+                  </div>  
+                </div>
+              </div>
             </div>
-            <!--a list of notes referencing attributes and fights,mentality,history...-->
-            <div class="justification-container">
-              <p contenteditable="true">
-                justification statements and conclusions
-              </p>  
-            </div>
           </div>
+          
         </div>
         {% endfor %}
         
@@ -257,8 +259,13 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
 
   <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
-  <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
   <script>
+    
+        const justificationMap = {};
+
+        {% for outcome in outcomes %}
+            justificationMap[{{outcome.id}}] = "{{outcome.justification|default:'Justification Statements and Conclusions'}}";
+        {% endfor %}
     // console.log(attribInfoMap);
     //for every attrib row write the correct description based on data-polarity
     const attribRows = document.querySelectorAll('.attrib-row');
@@ -281,6 +288,9 @@
       attribList.appendChild(attribRow);
     });
   </script>
+
+  <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
+
 </body>
 
 </html>

@@ -124,7 +124,7 @@ ul.confidence-list {
     .outcome {
       display: flex;
       flex-direction: column;
-      // border: 1px solid lavender;
+
       padding: 0.2rem;
       position: relative;
 
@@ -175,7 +175,23 @@ ul.confidence-list {
   }
 
   .justification-container{
-    border: 1px solid lavender;
-    border-radius: 0.4rem;
+    .editor-wrapper{
+      border: 1px solid lavender;
+      border-radius: 0.4rem; 
+      // height: auto;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+
+      .editor {
+        margin: 0px;
+        padding: 0.3rem;
+        width: 100%;
+        text-transform: capitalize;
+        text-align: left;
+        // max-width: 32ch;
+        word-break: break-word;
+        min-height: 4rem;
+      }
+    }
   }
 }

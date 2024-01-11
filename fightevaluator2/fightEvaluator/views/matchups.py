@@ -90,6 +90,7 @@ def updateMatchUpOutcomeLikelihood(request,outcomeId):
     matchupOutcomeUpdateForm = MatchUpOutcomeUpdateLikelihood(inputBody)
     if matchupOutcomeUpdateForm.is_valid():
         matchupOutcome.likelihood = matchupOutcomeUpdateForm.cleaned_data['likelihood']
+        matchupOutcome.justification = matchupOutcomeUpdateForm.cleaned_data['justification']
         matchupOutcome.save()
     else:
         return JsonResponse({"success":"false","errors":matchupOutcomeUpdateForm.errors})
