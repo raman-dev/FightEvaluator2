@@ -264,8 +264,9 @@
         const justificationMap = {};
 
         {% for outcome in outcomes %}
-            justificationMap[{{outcome.id}}] = "{{outcome.justification|default:'Justification Statements and Conclusions'}}";
+            justificationMap[{{outcome.id}}] = `{{outcome.justification|default:'Justification Statements and Conclusions'|safe}}`;
         {% endfor %}
+
     // console.log(attribInfoMap);
     //for every attrib row write the correct description based on data-polarity
     const attribRows = document.querySelectorAll('.attrib-row');
