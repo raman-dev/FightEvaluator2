@@ -20,8 +20,9 @@ def matchup_index(request,matchupId):
             MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_a,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
             MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_b,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
             MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS,likelihood=MatchUpOutcome.Likelihood.LIKELY),
-            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE,likelihood=MatchUpOutcome.Likelihood.LIKELY),
+            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
         ]
+        
         for outcome in matchupOutcomes:
             outcome.save()
 
