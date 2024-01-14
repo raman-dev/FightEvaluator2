@@ -8,6 +8,26 @@ import json
 import datetime
 from ..scraper import getUpcomingFightEvent
 
+@require_GET
+def indexById(request,eventId):
+    event = FightEvent.objects.filter(id=eventId)[0]
+    matchups = MatchUp.objects.filter(event=event)
+    mainCard = []
+    prelims = []
+    for matchup in matchups:
+        # print(matchup.isprelim,matchup)
+        if matchup.isprelim:
+            prelims.append(matchup)
+        else:
+            mainCard.append(matchup)
+    
+    context = {
+        'event': event,
+        'matchupsList': [mainCard,prelims],
+    }
+
+    return render(request, "fightEvaluator/index.html",context)
+
 # Create your views here.
 @require_GET
 def index(request):
