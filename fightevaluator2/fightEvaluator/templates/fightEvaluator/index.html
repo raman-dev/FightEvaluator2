@@ -289,7 +289,7 @@
         </div>
         <div class="matchups container-fluid">
           {% for matchup in matchups %}
-          <div class="matchup row border border-2 m-1" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
+          <div class="matchup row border border-2 m-1"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
             <div class="col col-1">
               <h1>{{forloop.counter}}</h1>
             </div>
@@ -768,10 +768,16 @@
     }
 
     function onClickMatchup(event){
+      // console.log('onClickMatchup', event.currentTarget);
+      if (event.currentTarget === document.activeElement){
+        event.currentTarget.blur();
+      }else{
+        event.currentTarget.focus();
+      }
       let result = matchupElementStateHandler.toggleState(event.currentTarget);
       matchupUIStateManager.toggleState(result);
     }
- 
+
     function onClickDelete(event){
       //check if matchup selected
       let activeMatchup = document.querySelector(".matchup.active");

@@ -149,7 +149,6 @@
   text-transform: capitalize;
 }
 .matchups-container .matchup:hover {
-  background-color: hsl(0, 0%, 12%);
   cursor: pointer;
 }
 .matchups-container .matchup:hover .weightclass h6 {
@@ -157,6 +156,9 @@
   margin: 0px;
 }
 .matchups-container .matchup.active {
+  border-color: #598392 !important;
+}
+.matchups-container .matchup:focus {
   border-color: #598392 !important;
 }
 .matchups-container .matchup.watching {

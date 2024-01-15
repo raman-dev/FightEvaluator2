@@ -172,8 +172,9 @@ $cardBorderColor: #131b23;
       }
     }
   }
+
   .matchup:hover {
-    background-color: hsl(0, 0%, 12%);
+    // background-color: hsl(0, 0%, 12%);
     cursor: pointer;
     .weightclass {
       h6 { 
@@ -182,10 +183,16 @@ $cardBorderColor: #131b23;
       }
     }
   }
+
   .matchup.active{
     border-color: #598392 !important;
     // border-bottom: 1px solid gray;
   }
+
+  .matchup:focus{
+    border-color: #598392 !important; 
+  }
+
   .matchup.watching{
     //overlay darkens
     background-color: hsl(0, 0%, 12%, 0.5);

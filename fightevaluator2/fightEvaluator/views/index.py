@@ -69,4 +69,6 @@ def index(request):
     return render(request, "fightEvaluator/index.html",context)
 
 
+def focusTest(request):
+    return render(request,"fightEvaluator/focusTest.html",{})
 

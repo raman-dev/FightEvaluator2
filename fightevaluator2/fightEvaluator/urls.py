@@ -3,6 +3,9 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+
+    path('focusTest',views.focusTest, name='focusTest'),
+
     path('<int:eventId>',views.indexById,name='indexById'),
     path('fighters/search/',views.fighter_search, name='fighter_search'),#working
     path('fighters/create-fighter',views.create_fighter, name='create_fighter'),#working
