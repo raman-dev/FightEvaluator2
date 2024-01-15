@@ -15,6 +15,7 @@ urlpatterns = [
     path('notes/delete-note/<int:noteId>',views.delete_note, name='delete_note'),#working
 
     path('matchup/create-matchup',views.create_matchup, name='create_matchup'),#working
+    path('matchup/update-matchup/<int:matchupId>',views.update_matchup, name='update_matchup'),#working
     path('matchup/delete-matchup/<int:matchupId>',views.delete_matchup, name='delete_matchup'),#working
     path('matchup/<int:matchupId>',views.matchup_index, name='matchup'),#working
     path('matchup/update-outcome/<int:outcomeId>',views.updateMatchUpOutcomeLikelihood, name='update_outcome'),#working

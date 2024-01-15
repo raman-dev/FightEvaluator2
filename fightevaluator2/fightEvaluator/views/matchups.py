@@ -84,6 +84,24 @@ def delete_matchup(request,matchupId):
     return JsonResponse({"success":"true"})
 
 @require_http_methods(["PATCH"])
+def update_matchup(request,matchupId):
+    matchup = get_object_or_404(MatchUp,id=matchupId)
+    inputBody = json.loads(request.body)
+    
+    matchupUpdateForm = MatchUpForm(inputBody)
+    if matchupUpdateForm.is_valid():
+        matchup.fighter_a = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_a_id'])
+        matchup.fighter_b = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_b_id'])
+        matchup.weight_class = matchupUpdateForm.cleaned_data['weight_class']
+        matchup.rounds = matchupUpdateForm.cleaned_data['rounds']
+        matchup.scheduled = matchupUpdateForm.cleaned_data['scheduled']
+        matchup.isprelim = matchupUpdateForm.cleaned_data['isprelim']
+        matchup.save()
+    else:
+        return JsonResponse({"success":"false","errors":matchupUpdateForm.errors})
+
+    return JsonResponse(model_to_dict(matchup))
+@require_http_methods(["PATCH"])
 def updateMatchUpOutcomeLikelihood(request,outcomeId):
     matchupOutcome = get_object_or_404(MatchUpOutcome,id=outcomeId)
     inputBody = json.loads(request.body)

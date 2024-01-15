@@ -62,6 +62,11 @@
 }
 .search-suggestion ul .suggestion p {
   margin: 0px;
+  text-transform: capitalize;
+}
+
+.search-container .search-box input {
+  text-transform: capitalize;
 }
 
 /* fighter-img has rounded corners using crop */

@@ -65,8 +65,22 @@
     .suggestion{
       p{
         margin: 0px;
+        text-transform: capitalize;
       }
     }
+  }
+}
+
+.search-container{
+  .search-box{
+    input {
+      text-transform: capitalize;
+    }
+
+    // input[disabled]{
+      // background-color: transparent;
+      // color: red;
+    // }
   }
 }
 

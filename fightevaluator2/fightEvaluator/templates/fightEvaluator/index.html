@@ -20,11 +20,11 @@
   <!--container-->
   <div class="container-fluid main-container">
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="matchupModal" tabindex="-1" aria-labelledby="matchupModalLabel" aria-hidden="true" data-matchup-id="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content w-auto">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
+            <h1 class="modal-title fs-5" id="matchupModalLabel">
               Add Matchup
             </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -35,15 +35,19 @@
               <div class="fighter-selector">
                 <div class="current-matchup p-2 border rounded">
                   <h5>Current Matchup</h5>
+                  
                   <div class="fighter fighter-a d-flex align-items-center" data-selected-id="-1">
                     <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
-                    <h6 class="fighter-name mx-1 d-none">Fighter a</h6>
+                    <!-- <h6 class="fighter-name mx-1 d-none">Fighter a</h6> -->
                     <!--bootstrap close button-->
                     <div class="search-container mx-1">
                       <!--text search box-->
                       <div class="search-box" data-target="#searchbox-a">
                         <form>
-                          <input type="text" name="search" placeholder="Search for a fighter..." />
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnA">
+                            <button class="btn btn-outline-danger" type="button" id="clearSearchBtnA" onclick="clearFighterSelection('fighter-a')" >clear</button>
+                          </div>
                         </form>
                       </div>
                       <!--search box suggestion drop down-->
@@ -51,21 +55,21 @@
                         <ul class="list-group"></ul>
                       </div>
                     </div>
-                    <button class="search-clear-button btn-primary btn" onclick="clearFighterSelection('fighter-a')">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
-                    </button>
                   </div>
                   <div class="my-1">
                     <p class="m-0 text-center">versus</p>
                   </div>
                   <div class="fighter fighter-b d-flex align-items-center" data-selected-id="-1">
                     <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
-                    <h6 class="fighter-name mx-1 d-none">Fighter b</h6>
+                    <!-- <h6 class="fighter-name mx-1 d-none">Fighter b</h6> -->
                     <div class="search-container mx-1">
                       <!--text search box-->
                       <div class="search-box" data-target="#searchbox-b">
                         <form>
-                          <input type="text" name="search" placeholder="Search for a fighter..." />
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnB">
+                            <button class="btn btn-outline-danger" type="button" id="clearSearchBtnB" onclick="clearFighterSelection('fighter-b')" >clear</button>
+                          </div>                        
                         </form>
                       </div>
                       <!--search box suggestion drop down-->
@@ -73,9 +77,6 @@
                         <ul class="list-group"></ul>
                       </div>
                     </div>
-                    <button class="search-clear-button btn-primary btn" onclick="clearFighterSelection('fighter-b')">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
-                    </button>
                   </div>
                   <div class="matchup-info-wrapper">
                     <div class="weight-class dropdown">
@@ -222,10 +223,12 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
-            <button type="button" class="btn btn-primary" onclick="createMatchup(event)">
+            <button type="button" class="create-matchup-btn btn btn-primary" onclick="createMatchUp(event)">
               Create Matchup
             </button>
-
+            <button type="button" class="update-matchup-btn btn btn-primary d-none" onclick="updateMatchUp(event)">
+              Update Matchup
+            </button>
           </div>
         </div>
       </div>
@@ -236,16 +239,16 @@
       <div class="action-bar d-flex align-items-center w-100">
         <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
           <div class="action-wrapper" >
-            <button type="button" class="btn btn-primary active-independent" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary active-independent" data-bs-toggle="modal" data-bs-target="#matchupModal">
               add
             </button>
             <p>&nbsp;- add matchup</p>
           </div>
           <!--edit matchup action-->
           <div class="action-wrapper">
-            <a class="edit btn btn-primary disabled" href="#">
+            <button type="button" class="edit btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#matchupModal" onclick="onClickEdit()">
               edit
-            </a>
+            </button>
             <p>&nbsp;- edit matchup</p>
           </div>
           <div class="action-wrapper">
@@ -286,11 +289,11 @@
         </div>
         <div class="matchups container-fluid">
           {% for matchup in matchups %}
-          <div class="matchup row border border-2 m-1" data-matchup-id="{{matchup.id}}">
+          <div class="matchup row border border-2 m-1" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
             <div class="col col-1">
               <h1>{{forloop.counter}}</h1>
             </div>
-            <div class="col col-4 d-flex fighter">
+            <div class="col col-4 d-flex fighter" data-fighter-id="{{ matchup.fighter_a.id }}">
               <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="">
               <a href="/assessment/{{ matchup.fighter_a.id }}">
                 <p class="fighter-name">{{ matchup.fighter_a.name }}</p>
@@ -298,9 +301,9 @@
             </div>
             <div class="col col-3 weightclass">
               <h6>{{ matchup.weight_class|rmscores }}</h6>
-              <p>{{ matchup.rounds }} x 5</p>
+              <p class="matchup-rounds">{{ matchup.rounds }} x 5</p>
             </div>
-            <div class="col col-4 d-flex fighter justify-content-end">
+            <div class="col col-4 d-flex fighter justify-content-end" data-fighter-id="{{ matchup.fighter_b.id }}">
               <a href="/assessment/{{ matchup.fighter_b.id }}">
                 <p class="fighter-name">{{ matchup.fighter_b.name }}</p>
               </a>
@@ -328,6 +331,7 @@
       </div>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -342,7 +346,7 @@
       "Content-Type": "application/json",
       "X-CSRFToken": Cookies.get('csrftoken'),
     }
-    function createMatchup(event) {
+    function createMatchUp(event) {
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
       let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
@@ -381,6 +385,51 @@
           //update matchup table
           let matchup = data["matchup"];
           let matchupElement = document.createElement("div");
+          //reflect change in matchup table
+        });
+    }
+
+    function updateMatchUp(event){
+      let matchupId = document.querySelector("#matchupModal").dataset.matchupId;
+      //grab fighter-id from fighter-a and fighter-b
+      let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
+      let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
+      let weightClass = document.querySelector(".weight-class .dropdown-toggle").textContent;
+      let rounds = document.querySelector("input[name='rounds']:checked").value;
+      let isprelim = document.querySelector("#isprelim").checked;
+      //make sure both fighter id's are not -1
+      if (fighterAId == -1 || fighterBId == -1) {
+        alert("Please select two fighters");
+        return;
+      }
+      //also make sure some dropdown is selected
+      if (weightClass == "Weight Class") {
+        alert("Please select a weight class");
+        return;
+      }
+      // console.log(fighterAId, fighterBId, weightClass,rounds);
+      // return;
+
+      //send post request to /create-matchup
+      fetch(`/matchup/update-matchup/${matchupId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          matchupId: matchupId,
+          fighter_a_id: fighterAId,
+          fighter_b_id: fighterBId,
+          weight_class: weightClass,
+          rounds: rounds,
+          event_id: fightEventId,
+          isprelim: isprelim,
+        }),
+        headers: postHeaders,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          //update matchup table
+          // let matchup = data["matchup"];
+          // let matchupElement = document.createElement("div");
           //reflect change in matchup table
         });
     }
@@ -432,12 +481,12 @@
 
     function clearFighterSelection(fighter){
       let fighterElement = document.querySelector(`.${fighter}`);
+      let searchBoxInput = fighterElement.querySelector(".search-box input");
       fighterElement.dataset.selectedId = -1;
       // fighterElement.querySelector(".fighter-img").src = "static/media/sample_50.png";
-      fighterElement.querySelector(".fighter-name").textContent = "";
-      fighterElement.querySelector(".fighter-name").classList.add("d-none");
       fighterElement.querySelector(".search-container").classList.remove("d-none");
-      fighterElement.querySelector(`.search-box input`).value = "";
+      searchBoxInput.value = "";
+      searchBoxInput.removeAttribute("disabled");
     }
 
     function onClickSuggestion() {
@@ -447,11 +496,14 @@
       this.searchSuggestionList.innerHTML = "";
       //set the first one to the new fighter
       // this.fighterElement.querySelector(".fighter-img").src = this.fighter.image_url;
-      this.fighterElement.querySelector(".fighter-name").textContent = this.fighter.first_name + " " + this.fighter.last_name;
-      this.fighterElement.querySelector(".fighter-name").classList.remove("d-none");
+      // this.fighterElement.querySelector(".fighter-name").textContent = this.fighter.first_name + " " + this.fighter.last_name;
+      // this.fighterElement.querySelector(".fighter-name").classList.remove("d-none");
       this.fighterElement.dataset.selectedId = this.fighter.id;
-      this.fighterElement.querySelector(".search-container").classList.add("d-none");
+      // this.searchBoxInput.setAttribute("readonly", true); 
+      this.searchBoxInput.setAttribute("disabled",true);
+      // this.fighterElement.querySelector(".search-container").classList.add("d-none");
     }
+    
     //search box functionality
     document.querySelectorAll(".fighter-selector .fighter").forEach((fighterElement) => {
       let searchBox = fighterElement.querySelector(".search-box");
@@ -593,10 +645,12 @@
         let analyzeButton = document.querySelector(".analyze");
         let watchButton = document.querySelector(".watch");
         let deleteButton = document.querySelector(".delete");
+        let editButton = document.querySelector(".edit");
 
         watchButton.classList.remove("disabled");
         analyzeButton.classList.remove("disabled");
         deleteButton.classList.remove("disabled");
+        editButton.classList.remove("disabled");
 
         analyzeButton.href = `/matchup/${matchupId}`;
         //check if in watchlist
@@ -613,9 +667,11 @@
         //disable all actions
         let analyzeButton = document.querySelector(".analyze");
         let watchButton = document.querySelector(".watch");
+        let editButton = document.querySelector(".edit");
 
         analyzeButton.classList.add("disabled");
         watchButton.classList.add("disabled");
+        editButton.classList.add("disabled");
 
         analyzeButton.href = "#";
         watchButton.textContent = "watch";
@@ -735,7 +791,82 @@
       confirmationDialog.classList.remove("d-none");
     }
 
-   
+    function onClickEdit(event){
+      let activeMatchup = document.querySelector(".matchup.active");
+      let [fighterA,fighterB] = activeMatchup.querySelectorAll(".fighter");
+      let matchupId = activeMatchup.dataset.matchupId;
+      let weightClass = activeMatchup.querySelector(".weightclass h6").textContent;
+      //capitalize weightClass
+      weightClass = weightClass.charAt(0).toUpperCase() + weightClass.slice(1).toLowerCase();
+      let rounds = parseInt(activeMatchup.querySelector(".weightclass .matchup-rounds").textContent.split(" ")[0]);
+      //populate modal form data
+      let matchupModal = document.querySelector("#matchupModal");
+      matchupModal.dataset.matchupId = matchupId;
+      //fill out names of fighters from current active matchup
+      let searchBoxA = matchupModal.querySelector(".fighter-a .search-box input");
+      let searchBoxB = matchupModal.querySelector(".fighter-b .search-box input");
+
+      searchBoxA.setAttribute("disabled",true);
+      searchBoxB.setAttribute("disabled",true);
+
+      searchBoxA.value = fighterA.querySelector(".fighter-name").textContent;
+      searchBoxB.value = fighterB.querySelector(".fighter-name").textContent;
+
+      //set fighter id's
+      matchupModal.querySelector(".fighter-a").dataset.selectedId = fighterA.dataset.fighterId;
+      matchupModal.querySelector(".fighter-b").dataset.selectedId = fighterB.dataset.fighterId;
+
+      //set weightclass
+      matchupModal.querySelector(".weight-class .dropdown-toggle").textContent = weightClass;
+      //set rounds
+      if (rounds == 3){
+        matchupModal.querySelector("#roundOption-3").checked = true;
+      }else{
+        matchupModal.querySelector("#roundOption-5").checked = true;
+      }
+
+      //set isprelim
+      let isprelim = activeMatchup.dataset.isprelim;
+      if (isprelim == "True"){
+        matchupModal.querySelector("#isprelim").checked = true;
+      }else{
+        matchupModal.querySelector("#isprelim").checked = false;
+      }
+
+      //show update button
+      matchupModal.querySelector(".create-matchup-btn").classList.add("d-none");
+      matchupModal.querySelector(".update-matchup-btn").classList.remove("d-none");
+    }
+    
+    function onMatchUpDialogHidden(){
+      //clear form data from matchupModal
+      let matchupModal = document.querySelector("#matchupModal");
+      let searchBoxA = matchupModal.querySelector(".fighter-a .search-box input");
+      let searchBoxB = matchupModal.querySelector(".fighter-b .search-box input");
+      
+      searchBoxA.value = "";
+      searchBoxB.value = "";
+
+      searchBoxA.removeAttribute("disabled");
+      searchBoxB.removeAttribute("disabled");
+
+      matchupModal.querySelector(".fighter-a").dataset.selectedId = -1;
+      matchupModal.querySelector(".fighter-b").dataset.selectedId = -1;
+
+      matchupModal.querySelector(".weight-class .dropdown-toggle").textContent = "Weight Class";
+      matchupModal.querySelector("#roundOption-3").checked = true;
+      matchupModal.querySelector("#isprelim").checked = false;
+
+      //hide update button
+      matchupModal.querySelector(".create-matchup-btn").classList.remove("d-none");
+      matchupModal.querySelector(".update-matchup-btn").classList.add("d-none");
+    }
+
+    //add on hidden event listener to matchupModal
+    let matchupModal = document.querySelector("#matchupModal");
+    matchupModal.addEventListener("hidden.bs.modal", onMatchUpDialogHidden);
+
+
     initWatchList();
 
     function deleteMatchup(matchupId){
