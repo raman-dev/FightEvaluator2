@@ -9,10 +9,11 @@ $neutralBg: #ffc107;
 $outlineColor : #3d7efd;
 
 $backgroundColor: #212529;
-$cardColor: #242a34;
+// $cardColor: #242a34;
 $cardBorderColor: #131b23;
+$cardColor: #12161A;
 
-$color-0: #01161E;
+$color-0: #01161E; 
 $color-1: #124559;
 $color-2: #598392;
 $color-3: #AEC3B0;
@@ -168,7 +169,7 @@ $flickerDuration: 400ms;
     display: flex;
     
     border-radius: $borderRadius;
-    border: 1px solid $cardBorderColor;
+    // border: 1px solid $cardBorderColor;
     background-color: $cardColor;
 
     margin-left: 0.8rem;
@@ -239,17 +240,23 @@ $flickerDuration: 400ms;
 }
 
 
+.fighter-attrib-list{
+  padding: 0.5rem;
+}
 
 .attrib-card{
   background-color: $cardColor;
   
-  border: 2px solid $cardBorderColor;
+  // border: 2px solid $cardBorderColor;
   border-radius: $borderRadius;
-  outline: 3px solid transparent;
+
+  outline: 0px solid transparent;
   outline-offset: 2px;
   
   padding: $cardPadding;
   margin-bottom: 0.7rem;
+
+  transition: outline 0.12s ease-out;
 
   p{
     margin: 0px;
@@ -414,8 +421,12 @@ $flickerDuration: 400ms;
   }
 }
 .attrib-card[data-edit-mode-enabled="true"]{
-  border-color: lavender !important;
+  // outline-color: lavender !important;
+  
+  outline: 3px solid lavender !important;
+
   animation-play-state: running;
+  margin-bottom: 0.85rem;
 
   .card-state{
     background-color: transparent;
@@ -450,7 +461,7 @@ $flickerDuration: 400ms;
 .list-group-item {
   margin-bottom: 1rem;
   background-color: $cardColor;
-  border: 2px solid #242a30 !important;
+  // border: 2px solid #242a30 !important;
   outline: 3px solid transparent !important;
   outline-offset: 2px !important;
   border-radius: 0.5rem !important;  
@@ -465,6 +476,7 @@ $flickerDuration: 400ms;
 .fighter-notes {
   max-width: 48ch;
   padding: 1rem;
+  margin: 0.5rem;
 
   .notes-title{
     padding: 0.5rem;
@@ -519,7 +531,7 @@ $flickerDuration: 400ms;
       padding: 0px;
       .note {
         background-color: #212529;
-        border: 2px solid lavender;
+        border: 1px solid lavender;
         border-radius: 0.6rem;
         list-style: None;
         display: flex;
@@ -533,6 +545,11 @@ $flickerDuration: 400ms;
           max-width: 100%;
           margin: 0px;
         }
+      }
+
+      .note:focus{
+        outline: 3px solid #3d7efd;
+        outline-offset: 2px;
       }
 
       .note.active{

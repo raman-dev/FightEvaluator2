@@ -207,7 +207,7 @@
             <div class="notes-list align-self-center mt-4">
               <ul class="dx-none">
                 {% for note in notes %}
-                <li class="note" data-note-id="{{ note.id }}">
+                <li class="note" data-note-id="{{ note.id }}" tabindex="100">
                   <p>{{ note.data }}</p>
                   <!-- <button
                     class="btn btn-danger note-delete-btn"
@@ -469,8 +469,6 @@
      
       let fighterAge = document.querySelector(".fighter-age");
       fighterAge.textContent = dobToAge('{{ fighter.date_of_birth }}');
-
-      
       
       let notesList = document.querySelector('.notes-list');
       let notesListUl = document.querySelector(".notes-list ul");
@@ -489,15 +487,25 @@
         // console.log(event);
         //remove active class from all notes
         let currentNote = event.currentTarget;
-        let list = event.currentTarget.parentElement;
-        let active = list.querySelector('.active');
-        if (active != null){
-          active.classList.remove('active');
-        }
-        if (active == currentNote){
+        // console.log(currentNote);
+        if (document.activeElement === currentNote){
           document.querySelector('.note-delete-btn').classList.add('disabled');
+          currentNote.blur();
           return;//do nothing we only deactivated this note
         }
+        // document.activeElement.blur();
+        // currentNote.focus();
+        let list = event.currentTarget.parentElement;
+        // let active = list.querySelector('.active');
+
+        // if (active != null){
+        //   active.classList.remove('active');
+        // }
+        // if (active == currentNote){
+        //   document.querySelector('.note-delete-btn').classList.add('disabled');
+        //   return;//do nothing we only deactivated this note
+        // }
+        
         //add active class to clicked note
         currentNote.classList.add('active');
         //enable delete button

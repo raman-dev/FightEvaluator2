@@ -119,8 +119,7 @@ body {
 .fighter-card .content-wrapper {
   display: flex;
   border-radius: 0.5rem;
-  border: 1px solid #131b23;
-  background-color: #242a34;
+  background-color: #12161A;
   margin-left: 0.8rem;
   padding: 1.2rem;
 }
@@ -178,14 +177,18 @@ body {
   color: whitesmoke;
 }
 
+.fighter-attrib-list {
+  padding: 0.5rem;
+}
+
 .attrib-card {
-  background-color: #242a34;
-  border: 2px solid #131b23;
+  background-color: #12161A;
   border-radius: 0.5rem;
-  outline: 3px solid transparent;
+  outline: 0px solid transparent;
   outline-offset: 2px;
   padding: 1.2rem;
   margin-bottom: 0.7rem;
+  transition: outline 0.12s ease-out;
 }
 .attrib-card p {
   margin: 0px;
@@ -313,8 +316,9 @@ body {
 }
 
 .attrib-card[data-edit-mode-enabled=true] {
-  border-color: lavender !important;
+  outline: 3px solid lavender !important;
   animation-play-state: running;
+  margin-bottom: 0.85rem;
 }
 .attrib-card[data-edit-mode-enabled=true] .card-state {
   background-color: transparent;
@@ -341,8 +345,7 @@ body {
 
 .list-group-item {
   margin-bottom: 1rem;
-  background-color: #242a34;
-  border: 2px solid #242a30 !important;
+  background-color: #12161A;
   outline: 3px solid transparent !important;
   outline-offset: 2px !important;
   border-radius: 0.5rem !important;
@@ -356,6 +359,7 @@ body {
 .fighter-notes {
   max-width: 48ch;
   padding: 1rem;
+  margin: 0.5rem;
 }
 .fighter-notes .notes-title {
   padding: 0.5rem;
@@ -404,7 +408,7 @@ body {
 }
 .fighter-notes .notes-list ul .note {
   background-color: #212529;
-  border: 2px solid lavender;
+  border: 1px solid lavender;
   border-radius: 0.6rem;
   list-style: None;
   display: flex;
@@ -417,6 +421,10 @@ body {
   min-width: 32ch;
   max-width: 100%;
   margin: 0px;
+}
+.fighter-notes .notes-list ul .note:focus {
+  outline: 3px solid #3d7efd;
+  outline-offset: 2px;
 }
 .fighter-notes .notes-list ul .note.active {
   outline: 3px solid #3d7efd;
