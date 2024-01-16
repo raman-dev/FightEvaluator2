@@ -418,11 +418,14 @@
           notesContainer.classList.remove('dx-none');
           //create a new li element with the noteText
           let newNote = document.createElement("li");
+          newNote.setAttribute("tabindex","100");
           newNote.classList.add("note");
           // newNote.setAttribute("data-note-id", noteData.id);
           newNote.innerHTML = "<p>" + noteText + "</p>";
           newNote.dataset.noteId = noteData.id;
           newNote.addEventListener('click',onClickNote);
+          // newNote.addEventListener('focusin',onNoteFocusIn);
+          // newNote.addEventListener('focusout',onNoteFocusOut);
           //append the new li element to the notes-list
           let notesList = document.querySelector(".notes-list ul");
           notesList.classList.remove('dx-none');//if there are no notes, remove the d-none class
@@ -437,6 +440,7 @@
         //send delete request to server
         //remove note from notes-list
         let activeNote = document.querySelector('.notes-list .active');
+        // console.log(activeNote);
         let note_id = parseInt(activeNote.getAttribute("data-note-id"));
         // console.log(note_id);
         let response = await fetch(`/notes/delete-note/${note_id}`, {
@@ -483,38 +487,39 @@
         notesListUl.classList.remove('dx-none');
       }
 
-      function onClickNote(event){
-        // console.log(event);
-        //remove active class from all notes
-        let currentNote = event.currentTarget;
-        // console.log(currentNote);
-        if (document.activeElement === currentNote){
-          document.querySelector('.note-delete-btn').classList.add('disabled');
-          currentNote.blur();
-          return;//do nothing we only deactivated this note
-        }
-        // document.activeElement.blur();
-        // currentNote.focus();
-        let list = event.currentTarget.parentElement;
-        // let active = list.querySelector('.active');
+      // function onNoteFocusIn(event){
+      //   document.querySelector('.note-delete-btn').classList.remove('disabled');
+      // }
 
-        // if (active != null){
-        //   active.classList.remove('active');
-        // }
-        // if (active == currentNote){
-        //   document.querySelector('.note-delete-btn').classList.add('disabled');
-        //   return;//do nothing we only deactivated this note
-        // }
-        
-        //add active class to clicked note
-        currentNote.classList.add('active');
-        //enable delete button
+      // function onNoteFocusOut(event){
+      //   document.querySelector('.note-delete-btn').classList.add('disabled');
+      // }
+
+      function onClickNote(event){
+        // console.log('note clicked');
+        //remove active class from all notes
+        let list = event.currentTarget.parentElement;
+        let note = event.currentTarget;
+        //check if note is active note
+        let activeNote = list.querySelector('.active');
+        if (note === activeNote){
+          // console.log('note is active note');
+          activeNote.classList.remove('active');
+          document.querySelector('.note-delete-btn').classList.add('disabled');
+          return;
+        }
+        if (activeNote != null){
+          activeNote.classList.remove('active');
+        }
+        note.classList.add('active');
         document.querySelector('.note-delete-btn').classList.remove('disabled');
       }
       
       //on click a note make it active and enable delete button
       for (const note of notesListUl.children){
         note.addEventListener('click',onClickNote);
+        // note.addEventListener('focusin',onNoteFocusIn);
+        // note.addEventListener('focusout',onNoteFocusOut);
       }
       
     </script>
@@ -593,6 +598,7 @@
         let xmodal = document.querySelector(".xmodal");
         let action = xmodal.classList.contains("hide") ? "show" : "hide";
         //these variables are defined only when showing the modal
+        // console.log('toggle xmodal');
         if (action == "show"){
           //show the modal
           xmodal.classList.remove("hide");
@@ -617,7 +623,7 @@
         //write values from fighter_data to the form
         let form = document.querySelector(".fighter-creator form");
         for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name") {
+          if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name" || key =="middle_name" || key =="data_api_link") {
             continue;
           }
           // console.log(key, fighter_data[key]);

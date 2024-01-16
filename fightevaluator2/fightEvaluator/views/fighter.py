@@ -61,7 +61,8 @@ def update_fighter(request,fighterId):
         fighter.height = form.cleaned_data['height']
         fighter.weight_class = WeightClass[form.cleaned_data['weight_class'].upper()]
         fighter.reach = form.cleaned_data['reach']
-        fighter.stance = Stance[form.cleaned_data['stance'].upper()]
+        if form.cleaned_data['stance'] != None:
+            fighter.stance = Stance[form.cleaned_data['stance'].upper()]
         fighter.date_of_birth = form.cleaned_data['date_of_birth']
         fighter.wins = form.cleaned_data['wins']
         fighter.losses = form.cleaned_data['losses']

@@ -547,10 +547,10 @@ $flickerDuration: 400ms;
         }
       }
 
-      .note:focus{
-        outline: 3px solid #3d7efd;
-        outline-offset: 2px;
-      }
+      // .note:focus{
+      //   outline: 3px solid #3d7efd;
+      //   outline-offset: 2px;
+      // }
 
       .note.active{
         outline: 3px solid #3d7efd;

@@ -422,10 +422,6 @@ body {
   max-width: 100%;
   margin: 0px;
 }
-.fighter-notes .notes-list ul .note:focus {
-  outline: 3px solid #3d7efd;
-  outline-offset: 2px;
-}
 .fighter-notes .notes-list ul .note.active {
   outline: 3px solid #3d7efd;
   outline-offset: 2px;
