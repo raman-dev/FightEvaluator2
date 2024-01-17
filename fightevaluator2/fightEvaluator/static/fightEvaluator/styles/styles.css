@@ -59,6 +59,12 @@ h6 {
   overflow: auto;
 }
 
+nav {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 /*
     tailwind responsive media queries
 *//*# sourceMappingURL=styles.css.map */

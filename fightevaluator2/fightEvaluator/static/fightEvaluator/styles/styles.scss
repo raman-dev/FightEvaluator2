@@ -85,6 +85,11 @@ $main-container-leftpadding: calc($sidebar-width + 2ch);
     overflow: auto;
 }
 
+nav{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
 
 /*
     tailwind responsive media queries
