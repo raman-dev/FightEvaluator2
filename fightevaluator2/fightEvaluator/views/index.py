@@ -68,6 +68,12 @@ def index(request):
 
     return render(request, "fightEvaluator/index.html",context)
 
+@require_GET
+def events(request):
+    #return a list of all events
+    events = FightEvent.objects.all()
+    
+    return render(request,"fightEvaluator/events.html",{'events':events})
 
 def focusTest(request):
     return render(request,"fightEvaluator/focusTest.html",{})

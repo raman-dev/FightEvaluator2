@@ -86,7 +86,7 @@ class MatchUp(models.Model):
      #optional result
      result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
      #optional boolean isprelim
-     isprelim = models.BooleanField(default=True,null=True,blank=True)
+     isprelim = models.BooleanField(default=True,null=True,blank=True) 
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
@@ -151,6 +151,7 @@ class Fighter(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
 
+#outcomes represent possible results of a matchup
 class MatchUpOutcome(models.Model):
 
     class Outcomes(models.TextChoices):
@@ -175,3 +176,20 @@ class MatchUpOutcome(models.Model):
 
     def __str__(self):
         return "|" + self.outcome + "|" + str(self.likelihood)
+
+
+class Prediction(models.Model):
+     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+     #a prediction is an expected outcome of a matchup 
+     prediction = models.CharField(choices=MatchUpOutcome.Outcomes.choices,max_length=256)
+     #actual outcome of the matchup
+     result = models.CharField(default=None,blank=True,null=True,choices=MatchUpOutcome.Outcomes.choices,max_length=256)
+
+
+"""
+
+        matchup
+         prediction
+            if prediction == result -> correct
+            else -> incorrect
+"""
