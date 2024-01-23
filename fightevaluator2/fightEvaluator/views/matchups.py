@@ -44,7 +44,7 @@ def matchup_index(request,matchupId):
         'attribComparison':attribComparison,
         'outcomes' : matchupOutcomes,
     }
-    return render(request,"fightEvaluator/matchup.html",context)
+    return render(request,"fightEvaluator/matchup2.html",context)
 
 @require_POST
 def create_matchup(request):

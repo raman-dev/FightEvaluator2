@@ -13,4 +13,7 @@ ul.event-list li a {
 }
 ul.event-list li:hover {
   outline-color: whitesmoke;
+}
+ul.event-list li:hover a {
+  text-decoration: underline;
 }/*# sourceMappingURL=events.css.map */

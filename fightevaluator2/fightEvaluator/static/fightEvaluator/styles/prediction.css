@@ -1,0 +1,8 @@
+.prediction-container {
+  display: flex;
+  justify-content: center;
+}
+.prediction-container .prediction-selector {
+  width: -moz-fit-content;
+  width: fit-content;
+}/*# sourceMappingURL=prediction.css.map */

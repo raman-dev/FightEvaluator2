@@ -1,4 +1,5 @@
-@import url(outcomes.scss);
+@import url(outcomes.css);
+@import url(prediction.css);
 /*data-polarity color variables*/
 /*horizontally centered event-title*/
 .event-title {

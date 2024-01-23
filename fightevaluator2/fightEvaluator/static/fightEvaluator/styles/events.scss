@@ -15,5 +15,8 @@ ul.event-list{
     }
     li:hover{
         outline-color: whitesmoke;
+        a{
+            text-decoration: underline;
+        }
     }
 } 

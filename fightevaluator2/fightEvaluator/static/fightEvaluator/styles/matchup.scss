@@ -1,9 +1,10 @@
-@import url(outcomes.scss);
-
+@import url(outcomes.css);
+@import url(prediction.css); 
+ 
 /*data-polarity color variables*/
 $positiveBg: #0d6efd; 
 $negativeBg: #dc3545;
-$neutralBg: #ffc107;
+$neutralBg: #ffc107; 
 
 /*horizontally centered event-title*/
 .event-title {
