@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.css"
-      integrity="sha512-r0fo0kMK8myZfuKWk9b6yY8azUnHCPhgNz/uWDl2rtMdWJlk7gmd9socvGZdZzICwAkMgfTkVrplDahQ07Gi0A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer" />
-    {% load static %}
-    <link rel="stylesheet" href="{% static  'fightEvaluator/styles/styles.css' %}" />
-    <link rel="stylesheet" href="{% static  'fightEvaluator/styles/assessment_styles.css' %}" />
-    <title>Fighter Assessment: {{ fighter.name }}</title>
-  </head>
-  {% load custom_filters %}
-  <body data-bs-theme="dark">
+{% block styles %}
+<link rel="stylesheet" href="{% static  'fightEvaluator/styles/assessment_styles.css' %}" />
+{% endblock %}
+{% block title %}Fighter Assessment: {{ fighter.name }}{% endblock %}
+
+{% block content %}
     {% include 'fightEvaluator/navbar.html' %}
     <div class="main-container">
       <div class="content-container">
@@ -328,11 +318,10 @@
         </div>
       </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
     <script src="{% static 'fightEvaluator/js/attribute-interaction.js' %}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
-
-    <script src="{% static 'fightEvaluator/js/definitions.js' %}"></script>
     <script>
       var editModeEnabled = false;
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
@@ -523,11 +512,6 @@
       }
       
     </script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.js"
-      integrity="sha512-ipBeSMCnlAvS4AEbycy0nTk9KkYr5lUJwFHNvf4IxtV/CDW4qx53mZKUryWtNr6GFaBl11EXyrU6iE3mo6ib2g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"></script>
     <script>
       function onEditFighter(event){
         event.currentTarget.classList.toggle('active');
@@ -633,5 +617,5 @@
       }
     
     </script>
-  </body>
-</html>
+{% endblock %}
+

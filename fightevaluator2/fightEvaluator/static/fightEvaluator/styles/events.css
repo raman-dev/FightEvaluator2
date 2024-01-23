@@ -1,0 +1,16 @@
+ul.event-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+ul.event-list li {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+ul.event-list li a {
+  text-decoration: none;
+  color: lavender;
+}
+ul.event-list li:hover {
+  outline-color: whitesmoke;
+}/*# sourceMappingURL=events.css.map */

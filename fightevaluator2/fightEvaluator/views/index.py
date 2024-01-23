@@ -70,8 +70,8 @@ def index(request):
 
 @require_GET
 def events(request):
-    #return a list of all events
-    events = FightEvent.objects.all()
+    #return a list of all events sorted by date
+    events = FightEvent.objects.all().order_by('date').reverse()
     
     return render(request,"fightEvaluator/events.html",{'events':events})
 

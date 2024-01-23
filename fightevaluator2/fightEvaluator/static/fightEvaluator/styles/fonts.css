@@ -1,0 +1,26 @@
+/* import font as variable */
+/* poppins thin light and regular bold semi-bold font-face declarations  */
+@font-face {
+  font-family: PoppinsThin;
+  src: url("Poppins/Poppins-Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsLight;
+  src: url("Poppins/Poppins-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsRegular;
+  src: url("Poppins/Poppins-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsMedium;
+  src: url("Poppins/Poppins-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsBold;
+  src: url("Poppins/Poppins-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: PoppinsSemiBold;
+  src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
+}/*# sourceMappingURL=fonts.css.map */

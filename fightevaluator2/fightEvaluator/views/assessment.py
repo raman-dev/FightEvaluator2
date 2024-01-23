@@ -29,7 +29,7 @@ def assessment_index(request,fighterId):
         'nextMatchup':nextMatchup,
     }
 
-    return render(request,"fightEvaluator/assessment.html",context)
+    return render(request,"fightEvaluator/assessment2.html",context)
 
 @require_http_methods(["PATCH"])
 def update_assessment(request):

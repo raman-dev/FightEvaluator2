@@ -1,16 +1,26 @@
-<html>
-<head>
-    <title>Events</title>
-</head>
-<body>
-    <h1>Fuck ME</h1>
-    <ul>
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% block title %}
+    Fight Events
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'fightEvaluator/styles/events.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-container container-fluid d-flex flex-column align-items-center">
+    <h1>Events</h1>
+    <ul class="border event-list mx-auto">
         {% for event in events %}
-        <li>
-            {{ event.title }}
-        </li>
+            <li class="border rounded-3 m-2">
+                <a href="/{{event.id}}">
+                    <h6 class="p-3 m-0 text-center">
+                        {{ event.title }}
+                    </h6>
+                </a>
+            </li>
         {% endfor %}
     </ul>
-
-</body>
-</html>
+</div>
+{% endblock %}
