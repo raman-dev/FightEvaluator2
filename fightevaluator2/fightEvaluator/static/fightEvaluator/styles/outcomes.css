@@ -45,6 +45,10 @@
   background-color: #00ff00;
 }
 
+.likely-0 {
+  background-color: #52565A;
+}
+
 .confidence-selector {
   border: 1px solid lavender;
   border-radius: 0.4rem;

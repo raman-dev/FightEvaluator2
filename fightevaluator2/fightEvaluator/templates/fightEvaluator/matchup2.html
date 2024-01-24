@@ -97,7 +97,7 @@
       <div class="form-select-container">
         <form>
           <select class="form-select" name="prediction" id="">
-            <option value="" selected >Choose Prediction</option>
+            <option value="null" selected >Choose Prediction</option>
             {% for outcome in outcomes %}
               {% if outcome.fighter %}
               <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
@@ -107,8 +107,8 @@
             {% endfor %}
           </select>
         </form>
-        <div class="current-confidence d-flex align-items-center" data-likelihood="3">
-          <p class="confidence my-0 w-100 likely-3" style="color:black;">Neutral</p>
+        <div class="current-confidence d-flex align-items-center current-likelihood" data-likelihood="0">
+          <p class="prediction-likelihood-text confidence my-0 w-100 likely-0" style="color:black;">Likelihood</p>
         </div>
       </div>
     </div>
@@ -267,10 +267,14 @@
 
 <script>
     
-    const justificationMap = {};
+  const outcomeMap = {};
 
   {% for outcome in outcomes %}
-    justificationMap[{{outcome.id}}] = `{{outcome.justification|default:'Justification Statements and Conclusions'|safe}}`;
+    outcomeMap[{{outcome.id}}] = {
+       justification:`{{outcome.justification|default:'Justification Statements and Conclusions'|safe}}`,
+       likelihood:{{outcome.likelihood}},
+       likelihood_display:`{{ outcome.get_likelihood_display|safe }}`,
+    };
   {% endfor %}
 
 // console.log(attribInfoMap);
@@ -296,6 +300,6 @@ attribCardOrder.forEach((attribName) => {
 });
 </script>
 <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
-
+<script src="{% static 'fightEvaluator/js/prediction.js' %}"></script>
 {% endblock %}
 

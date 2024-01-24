@@ -28,7 +28,7 @@ async function updateLikelihood(){
         this.outcome.dataset.likelihood = output.likelhood;
         //disable save button
         this.outcome.querySelector('.justification .editor-wrapper .editor').textContent = output.justification;
-        justificationMap[outcome_id] = output.justification;
+        outcomeMap[outcome_id].justification = output.justification;
         saveOutcomeBtn.classList.add('disabled');//disable save button
         toggleConfidenceList(false,this.outcome.querySelector('.confidence-list'));
     }
@@ -46,6 +46,7 @@ function toggleConfidenceList(expandList,confidenceList){
     }
 }
 
+
 function toggleJustification(expandJustification,justificationEditor){
     if (expandJustification){
         //if justificationEditor is collapsed, expand it
@@ -60,8 +61,8 @@ function toggleJustification(expandJustification,justificationEditor){
 
 //for every key value in a dictionary 
 //add key value pair to FormData
-for (const [key, value] of Object.entries(justificationMap)) {
-    document.querySelector(`[data-id='${key}'] .editor-wrapper .editor`).textContent = value;
+for (const [key, data] of Object.entries(outcomeMap)) {
+    document.querySelector(`[data-id='${key}'] .editor-wrapper .editor`).textContent = data.justification;
 }
 
 document.querySelectorAll('.outcome').forEach(outcome => {
