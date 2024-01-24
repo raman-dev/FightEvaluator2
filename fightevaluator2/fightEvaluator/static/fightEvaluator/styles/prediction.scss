@@ -1,7 +1,41 @@
+
+
 .prediction-container{
     display: flex;
     justify-content: center;
+
+    .form-select-container form select{
+        border-bottom-left-radius: 0rem;
+        border-bottom-right-radius: 0rem;
+    }
+    
     .prediction-selector{
-        width: fit-content;
+        background-color: #12161A;
+        border-radius: 0.8rem;
+        
+        padding: 1.2rem;
+        height: fit-content;
+        width: fit-content; 
+        
+        .title-container{
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-container .save-prediction-btn{
+            position: absolute;
+            right: 0px;
+            top: 0px;
+        }
+        .confidence {
+            min-width: fit-content;
+            border-radius: 0.4rem;
+            border-top-left-radius: 0rem;
+            border-top-right-radius: 0rem;
+            padding: 0.3rem;
+            text-align: center;
+            text-transform: capitalize;
+            font-family: PoppinsSemiBold;
+        }
     }
 }

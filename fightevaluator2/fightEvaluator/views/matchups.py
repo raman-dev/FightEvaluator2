@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,Prediction
 from ..forms import *
 import json
 import datetime
@@ -115,3 +115,9 @@ def updateMatchUpOutcomeLikelihood(request,outcomeId):
         return JsonResponse({"success":"false","errors":matchupOutcomeUpdateForm.errors})
 
     return JsonResponse(model_to_dict(matchupOutcome))
+
+# @require_http_methods(["PUT"])
+# def updatePrediction(request):
+#     inputBody = json.loads(request.body)
+#     predictionForm = PredictionForm(inputBody)
+    

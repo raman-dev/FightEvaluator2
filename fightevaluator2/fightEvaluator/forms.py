@@ -63,3 +63,5 @@ class MatchUpForm(forms.Form):
 class MatchUpOutcomeUpdateLikelihood(forms.Form):
     likelihood = forms.IntegerField(label='Likelihood',min_value=1,max_value=5)
     justification = forms.CharField(label='Justification',max_length=1024)
+
+# class PredictionForm(forms.Form):

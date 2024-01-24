@@ -11,6 +11,7 @@
 {% block content %}
 
 {% include 'fightEvaluator/navbar.html' %}
+{% csrf_token %}
 <div class="container-fluid xmain-container main-container">
   <div class="matchup-info">
     <h4>
@@ -88,19 +89,28 @@
   <div class="prediction-container my-4">
     <div class="prediction-selector">
       <!--drop down of outcomes 1 of which is to be selected as an official prediction-->
+      <div class="title-container d-flex justify-content-between">
       <h2>Prediction</h2>
+      <button class="save-prediction-btn btn btn-primary disabled">save</button>
+      </div>
       <!--bootstrap dropdown-->
-      <form>
-        <select class="form-select" name="prediction" id="">
-          {% for outcome in outcomes %}
-            {% if outcome.fighter %}
-            <option value="{{ outcome.id }}" {% if outcome.fighter.id == prediction.id %} selected {% endif %}>{{ outcome.fighter.name }} {{outcome.outcome}}</option>
-            {% else %}
-            <option value="{{ outcome.id }}" {% if outcome.id == prediction.id %} selected {% endif %}>{{ outcome.get_outcome_display }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-      </form>
+      <div class="form-select-container">
+        <form>
+          <select class="form-select" name="prediction" id="">
+            <option value="" selected >Choose Prediction</option>
+            {% for outcome in outcomes %}
+              {% if outcome.fighter %}
+              <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
+              {% else %}
+              <option value="{{ outcome.id }}">{{ outcome.get_outcome_display }}</option>            
+              {% endif %}
+            {% endfor %}
+          </select>
+        </form>
+        <div class="current-confidence d-flex align-items-center" data-likelihood="3">
+          <p class="confidence my-0 w-100 likely-3" style="color:black;">Neutral</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -115,7 +125,7 @@
     <!--0 to 10 datalist-->
 
 
-    {% csrf_token %}
+    
     <h2>Outcome Likelihood</h2>
     <div class="outcomes-wrapper row">
       {% for outcome in outcomes %}

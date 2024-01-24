@@ -184,12 +184,3 @@ class Prediction(models.Model):
      prediction = models.CharField(choices=MatchUpOutcome.Outcomes.choices,max_length=256)
      #actual outcome of the matchup
      result = models.CharField(default=None,blank=True,null=True,choices=MatchUpOutcome.Outcomes.choices,max_length=256)
-
-
-"""
-
-        matchup
-         prediction
-            if prediction == result -> correct
-            else -> incorrect
-"""
