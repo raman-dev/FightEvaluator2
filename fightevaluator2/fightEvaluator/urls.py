@@ -23,4 +23,5 @@ urlpatterns = [
     path('matchup/delete-matchup/<int:matchupId>',views.delete_matchup, name='delete_matchup'),#working
     path('matchup/<int:matchupId>',views.matchup_index, name='matchup'),#working
     path('matchup/update-outcome/<int:outcomeId>',views.updateMatchUpOutcomeLikelihood, name='update_outcome'),#working
+    path('matchup/update-prediction/<int:matchupId>/<int:outcomeId>',views.updatePrediction, name='update_prediction'),#working
 ]

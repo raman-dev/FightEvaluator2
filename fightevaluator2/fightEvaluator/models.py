@@ -173,14 +173,28 @@ class MatchUpOutcome(models.Model):
     outcome = models.CharField(choices=Outcomes.choices,max_length=256)
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
+    is_prediction = models.BooleanField(default=False)
+    is_result = models.BooleanField(default=False)
 
     def __str__(self):
         return "|" + self.outcome + "|" + str(self.likelihood)
 
+# class PredictionResult(models.Model):
+#      #the outcome that is expected
+#      prediction = models.ForeignKey('MatchUpOutcome',on_delete=models.CASCADE)
+#      #the actual outcome
+#      result = models.ForeignKey('FightOutcome',default=None,null=True,blank=True,on_delete=models.CASCADE,related_name="result")
 
-class Prediction(models.Model):
-     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
-     #a prediction is an expected outcome of a matchup 
-     prediction = models.CharField(choices=MatchUpOutcome.Outcomes.choices,max_length=256)
-     #actual outcome of the matchup
-     result = models.CharField(default=None,blank=True,null=True,choices=MatchUpOutcome.Outcomes.choices,max_length=256)
+# class FightOutcome(models.Model):    
+#     class Outcomes(models.TextChoices):
+#         KO = "KO/TKO","Knockout or Technical Knockout"
+#         SUBMISSION = "Sub","Submission"
+#         DECISION = "UD/SD/MD","Unanimous Decision/Split Decision/Majority Decision"
+#         DRAW = "Draw","Draw"
+#         NO_CONTEST = "NC","No Contest"
+
+#     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+#     #stoppage time
+#     time = models.CharField(default=None,null=True,blank=True,max_length=256)
+#     #stoppage method
+#     method = models.CharField(choices=Outcomes.choices,max_length=256,default=None,null=True,blank=True)

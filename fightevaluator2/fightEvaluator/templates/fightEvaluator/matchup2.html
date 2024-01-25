@@ -57,7 +57,7 @@
       </div>
       <!-- </div> -->
       <div class="fighter-info m-1">
-        <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}alt="">
+        <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
 
         <div class="fighter-bio">
           <div class="name">
@@ -86,8 +86,8 @@
     </div>
   </div>
 
-  <div class="prediction-container my-4">
-    <div class="prediction-selector">
+  <div class="prediction-result-container my-4">
+    <div class="prediction-selector" data-outcome-prediction-id="0">
       <!--drop down of outcomes 1 of which is to be selected as an official prediction-->
       <div class="title-container d-flex justify-content-between">
       <h2>Prediction</h2>
@@ -97,7 +97,7 @@
       <div class="form-select-container">
         <form>
           <select class="form-select" name="prediction" id="">
-            <option value="null" selected >Choose Prediction</option>
+            <option value="0" selected >Choose Outcome</option>
             {% for outcome in outcomes %}
               {% if outcome.fighter %}
               <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
@@ -112,6 +112,33 @@
         </div>
       </div>
     </div>
+    
+    <div class="result-selector" data-outcome-prediction-id="0">
+      <!--drop down of outcomes 1 of which is to be selected as an official prediction-->
+      <div class="title-container d-flex justify-content-between">
+      <h2>Result</h2>
+      <button class="save-result-btn btn btn-primary disabled">save</button>
+      </div>
+      <!--bootstrap dropdown-->
+      <div class="form-select-container">
+        <form>
+          <select class="form-select" name="result" id="">
+            <option value="0" selected >Not One of Outcomes</option>
+            {% for outcome in outcomes %}
+              {% if outcome.fighter %}
+              <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
+              {% else %}
+              <option value="{{ outcome.id }}">{{ outcome.get_outcome_display }}</option>            
+              {% endif %}
+            {% endfor %}
+          </select>
+        </form>
+        <div class="current-confidence d-flex align-items-center current-likelihood" data-likelihood="0">
+          <p class="prediction-likelihood-text confidence my-0 w-100 likely-0" style="color:black;">Likelihood</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="outcomes-container my-4">
@@ -266,17 +293,30 @@
 {% block scripts %}
 
 <script>
-    
+  
+  const matchupId = {{ matchup.id }};
   const outcomeMap = {};
-
+  var matchupOutcomePredictionId = 0;
   {% for outcome in outcomes %}
     outcomeMap[{{outcome.id}}] = {
        justification:`{{outcome.justification|default:'Justification Statements and Conclusions'|safe}}`,
        likelihood:{{outcome.likelihood}},
        likelihood_display:`{{ outcome.get_likelihood_display|safe }}`,
+       is_prediction : {% if outcome.is_prediction is True %}true {% else %}false{% endif %},
+       is_result : {% if outcome.is_result is True %}true {% else %}false{% endif %},
     };
   {% endfor %}
-
+   
+  //for every outcome if is_prediction == true then set the prediction-selector outcome-prediction-id to outcome.id
+  for (const [key,data] of Object.entries(outcomeMap)){
+    // console.log(key,data);
+    if (data.is_prediction){
+      matchupOutcomePredictionId = key;
+      break;
+    }
+  }
+  
+  document.querySelector('.prediction-selector').dataset.outcomePredictionId = matchupOutcomePredictionId;
 // console.log(attribInfoMap);
 //for every attrib row write the correct description based on data-polarity
 const attribRows = document.querySelectorAll('.attrib-row');

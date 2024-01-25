@@ -1,12 +1,12 @@
-.prediction-container {
+.prediction-result-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
-.prediction-container .form-select-container form select {
+.prediction-result-container .form-select-container form select {
   border-bottom-left-radius: 0rem;
   border-bottom-right-radius: 0rem;
 }
-.prediction-container .prediction-selector {
+.prediction-result-container .prediction-selector {
   background-color: #12161A;
   border-radius: 0.8rem;
   padding: 1.2rem;
@@ -15,16 +15,45 @@
   width: -moz-fit-content;
   width: fit-content;
 }
-.prediction-container .prediction-selector .title-container {
+.prediction-result-container .prediction-selector .title-container {
   position: relative;
   margin-bottom: 0.5rem;
 }
-.prediction-container .prediction-selector .title-container .save-prediction-btn {
+.prediction-result-container .prediction-selector .title-container .save-prediction-btn {
   position: absolute;
   right: 0px;
   top: 0px;
 }
-.prediction-container .prediction-selector .confidence {
+.prediction-result-container .prediction-selector .confidence {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  border-radius: 0.4rem;
+  border-top-left-radius: 0rem;
+  border-top-right-radius: 0rem;
+  padding: 0.3rem;
+  text-align: center;
+  text-transform: capitalize;
+  font-family: PoppinsSemiBold;
+}
+.prediction-result-container .result-selector {
+  background-color: #12161A;
+  border-radius: 0.8rem;
+  padding: 1.2rem;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.prediction-result-container .result-selector .title-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+.prediction-result-container .result-selector .title-container .save-prediction-btn {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+.prediction-result-container .result-selector .confidence {
   min-width: -moz-fit-content;
   min-width: fit-content;
   border-radius: 0.4rem;

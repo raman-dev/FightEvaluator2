@@ -23,12 +23,15 @@ async function updateLikelihood(){
     });
     if (response.status == 200){
         let output =  await response.json();
-        // console.log(output);
+        console.log(output);
         //update outcome likelihood
         this.outcome.dataset.likelihood = output.likelhood;
         //disable save button
         this.outcome.querySelector('.justification .editor-wrapper .editor').textContent = output.justification;
         outcomeMap[outcome_id].justification = output.justification;
+        outcomeMap[outcome_id].likelihood = output.likelihood;
+        outcomeMap[outcome_id].likelihood_display = output.likelihood_display;
+        console.log(outcomeMap);
         saveOutcomeBtn.classList.add('disabled');//disable save button
         toggleConfidenceList(false,this.outcome.querySelector('.confidence-list'));
     }
