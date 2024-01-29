@@ -1,7 +1,6 @@
 let predictionSelector = document.querySelector('.prediction-selector');
 let select = document.querySelector('.prediction-selector select');
 let savePredictionBtn = document.querySelector('.save-prediction-btn');
-let saveResultBtn = document.querySelector('.save-result-btn');
 savePredictionBtn.addEventListener('click',onClickSavePredictionBtn);
 
 const DEFAULT_OUTCOME_ID = 0;

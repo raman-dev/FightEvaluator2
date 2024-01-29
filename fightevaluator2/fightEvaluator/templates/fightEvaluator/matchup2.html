@@ -88,9 +88,8 @@
 
   <div class="prediction-result-container my-4">
     <div class="prediction-selector" data-outcome-prediction-id="0">
-      <!--drop down of outcomes 1 of which is to be selected as an official prediction-->
       <div class="title-container d-flex justify-content-between">
-      <h2>Result</h2>
+      <h2>Prediction</h2>
       <button class="save-prediction-btn btn btn-primary disabled">save</button>
       </div>
       <!--bootstrap dropdown-->
@@ -98,32 +97,6 @@
         <form>
           <select class="form-select" name="prediction" id="">
             <option value="0" selected >Choose Outcome</option>
-            {% for outcome in outcomes %}
-              {% if outcome.fighter %}
-              <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
-              {% else %}
-              <option value="{{ outcome.id }}">{{ outcome.get_outcome_display }}</option>            
-              {% endif %}
-            {% endfor %}
-          </select>
-        </form>
-        <div class="current-confidence d-flex align-items-center current-likelihood" data-likelihood="0">
-          <p class="prediction-likelihood-text confidence my-0 w-100 likely-0" style="color:black;">Likelihood</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="result-selector" data-outcome-prediction-id="0">
-      <!--drop down of outcomes 1 of which is to be selected as an official prediction-->
-      <div class="title-container d-flex justify-content-between">
-      <h2>Result</h2>
-      <button class="save-result-btn btn btn-primary disabled">save</button>
-      </div>
-      <!--bootstrap dropdown-->
-      <div class="form-select-container">
-        <form>
-          <select class="form-select" name="result" id="">
-            <option value="0" selected >Not One of Outcomes</option>
             {% for outcome in outcomes %}
               {% if outcome.fighter %}
               <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
