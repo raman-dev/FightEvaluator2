@@ -6,7 +6,7 @@ from ..models import FightEvent,MatchUp
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
-from ..scraper import getUpcomingFightEvent
+from ..scraper import getUpcomingFightEvent,getFightEventResults
 
 @require_GET
 def indexById(request,eventId):
@@ -78,3 +78,6 @@ def events(request):
 def focusTest(request):
     return render(request,"fightEvaluator/focusTest.html",{})
 
+def scraperResults(request):
+    outcomes = getFightEventResults("link")
+    return JsonResponse({'outcomes':outcomes})

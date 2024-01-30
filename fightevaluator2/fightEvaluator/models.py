@@ -174,7 +174,6 @@ class MatchUpOutcome(models.Model):
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
     is_prediction = models.BooleanField(default=False)
-    is_result = models.BooleanField(default=False)
 
     def __str__(self):
         return "|" + self.outcome + "|" + str(self.likelihood)
@@ -185,16 +184,17 @@ class MatchUpOutcome(models.Model):
 #      #the actual outcome
 #      result = models.ForeignKey('FightOutcome',default=None,null=True,blank=True,on_delete=models.CASCADE,related_name="result")
 
-# class FightOutcome(models.Model):    
-#     class Outcomes(models.TextChoices):
-#         KO = "KO/TKO","Knockout or Technical Knockout"
-#         SUBMISSION = "Sub","Submission"
-#         DECISION = "UD/SD/MD","Unanimous Decision/Split Decision/Majority Decision"
-#         DRAW = "Draw","Draw"
-#         NO_CONTEST = "NC","No Contest"
+class FightOutcome(models.Model):    
+    class Outcomes(models.TextChoices):
+        KO = "KO/TKO","Knockout or Technical Knockout"
+        SUBMISSION = "Sub","Submission"
+        DECISION = "UD/SD/MD","Unanimous Decision/Split Decision/Majority Decision"
+        DRAW = "Draw","Draw"
+        NO_CONTEST = "NC","No Contest"
+        NA = "N/A","Not Available"
 
-#     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
-#     #stoppage time
-#     time = models.CharField(default=None,null=True,blank=True,max_length=256)
-#     #stoppage method
-#     method = models.CharField(choices=Outcomes.choices,max_length=256,default=None,null=True,blank=True)
+    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    #stoppage time
+    time = models.CharField(default=None,null=True,blank=True,max_length=256)
+    #stoppage method
+    method = models.CharField(choices=Outcomes.choices,max_length=256,default=Outcomes.NA)

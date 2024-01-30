@@ -246,6 +246,33 @@ def getFighterData(link):
     getFighterDetails(fighterDetailsUl,fighterData)
 
     return fighterData
+
+TEST_LINK = "https://www.tapology.com/fightcenter/events/105840-ufc-297"
+def getFightEventResults(link):
+    source = getPageSource(TEST_LINK)
+    #use link to get more info about event
+    soup = BeautifulSoup(source,'html.parser')#parse html
+    #list of matchups
+    ulFightCard = soup.find('ul',class_='fightCard')
+    outcomes = []
+    for li in ulFightCard.findAll('li'):
+        fightCardBout = li.div
+        fightCardResultHolder = fightCardBout.find('div',class_='fightCardResultHolder')
+        fightCardResult = fightCardResultHolder.find('div',class_='fightCardResult')
+        time = fightCardResultHolder.find('span',class_='time').text.strip()
+        method = fightCardResultHolder.find('span',class_='result').text.strip()
+        
+        outcomeData = {}
+        outcomeData['time'] = time
+        outcomeData['method'] = method
+        
+        for i,fightCardFighterBout in enumerate(fightCardBout.findAll('div',class_='fightCardFighterBout')):
+            fighterName = fightCardFighterBout.find('div',class_='fightCardFighterName')
+            name = normalizeString(fighterName.a.text.strip())
+            outcomeData['fighter_'+str(i)] = name
+        outcomes.append(outcomeData)
+    return outcomes
+
 #     print('valid fighteventForm')
 # for every matchup find the fighter object in the database
 # if fighter is not in database create fighter object
