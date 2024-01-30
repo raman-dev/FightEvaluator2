@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 
-from ..models import FightEvent,MatchUp
+from ..models import FightEvent,MatchUp,FightOutcome
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
@@ -78,6 +79,20 @@ def events(request):
 def focusTest(request):
     return render(request,"fightEvaluator/focusTest.html",{})
 
-def scraperResults(request):
-    outcomes = getFightEventResults("link")
+#maybe asynchronous in the future evaluate
+def scraperResults(request,eventId):
+    fightEvent = get_object_or_404(FightEvent,id=eventId)
+    matchups = MatchUp.objects.filter(event=fightEvent)
+    nameMatchupMap = {}
+    for matchup in matchups:
+        nameMatchupMap[matchup.fighter_a.name_unmod] = matchup
+        nameMatchupMap[matchup.fighter_b.name_unmod] = matchup
+    outcomes = getFightEventResults(fightEvent.link)
+    for outcome in outcomes:
+        #do what find the corresponding matchup from matchups
+        time,method,fighter_0,_ = outcome.values()
+        matchup = nameMatchupMap[fighter_0]
+        fightOutcome = FightOutcome(matchup=matchup,time=time,method=method)
+        # fightOutcome.save()
+        
     return JsonResponse({'outcomes':outcomes})

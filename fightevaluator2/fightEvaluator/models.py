@@ -147,6 +147,10 @@ class Fighter(models.Model):
     @property
     def name(self):
         return self.first_name.capitalize() + " " + self.last_name.capitalize()
+    
+    @property
+    def name_unmod(self):
+         return self.first_name + " " + self.last_name
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
