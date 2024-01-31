@@ -120,6 +120,12 @@ ul.confidence-list li.active .likelihood {
   position: absolute;
   right: 0px;
 }
+.outcomes-container .outcomes-wrapper .outcome .wrapper.occurred {
+  outline-color: #00FF00;
+}
+.outcomes-container .outcomes-wrapper .outcome .wrapper.not-occurred {
+  outline-color: #FF0000;
+}
 .outcomes-container .outcomes-wrapper .outcome .wrapper {
   margin: auto;
   width: 4rem;
@@ -129,6 +135,8 @@ ul.confidence-list li.active .likelihood {
   justify-content: center;
   border: 1px solid lavender;
   border-radius: 99rem;
+  outline: 3px solid transparent;
+  outline-offset: 1px;
 }
 .outcomes-container .outcomes-wrapper .outcome .wrapper h6 {
   text-transform: capitalize;

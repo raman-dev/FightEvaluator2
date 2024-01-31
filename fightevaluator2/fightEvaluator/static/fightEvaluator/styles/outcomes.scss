@@ -136,6 +136,14 @@ ul.confidence-list {
         right: 0px;
       }
 
+      .wrapper.occurred{
+        outline-color: #00FF00;
+      }
+
+      .wrapper.not-occurred{
+        outline-color: #FF0000;
+      }
+
       .wrapper {
         margin: auto;
         width: 4rem;
@@ -147,6 +155,9 @@ ul.confidence-list {
 
         border: 1px solid lavender;
         border-radius: 99rem;
+
+        outline: 3px solid transparent;
+        outline-offset: 1px;
 
         h6 {
           text-transform: capitalize;

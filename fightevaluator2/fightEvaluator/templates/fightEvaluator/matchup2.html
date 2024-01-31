@@ -22,30 +22,33 @@
     <!--contains information about each fighter including fighter img-->
     <div class="fighter-container">
       <div class="fighter-info m-1">
-        <img src={% if fighter_a.img_link %}{{fighter_a.img_link}}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
-        <div class="fighter-bio">
-          <div class="name">
-            <h5>
-              <a href="/assessment/{{ fighter_a.id }}">{{ fighter_a.first_name }} {{ fighter_a.last_name }}</a>
-            </h5>
-          </div>
-          <div class="age">
-            <h6 class="age-label">age:&nbsp;</h6>
-            <p class="age">{{ fighter_a.date_of_birth }}</p>
-          </div>
-          <div class="record">
-            <h6 class="record-label">record:&nbsp;</h6>
-            <p class="record">{{ fighter_a.record }}</p>
-          </div>
-          <div class="height">
-            <h6 class="height-label">height:&nbsp;</h6>
-            <p>{{fighter_a.height}}</p>
-          </div>
-          <div class="reach">
-            <h6 class="reach-label">reach:&nbsp;</h6>
-            <p>{{fighter_a.reach}}</p>
+        <div class="fighter-info-wrapper">
+          <img src={% if fighter_a.img_link %}{{fighter_a.img_link}}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
+          <div class="fighter-bio">
+            <div class="name">
+              <h5>
+                <a href="/assessment/{{ fighter_a.id }}">{{ fighter_a.first_name }} {{ fighter_a.last_name }}</a>
+              </h5>
+            </div>
+            <div class="age">
+              <h6 class="age-label">age:&nbsp;</h6>
+              <p class="age">{{ fighter_a.date_of_birth }}</p>
+            </div>
+            <div class="record">
+              <h6 class="record-label">record:&nbsp;</h6>
+              <p class="record">{{ fighter_a.record }}</p>
+            </div>
+            <div class="height">
+              <h6 class="height-label">height:&nbsp;</h6>
+              <p>{{fighter_a.height}}</p>
+            </div>
+            <div class="reach">
+              <h6 class="reach-label">reach:&nbsp;</h6>
+              <p>{{fighter_a.reach}}</p>
+            </div>
           </div>
         </div>
+        <div class="fight-result-label d-none"></div><!--fight win method show-->
       </div>
       <!-- <div class="matchup-info"> -->
       <!-- <div class="matchup-weightclass">
@@ -57,6 +60,7 @@
       </div>
       <!-- </div> -->
       <div class="fighter-info m-1">
+        <div class="fighter-info-wrapper">
         <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
 
         <div class="fighter-bio">
@@ -82,6 +86,8 @@
             <p>{{fighter_b.reach}}</p>
           </div>
         </div>
+        </div>
+        <div class="fight-result-label d-none"></div>
       </div>
     </div>
   </div>

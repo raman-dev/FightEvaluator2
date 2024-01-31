@@ -31,11 +31,28 @@ h6 {
     margin: 1rem;
   }
 
+  .fighter-info.win{ 
+    outline-color: #00FF00;
+  }
+  .fighter-info.lose{
+    outline-color: #FF0000;
+  }
+
   .fighter-info {
-    display: flex;
     padding: 1.2rem;
     border-radius: 1rem;
     background-color: #12161A; 
+    outline: 3px solid transparent;
+    outline-offset: 1px;
+
+    .fighter-info-wrapper{
+      display: flex;
+    }
+
+    .fight-result-label{
+      color: #00FF00;
+    }
+
     img {
       margin: auto;
       max-width: 10rem;

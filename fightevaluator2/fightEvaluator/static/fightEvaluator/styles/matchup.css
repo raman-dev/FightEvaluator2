@@ -25,11 +25,24 @@ h6 {
 .fighter-container .vs-wrapper {
   margin: 1rem;
 }
+.fighter-container .fighter-info.win {
+  outline-color: #00FF00;
+}
+.fighter-container .fighter-info.lose {
+  outline-color: #FF0000;
+}
 .fighter-container .fighter-info {
-  display: flex;
   padding: 1.2rem;
   border-radius: 1rem;
   background-color: #12161A;
+  outline: 3px solid transparent;
+  outline-offset: 1px;
+}
+.fighter-container .fighter-info .fighter-info-wrapper {
+  display: flex;
+}
+.fighter-container .fighter-info .fight-result-label {
+  color: #00FF00;
 }
 .fighter-container .fighter-info img {
   margin: auto;

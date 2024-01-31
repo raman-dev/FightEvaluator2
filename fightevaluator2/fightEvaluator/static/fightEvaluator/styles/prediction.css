@@ -10,6 +10,8 @@
 .prediction-result-container .prediction-selector {
   background-color: #12161A;
   border-radius: 0.8rem;
+  outline: 3px solid transparent;
+  outline-offset: 1px;
   padding: 1.2rem;
   height: -moz-fit-content;
   height: fit-content;
@@ -36,34 +38,11 @@
   text-transform: capitalize;
   font-family: PoppinsSemiBold;
 }
-.prediction-result-container .result-selector {
-  background-color: #12161A;
-  border-radius: 0.8rem;
-  padding: 1.2rem;
-  height: -moz-fit-content;
-  height: fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
+.prediction-result-container .prediction-selector.correct {
+  outline-color: #00FF00;
 }
-.prediction-result-container .result-selector .title-container {
-  position: relative;
-  margin-bottom: 0.5rem;
-}
-.prediction-result-container .result-selector .title-container .save-prediction-btn {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-}
-.prediction-result-container .result-selector .confidence {
-  min-width: -moz-fit-content;
-  min-width: fit-content;
-  border-radius: 0.4rem;
-  border-top-left-radius: 0rem;
-  border-top-right-radius: 0rem;
-  padding: 0.3rem;
-  text-align: center;
-  text-transform: capitalize;
-  font-family: PoppinsSemiBold;
+.prediction-result-container .prediction-selector.incorrect {
+  outline-color: #FF0000;
 }
 .prediction-result-container .reveal-result-container {
   display: flex;
