@@ -198,7 +198,16 @@ class FightOutcome(models.Model):
         NA = "N/A","Not Available"
 
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    #final round
+    final_round = models.IntegerField(default=0)
     #stoppage time
     time = models.CharField(default=None,null=True,blank=True,max_length=256)
     #stoppage method
     method = models.CharField(choices=Outcomes.choices,max_length=256,default=Outcomes.NA)
+    #winner if there is one
+    winner = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE,related_name="winner")
+
+    def __str__(self):
+        return self.method + " " + self.time + " " + str(self.final_round) +"/" +str(self.matchup.rounds) +"|" + str(self.winner.name)
+
+    

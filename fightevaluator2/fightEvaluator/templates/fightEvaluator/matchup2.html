@@ -87,6 +87,13 @@
   </div>
 
   <div class="prediction-result-container my-4">
+    <div class="reveal-result-container">
+      {% if result %}
+        <p>Results Available!</p><button class="btn btn-secondary">Reveal</button>
+      {% else %}
+        <p>Results not available yet</p><button class="btn disabled btn-secondary">Reveal</button>
+      {% endif %}
+    </div>
     <div class="prediction-selector" data-outcome-prediction-id="0">
       <div class="title-container d-flex justify-content-between">
       <h2>Prediction</h2>
@@ -279,6 +286,9 @@
        is_result : {% if outcome.is_result is True %}true {% else %}false{% endif %},
     };
   {% endfor %}
+
+  //need to write result to javascript object
+  const result = {{ result|safe }}
    
   //for every outcome if is_prediction == true then set the prediction-selector outcome-prediction-id to outcome.id
   for (const [key,data] of Object.entries(outcomeMap)){

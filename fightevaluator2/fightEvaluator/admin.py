@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Fighter,Assessment,Note,MatchUp,FightEvent,MatchUpOutcome
+from .models import Fighter,Assessment,Note,MatchUp,FightEvent,MatchUpOutcome,FightOutcome
 # Register your models here.
 
 @admin.register(FightEvent)
@@ -57,5 +57,14 @@ class MatchUpOutcomeAdmin(admin.ModelAdmin):
     list_display = ["outcome","likelihood",fighterName,"matchup"]
     # search_fields = [""]
 
+@admin.register(FightOutcome)
+class FightOutcomeAdmin(admin.ModelAdmin):
+    @admin.display(description="Winner")
+    def winnerName(obj):
+        if not obj.winner:
+            return "No Winner"
+        return obj.winner.name
+    list_display = ["method","time","final_round","matchup",winnerName]
+    search_fields = ["matchup__fighter_a__first_name","matchup__fighter_a__last_name","matchup__fighter_b__first_name","matchup__fighter_b__last_name"]
 # admin.site.register(Fighter,FighterAdmin)
 # admin.site.register(Assessment,AssessmentAdmin)

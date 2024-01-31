@@ -270,6 +270,10 @@ def getFightEventResults(link):
             fighterName = fightCardFighterBout.find('div',class_='fightCardFighterName')
             name = normalizeString(fighterName.a.text.strip())
             outcomeData['fighter_'+str(i)] = name
+            #check if class list contains win
+            classes = fightCardFighterBout.get('class')
+            if 'win' in classes:
+                outcomeData['winner'] = 'fighter_'+str(i)
         outcomes.append(outcomeData)
     return outcomes
 

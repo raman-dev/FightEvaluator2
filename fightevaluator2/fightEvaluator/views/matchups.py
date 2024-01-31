@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome
 from ..forms import *
 import json
 import datetime
@@ -34,7 +34,7 @@ def matchup_index(request,matchupId):
         if k == 'id' or k == 'fighter':
             continue            
         attribComparison.append((k,fighterA_assessment[k],fighterB_assessment[k]))
-    
+    result = FightOutcome.objects.filter(matchup=matchup).first()
     context = {
         'matchup':matchup,
         'fighter_a':matchup.fighter_a,
@@ -44,6 +44,14 @@ def matchup_index(request,matchupId):
         'attribComparison':attribComparison,
         'outcomes' : matchupOutcomes,
     }
+    if result:
+        context['result'] = {
+            'method':result.method,
+            'final_round':result.final_round,
+            'time':result.time,
+        }
+        if result.winner:
+            context['result']['winner_id'] = result.winner.id
     return render(request,"fightEvaluator/matchup2.html",context)
 
 @require_POST
