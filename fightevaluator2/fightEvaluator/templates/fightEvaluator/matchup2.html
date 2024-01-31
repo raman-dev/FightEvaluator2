@@ -95,9 +95,9 @@
   <div class="prediction-result-container my-4">
     <div class="reveal-result-container">
       {% if result %}
-        <p>Results Available!</p><button class="btn btn-secondary">Reveal</button>
+        <p>Results Available!</p><button class="btn btn-secondary reveal-result-btn">Reveal</button>
       {% else %}
-        <p>Results not available yet</p><button class="btn disabled btn-secondary">Reveal</button>
+        <p>Results not available yet</p><button class="btn disabled btn-secondary reveal-result-btn">Reveal</button>
       {% endif %}
     </div>
     <div class="prediction-selector" data-outcome-prediction-id="0">
@@ -295,6 +295,8 @@
 
   //need to write result to javascript object
   const result = {{ result|safe }}
+
+  result['total_rounds'] = {{ matchup.rounds }};
    
   //for every outcome if is_prediction == true then set the prediction-selector outcome-prediction-id to outcome.id
   for (const [key,data] of Object.entries(outcomeMap)){
@@ -328,6 +330,8 @@ attribCardOrder.forEach((attribName) => {
   attribList.appendChild(attribRow);
 });
 </script>
+
+<script src="{% static 'fightEvaluator/js/result.js' %}"></script>
 <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
 <script src="{% static 'fightEvaluator/js/prediction.js' %}"></script>
 {% endblock %}
