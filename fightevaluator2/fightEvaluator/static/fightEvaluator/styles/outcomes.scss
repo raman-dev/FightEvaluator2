@@ -124,7 +124,20 @@ ul.confidence-list {
     display: flex;
     justify-content: space-evenly;
     gap: 0.6rem;
-    .outcome {
+
+    .outcome.occurred{
+      .wrapper{
+        outline-color: #00FF00;
+      }
+    }
+
+    .outcome.not-occurred{
+      .wrapper{
+        outline-color: #FF0000;
+      }
+    }
+
+    .outcome { 
       display: flex;
       flex-direction: column;
 
@@ -134,14 +147,6 @@ ul.confidence-list {
       .save-outcome-btn{
         position: absolute;
         right: 0px;
-      }
-
-      .wrapper.occurred{
-        outline-color: #00FF00;
-      }
-
-      .wrapper.not-occurred{
-        outline-color: #FF0000;
       }
 
       .wrapper {

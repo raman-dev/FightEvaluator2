@@ -21,7 +21,7 @@
   <div class="matchup-container justify-content-center">
     <!--contains information about each fighter including fighter img-->
     <div class="fighter-container">
-      <div class="fighter-info m-1">
+      <div class="fighter-info m-1" data-fighter-id="{{fighter_a.id}}">
         <div class="fighter-info-wrapper">
           <img src={% if fighter_a.img_link %}{{fighter_a.img_link}}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
           <div class="fighter-bio">
@@ -59,7 +59,7 @@
         <h4>vs</h4>
       </div>
       <!-- </div> -->
-      <div class="fighter-info m-1">
+      <div class="fighter-info m-1" data-fighter-id="{{fighter_b.id}}">
         <div class="fighter-info-wrapper">
         <img src={% if fighter_b.img_link %}{{ fighter_b.img_link }}{% else %}{% static 'fightEvaluator/media/sample_150.png' %}{% endif %} alt="">
 
@@ -143,7 +143,7 @@
     <div class="outcomes-wrapper row">
       {% for outcome in outcomes %}
       <div class="outcome-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
-        <div class="outcome" data-id="{{ outcome.id }}" data-likelihood="{{ outcome.likelihood }}">
+        <div class="outcome{% if not outcome.fighter %} {{ outcome.name }} {% endif %}" {% if outcome.fighter %}data-fighter-id="{{outcome.fighter.id}}"{% endif %} data-id="{{ outcome.id }}" data-likelihood="{{ outcome.likelihood }}">
           <div class="wrapper">
               <h6>{{ outcome.outcome }}</h6>
           </div>

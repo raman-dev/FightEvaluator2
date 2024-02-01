@@ -175,6 +175,7 @@ class MatchUpOutcome(models.Model):
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
     outcome = models.CharField(choices=Outcomes.choices,max_length=256)
+    name = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
     is_prediction = models.BooleanField(default=False)

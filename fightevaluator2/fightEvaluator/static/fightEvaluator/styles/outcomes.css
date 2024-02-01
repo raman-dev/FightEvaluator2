@@ -110,6 +110,12 @@ ul.confidence-list li.active .likelihood {
   justify-content: space-evenly;
   gap: 0.6rem;
 }
+.outcomes-container .outcomes-wrapper .outcome.occurred .wrapper {
+  outline-color: #00FF00;
+}
+.outcomes-container .outcomes-wrapper .outcome.not-occurred .wrapper {
+  outline-color: #FF0000;
+}
 .outcomes-container .outcomes-wrapper .outcome {
   display: flex;
   flex-direction: column;
@@ -119,12 +125,6 @@ ul.confidence-list li.active .likelihood {
 .outcomes-container .outcomes-wrapper .outcome .save-outcome-btn {
   position: absolute;
   right: 0px;
-}
-.outcomes-container .outcomes-wrapper .outcome .wrapper.occurred {
-  outline-color: #00FF00;
-}
-.outcomes-container .outcomes-wrapper .outcome .wrapper.not-occurred {
-  outline-color: #FF0000;
 }
 .outcomes-container .outcomes-wrapper .outcome .wrapper {
   margin: auto;

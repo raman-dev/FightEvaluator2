@@ -19,13 +19,19 @@ def matchup_index(request,matchupId):
         matchupOutcomes = [
             MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_a,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
             MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_b,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
-            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS,likelihood=MatchUpOutcome.Likelihood.LIKELY),
-            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
+            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS,likelihood=MatchUpOutcome.Likelihood.LIKELY,name="ROUNDS_OVER_ONE_AND_HALF"),
+            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE,likelihood=MatchUpOutcome.Likelihood.NEUTRAL,name="DOES_NOT_GO_THE_DISTANCE"),
         ]
         
         for outcome in matchupOutcomes:
             outcome.save()
-
+    for outcome in matchupOutcomes:
+        if outcome.outcome == MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS:
+            outcome.name = "ROUNDS_OVER_ONE_AND_HALF"
+            outcome.save()
+        elif outcome.outcome == MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE:
+            outcome.name = "DOES_NOT_GO_THE_DISTANCE"
+            outcome.save()
     attribComparison = []
     fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
     fighterB_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_b))
