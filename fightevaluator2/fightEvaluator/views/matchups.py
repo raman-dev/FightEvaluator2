@@ -115,6 +115,7 @@ def update_matchup(request,matchupId):
         return JsonResponse({"success":"false","errors":matchupUpdateForm.errors})
 
     return JsonResponse(model_to_dict(matchup))
+
 @require_http_methods(["PATCH"])
 def updateMatchUpOutcomeLikelihood(request,outcomeId):
     matchupOutcome = get_object_or_404(MatchUpOutcome,id=outcomeId)
