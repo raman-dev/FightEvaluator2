@@ -184,9 +184,6 @@
             <div class="title-wrapper">            
               <h5>Justification</h5>
               <button class="btn show-justification-btn w-0">
-                <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                  <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
-                </svg> -->
               </button>
             </div>
             <!--a list of notes referencing attributes and fights,mentality,history...-->
@@ -308,6 +305,77 @@
       </div> -->
     </div>
   </div>
+
+  <div class="outcomes-container my-4">
+    <!--
+      what are possible outcomes that are easy to predict for me?
+      win-loss
+      over 1.5 rounds
+      fight doesn't go the distance
+    -->
+
+    <!--0 to 10 datalist-->
+
+    <h2>Event Likelihood</h2>
+    <div class="outcomes-wrapper events-wrapper row">
+      {% for event in standardEvents %}
+      <div class="outcome-card event-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
+        <div class="outcome event event-{{event.name}}" data-fighter-id="0" data-id="0" data-likelihood="3">
+          <div class="wrapper">
+              <h6>{{ event.value }}</h6>
+          </div>
+          <button class="save-outcome-btn save-event-likelihood-btn btn btn-primary disabled">save</button>
+          <p>
+            {{ event.label }}
+          </p>
+          <div class="confidence-selector">
+            <div class="current-confidence d-flex align-items-center" data-likelihood="3">
+              <p class="confidence my-0 w-100 likely-3" style="color:black;">Neutral</p>
+              <button class="btn show-confidence-list-btn w-0">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                  <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
+                </svg>
+              </button>
+            </div>
+            <ul class="confidence-list">                
+              <li data-likelihood="1">
+                <div class="likelihood likely-1">very likely</div>
+              </li>
+              <li data-likelihood="2">
+                <div class="likelihood likely-2">somewhat likely</div>
+              </li>
+              <li class="active" data-likelihood="3">
+                <div class="likelihood likely-3">neutral</div>
+              </li>
+              <li data-likelihood="4">
+                <div class="likelihood likely-4">somewhat unlikely</div>
+              </li>
+              <li data-likelihood="5">
+                <div class="likelihood likely-5">very unlikely</div>
+              </li>
+            </ul>
+          </div>
+          <div class="justification">
+            <div class="title-wrapper">            
+              <h5>Justification</h5>
+              <button class="btn show-justification-btn w-0">
+              </button>
+            </div>
+            <!--a list of notes referencing attributes and fights,mentality,history...-->
+            <div class="justification-container">
+              <div class="editor-wrapper">
+                <div class="editor"  contenteditable="plaintext-only">
+                </div>  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+
   <div class="content-grid">
 
     <div class="attrib-compare-table">
@@ -384,6 +452,7 @@
   
   const matchupId = {{ matchup.id }};
   const outcomeMap = {};
+  const eventLikelihoodMap = {};
   var matchupOutcomePredictionId = 0;
   {% for outcome in outcomes %}
     outcomeMap[{{outcome.id}}] = {
@@ -392,6 +461,14 @@
        likelihood_display:`{{ outcome.get_likelihood_display|safe }}`,
        is_prediction : {% if outcome.is_prediction is True %}true {% else %}false{% endif %},
        is_result : {% if outcome.is_result is True %}true {% else %}false{% endif %},
+    };
+  {% endfor %}
+
+  {% for eventLikelihood in eventLikelihoods %}
+    eventLikelihoodMap[{{eventLikelihood.event.name}}] = {
+       justification:`{{eventLikelihood.justification|default:'Justification Statements and Conclusions'|safe}}`,
+       likelihood:{{eventLikelihood.likelihood}},
+       likelihood_display:`{{ eventLikelihood.get_likelihood_display|safe }}`,
     };
   {% endfor %}
 

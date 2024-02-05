@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome,EventLikelihood,Event
 from ..forms import *
 import json
 import datetime
@@ -41,6 +41,7 @@ def matchup_index(request,matchupId):
         'fighter_b_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt'),
         'attribComparison':attribComparison,
         'outcomes': matchupOutcomes,#used in memory to populate data
+        'standardEvents':[Event.WIN,Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]
     }
     if result:
         context['result'] = {

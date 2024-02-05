@@ -84,7 +84,7 @@ class MatchUp(models.Model):
      #optional event 
      event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
      #optional result
-     result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
+    #  result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
 
@@ -160,7 +160,6 @@ class MatchUpOutcome(models.Model):
 
     class Outcomes(models.TextChoices):
         WIN = "Win","Fighter wins"
-        # GEQ_ONE_AND_HALF_ROUNDS = "1.5 >= Rnds","Fight lasts more than 1.5 rounds"
         
         GOES_THE_DISTANCE = "Yes","Fight Goes the Distance"
         DOES_NOT_GO_THE_DISTANCE = "No","Fight Does Not Go the Distance"
@@ -237,9 +236,19 @@ class Event(models.TextChoices):
     ROUNDS_GEQ_FOUR_AND_HALF = "Rnds >= 4.5","Fight lasts more than 4.5 rounds"
 
 class EventLikelihood(models.Model):
-    event = models.CharField(choices=Event.choices,max_length=256)
-    likelihood = models.IntegerField(default=0)
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    
+    event = models.CharField(choices=Event.choices,max_length=256)
+    likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
+    
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.event) + "|" + str(self.likelihood)
+
+#only 1 prediction per matchup
+class MatchUpPrediction(models.Model):
+    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    prediction = models.ForeignKey('EventLikelihood',on_delete=models.CASCADE)
     
