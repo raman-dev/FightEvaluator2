@@ -9,29 +9,21 @@ from ..forms import *
 import json
 import datetime
 
+
+@require_GET
+def get_outcomes_list(request):
+    outcomes = MatchUpOutcome.Outcomes
+    result = []
+    for outcome in outcomes:
+        result.append({'name':outcome.name,'value':outcome.value})      
+    
+    return JsonResponse(result,safe=False)
+
 @require_GET
 def matchup_index(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     matchupOutcomes = MatchUpOutcome.objects.filter(matchup=matchup)
 
-    if len(matchupOutcomes) == 0:
-        #create the 4 outcomes i am interested in
-        matchupOutcomes = [
-            MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_a,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
-            MatchUpOutcome(matchup=matchup,fighter=matchup.fighter_b,outcome=MatchUpOutcome.Outcomes.WIN,likelihood=MatchUpOutcome.Likelihood.NEUTRAL),
-            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS,likelihood=MatchUpOutcome.Likelihood.LIKELY,name="ROUNDS_OVER_ONE_AND_HALF"),
-            MatchUpOutcome(matchup=matchup,outcome=MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE,likelihood=MatchUpOutcome.Likelihood.NEUTRAL,name="DOES_NOT_GO_THE_DISTANCE"),
-        ]
-        
-        for outcome in matchupOutcomes:
-            outcome.save()
-    for outcome in matchupOutcomes:
-        if outcome.outcome == MatchUpOutcome.Outcomes.GEQ_ONE_AND_HALF_ROUNDS:
-            outcome.name = "ROUNDS_OVER_ONE_AND_HALF"
-            outcome.save()
-        elif outcome.outcome == MatchUpOutcome.Outcomes.DOES_NOT_GO_THE_DISTANCE:
-            outcome.name = "DOES_NOT_GO_THE_DISTANCE"
-            outcome.save()
     attribComparison = []
     fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
     fighterB_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_b))
@@ -48,7 +40,7 @@ def matchup_index(request,matchupId):
         'fighter_a_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_a)).order_by('-createdAt'),
         'fighter_b_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt'),
         'attribComparison':attribComparison,
-        'outcomes' : matchupOutcomes,
+        'outcomes': matchupOutcomes,#used in memory to populate data
     }
     if result:
         context['result'] = {

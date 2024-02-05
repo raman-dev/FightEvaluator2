@@ -160,8 +160,18 @@ class MatchUpOutcome(models.Model):
 
     class Outcomes(models.TextChoices):
         WIN = "Win","Fighter wins"
-        GEQ_ONE_AND_HALF_ROUNDS = "1.5 >= Rnds","Fight lasts more than 1.5 rounds"
+        # GEQ_ONE_AND_HALF_ROUNDS = "1.5 >= Rnds","Fight lasts more than 1.5 rounds"
+        
+        GOES_THE_DISTANCE = "Yes","Fight Goes the Distance"
         DOES_NOT_GO_THE_DISTANCE = "No","Fight Does Not Go the Distance"
+        
+        ROUNDS_GEQ_ZERO_AND_HALF = "Rnds >= 0.5","Fight lasts more than 0.5 rounds"
+        ROUNDS_GEQ_ONE_AND_HALF = "Rnds >= 1.5","Fight lasts more than 1.5 rounds"
+        ROUNDS_GEQ_TWO_AND_HALF = "Rnds >= 2.5","Fight lasts more than 2.5 rounds"
+        ROUNDS_GEQ_THREE_AND_HALF = "Rnds >= 3.5","Fight lasts more than 3.5 rounds"
+        ROUNDS_GEQ_FOUR_AND_HALF = "Rnds >= 4.5","Fight lasts more than 4.5 rounds"
+
+        
 
     class Likelihood(models.IntegerChoices):
         UNLIKELY = (5,"Very Unlikely")
@@ -175,19 +185,13 @@ class MatchUpOutcome(models.Model):
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
     outcome = models.CharField(choices=Outcomes.choices,max_length=256)
-    name = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
+    # name = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
     is_prediction = models.BooleanField(default=False)
 
     def __str__(self):
         return "|" + self.outcome + "|" + str(self.likelihood)
-
-# class PredictionResult(models.Model):
-#      #the outcome that is expected
-#      prediction = models.ForeignKey('MatchUpOutcome',on_delete=models.CASCADE)
-#      #the actual outcome
-#      result = models.ForeignKey('FightOutcome',default=None,null=True,blank=True,on_delete=models.CASCADE,related_name="result")
 
 class FightOutcome(models.Model):    
     class Outcomes(models.TextChoices):
@@ -211,4 +215,31 @@ class FightOutcome(models.Model):
     def __str__(self):
         return self.method + " " + self.time + " " + str(self.final_round) +"/" +str(self.matchup.rounds) +"|" + str(self.winner.name)
 
+
+class Likelihood(models.IntegerChoices):
+    UNLIKELY = (5,"Very Unlikely")
+    POSSIBLE = (4,"Somewhat Unlikely")
+    NEUTRAL = (3,"Neutral")
+    LIKELY = (2,"Likely")
+    VERY_LIKELY = (1,"Very Likely")
+    NOT_PREDICTED = (0,"Not Predicted")
+
+
+class Event(models.TextChoices):
+    WIN = "Win","Fighter wins"  
+    GOES_THE_DISTANCE = "Yes","Fight Goes the Distance"
+    DOES_NOT_GO_THE_DISTANCE = "No","Fight Does Not Go the Distance"
+    
+    ROUNDS_GEQ_ZERO_AND_HALF = "Rnds >= 0.5","Fight lasts more than 0.5 rounds"
+    ROUNDS_GEQ_ONE_AND_HALF = "Rnds >= 1.5","Fight lasts more than 1.5 rounds"
+    ROUNDS_GEQ_TWO_AND_HALF = "Rnds >= 2.5","Fight lasts more than 2.5 rounds"
+    ROUNDS_GEQ_THREE_AND_HALF = "Rnds >= 3.5","Fight lasts more than 3.5 rounds"
+    ROUNDS_GEQ_FOUR_AND_HALF = "Rnds >= 4.5","Fight lasts more than 4.5 rounds"
+
+class EventLikelihood(models.Model):
+    event = models.CharField(choices=Event.choices,max_length=256)
+    likelihood = models.IntegerField(default=0)
+    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
+    fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
     

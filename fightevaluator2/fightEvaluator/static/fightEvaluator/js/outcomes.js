@@ -144,3 +144,21 @@ document.querySelectorAll('.outcome').forEach(outcome => {
 
     saveOutcomeBtn.addEventListener('click',updateLikelihood.bind({outcome:outcome}));
 });
+
+// async function getOutcomes(){
+//     //fetch all outcomes from the api /matchup/get-outcomes-list
+//     let response = await fetch('/matchup/get-outcomes-list',{
+//         method: "GET",
+//         headers: {
+//         accept: "application/json",
+//         "Content-Type": "application/json",
+//         "X-CSRFToken": Cookies.get("csrftoken"),
+//         },
+//     });
+//     if (response.status == 200){
+//         let output =  await response.json();
+//         // console.log(output);
+//     }
+// }
+
+// getOutcomes();

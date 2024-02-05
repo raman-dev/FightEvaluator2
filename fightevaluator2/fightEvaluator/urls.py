@@ -23,6 +23,8 @@ urlpatterns = [
     path('matchup/update-matchup/<int:matchupId>',views.update_matchup, name='update_matchup'),#working
     path('matchup/delete-matchup/<int:matchupId>',views.delete_matchup, name='delete_matchup'),#working
     path('matchup/<int:matchupId>',views.matchup_index, name='matchup'),#working
+
+    path('matchup/get-outcomes-list',views.get_outcomes_list, name='get_outcomes_list'),#working
     path('matchup/update-outcome/<int:outcomeId>',views.updateMatchUpOutcomeLikelihood, name='update_outcome'),#working
     path('matchup/update-prediction/<int:matchupId>/<int:outcomeId>',views.updatePrediction, name='update_prediction'),#working
 ]
