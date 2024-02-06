@@ -215,13 +215,21 @@
     <div class="outcomes-wrapper events-wrapper row">
       {% for event,fighter_id in standardEvents %}
       <div class="outcome-card event-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
-        <div class="outcome event {{event.name}}" data-fighter-id="{% if fighter_id %}{{fighter_id}}{% endif %}" data-id="0" data-likelihood="3">
+        <div class="outcome event" data-event-type="{{event.name}}" data-fighter-id="{% if fighter_id %}{{fighter_id}}{% endif %}" data-id="0" data-likelihood="3">
           <div class="wrapper">
               <h6>{{ event.value }}</h6>
           </div>
           <button class="save-outcome-btn save-event-likelihood-btn btn btn-primary disabled">save</button>
           <p>
-            {{ event.label }}
+            {% if fighter_id %}
+              {% if matchup.fighter_a.id == fighter_id %}
+                {{ fighter_a.last_name }} Wins
+              {% else %}
+                {{ fighter_b.last_name }} Wins
+              {% endif %}
+            {% else %}
+                {{ event.label }}
+            {% endif %}
           </p>
           <div class="confidence-selector">
             <div class="current-confidence d-flex align-items-center" data-likelihood="3">
@@ -259,8 +267,7 @@
             <!--a list of notes referencing attributes and fights,mentality,history...-->
             <div class="justification-container">
               <div class="editor-wrapper">
-                <div class="editor"  contenteditable="plaintext-only">
-                </div>  
+                <div class="editor"  contenteditable="plaintext-only">Justification Statements and Conclusions</div>  
               </div>
             </div>
           </div>
@@ -361,11 +368,7 @@
 
   {% for eventLikelihood in eventLikelihoods %}
     {% if eventLikelihood.fighter %}
-      eventLikelihoodMap[`{{eventLikelihood.event_name}}-{{eventLikelihood.fighter.id}}`] = {
-        justification:`{{eventLikelihood.justification|default:'Justification Statements and Conclusions'|safe}}`,
-        likelihood:{{eventLikelihood.likelihood}},
-        likelihood_display:`{{ eventLikelihood.get_likelihood_display|safe }}`,
-      };
+        eventLikelihoodMap[`{{eventLikelihood.event_name}}`] = {}
     {% else %}
       eventLikelihoodMap[`{{eventLikelihood.event_name}}`] = {
         justification:`{{eventLikelihood.justification|default:'Justification Statements and Conclusions'|safe}}`,
@@ -373,6 +376,15 @@
         likelihood_display:`{{ eventLikelihood.get_likelihood_display|safe }}`,
       };
     {% endif %}
+  {% endfor %}
+  {% for el in eventLikelihoods %}
+      {% if el.fighter %}
+        eventLikelihoodMap[`{{el.event_name}}`][`{{el.fighter.id}}`] = {
+          justification:`{{el.justification|default:'Justification Statements and Conclusions'|safe}}`,
+          likelihood:{{el.likelihood}},
+          likelihood_display:`{{ el.get_likelihood_display|safe }}`,
+        };
+      {% endif %}
   {% endfor %}
 
   //need to write result to javascript object

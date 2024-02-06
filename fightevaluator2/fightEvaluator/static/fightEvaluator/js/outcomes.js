@@ -145,7 +145,77 @@ document.querySelectorAll('.outcome').forEach(outcome => {
     saveOutcomeBtn.addEventListener('click',updateLikelihood.bind({outcome:outcome}));
 });
 
+//Write Fighter last names for standard event win
+document.querySelectorAll('.event').forEach((eventElement) => {
+    let eventType = eventElement.dataset.eventType;
+    let confidenceSelector= eventElement.querySelector('.confidence-selector');
+    
+    let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
 
+    let justifactionEditorWrapper = eventElement.querySelector('.justification .editor-wrapper');
+    let justifactionEditor = justifactionEditorWrapper.querySelector('.editor');
+
+    let confidenceList = confidenceSelector.querySelector('.confidence-list');
+    let currentConfidence = confidenceSelector.querySelector('.current-confidence');
+    let confidenceTextElement = currentConfidence.querySelector('p');
+
+    let saveOutcomeBtn = eventElement.querySelector('.save-outcome-btn');
+
+    showConfidenceListBtn.addEventListener('click', () => {
+        //check if confidenceList is expanded
+        let isOpen = confidenceList.classList.contains('expanded');
+        toggleJustification(!isOpen,confidenceList);
+    });
+
+    justifactionEditor.addEventListener('input', (event) => {
+        let justification = event.currentTarget.textContent.trim();
+        //enable save button iff justification is different to outcome.dataset.justification
+        if (justification != outcome.dataset.justification){
+            //enable save button
+            saveOutcomeBtn.classList.remove('disabled');
+        }else{
+            //disable save button
+            if (!saveOutcomeBtn.classList.contains('disabled')){
+                saveOutcomeBtn.classList.add('disabled');
+            }
+        }
+    });
+    //get data from event likelihood
+    //populate the html with the data from eventLikelihood
+    renderEventLikelihood(eventElement,eventType);
+});
+
+function renderEventLikelihood(event,eventType){
+    //check if eventType exists
+    if (!eventType in eventLikelihoodMap){
+        return;
+    }
+    let data = eventLikelihoodMap[eventType];
+    let fighterId = event.dataset.fighterId;
+    //fighter specific event
+    if (eventType == 'WIN'){
+        data = data[fighterId];
+    }
+    //populate the html with the data from eventLikelihood
+    event.querySelector(`.editor-wrapper .editor`).textContent = data.justification;
+    event.dataset.likelihood = data.likelihood;
+
+    let confidenceSelector= event.querySelector('.confidence-selector');
+    let confidenceList = confidenceSelector.querySelector('.confidence-list');
+    let confidenceTextContainer = confidenceSelector.querySelector('.current-confidence');
+    let confidenceTextElement = confidenceTextContainer.querySelector('p.confidence');
+    
+    confidenceTextContainer.dataset.likelihood = data.likelihood;
+    confidenceTextElement.textContent = data.likelihood_display;
+    //remove default confidence class
+    confidenceTextElement.classList.remove('likely-3');
+    //add confidence class
+    confidenceTextElement.classList.add(`likely-${data.likelihood}`);
+    //remove default active list element
+    confidenceList.querySelector('.active').classList.remove('active');
+    //make active list element with correct likelihood
+    confidenceList.querySelector(`[data-likelihood='${data.likelihood}']`).classList.add('active');
+}
 
 // async function getOutcomes(){
 //     //fetch all outcomes from the api /matchup/get-outcomes-list
