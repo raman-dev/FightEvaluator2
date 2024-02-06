@@ -41,7 +41,12 @@ def matchup_index(request,matchupId):
         'fighter_b_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt'),
         'attribComparison':attribComparison,
         'outcomes': matchupOutcomes,#used in memory to populate data
-        'standardEvents':[Event.WIN,Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]
+        'standardEvents':[
+            (Event.WIN,matchup.fighter_a.id),
+            (Event.WIN,matchup.fighter_b.id),
+            (Event.ROUNDS_GEQ_ONE_AND_HALF,None),
+            (Event.DOES_NOT_GO_THE_DISTANCE,None)],
+        'eventLikelihoods':EventLikelihood.objects.filter(matchup=matchup),
     }
     if result:
         context['result'] = {

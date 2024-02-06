@@ -239,6 +239,7 @@ class EventLikelihood(models.Model):
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     
     event = models.CharField(choices=Event.choices,max_length=256)
+    event_name = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
     

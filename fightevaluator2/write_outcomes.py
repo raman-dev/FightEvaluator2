@@ -17,6 +17,7 @@ def o2el():
             # print(event.name,event.value)
             if event.value == outcome.outcome:
                 eventLikelihood.event = event
+                eventLikelihood.event_name = event.name
         
         if outcome.fighter != None:
             eventLikelihood.fighter = outcome.fighter

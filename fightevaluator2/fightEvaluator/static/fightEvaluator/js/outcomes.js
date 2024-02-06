@@ -145,6 +145,8 @@ document.querySelectorAll('.outcome').forEach(outcome => {
     saveOutcomeBtn.addEventListener('click',updateLikelihood.bind({outcome:outcome}));
 });
 
+
+
 // async function getOutcomes(){
 //     //fetch all outcomes from the api /matchup/get-outcomes-list
 //     let response = await fetch('/matchup/get-outcomes-list',{
