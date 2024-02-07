@@ -1,19 +1,64 @@
 //on click show confidence-list-btn expand confidence-list
 //for every show-confidence-list-btn 
 //add click event listener
-async function updateLikelihood(){
-    let outcome_id = this.outcome.dataset.id;
-    let newLikelihood = this.outcome.querySelector('.current-confidence').dataset.likelihood;
-    let saveOutcomeBtn = this.outcome.querySelector('.save-outcome-btn');
-    let newJustification = this.outcome.querySelector('.justification .editor-wrapper .editor').textContent
+// async function updateLikelihood(){
+//     let outcome_id = this.outcome.dataset.id;
+//     let newLikelihood = this.outcome.querySelector('.current-confidence').dataset.likelihood;
+//     let saveOutcomeBtn = this.outcome.querySelector('.save-outcome-btn');
+//     let newJustification = this.outcome.querySelector('.justification .editor-wrapper .editor').textContent
+
+//     input_data = {
+//         "likelihood": newLikelihood,
+//         "justification": newJustification,
+//     };
+
+//     let response = await fetch(`/matchup/update-outcome/${outcome_id}`, {
+//         method: "PATCH",
+//         headers: {
+//           accept: "application/json",
+//           "Content-Type": "application/json",
+//           "X-CSRFToken": Cookies.get("csrftoken"),
+//         },
+//         body: JSON.stringify(input_data),
+//     });
+//     if (response.status == 200){
+//         let output =  await response.json();
+//         console.log(output);
+//         //update outcome likelihood
+//         this.outcome.dataset.likelihood = output.likelhood;
+//         //disable save button
+//         this.outcome.querySelector('.justification .editor-wrapper .editor').textContent = output.justification;
+//         outcomeMap[outcome_id].justification = output.justification;
+//         outcomeMap[outcome_id].likelihood = output.likelihood;
+//         outcomeMap[outcome_id].likelihood_display = output.likelihood_display;
+//         console.log(outcomeMap);
+//         saveOutcomeBtn.classList.add('disabled');//disable save button
+//         toggleConfidenceList(false,this.outcome.querySelector('.confidence-list'));
+//     }
+// }
+
+async function updateEventLikelihood(){
+    console.log(this.eventElement);
+    let eventType = this.eventElement.dataset.eventType;
+    let fighterId = this.eventElement.dataset.fighterId;
+    let data = checkHasDataMappingElseCreate(eventType,fighterId);
+
+    let newLikelihood = this.eventElement.querySelector('.current-confidence').dataset.likelihood;
+    let saveOutcomeBtn = this.eventElement.querySelector('.save-outcome-btn');
+    let newJustification = this.eventElement.querySelector('.justification .editor-wrapper .editor').textContent
 
     input_data = {
+        "matchupId": matchupId, 
+        "eventId": data.id,
+        "eventType": eventType,
+        "fighterId": parseInt(fighterId),
         "likelihood": newLikelihood,
         "justification": newJustification,
     };
 
-    let response = await fetch(`/matchup/update-outcome/${outcome_id}`, {
-        method: "PATCH",
+    // console.log(input_data);
+    let response = await fetch(`/matchup/update-event-likelihood/`, {
+        method: "PUT",
         headers: {
           accept: "application/json",
           "Content-Type": "application/json",
@@ -23,19 +68,17 @@ async function updateLikelihood(){
     });
     if (response.status == 200){
         let output =  await response.json();
-        console.log(output);
         //update outcome likelihood
-        this.outcome.dataset.likelihood = output.likelhood;
+        data.id = output.id;
+        data.likelihood = output.likelihood;
+        data.justification = output.justification;
         //disable save button
-        this.outcome.querySelector('.justification .editor-wrapper .editor').textContent = output.justification;
-        outcomeMap[outcome_id].justification = output.justification;
-        outcomeMap[outcome_id].likelihood = output.likelihood;
-        outcomeMap[outcome_id].likelihood_display = output.likelihood_display;
-        console.log(outcomeMap);
-        saveOutcomeBtn.classList.add('disabled');//disable save button
-        toggleConfidenceList(false,this.outcome.querySelector('.confidence-list'));
+        saveOutcomeBtn.classList.add('disabled');
+        //collapse confidence list
+        toggleConfidenceList(false,this.eventElement.querySelector('.confidence-list'));
     }
 }
+
 
 function toggleConfidenceList(expandList,confidenceList){
     if (expandList){
@@ -64,25 +107,107 @@ function toggleJustification(expandJustification,justificationEditor){
 
 //for every key value in a dictionary 
 //add key value pair to FormData
-for (const [key, data] of Object.entries(outcomeMap)) {
-    document.querySelector(`[data-id='${key}'] .editor-wrapper .editor`).textContent = data.justification;
-}
+// for (const [key, data] of Object.entries(outcomeMap)) {
+//     document.querySelector(`[data-id='${key}'] .editor-wrapper .editor`).textContent = data.justification;
+// }
 
-document.querySelectorAll('.outcome').forEach(outcome => {
-    let confidenceSelector= outcome.querySelector('.confidence-selector');
+// document.querySelectorAll('.outcome').forEach(outcome => {
+//     let confidenceSelector= outcome.querySelector('.confidence-selector');
     
-    let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
-    let showJustifactionBtn = outcome.querySelector('.show-justification-btn');
+//     let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
+//     let showJustifactionBtn = outcome.querySelector('.show-justification-btn');
 
-    let justifactionEditorWrapper = outcome.querySelector('.justification .editor-wrapper');
+//     let justifactionEditorWrapper = outcome.querySelector('.justification .editor-wrapper');
+//     let justifactionEditor = justifactionEditorWrapper.querySelector('.editor');
+
+//     let confidenceList = confidenceSelector.querySelector('.confidence-list');
+//     let currentConfidence = confidenceSelector.querySelector('.current-confidence');
+//     let confidenceTextElement = currentConfidence.querySelector('p');
+
+//     let saveOutcomeBtn = outcome.querySelector('.save-outcome-btn');
+//     //add click event listener to list items of confidenceList
+//     confidenceList.querySelectorAll('li').forEach(li => {
+//         li.addEventListener('click', (event) => {
+//             let listItem = event.currentTarget;
+//             let likelhoodTextElement = listItem.querySelector('.likelihood');
+//             let likelihood = listItem.dataset.likelihood;
+//             //clicked same confidence no change
+//             if (listItem.classList.contains('active')) {
+//                 return;
+//             }
+//             //clicked different confidence
+//             let oldConfidence = confidenceList.querySelector('.active');
+//             let oldLikelihood = currentConfidence.dataset.likelihood;
+
+//             oldConfidence.classList.remove('active');
+//             listItem.classList.add('active');
+            
+//             confidenceTextElement.textContent = likelhoodTextElement.textContent;
+//             confidenceTextElement.classList.remove(`likely-${oldLikelihood}`);
+//             confidenceTextElement.classList.add(`likely-${likelihood}`); 
+            
+//             currentConfidence.dataset.likelihood = likelihood;
+//             //enable save button iff active confidence is different to outcome.dataset.likelihood
+//             if (currentConfidence.dataset.likelihood != outcome.dataset.likelihood){
+//                 //enable save button
+//                 saveOutcomeBtn.classList.remove('disabled');
+//             }else{
+//                 //disable save button
+//                 if (!saveOutcomeBtn.classList.contains('disabled')){
+//                     saveOutcomeBtn.classList.add('disabled');
+//                 }
+//             }
+//         });
+//     });
+
+//     showConfidenceListBtn.addEventListener('click', (event) => {
+//         //check if confidenceList is expanded
+//         let isOpen = confidenceList.classList.contains('expanded');
+//         toggleJustification(!isOpen,confidenceList);
+//     });
+
+//     justifactionEditor.addEventListener('input', (event) => {
+//         let justification = event.currentTarget.textContent.trim();
+//         //enable save button iff justification is different to outcome.dataset.justification
+//         if (justification != outcome.dataset.justification){
+//             //enable save button
+//             saveOutcomeBtn.classList.remove('disabled');
+//         }else{
+//             //disable save button
+//             if (!saveOutcomeBtn.classList.contains('disabled')){
+//                 saveOutcomeBtn.classList.add('disabled');
+//             }
+//         }
+//     });
+
+//     // showJustifactionBtn.addEventListener('click', (event) => {
+//     //     let isOpen = justifactionEditorWrapper.classList.contains('expanded');
+//     //     toggleJustification(!isOpen,justifactionEditorWrapper);
+//     // });
+
+//     saveOutcomeBtn.addEventListener('click',updateLikelihood.bind({outcome:outcome}));
+// });
+
+//Write Fighter last names for standard event win
+document.querySelectorAll('.event').forEach((eventElement) => {
+    let eventType = eventElement.dataset.eventType;
+    let fighterId = eventElement.dataset.fighterId;
+    let data = checkHasDataMappingElseCreate(eventType,parseInt(fighterId));
+    // console.log(data);
+    let confidenceSelector= eventElement.querySelector('.confidence-selector');
+    let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
+    // console.log(showConfidenceListBtn);
+
+    let justifactionEditorWrapper = eventElement.querySelector('.justification .editor-wrapper');
     let justifactionEditor = justifactionEditorWrapper.querySelector('.editor');
 
     let confidenceList = confidenceSelector.querySelector('.confidence-list');
     let currentConfidence = confidenceSelector.querySelector('.current-confidence');
     let confidenceTextElement = currentConfidence.querySelector('p');
 
-    let saveOutcomeBtn = outcome.querySelector('.save-outcome-btn');
-    //add click event listener to list items of confidenceList
+    let saveOutcomeBtn = eventElement.querySelector('.save-outcome-btn');
+    
+
     confidenceList.querySelectorAll('li').forEach(li => {
         li.addEventListener('click', (event) => {
             let listItem = event.currentTarget;
@@ -105,7 +230,7 @@ document.querySelectorAll('.outcome').forEach(outcome => {
             
             currentConfidence.dataset.likelihood = likelihood;
             //enable save button iff active confidence is different to outcome.dataset.likelihood
-            if (currentConfidence.dataset.likelihood != outcome.dataset.likelihood){
+            if (currentConfidence.dataset.likelihood != data.likelihood){
                 //enable save button
                 saveOutcomeBtn.classList.remove('disabled');
             }else{
@@ -117,60 +242,37 @@ document.querySelectorAll('.outcome').forEach(outcome => {
         });
     });
 
-    showConfidenceListBtn.addEventListener('click', (event) => {
-        //check if confidenceList is expanded
-        let isOpen = confidenceList.classList.contains('expanded');
-        toggleJustification(!isOpen,confidenceList);
-    });
-
-    justifactionEditor.addEventListener('input', (event) => {
-        let justification = event.currentTarget.textContent.trim();
-        //enable save button iff justification is different to outcome.dataset.justification
-        if (justification != outcome.dataset.justification){
-            //enable save button
-            saveOutcomeBtn.classList.remove('disabled');
-        }else{
-            //disable save button
-            if (!saveOutcomeBtn.classList.contains('disabled')){
-                saveOutcomeBtn.classList.add('disabled');
-            }
-        }
-    });
-
-    // showJustifactionBtn.addEventListener('click', (event) => {
-    //     let isOpen = justifactionEditorWrapper.classList.contains('expanded');
-    //     toggleJustification(!isOpen,justifactionEditorWrapper);
-    // });
-
-    saveOutcomeBtn.addEventListener('click',updateLikelihood.bind({outcome:outcome}));
-});
-
-//Write Fighter last names for standard event win
-document.querySelectorAll('.event').forEach((eventElement) => {
-    let eventType = eventElement.dataset.eventType;
-    let confidenceSelector= eventElement.querySelector('.confidence-selector');
-    
-    let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
-
-    let justifactionEditorWrapper = eventElement.querySelector('.justification .editor-wrapper');
-    let justifactionEditor = justifactionEditorWrapper.querySelector('.editor');
-
-    let confidenceList = confidenceSelector.querySelector('.confidence-list');
-    let currentConfidence = confidenceSelector.querySelector('.current-confidence');
-    let confidenceTextElement = currentConfidence.querySelector('p');
-
-    let saveOutcomeBtn = eventElement.querySelector('.save-outcome-btn');
-
     showConfidenceListBtn.addEventListener('click', () => {
         //check if confidenceList is expanded
         let isOpen = confidenceList.classList.contains('expanded');
-        toggleJustification(!isOpen,confidenceList);
+        toggleConfidenceList(!isOpen,confidenceList);
     });
 
     justifactionEditor.addEventListener('input', (event) => {
+        /*
+            
+            map {
+                eventType :{
+                    if fighter specific
+                    fighterId0 : {
+                    }
+                    fighterId1 : {
+                    }
+                    ....
+                }
+
+                eventType:{
+                    likelihood: 3,
+                    likelihood_display: "Likely",
+                    justification: "..."
+                }
+            }
+        
+        */
+        //check if data mapping exists for eventType
+        //check if data.justification is different to written data in html
         let justification = event.currentTarget.textContent.trim();
-        //enable save button iff justification is different to outcome.dataset.justification
-        if (justification != outcome.dataset.justification){
+        if (data.justification != justification){
             //enable save button
             saveOutcomeBtn.classList.remove('disabled');
         }else{
@@ -182,20 +284,43 @@ document.querySelectorAll('.event').forEach((eventElement) => {
     });
     //get data from event likelihood
     //populate the html with the data from eventLikelihood
-    renderEventLikelihood(eventElement,eventType);
+    renderEventLikelihood(eventElement,data);
+    saveOutcomeBtn.addEventListener('click',updateEventLikelihood.bind({eventElement:eventElement}));
 });
 
-function renderEventLikelihood(event,eventType){
+function defaultLikelihood(){
+    return {
+        likelihood: 3,
+        likelihood_display: "Neutral",
+        justification: "Justification Statements and Conclusions",
+        id : 0,//default id
+    }
+}
+
+function checkHasDataMappingElseCreate(eventType,fighterId){
+    //event doesn't exist in eventLikelihoodMap
+    if (!(eventType in eventLikelihoodMap)){
+        //fighter specific eventType
+        if (fighterId != 0){
+            eventLikelihoodMap[eventType] = {};
+            eventLikelihoodMap[eventType][fighterId] = defaultLikelihood();
+            return eventLikelihoodMap[eventType][fighterId];
+        }
+        eventLikelihoodMap[eventType] = defaultLikelihood();
+        return eventLikelihoodMap[eventType];
+    }
+    if (fighterId != 0){
+        if (!(fighterId in eventLikelihoodMap[eventType])){
+            eventLikelihoodMap[eventType][fighterId] = defaultLikelihood();
+        }
+        return eventLikelihoodMap[eventType][fighterId];
+    }
+    return eventLikelihoodMap[eventType];
+}
+
+function renderEventLikelihood(event,data){
     //check if eventType exists
-    if (!eventType in eventLikelihoodMap){
-        return;
-    }
-    let data = eventLikelihoodMap[eventType];
-    let fighterId = event.dataset.fighterId;
-    //fighter specific event
-    if (eventType == 'WIN'){
-        data = data[fighterId];
-    }
+    // console.log(event,data);
     //populate the html with the data from eventLikelihood
     event.querySelector(`.editor-wrapper .editor`).textContent = data.justification;
     event.dataset.likelihood = data.likelihood;

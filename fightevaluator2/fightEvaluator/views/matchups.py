@@ -130,6 +130,51 @@ def updateMatchUpOutcomeLikelihood(request,outcomeId):
     result['likelihood_display'] = matchupOutcome.get_likelihood_display()
     return JsonResponse(result)
 
+@require_http_methods(["PUT"])
+def updateMatchUpEventLikelihood(request):
+    inputBody = json.loads(request.body)
+    matchup = get_object_or_404(MatchUp,id=inputBody['matchupId'])#need valid matchup id
+    eventLikelihoodForm = MatchUpEventLikelihoodForm(inputBody)
+    if eventLikelihoodForm.is_valid():
+        #check if fighterId is valid 
+        fighterId = eventLikelihoodForm.cleaned_data['fighterId']
+        eventType = eventLikelihoodForm.cleaned_data['eventType']
+        likelihood = eventLikelihoodForm.cleaned_data['likelihood']
+        justification = eventLikelihoodForm.cleaned_data['justification']
+        #if fighterId is valid this is a fighter specific event
+        #else it is a general event which are unique for each matchup
+        if fighterId != 0:
+            fighter = Fighter.objects.get(id=fighterId)
+            eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,fighter=fighter,event_type=eventType).first()
+            if eventLikelihood == None:
+                eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType)
+                eventLikelihood.save()
+            eventLikelihood.likelihood = likelihood
+            eventLikelihood.justification = justification
+            eventLikelihood.save()
+            return JsonResponse({
+                'id':eventLikelihood.id,
+                'eventType':eventLikelihood.eventType,
+                'likelihood':eventLikelihood.likelihood,
+                'justification':eventLikelihood.justification,
+                'fighterId':eventLikelihood.fighter.id
+            })
+        #general event
+        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,event_type=eventType).first()
+        if eventLikelihood == None:
+            eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType)
+            eventLikelihood.save()
+        eventLikelihood.likelihood = likelihood
+        eventLikelihood.justification = justification
+        eventLikelihood.save()
+        return JsonResponse({
+            'id':eventLikelihood.id,
+            'eventType':eventLikelihood.eventType,
+            'likelihood':eventLikelihood.likelihood,
+            'justification':eventLikelihood.justification,
+        })
+    return JsonResponse({"success":"false","errors":eventLikelihoodForm.errors})
+
 @require_http_methods(["PATCH"])
 def updatePrediction(request,matchupId,outcomeId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
