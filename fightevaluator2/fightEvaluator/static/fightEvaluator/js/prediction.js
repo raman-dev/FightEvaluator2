@@ -31,9 +31,11 @@ function setLikelhoodDisplay(outcomeId,likelihoodValue, likelihoodLabel){
 }
 
 select.addEventListener('change',(event)=>{
-    let outcomeId = parseInt(event.target.value);
-    let valueChanged = matchupOutcomePredictionId != outcomeId;
-    if (outcomeId == 0){
+    let eventType = parseInt(event.target.value);
+    let fighterId = event.target.dataset.fighterId;
+
+    // let valueChanged = matchupOutcomePredictionId != outcomeId;
+    if (eventType == 0){
         setLikelhoodDisplay(DEFAULT_OUTCOME_ID,DEFAULT_LIKELIHOOD,DEFAULT_LIKELIHOOD_LABEL);
         if (valueChanged){
             savePredictionBtn.classList.remove('disabled');
@@ -43,7 +45,8 @@ select.addEventListener('change',(event)=>{
         return;
     }
 
-    let outcomeData = outcomeMap[outcomeId];
+    // let outcomeData = outcomeMap[outcomeId];
+    let data = checkHasDataMappingElseCreate(eventType,fighterId);
     setLikelhoodDisplay(outcomeId,outcomeData.likelihood, outcomeData.likelihood_display);
     if (valueChanged){
         savePredictionBtn.classList.remove('disabled');

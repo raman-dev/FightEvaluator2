@@ -28,4 +28,5 @@ urlpatterns = [
     path('matchup/update-outcome/<int:outcomeId>',views.updateMatchUpOutcomeLikelihood, name='update_outcome'),#working
     path('matchup/update-prediction/<int:matchupId>/<int:outcomeId>',views.updatePrediction, name='update_prediction'),#working
     path('matchup/update-event-likelihood/',views.updateMatchUpEventLikelihood, name='update_event_likelihood'),#working
+    path('matchup/update-event-prediction/',views.updateMatchUpEventPrediction,name='update_event_prediction'),#not working
 ]

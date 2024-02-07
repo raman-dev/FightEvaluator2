@@ -100,7 +100,7 @@
         <p>Results not available yet</p><button class="btn disabled btn-secondary reveal-result-btn">Reveal</button>
       {% endif %}
     </div>
-    <div class="prediction-selector" data-outcome-prediction-id="0">
+    <div class="prediction-selector" data-outcome-prediction-id="0" data-prediction="NA">
       <div class="title-container d-flex justify-content-between">
       <h2>Prediction</h2>
       <button class="save-prediction-btn btn btn-primary disabled">save</button>
@@ -109,13 +109,11 @@
       <div class="form-select-container">
         <form>
           <select class="form-select" name="prediction" id="">
-            <option value="0" selected >Choose Outcome</option>
-            {% for outcome in outcomes %}
-              {% if outcome.fighter %}
-              <option value="{{ outcome.id }}">{{ outcome.fighter.name }} {{outcome.outcome}}</option>
-              {% else %}
-              <option value="{{ outcome.id }}">{{ outcome.get_outcome_display }}</option>            
-              {% endif %}
+            <option value="NA" data-event-type="NA" data-fighter-id="0" selected >Choose Outcome</option>
+            {% for event,fighter_id in standardEvents %}
+              <option value="{{ event.name }}" 
+              data-event-type="{{ event.name }}" 
+              data-fighter-id="{{ fighter_id|default_if_none:0 }}">{{ event.label }}</option>            
             {% endfor %}
           </select>
         </form>
@@ -353,24 +351,24 @@
 <script>
   
   const matchupId = {{ matchup.id }};
-  const outcomeMap = {};
   const eventLikelihoodMap = {};
-  var matchupOutcomePredictionId = 0;
-  {% for outcome in outcomes %}
-    outcomeMap[{{outcome.id}}] = {
-       justification:`{{outcome.justification|default:'Justification Statements and Conclusions'|safe}}`,
-       likelihood:{{outcome.likelihood}},
-       likelihood_display:`{{ outcome.get_likelihood_display|safe }}`,
-       is_prediction : {% if outcome.is_prediction is True %}true {% else %}false{% endif %},
-       is_result : {% if outcome.is_result is True %}true {% else %}false{% endif %},
-    };
-  {% endfor %}
+  const prediction = {
+    'eventType': 'NA',
+    'fighterId' : 0,
+  }
+
+  {% if prediction %}
+    prediction['eventType'] = `{{ prediction.prediction.eventType }}`;
+    {% if prediction.prediction.fighter %}
+      prediction['fighterId'] = {{ prediction.prediction.fighter.id }};
+    {% endif %}
+  {% endif %}
 
   {% for eventLikelihood in eventLikelihoods %}
     {% if eventLikelihood.fighter %}
-        eventLikelihoodMap[`{{eventLikelihood.event_type}}`] = {}
+        eventLikelihoodMap[`{{eventLikelihood.eventType}}`] = {}
     {% else %}
-      eventLikelihoodMap[`{{eventLikelihood.event_type}}`] = {
+      eventLikelihoodMap[`{{eventLikelihood.eventType}}`] = {
         justification:`{{eventLikelihood.justification|default:'Justification Statements and Conclusions'|safe}}`,
         likelihood:{{eventLikelihood.likelihood}},
         likelihood_display:`{{ eventLikelihood.get_likelihood_display|safe }}`,
@@ -380,7 +378,7 @@
   {% endfor %}
   {% for el in eventLikelihoods %}
       {% if el.fighter %}
-        eventLikelihoodMap[`{{el.event_type}}`][`{{el.fighter.id}}`] = {
+        eventLikelihoodMap[`{{el.eventType}}`][`{{el.fighter.id}}`] = {
           justification:`{{el.justification|default:'Justification Statements and Conclusions'|safe}}`,
           likelihood:{{el.likelihood}},
           likelihood_display:`{{ el.get_likelihood_display|safe }}`,
@@ -397,19 +395,6 @@
   {% endif %}
 
   result['total_rounds'] = {{ matchup.rounds }};
-
-  //if the outcome map is not empty then populate the correct outcome with the corresponding data
-   
-  //for every outcome if is_prediction == true then set the prediction-selector outcome-prediction-id to outcome.id
-  for (const [key,data] of Object.entries(outcomeMap)){
-    // console.log(key,data);
-    if (data.is_prediction){
-      matchupOutcomePredictionId = key;
-      break;
-    }
-  }
-  
-  document.querySelector('.prediction-selector').dataset.outcomePredictionId = matchupOutcomePredictionId;
 // console.log(attribInfoMap);
 //for every attrib row write the correct description based on data-polarity
 const attribRows = document.querySelectorAll('.attrib-row');
@@ -435,6 +420,6 @@ attribCardOrder.forEach((attribName) => {
 
 <script src="{% static 'fightEvaluator/js/result.js' %}"></script>
 <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
-<script src="{% static 'fightEvaluator/js/prediction.js' %}"></script>
+<!-- <script src="{% static 'fightEvaluator/js/prediction.js' %}"></script> -->
 {% endblock %}
 

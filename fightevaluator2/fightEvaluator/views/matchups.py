@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome,EventLikelihood,Event
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome,EventLikelihood,Event,MatchUpPrediction
 from ..forms import *
 import json
 import datetime
@@ -22,7 +22,7 @@ def get_outcomes_list(request):
 @require_GET
 def matchup_index(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
-    matchupOutcomes = MatchUpOutcome.objects.filter(matchup=matchup)
+    # matchupOutcomes = MatchUpOutcome.objects.filter(matchup=matchup)
 
     attribComparison = []
     fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
@@ -40,13 +40,13 @@ def matchup_index(request,matchupId):
         'fighter_a_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_a)).order_by('-createdAt'),
         'fighter_b_notes':Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt'),
         'attribComparison':attribComparison,
-        'outcomes': matchupOutcomes,#used in memory to populate data
         'standardEvents':[
             (Event.WIN,matchup.fighter_a.id),
             (Event.WIN,matchup.fighter_b.id),
             (Event.ROUNDS_GEQ_ONE_AND_HALF,None),
             (Event.DOES_NOT_GO_THE_DISTANCE,None)],
         'eventLikelihoods':EventLikelihood.objects.filter(matchup=matchup),
+        'prediction':MatchUpPrediction.objects.filter(matchup=matchup).first(),
     }
     if result:
         context['result'] = {
@@ -135,6 +135,7 @@ def updateMatchUpEventLikelihood(request):
     inputBody = json.loads(request.body)
     matchup = get_object_or_404(MatchUp,id=inputBody['matchupId'])#need valid matchup id
     eventLikelihoodForm = MatchUpEventLikelihoodForm(inputBody)
+    # print(inputBody,matchup)
     if eventLikelihoodForm.is_valid():
         #check if fighterId is valid 
         fighterId = eventLikelihoodForm.cleaned_data['fighterId']
@@ -145,7 +146,7 @@ def updateMatchUpEventLikelihood(request):
         #else it is a general event which are unique for each matchup
         if fighterId != 0:
             fighter = Fighter.objects.get(id=fighterId)
-            eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,fighter=fighter,event_type=eventType).first()
+            eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,fighter=fighter,eventType=eventType).first()
             if eventLikelihood == None:
                 eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType)
                 eventLikelihood.save()
@@ -156,11 +157,12 @@ def updateMatchUpEventLikelihood(request):
                 'id':eventLikelihood.id,
                 'eventType':eventLikelihood.eventType,
                 'likelihood':eventLikelihood.likelihood,
+                'likelihood_display':eventLikelihood.get_likelihood_display(),
                 'justification':eventLikelihood.justification,
                 'fighterId':eventLikelihood.fighter.id
             })
         #general event
-        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,event_type=eventType).first()
+        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType).first()
         if eventLikelihood == None:
             eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType)
             eventLikelihood.save()
@@ -172,6 +174,7 @@ def updateMatchUpEventLikelihood(request):
             'eventType':eventLikelihood.eventType,
             'likelihood':eventLikelihood.likelihood,
             'justification':eventLikelihood.justification,
+            'likelihood_display':eventLikelihood.get_likelihood_display(),
         })
     return JsonResponse({"success":"false","errors":eventLikelihoodForm.errors})
 
@@ -186,4 +189,43 @@ def updatePrediction(request,matchupId,outcomeId):
         outcome.save()
     
     return JsonResponse({"outcomeId":outcomeId})
-    
+
+
+@require_http_methods(["PUT"])
+def updateMatchUpEventPrediction(request):
+    inputBody = json.loads(request.body)
+    matchup = get_object_or_404(MatchUp,id=inputBody['matchupId'])
+    #we want to create a new event likelihood if it does not exist
+    #if it exists we want to query it
+    eventPredictionForm = EventPredictionForm(inputBody)
+    if eventPredictionForm.is_valid():
+        fighterId = eventPredictionForm.cleaned_data['fighterId']
+        eventType = eventPredictionForm.cleaned_data['eventType']
+        
+        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType)
+        currentPrediction = MatchUpPrediction.objects.filter(matchup=matchup).first()
+        if fighterId != 0:
+            #fighter specific event
+            fighter = Fighter.objects.get(id=fighterId)
+            eventLikelihood = eventLikelihood.filter(fighter=fighter).first()
+            if eventLikelihood == None:
+                eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType)
+                eventLikelihood.save()
+        else:
+            #general event
+            eventLikelihood = eventLikelihood.first()
+            if eventLikelihood == None:
+                eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType)
+                eventLikelihood.save()
+        if currentPrediction == None:
+            currentPrediction = MatchUpPrediction(matchup=matchup,prediction=eventLikelihood)
+            currentPrediction.save()
+        else:
+            currentPrediction.prediction = eventLikelihood
+            currentPrediction.save()
+        return JsonResponse({'eventType':currentPrediction.prediction.eventType,
+                             'fighterId':fighterId})
+    return JsonResponse({"success":"false","errors":eventPredictionForm.errors})
+            
+
+            

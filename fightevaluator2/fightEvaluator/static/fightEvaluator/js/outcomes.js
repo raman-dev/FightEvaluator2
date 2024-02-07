@@ -68,10 +68,12 @@ async function updateEventLikelihood(){
     });
     if (response.status == 200){
         let output =  await response.json();
+        // console.log(output);
         //update outcome likelihood
         data.id = output.id;
         data.likelihood = output.likelihood;
         data.justification = output.justification;
+        data.likelihood_display = output.likelihood_display;
         //disable save button
         saveOutcomeBtn.classList.add('disabled');
         //collapse confidence list
@@ -342,20 +344,99 @@ function renderEventLikelihood(event,data){
     confidenceList.querySelector(`[data-likelihood='${data.likelihood}']`).classList.add('active');
 }
 
-// async function getOutcomes(){
-//     //fetch all outcomes from the api /matchup/get-outcomes-list
-//     let response = await fetch('/matchup/get-outcomes-list',{
-//         method: "GET",
-//         headers: {
-//         accept: "application/json",
-//         "Content-Type": "application/json",
-//         "X-CSRFToken": Cookies.get("csrftoken"),
-//         },
-//     });
-//     if (response.status == 200){
-//         let output =  await response.json();
-//         // console.log(output);
-//     }
-// }
 
-// getOutcomes();
+
+let predictionSelector = document.querySelector('.prediction-selector');
+let select = document.querySelector('.prediction-selector select');
+let savePredictionBtn = document.querySelector('.save-prediction-btn');
+savePredictionBtn.addEventListener('click',onClickSavePredictionBtn);
+
+const DEFAULT_OUTCOME_ID = 0;
+const DEFAULT_LIKELIHOOD = 0;
+const DEFAULT_LIKELIHOOD_LABEL = "Likelihood";
+const DEFAULT_PREDICTION_TYPE = 0;
+const DEFAULT_FIGHTER_ID = 0;
+const DEFAULT_PREDICTION_DATA = {'likelihood': 0,'likelihood_display': 'Likelihood','id': 0};
+
+if (matchupOutcomePredictionId != 0){
+    setLikelhoodDisplay(
+        matchupOutcomePredictionId,
+        outcomeMap[matchupOutcomePredictionId].likelihood,
+        outcomeMap[matchupOutcomePredictionId].likelihood_display
+    );
+
+    select.value = matchupOutcomePredictionId;
+}
+
+function setLikelhoodDisplay2(data,eventType,fighterId){
+    console.log(data);
+    let predictionLikelihoodWrapper = predictionSelector.querySelector('.current-likelihood');
+    let predictionLikelihoodText = predictionSelector.querySelector('.prediction-likelihood-text');
+
+    predictionLikelihoodText.classList.remove(`likely-${predictionLikelihoodWrapper.dataset.likelihood}`);
+    
+    predictionLikelihoodWrapper.dataset.likelihood = data.likelihood;
+    predictionLikelihoodText.textContent = data.likelihood_display;
+
+    predictionLikelihoodText.classList.add(`likely-${data.likelihood}`);
+    // predictionSelector.dataset.outcomePredictionId = data.id;
+    predictionSelector.dataset.prediction = eventType;
+    predictionSelector.dataset.fighterId = fighterId;   
+
+}
+
+select.addEventListener('change',(event)=>{
+    // console.log(event.target,event);
+    // console.log(event.target.options,event.target.selectedIndex);
+
+    let option = event.target.options[event.target.selectedIndex];
+    let eventType = option.value;
+    let fighterId = option.dataset.fighterId;
+
+    let valueChanged = eventType != prediction.eventType;
+    if (eventType == 0){
+        setLikelhoodDisplay2(DEFAULT_PREDICTION_DATA,DEFAULT_PREDICTION_TYPE,DEFAULT_FIGHTER_ID);
+        if (valueChanged){
+            savePredictionBtn.classList.remove('disabled');
+        }else if (!savePredictionBtn.classList.contains('disabled')){
+            savePredictionBtn.classList.add('disabled');
+        }
+        return;
+    }
+
+    // let outcomeData = outcomeMap[outcomeId];
+    let data = checkHasDataMappingElseCreate(eventType,fighterId);
+    setLikelhoodDisplay2(data,eventType,fighterId);
+    if (valueChanged){
+        savePredictionBtn.classList.remove('disabled');
+    }else if (!savePredictionBtn.classList.contains('disabled')){
+            savePredictionBtn.classList.add('disabled');
+    }
+});
+
+async function onClickSavePredictionBtn(event) {
+
+    let predictionEventType = predictionSelector.dataset.prediction;
+    let predictionFighterId = predictionSelector.dataset.fighterId;
+
+    let response = await fetch(`/matchup/update-event-prediction/`, {
+        method: "PUT",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get("csrftoken"),
+        },
+        body: JSON.stringify({
+            "matchupId": matchupId, 
+            "eventType": predictionEventType,
+            "fighterId": parseInt(predictionFighterId),
+        }),
+    });
+    if (response.status == 200){
+        let output =  await response.json();
+
+        prediction.eventType = output.eventType;
+        prediction.fighterId = output.fighterId;
+    }
+    savePredictionBtn.classList.add('disabled');
+}

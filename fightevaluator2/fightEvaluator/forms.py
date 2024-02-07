@@ -79,10 +79,37 @@ class MatchUpEventLikelihoodForm(forms.Form):
         #check if event type is one of the Event types
         isValidType = False
         for validType in Event:
-            if eventType == validType:
+            # print(validType.name,eventType)
+            if eventType == validType.name:
                 self.cleaned_data['eventType'] = eventType
                 isValidType = True
                 break
+        # print('isValidType=>',isValidType)
+        fighterId = self.cleaned_data['fighterId']
+        if fighterId != 0:
+            if not Fighter.objects.filter(id=fighterId).exists():
+                return False
+        return isValidType
+
+class EventPredictionForm(forms.Form):
+    eventType = forms.CharField(label='Event Type',max_length=100)
+    fighterId = forms.IntegerField(label='Fighter Id',required=False)
+
+    #override is_valid
+    def is_valid(self) -> bool:
+        if not super().is_valid():
+            return False
+        #check if eventType is a valid eventType
+        eventType = self.cleaned_data['eventType'].upper()
+        #check if event type is one of the Event types
+        isValidType = False
+        for validType in Event:
+            # print(validType.name,eventType)
+            if eventType == validType.name:
+                self.cleaned_data['eventType'] = eventType
+                isValidType = True
+                break
+        # print('isValidType=>',isValidType)
         fighterId = self.cleaned_data['fighterId']
         if fighterId != 0:
             if not Fighter.objects.filter(id=fighterId).exists():
