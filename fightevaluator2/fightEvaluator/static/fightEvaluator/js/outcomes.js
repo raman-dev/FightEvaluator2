@@ -358,15 +358,15 @@ const DEFAULT_PREDICTION_TYPE = 0;
 const DEFAULT_FIGHTER_ID = 0;
 const DEFAULT_PREDICTION_DATA = {'likelihood': 0,'likelihood_display': 'Likelihood','id': 0};
 
-if (matchupOutcomePredictionId != 0){
-    setLikelhoodDisplay(
-        matchupOutcomePredictionId,
-        outcomeMap[matchupOutcomePredictionId].likelihood,
-        outcomeMap[matchupOutcomePredictionId].likelihood_display
-    );
+// if (matchupOutcomePredictionId != 0){
+//     setLikelhoodDisplay(
+//         matchupOutcomePredictionId,
+//         outcomeMap[matchupOutcomePredictionId].likelihood,
+//         outcomeMap[matchupOutcomePredictionId].likelihood_display
+//     );
 
-    select.value = matchupOutcomePredictionId;
-}
+//     select.value = matchupOutcomePredictionId;
+// }
 
 function setLikelhoodDisplay2(data,eventType,fighterId){
     console.log(data);
