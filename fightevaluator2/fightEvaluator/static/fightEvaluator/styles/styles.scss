@@ -55,10 +55,11 @@ $main-container-leftpadding: calc($sidebar-width + 2ch);
 }
 
 nav{
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
+    // border: 1px solid whitesmoke;
+    a{
+        text-decoration: none;
+    }
+} 
 
 /*
     tailwind responsive media queries

@@ -34,10 +34,8 @@ h6 {
   overflow: auto;
 }
 
-nav {
-  position: absolute;
-  top: 0px;
-  left: 0px;
+nav a {
+  text-decoration: none;
 }
 
 /*
