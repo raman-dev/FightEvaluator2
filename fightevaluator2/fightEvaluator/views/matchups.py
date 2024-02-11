@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome,EventLikelihood,Event,MatchUpPrediction
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome,EventLikelihood,Event,MatchUpPrediction,Likelihood
 from ..forms import *
 import json
 import datetime
@@ -23,6 +23,7 @@ def get_outcomes_list(request):
 def matchup_index(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     # matchupOutcomes = MatchUpOutcome.objects.filter(matchup=matchup)
+    # matchupPrediction = MatchUpPrediction.objects.filter(matchup=matchup).first()
 
     attribComparison = []
     fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
@@ -209,13 +210,13 @@ def updateMatchUpEventPrediction(request):
             fighter = Fighter.objects.get(id=fighterId)
             eventLikelihood = eventLikelihood.filter(fighter=fighter).first()
             if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType)
+                eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType, likelihood = Likelihood.NEUTRAL)
                 eventLikelihood.save()
         else:
             #general event
             eventLikelihood = eventLikelihood.first()
             if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType)
+                eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType,likelihood=Likelihood.NEUTRAL)
                 eventLikelihood.save()
         if currentPrediction == None:
             currentPrediction = MatchUpPrediction(matchup=matchup,prediction=eventLikelihood)

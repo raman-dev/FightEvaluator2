@@ -108,12 +108,22 @@
       <!--bootstrap dropdown-->
       <div class="form-select-container">
         <form>
-          <select class="form-select" name="prediction" id="">
+          <select class="form-select" name="prediction" id="" style="text-transform: capitalize;">
             <option value="NA" data-event-type="NA" data-fighter-id="0" selected >Choose Outcome</option>
             {% for event,fighter_id in standardEvents %}
-              <option value="{{ event.name }}" 
+              <option style="text-transform: capitalize;"  value="{{ event.name }}" 
               data-event-type="{{ event.name }}" 
-              data-fighter-id="{{ fighter_id|default_if_none:0 }}">{{ event.label }}</option>            
+              data-fighter-id="{{ fighter_id|default_if_none:0 }}">
+                {% if fighter_id %}
+                  {% if matchup.fighter_a.id == fighter_id %}
+                    {{ fighter_a.last_name }} Wins
+                  {% else %}
+                    {{ fighter_b.last_name }} Wins
+                  {% endif %}
+                {% else %}  
+                  {{ event.label }}
+                {% endif %}
+            </option>            
             {% endfor %}
           </select>
         </form>
