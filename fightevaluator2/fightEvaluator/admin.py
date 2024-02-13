@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Fighter,Assessment,Note,MatchUp,FightEvent,MatchUpOutcome,FightOutcome,EventLikelihood
+from .models import Fighter,Assessment,Note,MatchUp,FightEvent,FightOutcome,EventLikelihood
 # Register your models here.
 
 @admin.register(FightEvent)
@@ -47,19 +47,18 @@ class NoteAdmin(admin.ModelAdmin):
         return obj.assessment.fighter.first_name.capitalize() + " " + obj.assessment.fighter.last_name.capitalize()
     list_display = [fighterName,"data","createdAt"]
 
-@admin.register(MatchUpOutcome)
-class MatchUpOutcomeAdmin(admin.ModelAdmin):
-    @admin.display(description="Fighter Name")
-    def fighterName(obj):
-        if not obj.fighter:
-            return "Fighter Not Needed"
-        return obj.fighter.first_name.capitalize() + " " + obj.fighter.last_name.capitalize()
-    list_display = ["outcome","likelihood",fighterName,"matchup"]
-    # search_fields = [""]
+# @admin.register(MatchUpOutcome)
+# class MatchUpOutcomeAdmin(admin.ModelAdmin):
+#     @admin.display(description="Fighter Name")
+#     def fighterName(obj):
+#         if not obj.fighter:
+#             return "Fighter Not Needed"
+#         return obj.fighter.first_name.capitalize() + " " + obj.fighter.last_name.capitalize()
+#     list_display = ["outcome","likelihood",fighterName,"matchup"]
+#     # search_fields = [""]
 
 @admin.register(EventLikelihood)
 class EventLikelihoodAdmin(admin.ModelAdmin):
-
     @admin.display(description="Fighter Name")
     def fighterName(obj):
         if not obj.fighter:

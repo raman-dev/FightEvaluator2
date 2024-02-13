@@ -181,12 +181,12 @@ function defaultLikelihood(){
 
 function checkHasDataMappingElseCreate(eventType,fighterId){
     //event doesn't exist in eventLikelihoodMap
-    console.log(eventType,fighterId,eventLikelihoodMap);
+    // console.log(eventType,fighterId,eventLikelihoodMap);
     if (eventType in eventLikelihoodMap == false){
         //fighter specific eventType
-        console.log(eventType,'not in eventLikelihoodMap');
+        // console.log(eventType,'not in eventLikelihoodMap');
         if (fighterId != 0){
-            console.log(fighterId,'not in eventLikelihoodMap');
+            // console.log(fighterId,'not in eventLikelihoodMap');
             eventLikelihoodMap[eventType] = {};
             eventLikelihoodMap[eventType][fighterId] = defaultLikelihood();
             return eventLikelihoodMap[eventType][fighterId];
@@ -195,9 +195,9 @@ function checkHasDataMappingElseCreate(eventType,fighterId){
         return eventLikelihoodMap[eventType];
     }
     if (fighterId != 0){
-        console.log('fighterSpecific');
+        // console.log('fighterSpecific');
         if (fighterId in eventLikelihoodMap[eventType] == false){
-            console.log('making New!');
+            // console.log('making New!');
             eventLikelihoodMap[eventType][fighterId] = defaultLikelihood();
         }
         return eventLikelihoodMap[eventType][fighterId];
@@ -281,8 +281,12 @@ select.addEventListener('change',(event)=>{
     let option = event.target.options[event.target.selectedIndex];
     let eventType = option.value;
     let fighterId = option.dataset.fighterId;
-
+    
     let valueChanged = eventType != prediction.eventType;
+    if (eventType == prediction.eventType && fighterId != prediction.fighterId){
+        valueChanged = true;
+    }
+    console.log(eventType,fighterId,'valueChanged => '+ valueChanged);
     if (eventType == 'NA'){
         setLikelhoodDisplay2(DEFAULT_PREDICTION_DATA,DEFAULT_PREDICTION_TYPE,DEFAULT_FIGHTER_ID);
         if (valueChanged){
@@ -322,11 +326,14 @@ async function onClickSavePredictionBtn(event) {
             "fighterId": parseInt(predictionFighterId),
         }),
     });
+    
+    let output =  await response.json();
     if (response.status == 200){
-        let output =  await response.json();
 
         prediction.eventType = output.eventType;
         prediction.fighterId = output.fighterId;
+    }else{
+        console.log('error',output);
     }
     savePredictionBtn.classList.add('disabled');
 }

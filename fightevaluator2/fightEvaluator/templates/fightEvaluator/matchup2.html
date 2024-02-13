@@ -333,7 +333,6 @@
   {% endif %}
 
   result['total_rounds'] = {{ matchup.rounds }};
-// console.log(attribInfoMap);
 //for every attrib row write the correct description based on data-polarity
 const attribRows = document.querySelectorAll('.attrib-row');
 attribRows.forEach((row) => {
@@ -358,6 +357,6 @@ attribCardOrder.forEach((attribName) => {
 
 <script src="{% static 'fightEvaluator/js/result.js' %}"></script>
 <script src="{% static 'fightEvaluator/js/outcomes.js' %}"></script>
-<!-- <script src="{% static 'fightEvaluator/js/prediction.js' %}"></script> -->
+
 {% endblock %}
 

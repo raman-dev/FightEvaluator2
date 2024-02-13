@@ -4,26 +4,16 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
-from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,MatchUpOutcome,FightOutcome,EventLikelihood,Event,MatchUpPrediction,Likelihood
+from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,FightOutcome,EventLikelihood,Event,Likelihood,Prediction
 from ..forms import *
 import json
 import datetime
 
 
 @require_GET
-def get_outcomes_list(request):
-    outcomes = MatchUpOutcome.Outcomes
-    result = []
-    for outcome in outcomes:
-        result.append({'name':outcome.name,'value':outcome.value})      
-    
-    return JsonResponse(result,safe=False)
-
-@require_GET
 def matchup_index(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
-    # matchupOutcomes = MatchUpOutcome.objects.filter(matchup=matchup)
-    # matchupPrediction = MatchUpPrediction.objects.filter(matchup=matchup).first()
+    # Prediction = Prediction.objects.filter(matchup=matchup).first()
 
     attribComparison = []
     fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
@@ -47,7 +37,7 @@ def matchup_index(request,matchupId):
             (Event.ROUNDS_GEQ_ONE_AND_HALF,None),
             (Event.DOES_NOT_GO_THE_DISTANCE,None)],
         'eventLikelihoods':EventLikelihood.objects.filter(matchup=matchup),
-        'prediction':MatchUpPrediction.objects.filter(matchup=matchup).first(),
+        'prediction':Prediction.objects.filter(matchup=matchup).first(),
     }
     if result:
         context['result'] = {
@@ -115,21 +105,6 @@ def update_matchup(request,matchupId):
 
     return JsonResponse(model_to_dict(matchup))
 
-@require_http_methods(["PATCH"])
-def updateMatchUpOutcomeLikelihood(request,outcomeId):
-    matchupOutcome = get_object_or_404(MatchUpOutcome,id=outcomeId)
-    inputBody = json.loads(request.body)
-    
-    matchupOutcomeUpdateForm = MatchUpOutcomeUpdateLikelihood(inputBody)
-    if matchupOutcomeUpdateForm.is_valid():
-        matchupOutcome.likelihood = matchupOutcomeUpdateForm.cleaned_data['likelihood']
-        matchupOutcome.justification = matchupOutcomeUpdateForm.cleaned_data['justification']
-        matchupOutcome.save()
-    else:
-        return JsonResponse({"success":"false","errors":matchupOutcomeUpdateForm.errors})
-    result = model_to_dict(matchupOutcome)
-    result['likelihood_display'] = matchupOutcome.get_likelihood_display()
-    return JsonResponse(result)
 
 @require_http_methods(["PUT"])
 def updateMatchUpEventLikelihood(request):
@@ -179,32 +154,26 @@ def updateMatchUpEventLikelihood(request):
         })
     return JsonResponse({"success":"false","errors":eventLikelihoodForm.errors})
 
-@require_http_methods(["PATCH"])
-def updatePrediction(request,matchupId,outcomeId):
-    matchup = get_object_or_404(MatchUp,id=matchupId)
-    outcomes = MatchUpOutcome.objects.filter(matchup=matchup)
-    for outcome in outcomes:
-        outcome.is_prediction = False
-        if outcome.id == outcomeId:
-            outcome.is_prediction = True
-        outcome.save()
-    
-    return JsonResponse({"outcomeId":outcomeId})
-
-
 @require_http_methods(["PUT"])
 def updateMatchUpEventPrediction(request):
     inputBody = json.loads(request.body)
     matchup = get_object_or_404(MatchUp,id=inputBody['matchupId'])
     #we want to create a new event likelihood if it does not exist
     #if it exists we want to query it
+    # print(inputBody)
     eventPredictionForm = EventPredictionForm(inputBody)
     if eventPredictionForm.is_valid():
         fighterId = eventPredictionForm.cleaned_data['fighterId']
         eventType = eventPredictionForm.cleaned_data['eventType']
+        if (fighterId == 0 and eventType == "NA"):
+            #unset the prediction
+            currentPrediction = Prediction.objects.filter(matchup=matchup).first()
+            if currentPrediction != None:
+                currentPrediction.delete()
+            return JsonResponse({"success":"true"})
         
         eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType)
-        currentPrediction = MatchUpPrediction.objects.filter(matchup=matchup).first()
+        currentPrediction = Prediction.objects.filter(matchup=matchup).first()
         if fighterId != 0:
             #fighter specific event
             fighter = Fighter.objects.get(id=fighterId)
@@ -219,7 +188,7 @@ def updateMatchUpEventPrediction(request):
                 eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType,likelihood=Likelihood.NEUTRAL)
                 eventLikelihood.save()
         if currentPrediction == None:
-            currentPrediction = MatchUpPrediction(matchup=matchup,prediction=eventLikelihood)
+            currentPrediction = Prediction(matchup=matchup,prediction=eventLikelihood)
             currentPrediction.save()
         else:
             currentPrediction.prediction = eventLikelihood
