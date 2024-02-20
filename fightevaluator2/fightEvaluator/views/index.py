@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from django.shortcuts import render,get_object_or_404
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
 
 from ..models import FightEvent,MatchUp,FightOutcome
@@ -8,7 +9,8 @@ from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
 import re
-from ..scraper import getUpcomingFightEvent,getFightEventResults
+from .. import scraper
+# from ..scraper import getUpcomingFightEvent
 
 @require_GET
 def indexById(request,eventId):
@@ -38,7 +40,7 @@ def index(request):
     nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
     #compare current date and next event date
     if not nextEvent:
-        fightEventData = getUpcomingFightEvent()
+        fightEventData = scraper.getUpcomingFightEvent()
         fightEventForm = FightEventForm(fightEventData['eventData'])
         
         if not fightEventForm.is_valid():
@@ -115,7 +117,12 @@ def getFightEndTimeAndRound(raw_time):
     return time,int(rounds)
 #maybe asynchronous in the future evaluate
 def getFightEventResults(request,eventId):
+    # print(eventId)
     fightEvent = get_object_or_404(FightEvent,id=eventId)
+    #do not try and get event results if the event is in the future
+    #or if the it is not the atleast 2:00 am the day after the event
+    if fightEvent.date > datetime.date.today() or datetime.datetime.now().hour < 2:
+        return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
     matchups = MatchUp.objects.filter(event=fightEvent)
     nameMatchupMap = {}
     
@@ -124,13 +131,15 @@ def getFightEventResults(request,eventId):
     for matchup in matchups:
         nameMatchupMap[matchup.fighter_a.name_unmod] = matchup
         nameMatchupMap[matchup.fighter_b.name_unmod] = matchup
-        fightOutcome = FightOutcome.objects.filter(matchup=matchup)
+        fightOutcome = FightOutcome.objects.filter(matchup=matchup).first()
         if fightOutcome:
-            fightOutcomes.append(fightOutcome)
+            fightOutcomes.append(model_to_dict(fightOutcome))
             hasOutcomes = True
             
     if not hasOutcomes:
-        outcomes = getFightEventResults(fightEvent.link)
+        # print(fightEvent.link)
+        outcomes = scraper.getFightEventResults(fightEvent.link)
+        # print(outcomes)
         for outcome in outcomes:
             #do what find the corresponding matchup from matchups
             raw_time = outcome['time']
@@ -138,7 +147,10 @@ def getFightEventResults(request,eventId):
             fighter_0 = outcome['fighter_0']
             fighter_1 = outcome['fighter_1']
 
-            matchup = nameMatchupMap[fighter_0]
+            if fighter_0 in nameMatchupMap:
+                matchup = nameMatchupMap[fighter_0]
+            else:
+                matchup = nameMatchupMap[fighter_1]
             if not matchup:#try other fighter name since names can be sometimes different on different sites
                 matchup = nameMatchupMap[fighter_1]
             winner = None
@@ -160,6 +172,6 @@ def getFightEventResults(request,eventId):
                 winner=winner
             )
             fightOutcome.save()
-            fightOutcomes.append(fightOutcome)
-    
+            fightOutcomes.append(model_to_dict(fightOutcome))
+    # print(fightOutcomes)
     return JsonResponse({'fightOutcomes':fightOutcomes})

@@ -252,3 +252,7 @@ class Prediction(models.Model):
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     prediction = models.ForeignKey('EventLikelihood',on_delete=models.CASCADE)
     isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis
+
+    def __str__(self):
+        #return what event is predicted and the likelihood
+        return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())

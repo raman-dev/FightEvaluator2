@@ -249,7 +249,7 @@ def getFighterData(link):
 
 TEST_LINK = "https://www.tapology.com/fightcenter/events/105840-ufc-297"
 def getFightEventResults(link):
-    source = getPageSource(TEST_LINK)
+    source = getPageSource(link)
     #use link to get more info about event
     soup = BeautifulSoup(source,'html.parser')#parse html
     #list of matchups
