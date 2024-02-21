@@ -32,7 +32,7 @@
             </div>
             <div class="age">
               <h6 class="age-label">age:&nbsp;</h6>
-              <p class="age">{{ fighter_a.date_of_birth }}</p>
+              <p class="age">{{ fighter_a.date_of_birth|toage }}</p>
             </div>
             <div class="record">
               <h6 class="record-label">record:&nbsp;</h6>
@@ -71,7 +71,7 @@
           </div>
           <div class="age">
             <h6 class="age-label">age:&nbsp;</h6>
-            <p class="age">{{ fighter_b.date_of_birth }}</p>
+            <p class="age">{{ fighter_b.date_of_birth|toage }}</p>
           </div>
           <div class="record">
             <h6 class="record-label">record:&nbsp;</h6>
