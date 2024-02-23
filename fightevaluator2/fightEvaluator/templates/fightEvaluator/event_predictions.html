@@ -1,0 +1,23 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block title %} {{ event.title }} Predictions {% endblock %}
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+  {% include 'fightEvaluator/navbar.html' %}
+  <!--container-->
+  <div class="container-fluid main-container">
+    <ul>
+    {% for p in predictions %}
+      <p>{{ p }}</p>
+    {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+ 
+  {% endblock %} 
+  

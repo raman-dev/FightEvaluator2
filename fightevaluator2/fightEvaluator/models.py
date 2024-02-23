@@ -210,7 +210,7 @@ class FightOutcome(models.Model):
     winner = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE,related_name="winner")
 
     def __str__(self):
-        return self.method + " " + self.time + " " + str(self.final_round) +"/" +str(self.matchup.rounds) +"|" + str(self.winner.name)
+        return self.method + " " + self.time + " " + str(self.final_round) +"/" +str(self.matchup.rounds) +"|" + ("" if not self.winner else str(self.winner.name))
 
 
 class Likelihood(models.IntegerChoices):

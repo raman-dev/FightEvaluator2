@@ -4,7 +4,7 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 
-from ..models import FightEvent,MatchUp,FightOutcome
+from ..models import FightEvent,MatchUp,FightOutcome,Prediction
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
@@ -115,7 +115,9 @@ def getFightEndTimeAndRound(raw_time):
         rounds,_ = round_str.split('of')
 
     return time,int(rounds)
+
 #maybe asynchronous in the future evaluate
+@require_GET
 def getFightEventResults(request,eventId):
     # print(eventId)
     fightEvent = get_object_or_404(FightEvent,id=eventId)
@@ -175,3 +177,18 @@ def getFightEventResults(request,eventId):
             fightOutcomes.append(model_to_dict(fightOutcome))
     # print(fightOutcomes)
     return JsonResponse({'fightOutcomes':fightOutcomes})
+
+@require_GET
+def event_predictions(request,eventId):
+    #should be a list of predictions for matchups for event with eventId
+    event = get_object_or_404(FightEvent,id=eventId)
+    matchups = MatchUp.objects.filter(event=event)
+    #for every matchup with a prediction
+    predictions = []
+    for matchup in matchups:
+        prediction = Prediction.objects.filter(matchup=matchup).first()
+        if prediction:
+            predictions.append(prediction)
+    
+    return render(request,"fightEvaluator/event_predictions.html",{'predictions':predictions,'event':event})
+    
