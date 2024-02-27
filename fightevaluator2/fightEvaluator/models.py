@@ -245,7 +245,9 @@ class EventLikelihood(models.Model):
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.event) + "|" + str(self.likelihood)
+        if self.fighter != None:
+            return self.fighter.name +" " + str(self.event) + " => " + self.get_likelihood_display()
+        return str(self.event) + "|" + self.get_likelihood_display()
 
 #only 1 prediction per matchup
 class Prediction(models.Model):
@@ -255,4 +257,6 @@ class Prediction(models.Model):
 
     def __str__(self):
         #return what event is predicted and the likelihood
+        if self.prediction.fighter != None:
+             return self.prediction.fighter.name +", " + str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
         return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())

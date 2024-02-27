@@ -69,7 +69,21 @@ class EventLikelihoodAdmin(admin.ModelAdmin):
 
 @admin.register(Prediction)
 class Prediction(admin.ModelAdmin):
-    list_deisplay = ["matchup","prediction","isGamble"]
+
+    @admin.display(description="Event Likelihood")
+    def eventLikelihood(obj):
+        return obj.prediction.get_likelihood_display()
+
+    @admin.display(description="Predicted Event")
+    def event(obj):
+        return obj.prediction.event
+
+    @admin.display(description="Fighter Name")
+    def fighter(obj):
+        if not obj.prediction.fighter:
+            return "Fighter Not Needed"
+        return obj.prediction.fighter.first_name.capitalize() + " " + obj.prediction.fighter.last_name.capitalize()
+    list_display = ["matchup",fighter,event,eventLikelihood,"isGamble"]
 
 @admin.register(FightOutcome)
 class FightOutcomeAdmin(admin.ModelAdmin):

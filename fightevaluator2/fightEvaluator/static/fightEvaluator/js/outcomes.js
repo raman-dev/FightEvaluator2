@@ -244,12 +244,19 @@ const DEFAULT_FIGHTER_ID = 0;
 const DEFAULT_PREDICTION_DATA = {'likelihood': 0,'likelihood_display': 'Likelihood','id': 0};
 
 if (prediction.eventType != 'NA'){
-    console.log('prediciton => ',prediction);
+    console.log('prediction => ',prediction);
     let data = checkHasDataMappingElseCreate(prediction.eventType,parseInt(prediction.fighterId));
     console.log('showing prediction!',data);
     setLikelhoodDisplay2(data,prediction.eventType,prediction.fighterId);
     let selectOption = select.querySelector(`option[data-fighter-id="${prediction.fighterId}"][data-event-type="${prediction.eventType}"]`);
+    // console.log(selectOption);
+    let oldOption = select.querySelector('option[selected]');
+    oldOption.selected = false;//old option
+    oldOption.removeAttribute('selected');
+
     select.value = selectOption.value;
+    selectOption.selected = true;
+    selectOption.setAttribute('selected','');
 }
 
 function setLikelhoodDisplay2(data,eventType,fighterId){
@@ -277,8 +284,14 @@ function setLikelhoodDisplay2(data,eventType,fighterId){
 select.addEventListener('change',(event)=>{
     // console.log(event.target,event);
     // console.log(event.target.options,event.target.selectedIndex);
-
+    let oldOption = select.querySelector(`option[selected]`);
+    // console.log(oldOption);
+    oldOption.selected = false;
+    oldOption.removeAttribute('selected');
+    // console.log('select change event triggered');
     let option = event.target.options[event.target.selectedIndex];
+    option.selected = true;
+    option.setAttribute('selected','');
     let eventType = option.value;
     let fighterId = option.dataset.fighterId;
     
