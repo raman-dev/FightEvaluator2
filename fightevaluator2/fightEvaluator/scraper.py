@@ -172,6 +172,8 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
         roundSearch = re.search(r'[0-9]+ x [0-9]+',rounds)
         if roundSearch:
             rounds = roundSearch.group(0)[0]
+        else:
+            continue #ignore this matchup
         matchup['weight_class'] = poundsToWeightClass(weight_lbs)
         matchup['rounds'] = rounds
         matchup['isprelim'] = isprelim
@@ -210,7 +212,8 @@ def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> di
                 reach_inches = int(reach_match[0])
             else:
                 #if cm it is always gonna be the last match
-                reach_inches = math.floor(int(reach_match[-1]) / 2.54)
+                if reach_match != []:
+                    reach_inches = math.floor(int(reach_match[-1]) / 2.54)
             fighterData['reach'] = reach_inches
 
         if re.search(r'Date of Birth',li_text):
