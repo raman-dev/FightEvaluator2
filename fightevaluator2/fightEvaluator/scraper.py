@@ -69,10 +69,12 @@ def extractLinkAndDate(url):
         #get date from data object
         data_date = datetime.strptime(data[2].text.strip(),"%Y.%m.%d").date()
         #compare today and date when the distance from today and date increases break loop
+        print(data_event_title,data_date)
         if data_date < today:
             break
         result['link'] = domain + data_link
         result['date'] = data_date
+    # print(result)
     return result
 
 def poundsToWeightClass(weight_lbs):
@@ -143,13 +145,19 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
 
     #use link to get more info about event
     source = getPageSource(fightEventData['eventData']['link'])
-    
+
+    print('retrieved from => ',fightEventData['eventData']['link'])    
     soup = BeautifulSoup(source,'html.parser')#parse html
+    #print the soup to a file
+    # with open("output.html", "w", encoding="utf-8") as file:
+    # # Writing the HTML content of the parsed soup to the file
+    #     file.write(str(soup))
     title = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
     fightEventData['eventData']['title'] = title
 
     #list of matchups
     ulFightCard = soup.find('ul',class_='fightCard')
+    # print(ulFightCard)
     matchups = []
     for li in ulFightCard.findAll('li'):
         # print(li.div)
@@ -162,7 +170,10 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
             name = normalizeString(fighterName.a.text.strip())
             link = fighterName.a['href']
             matchup['fighters_raw'].append({'name':name,'link':domain+link})
-        weight_lbs = fightCardBout.find('span',class_='weight').text.strip()
+        weight_span = fightCardBout.find('span',class_='weight')
+        weight_lbs = ""
+        if weight_span and weight_span.text:
+            weight_lbs = weight_span.text.strip()
         rounds = fightCardBout.find('td').text.strip()#
         
         isprelim = False
@@ -195,7 +206,7 @@ def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> di
             height_inches = 0
             if len(height_match) == 1:
                 height_inches = math.floor(int(height_match[0]) / 2.54)
-            else:
+            if len(height_match) > 1:
                 height_inches = int(height_match[0])*12 + int(height_match[1])
             fighterData['height'] = height_inches
 
@@ -218,8 +229,12 @@ def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> di
 
         if re.search(r'Date of Birth',li_text):
             dob_string = li.find_all('span')[-1].text.strip()#last span element
-            dob = datetime.strptime(dob_string,"%Y.%m.%d").date()
-            fighterData['date_of_birth'] = dob
+            if dob_string != 'N/A':
+                print('dob_string',dob_string)
+                dob = datetime.strptime(dob_string,"%Y.%m.%d").date()
+                fighterData['date_of_birth'] = dob
+            else:
+                fighterData['date_of_birth'] = 'N/A'
 
 def getFighterData(link):
     source = getPageSource(link)

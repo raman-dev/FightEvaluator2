@@ -337,7 +337,9 @@
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
       let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
-      let weightClass = document.querySelector(".weight-class .dropdown-toggle").textContent;
+      let weightClass = document.querySelector(".weight-class .dropdown-toggle")
+                        .textContent
+                        .replace(" ","_");
       let rounds = document.querySelector("input[name='rounds']:checked").value;
       let isprelim = document.querySelector("#isprelim").checked;
       //make sure both fighter id's are not -1
@@ -350,9 +352,9 @@
         alert("Please select a weight class");
         return;
       }
-      // console.log(fighterAId, fighterBId, weightClass,rounds);
+      console.log(fighterAId, fighterBId, weightClass,rounds);
       // return;
-
+      //replace the space to an underscore
       //send post request to /create-matchup
       fetch("/matchup/create-matchup", {
         method: "POST",
