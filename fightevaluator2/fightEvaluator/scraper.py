@@ -19,7 +19,7 @@ domain = "https://www.tapology.com"
 
 DRIVER_PATH='chromedriver-win64/chromedriver'
 options = Options()
-options.add_argument("--headless=new")
+# options.add_argument("--headless=new")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--ignore-ssl-errors')
 
