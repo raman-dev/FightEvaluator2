@@ -3,3 +3,4 @@ from .assessment import *
 from .matchups import *
 from .note import *
 from .fighter import *
+from .prediction import *

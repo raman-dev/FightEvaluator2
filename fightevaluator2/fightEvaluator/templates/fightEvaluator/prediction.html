@@ -1,0 +1,50 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static  'fightEvaluator/styles/prediction_styles.css' %}" />
+{% endblock %}
+{% block title %}Fight Predictions{% endblock %}
+
+{% block content %}
+    {% include 'fightEvaluator/navbar.html' %}
+    <div class="main-container">
+        <!--
+
+            event picker
+
+            table that shows prediction results of predictions made
+            |matchup_name| prediction | correct | isGamble
+             
+            
+        -->
+        <div class="prediction-table-container container-fluid border">
+            table-container
+            <div class="prediction-table container-fluid border">
+                table
+                <div class="table-header row">
+                    <div class="col">MatchUp</div>
+                    <div class="col">Prediction</div>
+                    <div class="col">Correct</div>
+                    <div class="col">Gamble</div>
+                </div>
+                {% for data in predictions %}
+                    <div class="row">
+                        <div class="col">data.matchup</div>
+                        <div class="col">data.prediction</div>   
+                        <div class="col">data.isCorrect</div>
+                        <div class="col">data.isGamble</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    
+    
+{% endblock %}
+

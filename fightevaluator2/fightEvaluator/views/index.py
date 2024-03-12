@@ -153,10 +153,11 @@ def getFightEventResults(request,eventId):
 
             if fighter_0 in nameMatchupMap:
                 matchup = nameMatchupMap[fighter_0]
-            else:
+            if not matchup and not fighter_1 in nameMatchupMap:
                 matchup = nameMatchupMap[fighter_1]
             if not matchup:#try other fighter name since names can be sometimes different on different sites
-                matchup = nameMatchupMap[fighter_1]
+                # matchup = nameMatchupMap[fighter_1]
+                continue#skip result
             winner = None
             if 'winner' in outcome:
                 winner_name = outcome[outcome['winner']]
