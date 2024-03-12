@@ -16,24 +16,33 @@
 
             table that shows prediction results of predictions made
             |matchup_name| prediction | correct | isGamble
-             
             
         -->
         <div class="prediction-table-container container-fluid border">
             table-container
             <div class="prediction-table container border">
                 <ul>
-                    <div class="table-header row border">
-                        <div class="col col-4">MatchUp</div>
-                        <div class="col col-4">Prediction</div>
-                        <div class="col col-4">Correct</div>
-                    </div>
-                    {% for data in predictions %}
                     <li>
+                        <div class="table-header row">
+                            <div class="col col-3 column-label">MatchUp</div>
+                            <div class="col col-3 column-label">Prediction</div>
+                            <div class="col col-1 column-label">Result</div>
+                            <div class="col col-4 column-label">Event</div>
+                        </div>
+                    </li>
+                    {% for data in predictions %}
+                    <li class="data-row">
                         <div class="row">
-                            <div class="col col-4">{{data.matchup.title}}</div>
-                            <div class="col col-4">{{data.prediction}}</div>   
-                            <div class="col col-4">{{data.isCorrect}}</div>
+                            <div class="col col-3">{{data.matchup.title}}</div>
+                            <div class="col col-3">{{data.prediction.predictionDisplay}}</div>   
+                            <div class="col col-1 data-result">
+                                <p class="{% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %} ">
+                                    {{data.isCorrect}}
+                                </p>
+                            </div>
+                            <div class="col col-4">
+                                {{ data.matchup.event.title }}
+                            </div>
                         </div>
                     </li>
                     {% endfor %}
@@ -45,7 +54,19 @@
 {% endblock %}
 
 {% block scripts %}
-    
-    
+    <script>
+        //
+        function onClickColumnLabel(event){
+            // console.log(event);
+            //3 states for a column label 
+            //sort.inc
+            //sort.dec
+            //default
+        }
+        //for every column-label add a click listener
+        document.querySelectorAll('.column-label').forEach((element) => {
+            element.addEventListener('click',onClickColumnLabel);
+        });
+    </script>
 {% endblock %}
 

@@ -158,41 +158,6 @@ class Fighter(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
 
-#outcomes represent possible results of a matchup
-# class MatchUpOutcome(models.Model):
-
-#     class Outcomes(models.TextChoices):
-#         WIN = "Win","Fighter wins"
-        
-#         GOES_THE_DISTANCE = "Yes","Fight Goes the Distance"
-#         DOES_NOT_GO_THE_DISTANCE = "No","Fight Does Not Go the Distance"
-        
-#         ROUNDS_GEQ_ZERO_AND_HALF = "Rnds >= 0.5","Fight lasts more than 0.5 rounds"
-#         ROUNDS_GEQ_ONE_AND_HALF = "Rnds >= 1.5","Fight lasts more than 1.5 rounds"
-#         ROUNDS_GEQ_TWO_AND_HALF = "Rnds >= 2.5","Fight lasts more than 2.5 rounds"
-#         ROUNDS_GEQ_THREE_AND_HALF = "Rnds >= 3.5","Fight lasts more than 3.5 rounds"
-#         ROUNDS_GEQ_FOUR_AND_HALF = "Rnds >= 4.5","Fight lasts more than 4.5 rounds"     
-
-#     class Likelihood(models.IntegerChoices):
-#         UNLIKELY = (5,"Very Unlikely")
-#         POSSIBLE = (4,"Somewhat Unlikely")
-#         NEUTRAL = (3,"Neutral")
-#         LIKELY = (2,"Likely")
-#         VERY_LIKELY = (1,"Very Likely")
-#         NOT_PREDICTED = (0,"Not Predicted")
-
-
-#     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
-#     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
-#     outcome = models.CharField(choices=Outcomes.choices,max_length=256)
-#     # name = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
-#     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
-#     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
-#     is_prediction = models.BooleanField(default=False)
-
-#     def __str__(self):
-#         return "|" + self.outcome + "|" + str(self.likelihood)
-
 class FightOutcome(models.Model):    
     class Outcomes(models.TextChoices):
         KO = "KO/TKO","Knockout or Technical Knockout"
@@ -251,6 +216,11 @@ class EventLikelihood(models.Model):
         if self.fighter != None:
             return self.fighter.name +" " + str(self.event) + " => " + self.get_likelihood_display()
         return str(self.event) + "|" + self.get_likelihood_display()
+    
+    def predictionDisplay(self):
+         if self.fighter != None:
+              return self.fighter.name + " " + str(self.event)
+         return self.get_event_display()
 
 #only 1 prediction per matchup
 class Prediction(models.Model):

@@ -1,4 +1,56 @@
+@font-face {
+    font-family: PoppinsSemiBold;
+    src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+
 ul {
     padding: 0px;
     list-style: none; 
-}
+    li{
+        margin: 0.2rem;
+        padding: 0.4rem
+    }
+
+    li.data-row {
+        border:1px solid lavender;
+        border-radius: 0.4rem;
+        .col{
+            text-transform: capitalize;
+        }
+    }
+    .data-result{    
+        p{  
+            font-family: PoppinsSemiBold;
+            outline: 2px solid lavender;
+            outline-offset: 1px;
+            border-radius: 0.4rem;
+            margin: 0px;
+
+            width: 6ch;
+            text-align: center;
+            text-transform: lowercase;
+            color: black;
+        }
+        p.data-correct{
+            background-color: #00ff00;
+        }
+        p.data-incorrect{
+            background-color: #dc3545;
+        }
+    }
+
+    .column-label{
+        padding: 0.2rem;
+    }
+
+    .column-label:hover{
+        cursor: pointer;
+        background-color: #111519;
+    }
+    // .column-label.sort-inc{
+        
+    // }
+    // .column-label.sort-dec{
+
+    // }
+} 

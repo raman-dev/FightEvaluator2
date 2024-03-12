@@ -1,4 +1,43 @@
+@font-face {
+  font-family: PoppinsSemiBold;
+  src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
 ul {
   padding: 0px;
   list-style: none;
+}
+ul li {
+  margin: 0.2rem;
+  padding: 0.4rem;
+}
+ul li.data-row {
+  border: 1px solid lavender;
+  border-radius: 0.4rem;
+}
+ul li.data-row .col {
+  text-transform: capitalize;
+}
+ul .data-result p {
+  font-family: PoppinsSemiBold;
+  outline: 2px solid lavender;
+  outline-offset: 1px;
+  border-radius: 0.4rem;
+  margin: 0px;
+  width: 6ch;
+  text-align: center;
+  text-transform: lowercase;
+  color: black;
+}
+ul .data-result p.data-correct {
+  background-color: #00ff00;
+}
+ul .data-result p.data-incorrect {
+  background-color: #dc3545;
+}
+ul .column-label {
+  padding: 0.2rem;
+}
+ul .column-label:hover {
+  cursor: pointer;
+  background-color: #111519;
 }/*# sourceMappingURL=prediction_styles.css.map */
