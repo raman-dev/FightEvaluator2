@@ -41,16 +41,32 @@ ul {
 
     .column-label{
         padding: 0.2rem;
+        display: flex;
+        p{
+            margin: 0px;
+        }
+        justify-content: space-between; 
+        align-items: center;
+        .icon{
+            color: #313539;//set fill="currentColor"
+        }
     }
 
     .column-label:hover{
         cursor: pointer;
-        background-color: #111519;
+        background-color: #414549;
     }
-    // .column-label.sort-inc{
-        
-    // }
-    // .column-label.sort-dec{
-
-    // }
+    .column-label.sort-by{
+        background-color: #111519;
+        .icon{
+            color: #818589;//set fill="currentColor"
+        }
+    }
+    
+    .column-label[data-sort="dec"]{
+        //flip icon upside down
+        .icon {
+            transform: rotateZ(180deg);
+        }
+    }
 } 

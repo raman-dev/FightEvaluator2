@@ -36,8 +36,26 @@ ul .data-result p.data-incorrect {
 }
 ul .column-label {
   padding: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ul .column-label p {
+  margin: 0px;
+}
+ul .column-label .icon {
+  color: #313539;
 }
 ul .column-label:hover {
   cursor: pointer;
+  background-color: #414549;
+}
+ul .column-label.sort-by {
   background-color: #111519;
+}
+ul .column-label.sort-by .icon {
+  color: #818589;
+}
+ul .column-label[data-sort=dec] .icon {
+  transform: rotateZ(180deg);
 }/*# sourceMappingURL=prediction_styles.css.map */
