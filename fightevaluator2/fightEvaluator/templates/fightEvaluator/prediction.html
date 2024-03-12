@@ -21,22 +21,23 @@
         -->
         <div class="prediction-table-container container-fluid border">
             table-container
-            <div class="prediction-table container-fluid border">
-                table
-                <div class="table-header row">
-                    <div class="col">MatchUp</div>
-                    <div class="col">Prediction</div>
-                    <div class="col">Correct</div>
-                    <div class="col">Gamble</div>
-                </div>
-                {% for data in predictions %}
-                    <div class="row">
-                        <div class="col">data.matchup</div>
-                        <div class="col">data.prediction</div>   
-                        <div class="col">data.isCorrect</div>
-                        <div class="col">data.isGamble</div>
+            <div class="prediction-table container border">
+                <ul>
+                    <div class="table-header row border">
+                        <div class="col col-4">MatchUp</div>
+                        <div class="col col-4">Prediction</div>
+                        <div class="col col-4">Correct</div>
                     </div>
-                {% endfor %}
+                    {% for data in predictions %}
+                    <li>
+                        <div class="row">
+                            <div class="col col-4">{{data.matchup.title}}</div>
+                            <div class="col col-4">{{data.prediction}}</div>   
+                            <div class="col col-4">{{data.isCorrect}}</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

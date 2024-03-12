@@ -90,6 +90,9 @@ class MatchUp(models.Model):
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
+    
+     def title(self) -> str:
+          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize()
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
