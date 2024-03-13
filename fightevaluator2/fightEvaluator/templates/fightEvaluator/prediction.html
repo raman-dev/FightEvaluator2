@@ -23,7 +23,7 @@
             <div class="prediction-table container border">
                 <ul>
                     <li>
-                        <div class="table-header row" data-sort-key-count="0">
+                        <div class="table-header row" data-key-count="0">
                             <div class="col col-3 column-label">
                                 <p>
                                     MatchUp
@@ -50,20 +50,20 @@
                         </div>
                     </li>
                     {% for data in predictions %}
-                    <li class="data-row">
-                        <div class="row" tabindex="{{ forloop.counter0 }}">
-                            <div class="col col-3">{{data.matchup.title}}</div>
-                            <div class="col col-3" data-prediction="{{data.prediction.predictionDisplay}}" >{{data.prediction.predictionDisplay}}</div>   
-                            <div class="col col-1 data-result">
-                                <p  data-result="{{data.isCorrect}}" class="{% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %} ">
-                                    {{data.isCorrect}}
-                                </p>
+                        <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-event="{{ data.matchup.event.title }}">
+                            <div class="row">
+                                <div class="col col-3">{{data.matchup.title}}</div>
+                                <div class="col col-3">{{data.prediction.predictionDisplay}}</div>   
+                                <div class="col col-1 data-result">
+                                    <p  class="{% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %} ">
+                                        {{data.isCorrect}}
+                                    </p>
+                                </div>
+                                <div class="col col-4" >
+                                    {{ data.matchup.event.title }}
+                                </div>
                             </div>
-                            <div class="col col-4" data-event="{{data.event.title}}">
-                                {{ data.matchup.event.title }}
-                            </div>
-                        </div>
-                    </li>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -89,15 +89,59 @@
             //sort keys to use
             //for every column label with sort-by
             let keys = [];
+            let direction = {};
             document.querySelectorAll('.sort-by').forEach((element)=>{
-                keys.push(element.getAttribute("id"));
+                let k = element.getAttribute("id");
+                keys.push(k);
+                if (element.dataset.sort == "inc"){
+                    direction[k] = 1;
+                }else{
+                    direction[k] = -1;
+                }
             });
-            console.log(keys);
+            keys.sort((a,b) => {
+                let ele_a = document.querySelector(`[data-${a}]`);
+                let ele_b = document.querySelector(`[data-${b}]`);
+
+                return ele_a.dataset.sortOrder - ele_b.dataset.sortOrder;
+            });
+            // console.log(keys);
+            let tableUl = document.querySelector('.prediction-table ul');
+
+            let rows = Array.from(tableUl.children);
+            let headerRow = rows[0];
+            let dataRows = rows.slice(1,rows.length);
+            tableUl.innerHTML = "";//remove children
+            
+            // for (let i = 0;i < keys.length;i++){
+            dataRows.sort((a,b) => {
+                //compare every ith key
+                for (let j = keys.length;j >= 0 ;j--){
+                    let k = keys[j];
+                    if (a.dataset[k] != b.dataset[k]){
+                        return direction[k]* (a.dataset[k].localeCompare(b.dataset[k]));
+                    }
+                } 
+                return 0;
+            });
+            // }
+            if (keys.length == 0){//original order
+                dataRows.sort((a,b)=>{
+                    return a.getAttribute("tabindex") - b.getAttribute("tabindex");
+                });
+            }
+
+            console.log(dataRows);
+            tableUl.appendChild(headerRow);
+            dataRows.forEach((e)=>{
+                tableUl.appendChild(e);
+            });
         }
 
         function onClickColumnLabel(event){
             // console.log(event);
-            let keyCount = document.querySelector('.table-header').dataset.keyCount;//range from 0 to some n
+            let keyContainer = document.querySelector('.table-header');
+            let keyCount = parseInt(keyContainer.dataset.keyCount);//range from 0 to some key count
             let columnLabel = event.currentTarget;//listener element
             //3 states for a column label 
             //default -> inc -> dec -> default
@@ -107,14 +151,22 @@
             columnLabel.dataset.sort = sortOrder;
             if (sortOrder != DEFAULT){
                 if (!columnLabel.classList.contains('sort-by')){
+                    keyCount+=1;
                     columnLabel.classList.add('sort-by');
-                    columnLabel.dataset.sortOrder = 
+                    columnLabel.dataset.sortOrder = keyCount - 1;
+                    keyContainer.dataset.keyCount = keyCount;
                 }else{
                     //not changing anythingjust inverting sort order
                 }
             }else{
                 //return to default styles
+                keyContainer.dataset.keyCount -= 1;//do not sort by this column anymore
+                document.querySelectorAll('.column-label').forEach((element,index)=>{
+                    if (index == 0) return;
+                    element.dataset.sortOrder %= keyContainer.dataset.keyCount;
+                });
                 columnLabel.classList.remove('sort-by');
+                columnLabel.dataset.sortOrder = -1;
             }
             sortTableRows();
         }
