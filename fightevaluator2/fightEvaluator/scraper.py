@@ -152,7 +152,8 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     # with open("output.html", "w", encoding="utf-8") as file:
     # # Writing the HTML content of the parsed soup to the file
     #     file.write(str(soup))
-    title = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
+    # title = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
+    title = soup.find('h2').text.strip()
     fightEventData['eventData']['title'] = title
 
     #list of matchups
