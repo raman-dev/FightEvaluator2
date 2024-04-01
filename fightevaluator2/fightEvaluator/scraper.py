@@ -157,43 +157,66 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     fightEventData['eventData']['title'] = title
 
     #list of matchups
-    ulFightCard = soup.find('ul',class_='fightCard')
+    ulFightCard = soup.find(id='sectionFightCard').ul
+    """
+
+        page structure 2024-03-25
+            #sectionFightCard
+                ul
+                    li
+                      data-bout-wrapper
+                        div (another wrapper)
+                            div -> fighter_a
+                            div -> bout_info
+                            div -> fighter_b
+    
+    """
     # print(ulFightCard)
     matchups = []
     for li in ulFightCard.findAll('li'):
         # print(li.div)
+        dataWrapper = li.div.div#two wrappers
+        
+        # divFighterA,divBout,divFighterB = dataWrapper.children
+        print(dataWrapper)
+        print("number of children => ",len(list(dataWrapper.children)))
+        break
+        # print(divFighterA,divBout,divFighterB)
+
         fightCardBout = li.div
+         
         matchup = {'fighters_raw':[]}
 
-        for i,fightCardFighterBout in enumerate(fightCardBout.findAll('div',class_='fightCardFighterBout')):
-            # print(fightCardFighterBout)
-            fighterName = fightCardFighterBout.find('div',class_='fightCardFighterName')
-            name = normalizeString(fighterName.a.text.strip())
-            link = fighterName.a['href']
-            matchup['fighters_raw'].append({'name':name,'link':domain+link})
-        weight_span = fightCardBout.find('span',class_='weight')
-        weight_lbs = ""
-        if weight_span and weight_span.text:
-            weight_lbs = weight_span.text.strip()
-        rounds = fightCardBout.find('td').text.strip()#
+        # for i,fightCardFighterBout in enumerate(fightCardBout.findAll('div',class_='fightCardFighterBout')):
+        #     # print(fightCardFighterBout)
+        #     fighterName = fightCardFighterBout.find('div',class_='fightCardFighterName')
+        #     name = normalizeString(fighterName.a.text.strip())
+        #     link = fighterName.a['href']
+        #     matchup['fighters_raw'].append({'name':name,'link':domain+link})
+        # weight_span = fightCardBout.find('span',class_='weight')
+        # weight_lbs = ""
+        # if weight_span and weight_span.text:
+        #     weight_lbs = weight_span.text.strip()
+        # rounds = fightCardBout.find('td').text.strip()#
         
-        isprelim = False
-        if re.match(r'Prelim',rounds):
-            isprelim = True
+        # isprelim = False
+        # if re.match(r'Prelim',rounds):
+        #     isprelim = True
         
-        roundSearch = re.search(r'[0-9]+ x [0-9]+',rounds)
-        if roundSearch:
-            rounds = roundSearch.group(0)[0]
-        else:
-            continue #ignore this matchup
-        matchup['weight_class'] = poundsToWeightClass(weight_lbs)
-        matchup['rounds'] = rounds
-        matchup['isprelim'] = isprelim
-        matchups.append(matchup)
-    generateMatchupFighterObjs(matchups)
+        # roundSearch = re.search(r'[0-9]+ x [0-9]+',rounds)
+        # if roundSearch:
+        #     rounds = roundSearch.group(0)[0]
+        # else:
+        #     continue #ignore this matchup
+        # matchup['weight_class'] = poundsToWeightClass(weight_lbs)
+        # matchup['rounds'] = rounds
+        # matchup['isprelim'] = isprelim
+        # matchups.append(matchup)
+    # generateMatchupFighterObjs(matchups)
     fightEventData['matchups'] = matchups
     return fightEventData
 
+getUpcomingFightEvent()
 def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> dict:
     for li in fighterDetailsSoup.findAll('li'):
         li_text = li.text.strip()
