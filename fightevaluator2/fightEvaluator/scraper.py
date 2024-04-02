@@ -173,13 +173,30 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     """
     # print(ulFightCard)
     matchups = []
+    def extract_text(element):
+        result = []
+        if hasattr(element, 'children'):
+            for child in element.children:
+
+                if hasattr(child, 'name') and child.name is not None:
+                    result += extract_text(child)
+                elif hasattr(child, 'strip'):
+                    text = child.strip()
+                    if len(text) > 0:
+                        result.append(child.strip())
+        return result
     for li in ulFightCard.findAll('li'):
         # print(li.div)
         dataWrapper = li.div.div#two wrappers
         
         # divFighterA,divBout,divFighterB = dataWrapper.children
-        print(dataWrapper)
-        print("number of children => ",len(list(dataWrapper.children)))
+        # print(dataWrapper)
+        # print("number of children => ",len(list(dataWrapper.children)))
+        # all_text = extract_text(dataWrapper)
+        # print(all_text)
+        fighterA,matchupInfo,fighterB = dataWrapper.findChildren("div",recursive=False)
+        print(fighterA.find('a'))
+        print(fighterB.find('a'))
         break
         # print(divFighterA,divBout,divFighterB)
 
@@ -213,6 +230,7 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
         # matchup['isprelim'] = isprelim
         # matchups.append(matchup)
     # generateMatchupFighterObjs(matchups)
+        
     fightEventData['matchups'] = matchups
     return fightEventData
 
