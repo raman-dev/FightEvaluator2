@@ -22,6 +22,7 @@ options = Options()
 # options.add_argument("--headless=new")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--ignore-ssl-errors')
+import time
 
 #normalize string to ascii from unicode
 def normalizeString(string):
@@ -32,6 +33,7 @@ def getPageSource(url):
     browser = webdriver.Chrome(options=options)
     browser.get(url)
     
+    time.sleep(15)
     source = browser.page_source
     browser.quit()
     return source
@@ -138,6 +140,24 @@ def generateMatchupFighterObjs(matchups):
     matchup.pop('fighters_raw')#no longer need this data
     # print(matchup)
 
+
+def extract_text(element):
+    result = []
+    if hasattr(element, 'children'):
+        for child in element.children:
+            if hasattr(child, 'name') and child.name is not None:
+                result += extract_text(child)
+            elif hasattr(child, 'strip'):
+                text = child.strip()
+                if len(text) > 0:
+                    result.append(child.strip())
+    return result
+
+
+def getUpcomingFightEventData():
+    fightEventData = {}
+    return fightEventData
+
 def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight event
     fightEventData = {'eventData':{}}
     for k,v in extractLinkAndDate(EVENTS_URL2).items():
@@ -148,15 +168,17 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
 
     print('retrieved from => ',fightEventData['eventData']['link'])    
     soup = BeautifulSoup(source,'html.parser')#parse html
-    #print the soup to a file
-    # with open("output.html", "w", encoding="utf-8") as file:
-    # # Writing the HTML content of the parsed soup to the file
-    #     file.write(str(soup))
+    # print the soup to a file
+    with open("output.html", "w", encoding="utf-8") as file:
+    # Writing the HTML content of the parsed soup to the file
+        file.write(str(soup))
     # title = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
+    
     title = soup.find('h2').text.strip()
     fightEventData['eventData']['title'] = title
 
     #list of matchups
+    # ulFightCard = get_matchup_ul_soup(soup)
     ulFightCard = soup.find(id='sectionFightCard').ul
     """
 
@@ -174,22 +196,17 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     """
     # print(ulFightCard)
     matchups = []
-    def extract_text(element):
-        result = []
-        if hasattr(element, 'children'):
-            for child in element.children:
-                if hasattr(child, 'name') and child.name is not None:
-                    result += extract_text(child)
-                elif hasattr(child, 'strip'):
-                    text = child.strip()
-                    if len(text) > 0:
-                        result.append(child.strip())
-        return result
-    for li in ulFightCard.findAll('li'):
-        # print(li.div)
-        dataWrapper = li.div.div#two wrappers
-        
-        fighterA,matchupInfo,fighterB = dataWrapper.findChildren("div",recursive=False)
+    for li in ulFightCard.find_all('li'):
+        print(li)
+        dataWrapper = li.div
+        boutWrapper = dataWrapper.div
+        # dataWrapperChildren = dataWrapper.contents#dataWrapper.find_all("div",recursive=False)
+        break
+        # print(dataWrapper)
+        # print(dataWrapperChildren)
+        # if len(dataWrapperChildren) > 2:
+        #     boutWrappper = dataWrapperChildren[1]#is second child
+        fighterA,matchupInfo,fighterB = boutWrapper.find_all("div",recursive=False)
         matchupInfo = matchupInfo.div
 
         fighterA_a = fighterA.find('a')
@@ -231,11 +248,12 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
         matchup['rounds'] = rounds
         matchup['isprelim'] = isprelim
         matchups.append(matchup)
-    generateMatchupFighterObjs(matchups)
+        break
+    # generateMatchupFighterObjs(matchups)
     fightEventData['matchups'] = matchups
     return fightEventData
 
-# print(getUpcomingFightEvent())
+print(getUpcomingFightEvent())
 def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> dict:
     for li in fighterDetailsSoup.findAll('li'):
         li_text = li.text.strip()
