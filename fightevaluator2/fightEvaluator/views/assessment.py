@@ -15,7 +15,7 @@ def assessment_index(request,fighterId):
     assessment = Assessment.objects.get(fighter=fighter)
     #order in latest note first
     notes = Note.objects.filter(assessment=assessment).order_by('-createdAt')
-    nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('scheduled').first()
+    nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('scheduled').last()
     fighterjson = getFighterJSON(fighter)
     fighterjson = str(fighterjson)#need string for template writing
     fighterjson = fighterjson.replace('None','null')

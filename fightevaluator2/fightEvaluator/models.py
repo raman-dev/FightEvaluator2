@@ -84,7 +84,7 @@ class MatchUp(models.Model):
      #optional event 
      event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
      #optional result
-    #  result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
+     #result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
 

@@ -333,6 +333,32 @@
       "Content-Type": "application/json",
       "X-CSRFToken": Cookies.get('csrftoken'),
     }
+    
+    function createMatchUpElement(){
+      //
+     return `<div class="matchup row border border-2 m-1"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
+            <div class="col col-1">
+              <h1>{{forloop.counter}}</h1>
+            </div>
+            <div class="col col-4 d-flex fighter" data-fighter-id="{{ matchup.fighter_a.id }}">
+              <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="">
+              <a href="/assessment/{{ matchup.fighter_a.id }}">
+                <p class="fighter-name">{{ matchup.fighter_a.name }}</p>
+              </a>
+            </div>
+            <div class="col col-3 weightclass">
+              <h6>{{ matchup.weight_class|rmscores }}</h6>
+              <p class="matchup-rounds">{{ matchup.rounds }} x 5</p>
+            </div>
+            <div class="col col-4 d-flex fighter justify-content-end" data-fighter-id="{{ matchup.fighter_b.id }}">
+              <a href="/assessment/{{ matchup.fighter_b.id }}">
+                <p class="fighter-name">{{ matchup.fighter_b.name }}</p>
+              </a>
+              <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
+            </div>  
+          </div>`;
+    }
+    
     function createMatchUp(event) {
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
@@ -375,6 +401,7 @@
           let matchup = data["matchup"];
           let matchupElement = document.createElement("div");
           //reflect change in matchup table
+          // let element = createMatchUpElement(matchup);
         });
     }
 

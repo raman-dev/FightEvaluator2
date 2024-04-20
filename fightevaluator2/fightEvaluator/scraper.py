@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 
 import math
 import re
-import unicodedata
+# import unicodedata
 
 from django.db.models import Q
 from .models import WeightClass,Fighter,Assessment
@@ -24,9 +24,11 @@ options.add_argument('--ignore-certificate-errors')
 options.add_argument('--ignore-ssl-errors')
 import time
 
-#normalize string to ascii from unicode
-def normalizeString(string):
-    return unicodedata.normalize('NFD',string).encode('ascii', 'ignore').decode("ascii").lower()
+from .scraper2 import * 
+
+# #normalize string to ascii from unicode
+# def normalizeString(string):
+#     return unicodedata.normalize('NFD',string).encode('ascii', 'ignore').decode("ascii").lower()
 
 
 def getPageSource(url):
@@ -141,19 +143,6 @@ def generateMatchupFighterObjs(matchups):
     # print(matchup)
 
 
-def extract_text(element):
-    result = []
-    if hasattr(element, 'children'):
-        for child in element.children:
-            if hasattr(child, 'name') and child.name is not None:
-                result += extract_text(child)
-            elif hasattr(child, 'strip'):
-                text = child.strip()
-                if len(text) > 0:
-                    result.append(child.strip())
-    return result
-
-
 def getUpcomingFightEventData():
     fightEventData = {}
     return fightEventData
@@ -166,20 +155,17 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     #use link to get more info about event
     source = getPageSource(fightEventData['eventData']['link'])
 
-    print('retrieved from => ',fightEventData['eventData']['link'])    
+    # print('retrieved from => ',fightEventData['eventData']['link'])    
     soup = BeautifulSoup(source,'html.parser')#parse html
     # print the soup to a file
-    with open("output.html", "w", encoding="utf-8") as file:
-    # Writing the HTML content of the parsed soup to the file
-        file.write(str(soup))
+    # with open("output.html", "w", encoding="utf-8") as file:
+    # # Writing the HTML content of the parsed soup to the file
+    #     file.write(str(soup))
     # title = soup.find('div',class_='eventPageHeaderTitles').h1.text.strip()
     
     title = soup.find('h2').text.strip()
     fightEventData['eventData']['title'] = title
 
-    #list of matchups
-    # ulFightCard = get_matchup_ul_soup(soup)
-    ulFightCard = soup.find(id='sectionFightCard').ul
     """
 
         page structure 2024-03-25
@@ -194,66 +180,16 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
                             div -> fighter_b
     
     """
-    # print(ulFightCard)
-    matchups = []
-    for li in ulFightCard.find_all('li'):
-        print(li)
-        dataWrapper = li.div
-        boutWrapper = dataWrapper.div
-        # dataWrapperChildren = dataWrapper.contents#dataWrapper.find_all("div",recursive=False)
-        break
-        # print(dataWrapper)
-        # print(dataWrapperChildren)
-        # if len(dataWrapperChildren) > 2:
-        #     boutWrappper = dataWrapperChildren[1]#is second child
-        fighterA,matchupInfo,fighterB = boutWrapper.find_all("div",recursive=False)
-        matchupInfo = matchupInfo.div
-
-        fighterA_a = fighterA.find('a')
-        fighterB_a = fighterB.find('a')
-
-        fighterAName = fighterA_a.text.strip()
-        fighterBName = fighterB_a.text.strip()
-
-        fighterALink = fighterA_a['href']
-        fighterBLink = fighterB_a['href']
-
-        eventType,weight_lbs,rounds = extract_text(matchupInfo)
-        # print(fighterAName,fighterBName,eventType,weight_lbs,rounds)
-         
-        matchup = {
-            'fighters_raw':[
-            {
-                'name':normalizeString(fighterAName),
-                'link':domain + fighterALink
-            },
-            {
-                'name':normalizeString(fighterBName),
-                'link':domain + fighterBLink
-            }
-        ]}
-
-        isprelim = False
-        if re.match(r'Prelim',rounds):
-            isprelim = True
-        if eventType and "Prelim" in eventType:
-            isprelim = True
-             
-        roundSearch = re.search(r'[0-9]+ x [0-9]+',rounds)
-        if roundSearch:
-            rounds = roundSearch.group(0)[0]
-        else:
-            continue #ignore this matchup
-        matchup['weight_class'] = poundsToWeightClass(weight_lbs)
-        matchup['rounds'] = rounds
-        matchup['isprelim'] = isprelim
-        matchups.append(matchup)
-        break
-    # generateMatchupFighterObjs(matchups)
+    #list of matchups
+    matchups = scrapeMatchups(source) 
+    for m in matchups:
+        w = poundsToWeightClass(m['weight_class'])
+        m['weight_class'] = w
+    generateMatchupFighterObjs(matchups)
     fightEventData['matchups'] = matchups
     return fightEventData
 
-print(getUpcomingFightEvent())
+# print(getUpcomingFightEvent())
 def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> dict:
     for li in fighterDetailsSoup.findAll('li'):
         li_text = li.text.strip()
