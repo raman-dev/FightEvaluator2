@@ -325,6 +325,7 @@
 {% endblock %}
 
 {% block scripts %}
+ <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
  <script>
 
     var fightEventId = {{ event.id }};
@@ -334,29 +335,38 @@
       "X-CSRFToken": Cookies.get('csrftoken'),
     }
     
-    function createMatchUpElement(){
+    function createMatchUpElement(matchup){
       //
-     return `<div class="matchup row border border-2 m-1"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
+      let table = null;
+      console.log(typeof(matchup));
+      if (matchup.isprelim == true){
+        table = document.querySelector('#main-card');
+      }else{
+        table = document.querySelector('#prelims');
+      }
+      //get the count of rows
+      let index = table.querySelector('.matchups').children.length;
+     return $(`<div class="matchup row border border-2 m-1"  tabindex="50" data-matchup-id="${matchup.id}" data-isprelim="${matchup.isprelim}">
             <div class="col col-1">
-              <h1>{{forloop.counter}}</h1>
+              <h1>${index}</h1>
             </div>
-            <div class="col col-4 d-flex fighter" data-fighter-id="{{ matchup.fighter_a.id }}">
+            <div class="col col-4 d-flex fighter" data-fighter-id="${matchup.fighter_a}">
               <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="">
-              <a href="/assessment/{{ matchup.fighter_a.id }}">
-                <p class="fighter-name">{{ matchup.fighter_a.name }}</p>
+              <a href="/assessment/${ matchup.fighter_a }">
+                <p class="fighter-name">${ matchup.fighter_a_name }</p>
               </a>
             </div>
             <div class="col col-3 weightclass">
-              <h6>{{ matchup.weight_class|rmscores }}</h6>
-              <p class="matchup-rounds">{{ matchup.rounds }} x 5</p>
+              <h6>${ matchup.weight_class }</h6>
+              <p class="matchup-rounds">${ matchup.rounds } x 5</p>
             </div>
-            <div class="col col-4 d-flex fighter justify-content-end" data-fighter-id="{{ matchup.fighter_b.id }}">
-              <a href="/assessment/{{ matchup.fighter_b.id }}">
-                <p class="fighter-name">{{ matchup.fighter_b.name }}</p>
+            <div class="col col-4 d-flex fighter justify-content-end" data-fighter-id="${ matchup.fighter_b }">
+              <a href="/assessment/${ matchup.fighter_b }">
+                <p class="fighter-name">${ matchup.fighter_b_name }</p>
               </a>
               <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
             </div>  
-          </div>`;
+          </div>`)[0];
     }
     
     function createMatchUp(event) {
@@ -398,10 +408,29 @@
         .then((data) => {
           console.log(data);
           //update matchup table
-          let matchup = data["matchup"];
+          let matchup = data;
           let matchupElement = document.createElement("div");
           //reflect change in matchup table
-          // let element = createMatchUpElement(matchup);
+          let element = createMatchUpElement(matchup);
+          /*
+          
+              "id": 299,
+              "fighter_a": 1,
+              "fighter_b": 1,
+              "weight_class": "bantamweight",
+              "rounds": 3,
+              "scheduled": null,
+              "event": 36,
+              "isprelim": false
+          
+          */
+          let matchupTableContainer = null;
+          if (matchup.isprelim){
+            matchupTableContainer = document.querySelector('#prelims .matchups');
+          }else{
+            matchupTableContainer = document.querySelector('#main-card .matchups');
+          }
+          matchupTableContainer.appendChild(element);
         });
     }
 

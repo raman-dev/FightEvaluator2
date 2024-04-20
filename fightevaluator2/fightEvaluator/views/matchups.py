@@ -77,7 +77,10 @@ def create_matchup(request):
         #raise validation error
         print('invalid',form.errors)
         return JsonResponse({"fuck":"me"})
-    return JsonResponse(model_to_dict(matchup))
+    responseDict = model_to_dict(matchup)
+    responseDict['fighter_a_name'] = matchup.fighter_a.name
+    responseDict['fighter_b_name'] = matchup.fighter_b.name
+    return JsonResponse(responseDict)
 
 @require_http_methods(["DELETE"])
 def delete_matchup(request,matchupId):
