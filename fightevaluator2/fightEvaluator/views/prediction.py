@@ -21,11 +21,21 @@ def predictions(request):
             isGamble : boolean
         }
     """
-    context = {
-        'predictions':Prediction.objects.all()
-    }
-
-    return render(request, "fightEvaluator/prediction.html",context)
+    # context = {
+    #     'predictions':Prediction.objects.all()
+    # }
+    # context = {}
+    eventPredictionMap = {}
+    for p in Prediction.objects.all():
+        if p.matchup.event in eventPredictionMap:
+            eventPredictionMap[p.matchup.event].append(p)
+        else:
+            eventPredictionMap[p.matchup.event] = []
+            eventPredictionMap[p.matchup.event].append(p)
+    predictionsByEvent = list(eventPredictionMap.items())
+    predictionsByEvent.sort(key=lambda x: x[0].date)
+    predictionsByEvent.reverse()
+    return render(request, "fightEvaluator/prediction.html",{'event_predictions':predictionsByEvent})
 
 def publishResults(request):
     #using matchup results determine if predictions are correct
@@ -54,5 +64,5 @@ def publishResults(request):
                         prediction.isCorrect = True
 
         prediction.save()
-        print(prediction,prediction.isCorrect)
+        # print(prediction,prediction.isCorrect)
     return JsonResponse({"hello":"world"})

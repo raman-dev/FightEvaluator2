@@ -20,29 +20,28 @@
         -->
         <div class="prediction-table-container container-fluid border">
             table-container
-            <div class="prediction-table container border">
-                <ul>
+            {% for event,predictions in event_predictions %}
+            <div class="prediction-table row flex-column">
+                <div class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
+                    <p class="m-0">{{ event.date }}</p>
+                    <p class="m-0 text-end">{{ event.title }}</p>
+                </div>
+                <ul class="mx-auto border px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
                     <li>
                         <div class="table-header row" data-key-count="0">
-                            <div class="col col-3 column-label">
+                            <div class="col col-4 column-label">
                                 <p>
                                     MatchUp
                                 </p> 
                             </div>
-                            <div class="col col-3 column-label" id="prediction" data-sort-order="-1" data-sort="default">
+                            <div class="col col-4 column-label" id="prediction" data-sort-order="-1" data-sort="default">
                                 <p>Prediction</p>
                                 <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
                                 </svg>
                             </div>
-                            <div class="col col-1 column-label" id="result" data-sort-order="-1" data-sort="default">
+                            <div class="col col-4 column-label" id="result" data-sort-order="-1" data-sort="default">
                                 <p>Result</p>
-                                <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                    <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
-                                </svg>
-                            </div>
-                            <div class="col col-4 column-label"  id="event" data-sort-order="-1" data-sort="default">
-                                <p>Event</p>
                                 <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
                                 </svg>
@@ -52,21 +51,22 @@
                     {% for data in predictions %}
                         <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-event="{{ data.matchup.event.title }}">
                             <div class="row">
-                                <div class="col col-3">{{data.matchup.title}}</div>
-                                <div class="col col-3">{{data.prediction.predictionDisplay}}</div>   
-                                <div class="col col-1 data-result">
-                                    <p  class="{% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %} ">
+                                <div class="col col-4">{{data.matchup.title}}</div>
+                                <div class="col col-4">{{data.prediction.predictionDisplay}}</div>   
+                                <div class="col col-4 data-result ">
+                                    <p  class="mx-auto {% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %}">
                                         {{data.isCorrect}}
                                     </p>
                                 </div>
-                                <div class="col col-4" >
-                                    {{ data.matchup.event.title }}
-                                </div>
+                                <!-- <div class="col col-4" > -->
+                                <!-- </div> -->
                             </div>
                         </li>
                     {% endfor %}
                 </ul>
             </div>
+            {% endfor %}
+            
         </div>
     </div>
 
@@ -85,12 +85,12 @@
             "dec":"default",
         }
 
-        function sortTableRows(){
+        function sortTableRows(table){
             //sort keys to use
             //for every column label with sort-by
             let keys = [];
             let direction = {};
-            document.querySelectorAll('.sort-by').forEach((element)=>{
+            table.querySelectorAll('.sort-by').forEach((element)=>{
                 let k = element.getAttribute("id");
                 keys.push(k);
                 if (element.dataset.sort == "inc"){
@@ -100,13 +100,13 @@
                 }
             });
             keys.sort((a,b) => {
-                let ele_a = document.querySelector(`[data-${a}]`);
-                let ele_b = document.querySelector(`[data-${b}]`);
+                let ele_a = table.querySelector(`[data-${a}]`);
+                let ele_b = table.querySelector(`[data-${b}]`);
 
                 return ele_a.dataset.sortOrder - ele_b.dataset.sortOrder;
             });
             // console.log(keys);
-            let tableUl = document.querySelector('.prediction-table ul');
+            let tableUl = table.querySelector('ul');
 
             let rows = Array.from(tableUl.children);
             let headerRow = rows[0];
@@ -131,7 +131,7 @@
                 });
             }
 
-            console.log(dataRows);
+            // console.log(dataRows);
             tableUl.appendChild(headerRow);
             dataRows.forEach((e)=>{
                 tableUl.appendChild(e);
@@ -140,7 +140,7 @@
 
         function onClickColumnLabel(event){
             // console.log(event);
-            let keyContainer = document.querySelector('.table-header');
+            let keyContainer = this.table.querySelector('.table-header');
             let keyCount = parseInt(keyContainer.dataset.keyCount);//range from 0 to some key count
             let columnLabel = event.currentTarget;//listener element
             //3 states for a column label 
@@ -161,19 +161,21 @@
             }else{
                 //return to default styles
                 keyContainer.dataset.keyCount -= 1;//do not sort by this column anymore
-                document.querySelectorAll('.column-label').forEach((element,index)=>{
+                this.table.querySelectorAll('.column-label').forEach((element,index)=>{
                     if (index == 0) return;
                     element.dataset.sortOrder %= keyContainer.dataset.keyCount;
                 });
                 columnLabel.classList.remove('sort-by');
                 columnLabel.dataset.sortOrder = -1;
             }
-            sortTableRows();
+            sortTableRows(this.table);
         }
-        //for every column-label add a click listener
-        document.querySelectorAll('.column-label').forEach((element,index) => {
-            if (index == 0) return;//skip matchup
-            element.addEventListener('click',onClickColumnLabel);
+        document.querySelectorAll('.prediction-table').forEach((table)=>{
+            //for every column-label add a click listener
+            table.querySelectorAll('.column-label').forEach((element,index) => {
+                if (index == 0) return;//skip matchup
+                element.addEventListener('click',onClickColumnLabel.bind({'table':table}));
+            });
         });
     </script>
 {% endblock %}

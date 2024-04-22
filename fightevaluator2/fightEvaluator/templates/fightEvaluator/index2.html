@@ -389,7 +389,6 @@
         return;
       }
       console.log(fighterAId, fighterBId, weightClass,rounds);
-      // return;
       //replace the space to an underscore
       //send post request to /create-matchup
       fetch("/matchup/create-matchup", {
@@ -406,12 +405,7 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          //update matchup table
-          let matchup = data;
-          let matchupElement = document.createElement("div");
-          //reflect change in matchup table
-          let element = createMatchUpElement(matchup);
+          
           /*
           
               "id": 299,
@@ -424,6 +418,13 @@
               "isprelim": false
           
           */
+          console.log(data);
+          //update matchup table
+          let matchup = data;
+          let matchupElement = document.createElement("div");
+          //reflect change in matchup table
+          let element = createMatchUpElement(matchup);
+          
           let matchupTableContainer = null;
           if (matchup.isprelim){
             matchupTableContainer = document.querySelector('#prelims .matchups');
@@ -431,6 +432,7 @@
             matchupTableContainer = document.querySelector('#main-card .matchups');
           }
           matchupTableContainer.appendChild(element);
+          bootstrap.Modal.getInstance(document.querySelector('#matchupModal')).hide();
         });
     }
 

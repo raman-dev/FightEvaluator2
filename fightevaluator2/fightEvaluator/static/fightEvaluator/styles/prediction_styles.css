@@ -2,8 +2,16 @@
   font-family: PoppinsSemiBold;
   src: url("Poppins/Poppins-SemiBold.ttf") format("truetype");
 }
+.prediction-table {
+  margin-bottom: 1rem;
+}
+.prediction-table ul {
+  background-color: #12161A;
+}
+
 ul {
   padding: 0px;
+  padding-bottom: 0.8rem;
   list-style: none;
 }
 ul li {
@@ -45,6 +53,12 @@ ul .column-label p {
 }
 ul .column-label .icon {
   color: #313539;
+}
+ul #result.column-label {
+  justify-content: end !important;
+}
+ul #result.column-label p {
+  margin-right: 1rem;
 }
 ul .column-label:hover {
   cursor: pointer;
