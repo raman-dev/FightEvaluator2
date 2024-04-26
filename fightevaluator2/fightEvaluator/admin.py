@@ -39,6 +39,7 @@ class AssessmentAdmin(admin.ModelAdmin):
         return obj.fighter.first_name.capitalize() + " " + obj.fighter.last_name.capitalize()
     list_display = [fighterName,"head_movement","gas_tank","aggression","desire_to_win","striking","chinny","grappling_offense","grappling_defense"]
     search_fields = ["fighter__first_name","fighter__last_name"]
+    autocomplete_fields = ["fighter"]
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):

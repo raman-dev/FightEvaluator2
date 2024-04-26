@@ -18,8 +18,7 @@
             |matchup_name| prediction | correct | isGamble
             
         -->
-        <div class="prediction-table-container container-fluid border">
-            table-container
+        <div class="prediction-table-container container-fluid border py-2">
             {% for event,predictions in event_predictions %}
             <div class="prediction-table row flex-column">
                 <div class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
@@ -29,18 +28,18 @@
                 <ul class="mx-auto border px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
                     <li>
                         <div class="table-header row" data-key-count="0">
-                            <div class="col col-4 column-label">
+                            <div class="col col-5 column-label">
                                 <p>
                                     MatchUp
                                 </p> 
                             </div>
-                            <div class="col col-4 column-label" id="prediction" data-sort-order="-1" data-sort="default">
+                            <div class="col col-5 column-label" id="prediction" data-sort-order="-1" data-sort="default">
                                 <p>Prediction</p>
                                 <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
                                 </svg>
                             </div>
-                            <div class="col col-4 column-label" id="result" data-sort-order="-1" data-sort="default">
+                            <div class="col col-2 column-label" id="result" data-sort-order="-1" data-sort="default">
                                 <p>Result</p>
                                 <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
@@ -51,9 +50,9 @@
                     {% for data in predictions %}
                         <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-event="{{ data.matchup.event.title }}">
                             <div class="row">
-                                <div class="col col-4">{{data.matchup.title}}</div>
-                                <div class="col col-4">{{data.prediction.predictionDisplay}}</div>   
-                                <div class="col col-4 data-result ">
+                                <div class="col col-5">{{data.matchup.title}}</div>
+                                <div class="col col-5">{{data.prediction.predictionDisplay}}</div>   
+                                <div class="col col-2 data-result ">
                                     <p  class="mx-auto {% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %}">
                                         {{data.isCorrect}}
                                     </p>

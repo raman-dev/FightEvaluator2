@@ -45,7 +45,6 @@ ul .data-result p.data-incorrect {
 ul .column-label {
   padding: 0.2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 ul .column-label p {
@@ -53,12 +52,6 @@ ul .column-label p {
 }
 ul .column-label .icon {
   color: #313539;
-}
-ul #result.column-label {
-  justify-content: end !important;
-}
-ul #result.column-label p {
-  margin-right: 1rem;
 }
 ul .column-label:hover {
   cursor: pointer;
