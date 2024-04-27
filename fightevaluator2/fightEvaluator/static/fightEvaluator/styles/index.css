@@ -106,67 +106,78 @@
 .matchups-container {
   margin-bottom: 1.4rem;
 }
-.matchups-container .matchup {
+.matchups-container .matchups {
+  border: 1px solid lavender;
+  background-color: #111519;
+}
+.matchups-container .matchup-columns {
   padding: 0.4rem;
-}
-.matchups-container .matchup h1 {
-  margin: 0px;
-}
-.matchups-container .matchup .fighter {
-  align-items: center;
-}
-.matchups-container .matchup .fighter img {
-  height: -moz-fit-content;
-  height: fit-content;
-  border-radius: 50%;
-}
-.matchups-container .matchup .fighter a {
-  width: 18ch;
-  text-align: center;
-  text-decoration: none;
-}
-.matchups-container .matchup .fighter a .fighter-name {
-  margin: 0px;
-  color: #dee2e6;
+  border-bottom: 1px solid lavender;
   text-transform: capitalize;
 }
-.matchups-container .matchup .fighter a .fighter-name:hover {
+.matchups-container .matchup {
+  padding: 0.4rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+.matchups-container .matchup .fighters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.matchups-container .matchup .fighters p.vs {
+  margin: 0px;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+}
+.matchups-container .matchup .fighters a.fighter-link {
+  color: whitesmoke;
+  text-decoration: none;
+}
+.matchups-container .matchup .fighters .fighter-link:hover {
   text-decoration: underline;
 }
 .matchups-container .matchup .weightclass {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 .matchups-container .matchup .weightclass p {
   margin: 0px;
-}
-.matchups-container .matchup .weightclass h6 {
-  margin: 0px;
-  text-align: center;
   text-transform: capitalize;
 }
-.matchups-container .matchup:hover {
-  cursor: pointer;
+.matchups-container .matchup .rounds {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.matchups-container .matchup:hover .weightclass h6 {
-  text-decoration: underline;
+.matchups-container .matchup .rounds p {
   margin: 0px;
 }
+.matchups-container .matchup:hover {
+  background-color: hsl(210, 18%, 3%);
+  cursor: pointer;
+}
+.matchups-container .matchup:hover .weightclass {
+  text-decoration: underline;
+}
 .matchups-container .matchup.active {
-  border-color: #598392 !important;
+  background-color: hsl(210, 18%, 15%);
+  cursor: pointer;
+}
+.matchups-container .matchup.active .weightclass {
+  text-decoration: underline;
 }
 .matchups-container .matchup:focus {
-  border-color: #598392 !important;
+  background-color: hsl(210, 18%, 3%);
 }
 .matchups-container .matchup.watching {
   background-color: hsla(0, 0%, 12%, 0.5);
   pointer-events: none;
-  color: darkslategray;
+  color: darkslategray !important;
 }
-.matchups-container .matchup.watching .fighter .fighter-name {
-  color: darkslategray;
+.matchups-container .matchup.watching .fighter-link {
+  color: darkslategray !important;
 }
 
 .xmodal {

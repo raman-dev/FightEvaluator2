@@ -95,6 +95,7 @@
   margin: 0rem;
 }
 
+$tableBackgroundColor: #111519;
 $tableBorderRadius: 0.68em;
 $cardBorderColor: #131b23;
 
@@ -108,8 +109,6 @@ $cardBorderColor: #131b23;
  
 
 .table-container{
-  // border: 2px solid red;
-  // border-radius: 2rem;
   margin-bottom: 1rem;
 
   padding: 1rem;
@@ -130,67 +129,79 @@ $cardBorderColor: #131b23;
 
 .matchups-container{
   margin-bottom: 1.4rem;
+  .matchups{
+    border: 1px solid lavender;
+    background-color: $tableBackgroundColor;
+  }
+
+  .matchup-columns{
+    padding: 0.4rem;
+    border-bottom: 1px solid lavender;
+    text-transform: capitalize;
+  }
+
   .matchup {
     padding: 0.4rem;
-    // border-radius: 0.8rem; 
-    h1{
-      margin: 0px;
-    }
-    .fighter {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    .fighters{
+      display: flex;
       align-items: center;
-      img{
-        height: fit-content;
-        border-radius: 50%;
+      justify-content: center;
+      p.vs{
+        margin: 0px;
+        margin-left: 0.4rem;
+        margin-right: 0.4rem;
       }
-      a {
-        width: 18ch;
-        text-align: center;
+      a.fighter-link{
+        color: whitesmoke;
         text-decoration: none;
-        .fighter-name {
-          margin: 0px;
-          color: #dee2e6;
-          text-transform: capitalize;
-        }
-        .fighter-name:hover {
-          text-decoration: underline;
-        }
+      }
+
+      .fighter-link:hover{
+        text-decoration: underline;
       }
     }
+
     .weightclass {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
   
       p {
         margin: 0px;
-      }
-      h6{
-        margin: 0px; 
-        text-align: center;
         text-transform: capitalize;
       }
     }
-  }
-
-  .matchup:hover {
-    // background-color: hsl(0, 0%, 12%);
-    cursor: pointer;
-    .weightclass {
-      h6 { 
-        text-decoration: underline;
+    .rounds{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      p {
         margin: 0px;
       }
     }
   }
 
+  .matchup:hover {
+    background-color: hsl(210, 18%, 3%);
+    cursor: pointer;
+    .weightclass {
+      text-decoration: underline;
+    }
+  }
+
   .matchup.active{
-    border-color: #598392 !important;
-    // border-bottom: 1px solid gray;
+    background-color: hsl(210, 18%, 15%);
+    cursor: pointer;
+    .weightclass {
+      text-decoration: underline;
+    }
   }
 
   .matchup:focus{
-    border-color: #598392 !important; 
+    // border-color: #598392 !important; 
+    background-color: hsl(210, 18%, 3%);
   }
 
   .matchup.watching{
@@ -198,11 +209,9 @@ $cardBorderColor: #131b23;
     background-color: hsl(0, 0%, 12%, 0.5);
     pointer-events: none;
     //change all colors to greyed out versions of them selves
-    color: darkslategray;
-    .fighter{
-      .fighter-name{
-          color: darkslategray;
-      }
+    color: darkslategray !important;
+    .fighter-link{
+      color: darkslategray !important;
     }
   }
 }
