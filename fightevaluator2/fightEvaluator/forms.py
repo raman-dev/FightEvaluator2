@@ -35,7 +35,7 @@ class FighterForm(ModelForm):
 class MatchUpFormMF(ModelForm):
     class Meta:
         model = MatchUp
-        fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim']
+        fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','scheduled']
 
 
 class MatchUpForm(forms.Form):

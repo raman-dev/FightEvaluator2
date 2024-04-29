@@ -50,7 +50,8 @@ def index(request):
         for matchup in fightEventData['matchups']:
             matchup['event'] = nextEvent
             # print(matchup)
-            matchup['date'] = nextEvent.date
+            matchup['scheduled'] = nextEvent.date
+            # print(matchup)
             matchupForm = MatchUpFormMF(matchup)
             if not matchupForm.is_valid():
                 return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
