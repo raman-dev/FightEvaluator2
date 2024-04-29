@@ -58,8 +58,16 @@ def scrapeMatchups(source):
         #li is of type lxml.html.HtmlElement
         matchup = {}
 
-        dataBoutWrapper = pq(li)("div[data-bout-wrapper]").children()[0]
-        fighter_a,boutInfo,fighter_b = pq(dataBoutWrapper).children()
+        # dataBoutWrapper = pq(li)("div[data-bout-wrapper]").children()[0]
+        dataBoutWrapper = pq(li)("div[data-bout-wrapper]:first")
+        children = pq(dataBoutWrapper).children()
+        # print(pq(children))
+        
+        dataParent = children[0]
+        if len(children) == 3:
+            dataParent = children[1]
+
+        fighter_a,boutInfo,fighter_b = pq(dataParent).children()
         
         x = scrapeFighterData(fighter_a)
         y = scrapeFighterData(fighter_b)
@@ -86,56 +94,3 @@ def scrapeMatchups(source):
         matchups.append(matchup)
         
     return matchups
-
-
-# for li in ulFightCard.find_all('li'):
-    #     print(li)
-    #     dataWrapper = li.div
-    #     boutWrapper = dataWrapper.div
-    #     # dataWrapperChildren = dataWrapper.contents#dataWrapper.find_all("div",recursive=False)
-    #     # print(dataWrapper)
-    #     # print(dataWrapperChildren)
-    #     # if len(dataWrapperChildren) > 2:
-    #     #     boutWrappper = dataWrapperChildren[1]#is second child
-    #     fighterA,matchupInfo,fighterB = boutWrapper.find_all("div",recursive=False)
-    #     matchupInfo = matchupInfo.div
-
-    #     fighterA_a = fighterA.find('a')
-    #     fighterB_a = fighterB.find('a')
-
-    #     fighterAName = fighterA_a.text.strip()
-    #     fighterBName = fighterB_a.text.strip()
-
-    #     fighterALink = fighterA_a['href']
-    #     fighterBLink = fighterB_a['href']
-
-    #     eventType,weight_lbs,rounds = extract_text(matchupInfo)
-    #     # print(fighterAName,fighterBName,eventType,weight_lbs,rounds)
-         
-    #     matchup = {
-    #         'fighters_raw':[
-    #         {
-    #             'name':normalizeString(fighterAName),
-    #             'link':domain + fighterALink
-    #         },
-    #         {
-    #             'name':normalizeString(fighterBName),
-    #             'link':domain + fighterBLink
-    #         }
-    #     ]}
-
-    #     isprelim = False
-    #     if re.match(r'Prelim',rounds):
-    #         isprelim = True
-    #     if eventType and "Prelim" in eventType:
-    #         isprelim = True
-             
-    #     roundSearch = re.search(r'[0-9]+ x [0-9]+',rounds)
-    #     if roundSearch:
-    #         rounds = roundSearch.group(0)[0]
-    #     else:
-    #         continue #ignore this matchup
-    #     matchup['weight_class'] = poundsToWeightClass(weight_lbs)
-    #     matchup['rounds'] = rounds
-    #     matchup['isprelim'] = isprelim
-    #     matchups.append(matchup)
