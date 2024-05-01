@@ -42,6 +42,9 @@ ul .data-result p.data-correct {
 ul .data-result p.data-incorrect {
   background-color: #dc3545;
 }
+ul .data-result p.data-tbd {
+  background-color: slategrey;
+}
 ul .column-label {
   padding: 0.2rem;
   display: flex;

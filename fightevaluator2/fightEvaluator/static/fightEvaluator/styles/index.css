@@ -145,6 +145,7 @@
 .matchups-container .matchup .weightclass p {
   margin: 0px;
   text-transform: capitalize;
+  text-align: center;
 }
 .matchups-container .matchup .rounds {
   display: flex;

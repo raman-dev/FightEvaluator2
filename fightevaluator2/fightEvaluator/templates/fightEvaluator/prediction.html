@@ -53,8 +53,12 @@
                                 <div class="col col-5">{{data.matchup.title}}</div>
                                 <div class="col col-5">{{data.prediction.predictionDisplay}}</div>   
                                 <div class="col col-2 data-result ">
-                                    <p  class="mx-auto {% if data.isCorrect %} data-correct {% else %} data-incorrect {% endif %}">
-                                        {{data.isCorrect}}
+                                    <p  class="mx-auto {% if data.isCorrect %} data-correct {% elif data.isCorrect == False %} data-incorrect {% else %} data-tbd {% endif %}">
+                                        {% if data.isCorrect == None %}
+                                            tbd
+                                        {% else %}
+                                            {{data.isCorrect}}
+                                        {% endif %} 
                                     </p>
                                 </div>
                                 <!-- <div class="col col-4" > -->
