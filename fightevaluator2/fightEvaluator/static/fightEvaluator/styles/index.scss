@@ -156,6 +156,7 @@ $cardBorderColor: #131b23;
       a.fighter-link{
         color: whitesmoke;
         text-decoration: none;
+        text-align: center;
       }
 
       .fighter-link:hover{
@@ -174,6 +175,7 @@ $cardBorderColor: #131b23;
         text-align: center;
       }
     }
+     
     .rounds{
       display: flex;
       align-items: center;

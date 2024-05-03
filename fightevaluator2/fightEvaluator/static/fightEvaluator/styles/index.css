@@ -133,6 +133,7 @@
 .matchups-container .matchup .fighters a.fighter-link {
   color: whitesmoke;
   text-decoration: none;
+  text-align: center;
 }
 .matchups-container .matchup .fighters .fighter-link:hover {
   text-decoration: underline;
