@@ -790,9 +790,12 @@
       });
       let tableNote = document.querySelector(".table-note");
       if (watchListItems.length == 0) {
+        //show table note hide table
         tableNote.classList.remove("d-none");
+        document.querySelector('#watchlist .matchups').classList.add('d-none');
       } else {
         tableNote.classList.add("d-none");
+        document.querySelector('#watchlist .matchups').classList.remove('d-none');
       }
     }
     function onWatchListChanged(add, matchupId){
@@ -824,9 +827,12 @@
       //if watchlist is empty show table note
       let tableNote = document.querySelector(".table-note");
       if (watchListItems.length == 0) {
-        tableNote.classList.remove("d-none");
+       //show table note hide table
+       tableNote.classList.remove("d-none");
+        document.querySelector('#watchlist .matchups').classList.add('d-none');
       } else {
         tableNote.classList.add("d-none");
+        document.querySelector('#watchlist .matchups').classList.remove('d-none');
       }
     }
 
