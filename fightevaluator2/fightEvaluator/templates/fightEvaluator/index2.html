@@ -226,7 +226,13 @@
     </div>
     
     <div class="container-fluid title-container d-flex flex-column">
-      <h3 class="event-title">{{event.title}}</h3>
+      <div class="title-wrapper results-toggle-wrapper w-100 d-flex justify-content-between align-items-center">
+        <h3 class="event-title">{{event.title}}</h3>
+        <div class="results-switch form-check form-switch my-0 border px-4">
+          <input class="form-check-input" type="checkbox" role="switch" id="showResultsSwitch" disabled>
+          <label class="form-check-label" for="showResultsSwitch">Results Not Available</label>
+        </div>
+      </div>
       <div class="action-bar d-flex align-items-center w-100">
         <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
           <div class="action-wrapper" >
@@ -1007,6 +1013,35 @@
       confirmationDialog.dataset.matchupId = "-1";
       document.querySelector(".confirmation-dialog").classList.add("d-none");
     });
+  </script>
+  <script>
+    //check current datetime and see if beyond 2am of the next day after the event date
+    //format -> Month D, YYYY, filter converts date into iso date
+    var resultsAvailable = false;
+    const eventDateString = `{{ event.date|date:"c" }}`;
+    const [year,month,day] = eventDateString.split("-");
+    const eventDate = new Date(Date.UTC(parseInt(year),parseInt(month - 1),parseInt(day) + 1));
+    const currentDate = new Date();
+    const minDate = new Date(Date.UTC(parseInt(year),parseInt(month - 1),parseInt(day) + 2));
+    const RESULTS_AVAILABLE_LABEL = 'Show Results';
+    minDate.setHours(2);//2am
+    
+    console.log(currentDate);
+    console.log(eventDate,eventDateString);
+    console.log(minDate);
+
+    //check if currentDate is beyond minDate
+    if (currentDate >= minDate){
+      console.log('results are available for query');
+      resultsAvailable = true;
+    }
+    if (resultsAvailable){
+      //reflect in the ui
+      let resultSwitchContainer = document.querySelector('.results-switch');
+      resultSwitchContainer.classList.add('results-available');
+      resultSwitchContainer.querySelector('input').removeAttribute('disabled');//enable
+      resultSwitchContainer.querySelector('label').textContent = RESULTS_AVAILABLE_LABEL;
+    }
   </script>
 {% endblock %} 
   

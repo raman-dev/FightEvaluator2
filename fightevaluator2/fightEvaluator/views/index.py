@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction
 from ..forms import FightEventForm,MatchUpFormMF
@@ -14,7 +14,10 @@ from .. import scraper
 
 @require_GET
 def indexById(request,eventId):
-    event = FightEvent.objects.filter(id=eventId)[0]
+    eventQuerySet = FightEvent.objects.filter(id=eventId)
+    if not eventQuerySet:
+        return JsonResponse({'error':'No such event with id: '+str(eventId)})
+    event = eventQuerySet[0]
     matchups = MatchUp.objects.filter(event=event)
     mainCard = []
     prelims = []
@@ -24,7 +27,8 @@ def indexById(request,eventId):
             prelims.append(matchup)
         else:
             mainCard.append(matchup)
-    
+    # if not FightOutcome.objects.filter(matchup=mainCard[0]):
+        #results not generated but may be available for query
     context = {
         'event': event,
         'matchupsList': [mainCard,prelims],
@@ -120,6 +124,7 @@ def getFightEndTimeAndRound(raw_time):
     return time,int(rounds)
 
 #maybe asynchronous in the future evaluate
+#fetch results from web if not already in database
 @require_GET
 def getFightEventResults(request,eventId):
     # print(eventId)
