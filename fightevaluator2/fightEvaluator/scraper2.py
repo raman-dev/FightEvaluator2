@@ -9,7 +9,7 @@ def normalizeString(string):
     return unicodedata.normalize('NFD',string).encode('ascii', 'ignore').decode("ascii").lower()
 
 
-def extract_text(element):
+def extract_text(element: pq):
     text = element.text()
     result = []
     if text:
@@ -20,12 +20,22 @@ def extract_text(element):
     return result
 
 #grab fighter data from an element
-def scrapeFighterData(element):
-    atag = pq(element)('[class*="link-primary-red"]').eq(0)
-    name = atag.text()
+def scrapeFighterData(element,result_only=False):
+    fighterPQ = pq(element)
+    
+    atag = fighterPQ('[class*="link-primary-red"]').eq(0)
+    name = normalizeString(atag.text())
+    
+    if result_only == True:
+        isWinner = False
+        for span in fighterPQ("span"):
+            if "Up to" in pq(span).text():
+                isWinner = True
+                break
+        return {'name':name,'isWinner':isWinner}
+    
     link = atag.attr('href')
-
-    return {'name':normalizeString(name),'link':domain + link}
+    return {'name':name,'link':domain + link}
 
 def scrapeWeightlbs(s: str):
     #grab a 3 digit number from string
@@ -94,3 +104,36 @@ def scrapeMatchups(source):
         matchups.append(matchup)
         
     return matchups
+
+
+def scrapeResults():#(source):
+    d = pq(filename="test.html",encoding='utf-8')
+    ul = d("#sectionFightCard > ul") #this returns pyquery object
+    for li in ul("li"):
+        #li is of type lxml.html.HtmlElement
+        matchup = {}
+
+        # dataBoutWrapper = pq(li)("div[data-bout-wrapper]").children()[0]
+        dataBoutWrapper = pq(li)("div[data-bout-wrapper]:first")
+        children = pq(dataBoutWrapper).children()
+        # print(pq(children))
+        methodDataParent,resultDataParent,_ = children
+        methods = []
+        for span in pq(methodDataParent)("span"):
+            methods.append(pq(span).text())
+        
+        _,method,roundTimes = methods
+        fighter_a,_,fighter_b = pq(resultDataParent).children()
+        
+        x = scrapeFighterData(fighter_a,result_only=True)
+        y = scrapeFighterData(fighter_b,result_only=True)
+
+        print(x)
+        print(y)
+        print()
+
+        #non decision fromat is M:SS Round x of y
+        #decision is full time
+        # if "decision" in method: 
+        # break
+# scrapeResults()
