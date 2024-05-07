@@ -106,13 +106,13 @@ def scrapeMatchups(source):
     return matchups
 
 
-def scrapeResults():#(source):
-    d = pq(filename="test.html",encoding='utf-8')
+def scrapeResults(source):
+    # d = pq(filename="results_test.html",encoding='utf-8')
+    d = pq(source)
     ul = d("#sectionFightCard > ul") #this returns pyquery object
-    for li in ul("li"):
+    matchupResults = []
+    for i,li in enumerate(ul("li")):
         #li is of type lxml.html.HtmlElement
-        matchup = {}
-
         # dataBoutWrapper = pq(li)("div[data-bout-wrapper]").children()[0]
         dataBoutWrapper = pq(li)("div[data-bout-wrapper]:first")
         children = pq(dataBoutWrapper).children()
@@ -128,12 +128,38 @@ def scrapeResults():#(source):
         x = scrapeFighterData(fighter_a,result_only=True)
         y = scrapeFighterData(fighter_b,result_only=True)
 
-        print(x)
-        print(y)
-        print()
-
+        result = {
+            'fighters':[x,y]
+        }
+        
         #non decision fromat is M:SS Round x of y
         #decision is full time
-        # if "decision" in method: 
-        # break
-# scrapeResults()
+        method = method.split(",")[0].lower()
+        if 'decision' in method: 
+            result['method'] = 'decision'
+        elif 'ko/tko' in method:
+            result['method'] = 'ko/tko'
+        elif 'submission' in method:
+            result['method'] = 'submission'
+        else:
+            result['method'] = 'no contest'
+        
+        # print(roundTimes)
+        if method == 'decision':
+            #rounds = 3 or 5
+            #time  = 15:00 or 25:00
+            if "15:00" in roundTimes:
+                result['final_round'] = '3'
+            else:
+                result['final_round'] = '5'#last round of fight
+            result['time'] = '5:00' #final round time
+        else:
+            #format is Round X of Y
+            #M:SS Round X of Y
+            timeMatch = re.search(r'[0-5]\:[0-5][0-9]',roundTimes)
+            roundMatch = re.search(r'Round [1-5] of [1-5]',roundTimes)
+            result['time'] = timeMatch.group(0)
+            result['final_round'] = re.search(r'[1-5]',roundMatch.group(0)).group(0)
+        # print(result)
+        matchupResults.append(result)
+    return matchupResults

@@ -63,36 +63,7 @@ class FightEvent(models.Model):
      def __str__(self) -> str:
           return self.title + " | " + str(self.date)
 
-class MatchUp(models.Model):
-     class MatchUpResult(models.TextChoices):
-            WIN = "Win"
-            LOSS = "Loss"
-            DRAW = "Draw"
-            NO_CONTEST = "No Contest"
-            CANCELLED = "Cancelled"
-            POSTPONED = "Postponed"
-            UPCOMING = "Upcoming"
-            NA = "N/A"
 
-     fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
-     fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
-     weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
-     #optional number of rounds
-     rounds = models.IntegerField(default=3, null=True,blank=True)
-     #optional date of bout
-     scheduled = models.DateField(default=None, null=True,blank=True)
-     #optional event 
-     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
-     #optional result
-     #result = models.CharField(default=MatchUpResult.NA,null=True,blank=True,max_length=256,choices=MatchUpResult.choices)
-     #optional boolean isprelim
-     isprelim = models.BooleanField(default=True,null=True,blank=True) 
-
-     def __str__(self) -> str:
-          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
-    
-     def title(self) -> str:
-          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize()
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
@@ -167,7 +138,7 @@ class FightOutcome(models.Model):
         NO_CONTEST = "NC","No Contest"
         NA = "N/A","Not Available"
 
-    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    # matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     #final round
     final_round = models.IntegerField(default=0)
     #stoppage time
@@ -179,6 +150,37 @@ class FightOutcome(models.Model):
 
     def __str__(self):
         return self.method + " " + self.time + " " + str(self.final_round) +"/" +str(self.matchup.rounds) +"|" + ("" if not self.winner else str(self.winner.name))
+
+class MatchUp(models.Model):
+     class MatchUpResult(models.TextChoices):
+            WIN = "Win"
+            LOSS = "Loss"
+            DRAW = "Draw"
+            NO_CONTEST = "No Contest"
+            CANCELLED = "Cancelled"
+            POSTPONED = "Postponed"
+            UPCOMING = "Upcoming"
+            NA = "N/A"
+
+     fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
+     fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
+     weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
+     #optional number of rounds
+     rounds = models.IntegerField(default=3, null=True,blank=True)
+     #optional date of bout
+     scheduled = models.DateField(default=None, null=True,blank=True)
+     #optional event 
+     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
+     #optional result
+     #optional boolean isprelim
+     isprelim = models.BooleanField(default=True,null=True,blank=True) 
+     outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,blank=True,null=True)
+
+     def __str__(self) -> str:
+          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
+    
+     def title(self) -> str:
+          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize()
 
 
 class Likelihood(models.IntegerChoices):

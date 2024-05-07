@@ -48,16 +48,6 @@ class NoteAdmin(admin.ModelAdmin):
         return obj.assessment.fighter.first_name.capitalize() + " " + obj.assessment.fighter.last_name.capitalize()
     list_display = [fighterName,"data","createdAt"]
 
-# @admin.register(MatchUpOutcome)
-# class MatchUpOutcomeAdmin(admin.ModelAdmin):
-#     @admin.display(description="Fighter Name")
-#     def fighterName(obj):
-#         if not obj.fighter:
-#             return "Fighter Not Needed"
-#         return obj.fighter.first_name.capitalize() + " " + obj.fighter.last_name.capitalize()
-#     list_display = ["outcome","likelihood",fighterName,"matchup"]
-#     # search_fields = [""]
-
 @admin.register(EventLikelihood)
 class EventLikelihoodAdmin(admin.ModelAdmin):
     @admin.display(description="Fighter Name")
@@ -93,7 +83,5 @@ class FightOutcomeAdmin(admin.ModelAdmin):
         if not obj.winner:
             return "No Winner"
         return obj.winner.name
-    list_display = ["method","time","final_round","matchup",winnerName]
-    search_fields = ["matchup__fighter_a__first_name","matchup__fighter_a__last_name","matchup__fighter_b__first_name","matchup__fighter_b__last_name"]
-# admin.site.register(Fighter,FighterAdmin)
-# admin.site.register(Assessment,AssessmentAdmin)
+    list_display = ["method","time","final_round",winnerName]
+    # search_fields = ["matchup__fighter_a__first_name","matchup__fighter_a__last_name","matchup__fighter_b__first_name","matchup__fighter_b__last_name"]

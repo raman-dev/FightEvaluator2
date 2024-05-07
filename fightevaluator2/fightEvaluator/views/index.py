@@ -123,11 +123,24 @@ def getFightEndTimeAndRound(raw_time):
 
     return time,int(rounds)
 
+
+@require_GET
+def getFightEventResults2(request,eventId):
+    fightEvent = get_object_or_404(FightEvent,id=eventId)
+    #do not try and get event results if the event is in the future
+    #or if the it is not the atleast 2:00 am the day after the event
+    if fightEvent.date > datetime.date.today() or datetime.datetime.now().hour < 2:
+        return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
+    matchups = MatchUp.objects.filter(event=fightEvent)
+    
+
+
+
 #maybe asynchronous in the future evaluate
 #fetch results from web if not already in database
 @require_GET
 def getFightEventResults(request,eventId):
-    # print(eventId)
+    
     fightEvent = get_object_or_404(FightEvent,id=eventId)
     #do not try and get event results if the event is in the future
     #or if the it is not the atleast 2:00 am the day after the event
