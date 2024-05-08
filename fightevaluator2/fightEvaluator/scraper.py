@@ -35,7 +35,7 @@ def getPageSource(url):
     browser = webdriver.Chrome(options=options)
     browser.get(url)
     
-    time.sleep(15)
+    time.sleep(5)
     source = browser.page_source
     browser.quit()
     return source
@@ -292,6 +292,11 @@ def getFightEventResults(link):
         outcomes.append(outcomeData)
     return outcomes
 
+def getFightEventResults2(link):
+    source = getPageSource(link)
+    #use link to get more info about event
+    matchupResults = scrapeResults(source)
+    return matchupResults
 #     print('valid fighteventForm')
 # for every matchup find the fighter object in the database
 # if fighter is not in database create fighter object

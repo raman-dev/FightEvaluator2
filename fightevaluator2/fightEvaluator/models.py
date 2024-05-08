@@ -59,7 +59,8 @@ class FightEvent(models.Model):
      #one to many relationship one fightevent has many matchups
      location = models.CharField(default=None,null=True,blank=True,max_length=256)#location of event
      link = models.CharField(default=None,null=True,blank=True,max_length=256)#link to event information
-
+     hasResults = models.BooleanField(default=False)
+    
      def __str__(self) -> str:
           return self.title + " | " + str(self.date)
 
@@ -149,7 +150,7 @@ class FightOutcome(models.Model):
     winner = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE,related_name="winner")
 
     def __str__(self):
-        return self.method + " " + self.time + " " + str(self.final_round) +"/" +str(self.matchup.rounds) +"|" + ("" if not self.winner else str(self.winner.name))
+        return self.method + " " + self.time + " " + str(self.final_round) +"/" +"|" + ("" if not self.winner else str(self.winner.name))
 
 class MatchUp(models.Model):
      class MatchUpResult(models.TextChoices):
@@ -174,7 +175,7 @@ class MatchUp(models.Model):
      #optional result
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
-     outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,blank=True,null=True)
+     outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class

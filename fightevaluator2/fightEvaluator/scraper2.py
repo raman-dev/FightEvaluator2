@@ -138,7 +138,7 @@ def scrapeResults(source):
         if 'decision' in method: 
             result['method'] = 'decision'
         elif 'ko/tko' in method:
-            result['method'] = 'ko/tko'
+            result['method'] = 'ko'
         elif 'submission' in method:
             result['method'] = 'submission'
         else:

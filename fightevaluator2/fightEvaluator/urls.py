@@ -8,7 +8,8 @@ urlpatterns = [
     path('predictions/publish',views.publishResults,name="publish-results"),
 
     # path('focusTest',views.focusTest, name='focusTest'),
-    path('events/results/<int:eventId>',views.getFightEventResults, name='results'),
+    # path('events/results/<int:eventId>',views.getFightEventResults, name='results'),
+    path('events/results/<int:eventId>',views.getFightEventResults2, name='results'),
 
     path('<int:eventId>',views.indexById,name='indexById'),
     path('events/',views.events),

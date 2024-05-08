@@ -4,7 +4,7 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
-from ..models import FightEvent,MatchUp,FightOutcome,Prediction
+from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
@@ -124,6 +124,35 @@ def getFightEndTimeAndRound(raw_time):
     return time,int(rounds)
 
 
+def verifyPrediction(matchups):
+    for matchup in matchups:
+        prediction = Prediction.objects.filter(matchup=matchup).first()
+        if prediction:
+            outcome = matchup.outcome
+            #if prediction has a fighter then it is a winner determination
+            prediction.isCorrect = False
+            match prediction.prediction.event:
+                case Event.DOES_NOT_GO_THE_DISTANCE:
+                    # print("")
+                    #fights end method always decision if method == 'decision'
+                    prediction.isCorrect = outcome.method != FightOutcome.Outcomes.DECISION
+                case Event.ROUNDS_GEQ_ONE_AND_HALF:
+                    if outcome.final_round > 2:
+                        prediction.isCorrect = True
+                    elif outcome.final_round == 2:
+                        #time is str
+                        #int:int
+                        seconds = 30#
+                        _,actual_seconds = outcome.time.split(":")
+                        #if at least 30 seconds into the second minute for this event 
+                        #then true else False
+                        prediction.isCorrect = seconds >= actual_seconds
+                case Event.WIN:
+                    if outcome.winner != None and prediction.prediction.fighter == outcome.winner:
+                        prediction.isCorrect = True
+
+            prediction.save()
+
 @require_GET
 def getFightEventResults2(request,eventId):
     fightEvent = get_object_or_404(FightEvent,id=eventId)
@@ -132,9 +161,61 @@ def getFightEventResults2(request,eventId):
     if fightEvent.date > datetime.date.today() or datetime.datetime.now().hour < 2:
         return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
     matchups = MatchUp.objects.filter(event=fightEvent)
+
+    matchupResults = {}
+    fightOutcomes = []
+    if not fightEvent.hasResults:
+        matchupResults = scraper.getFightEventResults2(fightEvent.link)
+        nameMatchUpMap = {}
+        for m in matchups:
+            if m.fighter_a.name_unmod not in nameMatchUpMap:
+                nameMatchUpMap[m.fighter_a.name_unmod] = m
+                nameMatchUpMap[m.fighter_b.name_unmod] = m
+        for mr in matchupResults:
+            #find corresponding matchup from matchups
+            fighters = mr['fighters']
+            method = mr['method']
+            final_round = mr['final_round']
+            time = mr['time']
+
+            matchup = None
+            fa,fb = fighters
+            if fa['name'] in nameMatchUpMap:
+                matchup = nameMatchUpMap[fa['name']]
+            elif fb['name'] in nameMatchUpMap:
+                matchup = nameMatchUpMap[fb['name']]
+            else:
+                continue#skip this fight outcome
+            matchup.outcome = FightOutcome()
+            matchup.outcome.method = FightOutcome.Outcomes[method.upper()]
+            matchup.outcome.time = time
+            matchup.outcome.final_round = int(final_round)
+            
+
+            winnerName = None
+            winner = None
+            if fa['isWinner'] == True:
+                winnerName = fa['name']
+            elif fb['isWinner'] == True:
+                winnerName = fb['name']
+            
+            if winnerName:
+                winner = matchup.fighter_a
+                if winnerName != matchup.fighter_a.name_unmod:
+                    winner = matchup.fighter_b
+            
+            matchup.outcome.winner = winner
+            matchup.outcome.save()
+            matchup.save()
+            fightOutcomes.append(model_to_dict(matchup.outcome))
+        fightEvent.hasResults = True
+        fightEvent.save()
+    else:
+        for m in matchups:
+            fightOutcomes.append(model_to_dict(m.outcome))
+    verifyPrediction(matchups)
+    return JsonResponse({'puta':'madre'})
     
-
-
 
 #maybe asynchronous in the future evaluate
 #fetch results from web if not already in database
