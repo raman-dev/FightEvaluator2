@@ -102,8 +102,8 @@ def getStats():
     )
     stats = {}
     stats['total_predictions']= data['correct'] + data['incorrect']
-    stats['rate'] = f"{data['correct']}/{stats['total_predictions']}"
-    stats['rate_percent'] = f"{(100 * (data['correct']/stats['total_predictions'])):.2f}%"
+    stats['ratio'] = f"{data['correct']}/{stats['total_predictions']}"
+    stats['percent'] = f"{(100 * (data['correct']/stats['total_predictions'])):.2f}%"
     return stats
 
 def stats(request):
