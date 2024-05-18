@@ -3,6 +3,7 @@ from django.views.decorators.http import require_GET
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
+from django.db.models import Count,Q
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event
 from ..forms import FightEventForm,MatchUpFormMF
@@ -35,7 +36,7 @@ def predictions(request):
     predictionsByEvent = list(eventPredictionMap.items())
     predictionsByEvent.sort(key=lambda x: x[0].date)
     predictionsByEvent.reverse()
-    return render(request, "fightEvaluator/prediction.html",{'event_predictions':predictionsByEvent})
+    return render(request, "fightEvaluator/prediction.html",{'event_predictions':predictionsByEvent,'stats':getStats()})
 
 def verifyPrediction(matchups):
     for matchup in matchups:
@@ -90,3 +91,20 @@ def publishResults(request):
 
         prediction.save()
     return JsonResponse({"hello":"world"})
+
+def getStats():
+
+    #for all predictions get per event rate
+    #get overall rate
+    data = Prediction.objects.aggregate(
+        correct=Count('isCorrect',filter=Q(isCorrect=True)),
+        incorrect=Count('isCorrect',filter=Q(isCorrect=False))
+    )
+    stats = {}
+    stats['total_predictions']= data['correct'] + data['incorrect']
+    stats['rate'] = f"{data['correct']}/{stats['total_predictions']}"
+    stats['rate_percent'] = f"{(100 * (data['correct']/stats['total_predictions'])):.2f}%"
+    return stats
+
+def stats(request):
+    return JsonResponse(getStats(),safe=False)

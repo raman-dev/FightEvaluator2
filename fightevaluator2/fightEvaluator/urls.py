@@ -6,6 +6,7 @@ urlpatterns = [
 
     path('predictions',views.predictions,name="predictions"),
     path('predictions/publish',views.publishResults,name="publish-results"),
+    path('predictions/stats',views.stats,name='prediction-stats'),
 
     # path('focusTest',views.focusTest, name='focusTest'),
     # path('events/results/<int:eventId>',views.getFightEventResults, name='results'),

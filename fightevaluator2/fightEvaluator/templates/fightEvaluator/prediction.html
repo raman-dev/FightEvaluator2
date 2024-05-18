@@ -18,7 +18,20 @@
             |matchup_name| prediction | correct | isGamble
             
         -->
+        
         <div class="prediction-table-container container-fluid border py-2">
+            <div class="stat-container mx-auto col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
+                <ul class="border" style="max-width: 36ch; margin-left:auto;">
+                {% for k,v in stats.items %}
+                <li style="margin: 0px;">
+                    <div class="row">
+                        <div class="col" style="text-transform: uppercase;">{{k}}</div>
+                        <div class="col"><strong>{{v}}</strong></div>
+                    </div>
+                </li>
+                {% endfor %}
+                </ul>
+            </div>
             {% for event,predictions in event_predictions %}
             <div class="prediction-table row flex-column">
                 <div class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
