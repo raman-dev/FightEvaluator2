@@ -186,6 +186,8 @@ def getFightEventResults2(request,eventId):
                 matchup = nameMatchUpMap[fb['name']]
             else:
                 continue#skip this fight outcome
+            #replace spaces with underscores
+            method = method.replace(" ","_")
             matchup.outcome = FightOutcome()
             matchup.outcome.method = FightOutcome.Outcomes[method.upper()]
             matchup.outcome.time = time
