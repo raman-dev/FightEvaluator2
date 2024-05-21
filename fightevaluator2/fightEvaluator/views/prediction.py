@@ -99,23 +99,27 @@ def getStats():
     data = Prediction.objects.aggregate(
         correct=Count('isCorrect',filter=Q(isCorrect=True)),
         incorrect=Count('isCorrect',filter=Q(isCorrect=False)),
-        total_win_type=Count('isCorrect',filter=Q(prediction__event=Event.WIN)),
-        total_rounds_geq_one_half=Count('isCorrect',filter=Q(prediction__event=Event.ROUNDS_GEQ_ONE_AND_HALF)),
     )
     stats = {}
-    stats['total_predictions']= data['correct'] + data['incorrect']
-    stats['ratio'] = f"{data['correct']}/{stats['total_predictions']}"
-    stats['accuracy_overall'] = f"{(100 * (data['correct']/stats['total_predictions'])):.2f}%"
-    
-    #WIN_TYPE_ACCURACY
-    data.update(Prediction.objects.aggregate(
-        win=Count('isCorrect',filter=Q(isCorrect=True,prediction__event=Event.WIN)),
-        rounds_geq_one_half=Count('isCorrect',filter=Q(isCorrect=True,prediction__event=Event.ROUNDS_GEQ_ONE_AND_HALF))
-    ))
-    stats['win_type_ratio'] = f"{data['win']}/{data['total_win_type']}" 
-    stats['win_type_accuracy'] = f"{(100 * (data['win']/data['total_win_type'])):.2f}%"
-    stats['rounds_geq_one_half_ratio'] = f"{data['rounds_geq_one_half']}/{data['total_rounds_geq_one_half']}"
-    stats['rounds_geq_one_half_accuracy']=f"{(100 * (data['rounds_geq_one_half']/data['total_rounds_geq_one_half'])):.2f}%"
+    stats['general']={}
+    stats['general']['total_predictions']= data['correct'] + data['incorrect']
+    stats['general']['ratio'] = f"{data['correct']}/{stats['general']['total_predictions']}"
+    stats['general']['accuracy_overall'] = f"{(100 * (data['correct']/stats['general']['total_predictions'])):.2f}%"
+
+    stats['prediction_type'] = {}
+
+    for predictionEventType in Event:
+        result = Prediction.objects.aggregate(
+            total=Count('isCorrect',filter=Q(prediction__event=predictionEventType)),
+            count=Count('isCorrect',filter=Q(isCorrect=True,prediction__event=predictionEventType))
+        )
+        if result['total'] == 0:
+            continue
+        stats['prediction_type'][predictionEventType] = {
+            'ratio': f"{result['count']}/{result['total']}", 
+            'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
+        }
+
     return stats
 
 def stats(request):

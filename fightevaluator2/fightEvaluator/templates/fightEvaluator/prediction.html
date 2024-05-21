@@ -21,15 +21,31 @@
         
         <div class="prediction-table-container container-fluid border py-2">
             <div class="stat-container mx-auto col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
-                <ul class="border" style="max-width: 36ch; margin-left:auto;">
-                {% for k,v in stats.items %}
-                <li style="margin: 0px;">
+                <ul class="border" style=" margin-left:auto;">
+                {% for k,v in stats.general.items %}
+                <li style="margin: 0px; max-width: 42ch;">
                     <div class="row">
                         <div class="col" style="text-transform: uppercase;">{{k}}</div>
                         <div class="col"><strong>{{v}}</strong></div>
                     </div>
                 </li>
                 {% endfor %}
+                <li style="margin: 0px;">    
+                    <div class="row">
+                    {% for predType,typeStats in stats.prediction_type.items %}
+                        <div class="col col-4">
+                            <div class="prediction-type border text-center">{{predType.label}}</div>
+                            {% for statName,val in typeStats.items  %}
+                            <div class="row">
+                                <div class="col" style="text-transform: uppercase;">{{statName}}</div>
+                                <div class="col"><strong>{{val}}</strong></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    </div>  
+                </li>
+
                 </ul>
             </div>
             {% for event,predictions in event_predictions %}
