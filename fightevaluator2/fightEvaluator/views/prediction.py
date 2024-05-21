@@ -98,12 +98,24 @@ def getStats():
     #get overall rate
     data = Prediction.objects.aggregate(
         correct=Count('isCorrect',filter=Q(isCorrect=True)),
-        incorrect=Count('isCorrect',filter=Q(isCorrect=False))
+        incorrect=Count('isCorrect',filter=Q(isCorrect=False)),
+        total_win_type=Count('isCorrect',filter=Q(prediction__event=Event.WIN)),
+        total_rounds_geq_one_half=Count('isCorrect',filter=Q(prediction__event=Event.ROUNDS_GEQ_ONE_AND_HALF)),
     )
     stats = {}
     stats['total_predictions']= data['correct'] + data['incorrect']
     stats['ratio'] = f"{data['correct']}/{stats['total_predictions']}"
-    stats['percent'] = f"{(100 * (data['correct']/stats['total_predictions'])):.2f}%"
+    stats['accuracy_overall'] = f"{(100 * (data['correct']/stats['total_predictions'])):.2f}%"
+    
+    #WIN_TYPE_ACCURACY
+    data.update(Prediction.objects.aggregate(
+        win=Count('isCorrect',filter=Q(isCorrect=True,prediction__event=Event.WIN)),
+        rounds_geq_one_half=Count('isCorrect',filter=Q(isCorrect=True,prediction__event=Event.ROUNDS_GEQ_ONE_AND_HALF))
+    ))
+    stats['win_type_ratio'] = f"{data['win']}/{data['total_win_type']}" 
+    stats['win_type_accuracy'] = f"{(100 * (data['win']/data['total_win_type'])):.2f}%"
+    stats['rounds_geq_one_half_ratio'] = f"{data['rounds_geq_one_half']}/{data['total_rounds_geq_one_half']}"
+    stats['rounds_geq_one_half_accuracy']=f"{(100 * (data['rounds_geq_one_half']/data['total_rounds_geq_one_half'])):.2f}%"
     return stats
 
 def stats(request):
