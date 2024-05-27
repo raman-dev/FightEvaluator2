@@ -31,18 +31,18 @@
                 </li>
                 {% endfor %}
                 <li style="margin: 0px;">    
-                    <div class="row mx-0">
+                    <div class="general-stats row mx-0 my-1">
                     {% for predType in stats.prediction_type.keys %}
                         <div class="border col col-4">
                             <div class="prediction-type text-center">
-                                <p>{{predType.label}}</p>    
+                                <p class="my-0">{{predType.label}}</p>    
                             </div>
                         </div>
                     {% endfor %}
                     </div>
-                    <div class="row mx-0">
+                    <div class="outcome-type-stats row mx-0 ">
                     {% for typeStats in stats.prediction_type.values %}
-                    <div class="col col-4">
+                    <div class="stat-wrapper col col-4">
                         {% for statName,val in typeStats.items  %}
                         <div class="row">
                             <div class="col" style="text-transform: uppercase;">{{statName}}</div>

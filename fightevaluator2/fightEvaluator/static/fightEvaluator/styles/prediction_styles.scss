@@ -88,3 +88,14 @@ ul {
         }
     }
 } 
+
+.outcome-type-stats{
+    // background-color: red;
+    .stat-wrapper{
+        border-right: 1px solid #495057;
+    }
+     > :last-child{
+        // background-color: red;
+        border-right: none !important;
+    }
+} 

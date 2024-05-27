@@ -68,4 +68,11 @@ ul .column-label.sort-by .icon {
 }
 ul .column-label[data-sort=dec] .icon {
   transform: rotateZ(180deg);
+}
+
+.outcome-type-stats .stat-wrapper {
+  border-right: 1px solid #495057;
+}
+.outcome-type-stats > :last-child {
+  border-right: none !important;
 }/*# sourceMappingURL=prediction_styles.css.map */
