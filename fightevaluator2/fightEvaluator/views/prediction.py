@@ -46,7 +46,10 @@ def verifyPrediction(matchups):
             #if prediction has a fighter then it is a winner determination
             match prediction.prediction.event:
                 case Event.DOES_NOT_GO_THE_DISTANCE:
-                    print("")
+                    #as long as outcome was ko or sub
+                    prediction.isCorrect = outcome.method != FightOutcome.Outcomes.DECISION
+                    prediction.isCorrect &= outcome.method != FightOutcome.Outcomes.DRAW 
+                    prediction.isCorrect &= outcome.method != FightOutcome.Outcomes.NO_CONTEST
                 case Event.ROUNDS_GEQ_ONE_AND_HALF:
                     if outcome.final_round > 2:
                         prediction.isCorrect = True
