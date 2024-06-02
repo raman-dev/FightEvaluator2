@@ -58,6 +58,7 @@
   text-transform: capitalize;
   font-family: PoppinsSemiBold;
   color: black;
+  margin: 0px;
 }
 
 .prediction-table {
