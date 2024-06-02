@@ -66,12 +66,12 @@
                 <ul class="mx-auto border px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
                     <li>
                         <div class="table-header row" data-key-count="0">
-                            <div class="col col-5 column-label">
+                            <div class="col col-4 column-label">
                                 <p>
                                     MatchUp
                                 </p> 
                             </div>
-                            <div class="col col-5 column-label" id="prediction" data-sort-order="-1" data-sort="default">
+                            <div class="col col-4 column-label" id="prediction" data-sort-order="-1" data-sort="default">
                                 <p>Prediction</p>
                                 <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
@@ -83,14 +83,22 @@
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
                                 </svg>
                             </div>
+                            <div class="col col-2 column-label" id="likelihood" data-sort-order="-1" data-sort="default">
+                                <p>
+                                    Likelihood
+                                </p> 
+                                <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
+                                </svg>
+                            </div>
                         </div>
                     </li>
                     {% for data in predictions %}
-                        <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-event="{{ data.matchup.event.title }}">
+                        <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-likelihood="{{data.prediction.likelihood}}" data-event="{{ data.matchup.event.title }}" >
                             <div class="row">
-                                <div class="col col-5">{{data.matchup.title}}</div>
-                                <div class="col col-5">{{data.prediction.predictionDisplay}}</div>   
-                                <div class="col col-2 data-result ">
+                                <div class="col col-4 d-flex align-items-center">{{data.matchup.title}}</div>
+                                <div class="col col-4 d-flex align-items-center">{{data.prediction.predictionDisplay}}</div>   
+                                <div class="col col-2 data-result d-flex align-items-center">
                                     <p  class="mx-auto {% if data.isCorrect %} data-correct {% elif data.isCorrect == False %} data-incorrect {% else %} data-tbd {% endif %}">
                                         {% if data.isCorrect == None %}
                                             tbd
@@ -99,8 +107,10 @@
                                         {% endif %} 
                                     </p>
                                 </div>
-                                <!-- <div class="col col-4" > -->
-                                <!-- </div> -->
+
+                                <div class="col col-2 d-flex align-items-center justify-content-center likelihood">
+                                    <p class="confidence likely-{{data.prediction.likelihood}}">very likely</p>
+                                </div>
                             </div>
                         </li>
                     {% endfor %}
@@ -114,9 +124,29 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script>
+        const likelihoodValueStringMap = {
+            'likely-1': 'Very Likely',
+            'likely-2': 'Somewhat Likely',
+            'likely-3': 'Neutral',
+            'likely-4': 'Somewhat Unlikely',
+            'likely-5': 'Very Unlikely'
+        }      
+        
+        document.querySelectorAll('.confidence').forEach((element)=>{
+            // element.innerHTML = likelihoodValueStringMap[element.dataset.likelihood];?
+            for (const [key,value] of Object.entries(likelihoodValueStringMap)){
+                if (element.classList.contains(key)){
+                    element.innerHTML = value;
+                    break;
+                }
+            }
+        });
+    </script>
+
     <script>
         //
-
         const DEFAULT = "default";
         const INCREASING = "inc";
         const DECREASING = "dec";
@@ -143,6 +173,8 @@
             keys.sort((a,b) => {
                 let ele_a = table.querySelector(`[data-${a}]`);
                 let ele_b = table.querySelector(`[data-${b}]`);
+
+                console.log(ele_a,ele_b);
 
                 return ele_a.dataset.sortOrder - ele_b.dataset.sortOrder;
             });
