@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.db.models import Count,Q
 
-from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event
+from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,Likelihood
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
@@ -102,12 +102,38 @@ def getStats():
     data = Prediction.objects.aggregate(
         correct=Count('isCorrect',filter=Q(isCorrect=True)),
         incorrect=Count('isCorrect',filter=Q(isCorrect=False)),
+        very_likely=Count('isCorrect',filter=Q(prediction__likelihood=Likelihood.VERY_LIKELY)),
+        very_likely_correct=Count('isCorrect',filter=Q(isCorrect=True,prediction__likelihood=Likelihood.VERY_LIKELY)),
     )
     stats = {}
     stats['general']={}
     stats['general']['total_predictions']= data['correct'] + data['incorrect']
     stats['general']['ratio'] = f"{data['correct']}/{stats['general']['total_predictions']}"
     stats['general']['accuracy_overall'] = f"{(100 * (data['correct']/stats['general']['total_predictions'])):.2f}%"
+
+    """
+        
+        stats <---changes when a prediction object then has a corresponding outcome object
+            overall:
+                correctness 
+                    ratio
+                    percent
+            event_type_x:  
+                correctness 
+                    ratio
+                    percent
+            likelihood_x:
+                correctness
+                    ratio
+                    percent
+        
+        could have a recalibration?
+        one time recalculation of all stats
+
+        how to detect irregularity hash?
+        database
+            record.hash onchange-> calc new hash compare iff different set flag or send signal that table has changed
+    """
 
     stats['prediction_type'] = {}
 
