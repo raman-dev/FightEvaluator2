@@ -20,7 +20,7 @@ def create_note(request):
     if form.is_valid():
         print('note.form is valid') 
         assessment =get_object_or_404(Assessment,id=form.cleaned_data['assessment_id'])   
-        note = Note(assessment=assessment,data=form.cleaned_data['data'])
+        note = Note(assessment=assessment,data=form.cleaned_data['data'],tag=form.cleaned_data['tag'])
         note.save()
     else:
         print('invalid')

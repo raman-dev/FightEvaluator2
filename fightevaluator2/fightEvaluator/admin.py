@@ -4,7 +4,7 @@ from .models import Fighter,Assessment,Note,MatchUp,FightEvent,FightOutcome,Even
 
 @admin.register(FightEvent)
 class FightEventAdmin(admin.ModelAdmin):
-    list_display = ["title","date","location","link"]
+    list_display = ["title","date","location","link","id"]
 
 @admin.register(MatchUp)
 class MatchUpAdmin(admin.ModelAdmin):
@@ -14,7 +14,7 @@ class MatchUpAdmin(admin.ModelAdmin):
     @admin.display(description="Fighter B")
     def fighterB(obj):
         return obj.fighter_b.first_name.capitalize() + " " + obj.fighter_b.last_name.capitalize()
-    list_display = [fighterA,fighterB,"isprelim","weight_class","scheduled","event"]
+    list_display = [fighterA,fighterB,"isprelim","weight_class","scheduled","event","event_id"]
 
 @admin.register(Fighter)
 class FighterAdmin(admin.ModelAdmin):

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Assessment,WeightClass,FightEvent,MatchUp,Event
+from .models import Fighter,Assessment,WeightClass,FightEvent,MatchUp,Event,AttributeQualifier
 
 """
     **NOTE**************************************************
@@ -25,7 +25,19 @@ class AssessmentForm(ModelForm):
 class NoteForm(forms.Form):
     assessment_id = forms.IntegerField(label='Assessment Id')
     data = forms.CharField(label='Data',max_length=256)
-
+    tag = forms.CharField(label='Tag',max_length=8)
+    def is_valid(self):
+        if not super().is_valid():
+            return False
+        
+        tag = self.cleaned_data['tag']
+        # print('tag',tag)
+        if tag != 'NEUTRAL' and tag != 'NEGATIVE' and tag !='POSITIVE':
+            return False
+        self.cleaned_data['tag'] = AttributeQualifier[tag]
+        # print(AttributeQualifier.NEGATIVE,AttributeQualifier['NEGATIVE'])
+        return True
+        
 class FighterForm(ModelForm):
     class Meta:
         model = Fighter

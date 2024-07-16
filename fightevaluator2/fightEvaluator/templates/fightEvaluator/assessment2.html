@@ -192,12 +192,13 @@
               </div>
               <div
                 class="note-editor align-self-center"
+                data-tag="NEUTRAL"
                 contenteditable="plaintext-only"></div>
             </div>
             <div class="notes-list align-self-center mt-4">
               <ul class="dx-none">
                 {% for note in notes %}
-                <li class="note" data-note-id="{{ note.id }}" tabindex="100">
+                <li class="note" data-note-id="{{ note.id }}" tabindex="100" data-tag="{{note.tag}}">
                   <p>{{ note.data }}</p>
                   <!-- <button
                     class="btn btn-danger note-delete-btn"
@@ -388,6 +389,7 @@
         //from note-editor get the text content make sure it is non empty
         let noteEditor = document.querySelector(".note-editor");
         let noteText = noteEditor.textContent.trim();
+        let tag = noteEditor.dataset.tag;
         if (noteText.length > 0) {
           //post request to server with new note
           let response = await fetch("/notes/create-note", {
@@ -399,6 +401,7 @@
             },
             body: JSON.stringify({
               assessment_id: assessment_id,
+              tag:tag,
               data: noteText,
             }),
           });
@@ -510,6 +513,28 @@
         // note.addEventListener('focusin',onNoteFocusIn);
         // note.addEventListener('focusout',onNoteFocusOut);
       }
+
+      document.querySelector('.note-editor').addEventListener('input',(event)=>{
+        let editor = event.currentTarget;
+        let text = editor.innerHTML;
+        // console.log(text);
+        //search text for flag !positive,!negative
+        if (text.includes('!positive')){
+          editor.dataset.tag='POSITIVE';
+          text = text.replace("!positive","");
+          editor.innerHTML = text;
+        }
+        else if (text.includes('!negative')){
+          editor.dataset.tag='NEGATIVE';
+          text = text.replace("!negative","");
+          editor.innerHTML = text;
+        }else if (text.includes('!neutral')){
+          editor.dataset.tag='NEUTRAL';
+          text = text.replace("!neutral","");
+          editor.innerHTML = text;
+        }
+
+      });
       
     </script>
     <script>
