@@ -198,7 +198,7 @@
             <div class="notes-list align-self-center mt-4">
               <ul class="dx-none">
                 {% for note in notes %}
-                <li class="note" data-note-id="{{ note.id }}" tabindex="100" data-tag="{{note.tag}}">
+                <li class="note" data-note-id="{{ note.id }}" tabindex="100" data-tag="{{note.get_tag_display}}">
                   <p>{{ note.data }}</p>
                   <!-- <button
                     class="btn btn-danger note-delete-btn"
