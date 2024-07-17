@@ -405,7 +405,6 @@ body {
 }
 .fighter-notes .notes-list ul .note {
   background-color: #212529;
-  border: 1px solid lavender;
   border-radius: 0.6rem;
   list-style: None;
   display: flex;
@@ -418,6 +417,12 @@ body {
   min-width: 32ch;
   max-width: 100%;
   margin: 0px;
+}
+.fighter-notes .notes-list ul .note[data-tag=positive] {
+  border: 2px solid #0d6efd;
+}
+.fighter-notes .notes-list ul .note[data-tag=negative] {
+  border: 2px solid #dc3545;
 }
 .fighter-notes .notes-list ul .note.active {
   outline: 3px solid #3d7efd;

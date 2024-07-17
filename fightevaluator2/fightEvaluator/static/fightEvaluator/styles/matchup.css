@@ -138,8 +138,10 @@ h6 {
   text-transform: capitalize;
 }
 .content-grid .notes-section .notes {
+  border-radius: 0.4rem;
   list-style: none;
-  padding: 0px;
+  padding: 0.5rem;
+  background-color: #12161A;
 }
 .content-grid .notes-section .notes li p {
   max-width: 36ch;
@@ -159,6 +161,12 @@ h6 {
   max-width: 32ch;
   margin: 0px;
 }
+.content-grid .notes-section .notes .note[data-tag=positive] {
+  border: 3px solid #0d6efd;
+}
+.content-grid .notes-section .notes .note[data-tag=negative] {
+  border: 3px solid #dc3545;
+}
 .content-grid .notes-left {
   grid-column: span 1;
 }
@@ -172,6 +180,8 @@ h6 {
 @media (max-width: 1280px) {
   .content-grid {
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    -moz-column-gap: 0.5rem;
+         column-gap: 0.5rem;
   }
   .content-grid .attrib-compare-table {
     grid-row: 1;

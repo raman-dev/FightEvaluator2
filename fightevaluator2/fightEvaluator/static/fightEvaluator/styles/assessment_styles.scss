@@ -501,7 +501,10 @@ $flickerDuration: 400ms;
       word-break: break-word;
       min-height: 4rem;
       transition: outline 0.05s ease-out;
+
+      
     }
+    
 
     /* show light electric blue outline when note-editor is focused */
     .note-editor:focus {
@@ -528,7 +531,7 @@ $flickerDuration: 400ms;
       padding: 0px;
       .note {
         background-color: #212529;
-        border: 1px solid lavender;
+        // border: 1px solid lavender;
         border-radius: 0.6rem;
         list-style: None;
         display: flex;
@@ -542,6 +545,14 @@ $flickerDuration: 400ms;
           max-width: 100%;
           margin: 0px;
         }
+      }
+
+      .note[data-tag="positive"]{
+        border: 2px solid $positiveBg; 
+      }
+
+      .note[data-tag="negative"]{
+        border: 2px solid $negativeBg; 
       }
 
       // .note:focus{

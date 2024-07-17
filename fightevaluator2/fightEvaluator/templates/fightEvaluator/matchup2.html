@@ -249,7 +249,7 @@
       <div class="notes-container">
         <ul class="notes">
           {% for note in fighter_a_notes %}
-          <li class="note">
+          <li class="note"  data-tag="{{ note.get_tag_display }}">
             <p>{{ note.data }}</p>
           </li>
           {% endfor %}
@@ -271,7 +271,7 @@
             </p>
           </li> -->
           {% for note in fighter_b_notes %}
-          <li class="note">
+          <li class="note" data-tag="{{ note.get_tag_display }}">
             <p>
               {{ note.data }}
             </p>
