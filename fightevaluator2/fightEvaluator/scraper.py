@@ -233,16 +233,16 @@ def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> di
             else:
                 fighterData['date_of_birth'] = 'N/A'
 
+#fetch and parse fighter detail page
 def getFighterData(link):
     source = getPageSource(link)
     soup = BeautifulSoup(source,'html.parser')
     
-    fighterNameHeader = soup.find('div',class_='fighterUpcomingHeader')
-    record_h1,name_h1 = fighterNameHeader.find_all('h1')
-    full_name = normalizeString(name_h1.text.strip())
+    fighterNameRecord = soup.find_all('div',class_='leading-tight')
+    nameElement,recordElement = fighterNameRecord
+    full_name = normalizeString(nameElement.text.strip())
 
-    record = record_h1.text.strip().split('-')
-
+    record = recordElement.text.strip().split('-')
     wins = int(record[0])
     losses = int(record[1])
     draws = int(record[2])
