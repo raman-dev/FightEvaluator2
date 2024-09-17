@@ -19,6 +19,15 @@ def extract_text(element: pq):
     
     return result
 
+def scrapeFighterDetails(fighterDetailsDiv,fighterData) -> dict:
+    data = []
+    result = pq(fighterDetailsDiv)("span")
+    n = len(result)
+    for i in range(0,n - 1):
+        data.append(pq(result[i]).text())
+    
+    print(data)
+
 #grab fighter data from an element
 def scrapeFighterData(element,result_only=False):
     fighterPQ = pq(element)

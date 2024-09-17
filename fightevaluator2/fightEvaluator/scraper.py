@@ -189,7 +189,8 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     fightEventData['matchups'] = matchups
     return fightEventData
 
-# print(getUpcomingFightEvent())
+
+
 def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> dict:
     for li in fighterDetailsSoup.findAll('li'):
         li_text = li.text.strip()
@@ -257,8 +258,9 @@ def getFighterData(link):
         'losses':losses,
         'draws':draws,
     }
-    fighterDetailsUl = soup.find('div',id='stats').ul
-    getFighterDetails(fighterDetailsUl,fighterData)
+    fighterDetails = soup.find('div',id='standardDetails')
+    scrapeFighterDetails(str(fighterDetails),fighterData)
+    getFighterDetails(fighterDetails,fighterData)
 
     return fighterData
 
