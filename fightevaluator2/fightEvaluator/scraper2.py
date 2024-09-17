@@ -1,6 +1,9 @@
 import re
 import unicodedata
 from pyquery import PyQuery as pq
+from .models import WeightClass
+import math
+from datetime import datetime
 
 domain = "https://www.tapology.com"
 
@@ -25,8 +28,55 @@ def scrapeFighterDetails(fighterDetailsDiv,fighterData) -> dict:
     n = len(result)
     for i in range(0,n - 1):
         data.append(pq(result[i]).text())
-    
+    """
+   0 'Gabriel Miranda' : name 
+   1 'Fly' : nickname
+   2 '17-6-0 (Win-Loss-Draw)' : record
+   3 '1 Win': streak
+   4 '34'   : age
+   5 '1990 Mar 25': date-of-birth
+   6 '5\'11" (180cm)' : height
+   7 '71.0" (180cm)': reach
+   8 'Featherweight' : weightclass
+   9 '145.0 lbs': last weigh-in
+     'Astra Fight Team'
+     'September 09, 2023 in UFC'
+     '$0 USD'
+     'Telêmaco Borba, Paraná, Brazil' 
+    """
     print(data)
+    height_string = data[0]
+    #3 height values if both feet'inch" and cm are present
+    #1 height value if only cm is present
+    height_match = re.findall(r'[0-9]+',height_string)#try feet'inch"
+    height_inches = 0
+    if len(height_match) == 1:
+        height_inches = math.floor(int(height_match[0]) / 2.54)
+    if len(height_match) > 1:
+        height_inches = int(height_match[0])*12 + int(height_match[1])
+    fighterData['height'] = height_inches
+
+    weight_class = data[8].replace(" ","_").upper()
+    fighterData['weight_class'] = WeightClass[weight_class]
+
+    reach_string = data[7].strip()
+    reach_match = re.findall(r'[0-9]+',reach_string)
+    reach_inches = 0
+    if len(reach_match) == 2:
+        reach_inches = int(reach_match[0])
+    else:
+        #if cm it is always gonna be the last match
+        if reach_match != []:
+            reach_inches = math.floor(int(reach_match[-1]) / 2.54)
+    fighterData['reach'] = reach_inches
+    dob_string = data[5].strip()#last span element
+    if dob_string != 'N/A':
+        print('dob_string',dob_string)
+        dob = datetime.strptime(dob_string,"%Y %b %d").date()
+        fighterData['date_of_birth'] = dob
+    else:
+        fighterData['date_of_birth'] = 'N/A'
+    # print(data)
 
 #grab fighter data from an element
 def scrapeFighterData(element,result_only=False):

@@ -260,7 +260,7 @@ def getFighterData(link):
     }
     fighterDetails = soup.find('div',id='standardDetails')
     scrapeFighterDetails(str(fighterDetails),fighterData)
-    getFighterDetails(fighterDetails,fighterData)
+    # getFighterDetails(fighterDetails,fighterData)
 
     return fighterData
 
