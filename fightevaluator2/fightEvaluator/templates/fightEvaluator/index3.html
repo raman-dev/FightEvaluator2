@@ -1,0 +1,396 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Fight Evaluator {% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static  'fightEvaluator/styles/index.css' %}" />
+{% endblock %}
+
+{% block content %}
+  {% include 'fightEvaluator/navbar.html' %}
+  <!--container-->
+  
+  <div class="container-fluid main-container" style="position: relative">
+    <!-- <div class="matchup-menu visible">
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-action">
+          edit
+        </li>
+        <li class="list-group-item list-group-item-action">
+          analyze
+        </li>
+        <li class="list-group-item list-group-item-action">
+          watch
+        </li>
+        <li class="list-group-item list-group-item-action">
+          delete
+        </li>
+      </ul>
+    </div> -->
+    <!-- Modal -->
+    <div class="modal fade" id="matchupModal" tabindex="-1" aria-labelledby="matchupModalLabel" aria-hidden="true" data-matchup-id="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content w-auto">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="matchupModalLabel">
+              Add Matchup
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <!---->
+              <div class="fighter-selector">
+                <div class="current-matchup p-2 border rounded">
+                  <h5>Current Matchup</h5>
+                  
+                  <div class="fighter fighter-a d-flex align-items-center" data-selected-id="-1">
+                    <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
+                    <!-- <h6 class="fighter-name mx-1 d-none">Fighter a</h6> -->
+                    <!--bootstrap close button-->
+                    <div class="search-container mx-1">
+                      <!--text search box-->
+                      <div class="search-box" data-target="#searchbox-a">
+                        <form>
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnA">
+                            <button class="btn btn-outline-danger" type="button" id="clearSearchBtnA" onclick="clearFighterSelection('fighter-a')" >clear</button>
+                          </div>
+                        </form>
+                      </div>
+                      <!--search box suggestion drop down-->
+                      <div class="search-suggestion" id="searchbox-a">
+                        <ul class="list-group"></ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="my-1">
+                    <p class="m-0 text-center">versus</p>
+                  </div>
+                  <div class="fighter fighter-b d-flex align-items-center" data-selected-id="-1">
+                    <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
+                    <!-- <h6 class="fighter-name mx-1 d-none">Fighter b</h6> -->
+                    <div class="search-container mx-1">
+                      <!--text search box-->
+                      <div class="search-box" data-target="#searchbox-b">
+                        <form>
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnB">
+                            <button class="btn btn-outline-danger" type="button" id="clearSearchBtnB" onclick="clearFighterSelection('fighter-b')" >clear</button>
+                          </div>                        
+                        </form>
+                      </div>
+                      <!--search box suggestion drop down-->
+                      <div class="search-suggestion" id="searchbox-b">
+                        <ul class="list-group"></ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="matchup-info-wrapper">
+                    <div class="weight-class dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Weight Class
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">Flyweight</a></li>
+                        <li>
+                          <a class="dropdown-item" href="#">Bantamweight</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Featherweight</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Lightweight</a></li>
+                        <li>
+                          <a class="dropdown-item" href="#">Welterweight</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Middleweight</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Light Heavyweight</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Heavyweight</a></li>
+                        <li><a class="dropdown-item" href="#">Catchweight</a></li>
+                      </ul>
+                    </div>
+                    <div class="rounds-wrapper">
+                      <p class="m-0">Rounds</p>
+                      <!--2 radio buttons for 3 or 5 rounds-->
+                      <div class="form-check mx-2">
+                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3" checked>
+                        <label class="form-check-label" for="rounds">
+                          3
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5">
+                        <label class="form-check-label" for="rounds">
+                          5
+                        </label>
+                      </div>
+                    </div>
+                    <div class="prelims-wrapper">
+                      <!--bootstrap5 checkbox-->
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="isprelim">
+                        <label class="form-check-label" for="isprelim">
+                          On Prelims
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <div class="fighter-creator border rounded">
+                <!--form to create a fighter
+                        first name
+                        last name
+                        weight class
+                        height
+                        reach
+                        stance
+                        date_of_birth
+                        wins
+                        losses
+                        draws
+                  -->
+                <h5 class="text-start">Create a fighter</h5>
+                <form>
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col">
+                      <label for="first_name" class="form-label">First Name</label>
+                      <input type="text" class="form-control" id="first_name" name="first_name"
+                        placeholder="First Name" />
+                    </div>
+                    <div class="col">
+                      <label for="last_name" class="form-label">Last Name</label>
+                      <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label for="weight_class" class="form-label">Weight Class</label>
+                      <select class="form-select" id="weight_class" name="weight_class">
+                        <option selected>Choose...</option>
+                        <option value="FLYWEIGHT">Flyweight</option>
+                        <option value="BANTAMWEIGHT">Bantamweight</option>
+                        <option value="FEATHERWEIGHT">Featherweight</option>
+                        <option value="LIGHTWEIGHT">Lightweight</option>
+                        <option value="WELTERWEIGHT">Welterweight</option>
+                        <option value="MIDDLEWEIGHT">Middleweight</option>
+                        <option value="LIGHT_HEAVYWEIGHT">Light Heavyweight</option>
+                        <option value="HEAVY_WEIGHT">Heavyweight</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <label for="height" class="form-label">Height</label>
+                      <input type="number" class="form-control" name="height" id="height" max="99" maxlength="2"
+                        placeholder="Height" />
+                    </div>
+                    <div class="col">
+                      <label for="reach" class="form-label">Reach</label>
+                      <input type="number" class="form-control" id="reach" name="reach" max="99" maxlength="2"
+                        placeholder="Reach" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label for="stance" class="form-label">Stance</label>
+                      <select class="form-select" id="stance" name="stance">
+                        <option selected>Choose...</option>
+                        <option value="orthodox">Orthodox</option>
+                        <option value="southpaw">Southpaw</option>
+                        <option value="switch">Switch</option>
+                        <option value="open_stance">Open Stance</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <label for="date_of_birth" class="form-label">Date of Birth</label>
+                      <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
+                        placeholder="Date of Birth" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <button class="btn btn-primary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;"
+                      onclick="createFighter(event)" type="button">Create</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div style="margin: 0px; margin-right: auto;">
+              <p class="m-0" style="color: hsl(0 ,0%, 60%);"><small>Fighter not listed?</small></p>
+              <button type="button" class="btn btn-primary" onclick="showFighterCreatorSection()">
+                add new fighter
+              </button>
+            </div>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="button" class="create-matchup-btn btn btn-primary" onclick="createMatchUp(event)">
+              Create Matchup
+            </button>
+            <button type="button" class="update-matchup-btn btn btn-primary d-none" onclick="updateMatchUp(event)">
+              Update Matchup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container-fluid title-container d-flex flex-column">
+      <div class="title-wrapper results-toggle-wrapper w-100 d-flex justify-content-between align-items-center">
+        <h3 class="event-title">{{event.title}}</h3>
+        <div class="results-switch form-check form-switch my-0 border px-4">
+          <input class="form-check-input" type="checkbox" role="switch" id="showResultsSwitch" disabled>
+          <label class="form-check-label" for="showResultsSwitch">Results Not Available</label>
+        </div>
+      </div>
+      <div class="action-bar d-flex align-items-center w-100">
+        <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
+          <div class="action-wrapper" >
+            <button type="button" class="btn btn-primary active-independent" data-bs-toggle="modal" data-bs-target="#matchupModal">
+              add
+            </button>
+            <p>&nbsp;- add matchup</p>
+          </div>
+          <!--edit matchup action-->
+          <div class="action-wrapper">
+            <button type="button" class="edit btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#matchupModal" onclick="onClickEdit()">
+              edit
+            </button>
+            <p>&nbsp;- edit matchup</p>
+          </div>
+          <div class="action-wrapper">
+            <a class="analyze btn btn-primary disabled" href="#">
+              analyze
+            </a>
+            <p class="m-0">&nbsp;- view matchup</p>
+          </div>
+          <div class="action-wrapper">
+            <button class="watch btn btn-primary disabled">watch</button>
+            <p>&nbsp;- add to watchlist</p>
+          </div>
+          <div class="action-wrapper">
+            <button class="delete btn btn-danger disabled">delete</button>
+            <p>&nbsp;- delete matchup</p>
+          </div>
+        </div>
+      </div> 
+    </div>
+  
+    <div class="tables-wrapper">
+      <div class="matchups-container watchlist" id="watchlist">
+          <div class="matchups-header">
+            <h4>Watchlist</h4>
+            <p class="table-note">currently not watching any matchups.</p>
+          </div>
+          <div class="matchups container-fluid">
+            <div class="matchup-columns row">
+              <div class="col col-6">
+                <p class="m-0 text-center">matchup</p>
+              </div>
+              <div class="col col-3 weightclass">
+                <p class="m-0 text-center">weightclass </p>
+              </div>  
+              <div class="col col-3 rounds">
+                <p class="m-0 text-center">rounds</p>
+              </div>  
+            </div>
+          </div>
+      </div>
+      <!--main card fighter table-->
+      {% for matchups in matchupsList %}
+      <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>
+        <div class="matchups-header">
+          {% if forloop.counter == 1 %}
+          <h4>Main Card</h4>
+          {% elif forloop.counter == 2 %}
+          <h4>Prelims</h4>
+          {% endif %}
+        </div>
+        <div class="matchups container-fluid">
+          <div class="matchup-columns row">
+            <div class="col col-6">
+              <p class="m-0 text-center">matchup</p>
+            </div>
+            <div class="col col-3 weightclass">
+              <p class="m-0 text-center">weightclass </p>
+            </div>  
+            <div class="col col-3 rounds">
+              <p class="m-0 text-center">rounds</p>
+            </div>  
+          </div>
+          {% for matchup in matchups %}
+          
+          <div class="matchup row" onclick="onClickMatchUp(event)" data-order="{{forloop.counter}}"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
+            <div class="col-6 fighters">
+              <div class="d-flex">
+                <a class="fighter-link" href="/assessment/{{matchup.fighter_a.id}}" data-fighter-id="{{matchup.fighter_a.id}}">{{matchup.fighter_a.name}}</a>
+                  <p class="vs">vs</p>
+                <a class="fighter-link" href="/assessment/{{matchup.fighter_b.id}}" data-fighter-id="{{matchup.fighter_b.id}}">{{matchup.fighter_b.name}}</a>
+              </div>
+            </div>
+            <div class="col-3 weightclass">
+              <p>{{matchup.weight_class|rmscores}}</p>
+            </div>
+            <div class="col-3 rounds">
+              <p>{{matchup.rounds}} x 5</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}  
+    </div>
+  </div>
+
+  <div class="confirmation-dialog d-none" data-matchup-id="-1">
+    <div class="dialog-container bg-dark rounded-3">
+      <div class="dialog-title">
+        <h4>Delete following MatchUp.</h4>
+      </div>
+      <div class="dialog-body border p-1 my-3">
+        <p class="m-0">Matchup name.</p>
+      </div>
+      <div class="dialog-actions">
+        <button class="cancel btn btn-secondary">cancel</button>
+        <button class="confirm btn btn-primary">confirm</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+ <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+ <script>
+
+    var fightEventId = {{ event.id }};
+    const postHeaders = {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      "X-CSRFToken": Cookies.get('csrftoken'),
+    };
+    
+    function onClickMatchUp(event) {
+        let matchup = event.currentTarget;
+        let isActive = matchup.classList.contains('active');
+        let prevActive = document.querySelector('.matchup.active');
+        if (prevActive != null){
+            prevActive.classList.remove('active');
+        }
+        if (isActive){
+            return;
+        }
+        matchup.classList.add('active');
+    }
+</script>
+
+
+{% endblock %} 
+  
+ 

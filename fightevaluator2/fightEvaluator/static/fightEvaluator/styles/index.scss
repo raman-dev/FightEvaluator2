@@ -187,7 +187,7 @@ $cardBorderColor: #131b23;
   }
 
   .matchup:hover {
-    background-color: hsl(210, 18%, 3%);
+    background-color: hsl(200, 56%, 12%);
     cursor: pointer;
     .weightclass {
       text-decoration: underline;
@@ -204,7 +204,7 @@ $cardBorderColor: #131b23;
 
   .matchup:focus{
     // border-color: #598392 !important; 
-    background-color: hsl(210, 18%, 3%);
+    // background-color: hsl(210, 18%, 3%);
   }
 
   .matchup.watching{
@@ -390,3 +390,13 @@ $cardBorderColor: #131b23;
 //   box-shadow: black 2px 2px 0 0;
 //   --bs-btn-active-bg: hsl(0, 0%, 90%) !important;
 // }
+
+.matchup-menu{
+  border: 1px solid cyan;
+  position: absolute; 
+  padding: 0.2rem;
+  z-index: 10000;
+  li:hover{
+    cursor: pointer;
+  }
+}
