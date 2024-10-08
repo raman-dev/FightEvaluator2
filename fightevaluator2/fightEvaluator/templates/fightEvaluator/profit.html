@@ -1,0 +1,73 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'fightEvaluator/styles/profit_styles.css' %}">
+{% endblock %}
+{% block title %}Profit Calculator{% endblock %}
+
+{% block content %}
+    {% include 'fightEvaluator/navbar.html' %}
+    <div class="main-container border">
+        
+        <div class="table-wrapper">
+
+            <table class="odds-table table table-bordered">
+                <caption style="caption-side:top">
+                    <h3>Odds Table</h3>
+                </caption>
+                <thead>
+                    <th>fighter a</th>
+                    <th>fighter b</th>
+                    <th>odds a</th>
+                    <th>odds b</th>
+                    <th>Rounds > 1.5</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><p>Fighter A Name</p></td>
+                        <td><p>Fighter B Name</p></td>
+                        <td><p class="odds"><strong>-100</strong></p></td>
+                        <td><p class="odds"><strong>+100</strong></p></td>
+                        <td><p class="odds"><strong>-200</strong></p></td>
+                    </tr>
+                    <tr>
+                        <td><p>Fighter A Name</p></td>
+                        <td><p>Fighter B Name</p></td>
+                        <td><p class="odds"><strong>-100</strong></p></td>
+                        <td><p class="odds"><strong>+100</strong></p></td>
+                        <td><p class="odds"><strong>-200</strong></p></td>
+                    </tr>
+                    <tr>
+                        <td><p>Fighter A Name</p></td>
+                        <td><p>Fighter B Name</p></td>
+                        <td><p class="odds"><strong>-100</strong></p></td>
+                        <td><p class="odds"><strong>+100</strong></p></td>
+                        <td><p class="odds"><strong>-200</strong></p></td>
+                    </tr>
+                    <tr>
+                        <td><p>Fighter A Name</p></td>
+                        <td><p>Fighter B Name</p></td>
+                        <td><p class="odds"><strong>-100</strong></p></td>
+                        <td><p class="odds"><strong>+100</strong></p></td>
+                        <td><p class="odds"><strong>-200</strong></p></td>
+                    </tr>
+                    <tr>
+                        <td><p>Fighter A Name</p></td>
+                        <td><p>Fighter B Name</p></td>
+                        <td><p class="odds"><strong>-100</strong></p></td>
+                        <td><p class="odds"><strong>+100</strong></p></td>
+                        <td><p class="odds"><strong>-200</strong></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+

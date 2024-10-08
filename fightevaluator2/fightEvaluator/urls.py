@@ -5,6 +5,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('alt',views.index_alt,name='index_alt'),
 
+    path('profit',views.profit_calculator,name="profit_calculator"),
+
     path('predictions',views.predictions,name="predictions"),
     path('predictions/publish',views.publishResults,name="publish-results"),
     path('predictions/stats',views.stats,name='prediction-stats'),
