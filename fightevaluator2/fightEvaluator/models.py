@@ -1,5 +1,6 @@
 from django.db import models
 from django import forms
+import datetime
 
 class WeightClass(models.TextChoices):
     NA = "n/a"
@@ -63,7 +64,6 @@ class FightEvent(models.Model):
     
      def __str__(self) -> str:
           return self.title + " | " + str(self.date)
-
 
 
 class Assessment(models.Model):
@@ -227,6 +227,8 @@ class EventLikelihood(models.Model):
 
 #only 1 prediction per matchup
 class Prediction(models.Model):
+
+
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     prediction = models.ForeignKey('EventLikelihood',on_delete=models.CASCADE)
     isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis

@@ -25,49 +25,55 @@
                     <th>Rounds > 1.5</th>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr data-selected="">
                         <td><p>Fighter A Name</p></td>
                         <td><p>Fighter B Name</p></td>
-                        <td><p class="odds"><strong>-100</strong></p></td>
-                        <td><p class="odds"><strong>+100</strong></p></td>
-                        <td><p class="odds"><strong>-200</strong></p></td>
+                        <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>-100</strong></p></td>
+                        <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>+100</strong></p></td>
+                        <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td>
                     </tr>
-                    <tr>
-                        <td><p>Fighter A Name</p></td>
-                        <td><p>Fighter B Name</p></td>
-                        <td><p class="odds"><strong>-100</strong></p></td>
-                        <td><p class="odds"><strong>+100</strong></p></td>
-                        <td><p class="odds"><strong>-200</strong></p></td>
-                    </tr>
-                    <tr>
-                        <td><p>Fighter A Name</p></td>
-                        <td><p>Fighter B Name</p></td>
-                        <td><p class="odds"><strong>-100</strong></p></td>
-                        <td><p class="odds"><strong>+100</strong></p></td>
-                        <td><p class="odds"><strong>-200</strong></p></td>
-                    </tr>
-                    <tr>
-                        <td><p>Fighter A Name</p></td>
-                        <td><p>Fighter B Name</p></td>
-                        <td><p class="odds"><strong>-100</strong></p></td>
-                        <td><p class="odds"><strong>+100</strong></p></td>
-                        <td><p class="odds"><strong>-200</strong></p></td>
-                    </tr>
-                    <tr>
-                        <td><p>Fighter A Name</p></td>
-                        <td><p>Fighter B Name</p></td>
-                        <td><p class="odds"><strong>-100</strong></p></td>
-                        <td><p class="odds"><strong>+100</strong></p></td>
-                        <td><p class="odds"><strong>-200</strong></p></td>
-                    </tr>
+                    {% for odds in oddsList %}
+                        <tr data-selected="">
+                            <td><p>{{ odds.fighter_a}}</p></td>
+                            <td><p>{{ odds.fighter_b }}</p></td>
+                            <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
+                            <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
+                            <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="odds-result">
         </div>
     </div>
 
 {% endblock %}
 
 {% block scripts %}
+<script>
+                 
+    function onClickOdds(event){
 
+        // console.log(event.currentTarget);
+        //deselect currentElement if is selected
+        //or select current and deselect previous selected
+        let currentElement = event.currentTarget;
+        let oddsName = currentElement.dataset.name
+        let tr = currentElement.parentElement;
+        let selected = tr.dataset.selected;
+        if (selected == oddsName){
+            currentElement.classList.remove('selected');
+            tr.dataset.selected="";//remove name from selected
+            return;
+        }
+        let prevSelected = tr.querySelector('.selected');
+        if (prevSelected != null){
+            prevSelected.classList.remove('selected');//remove previous selected
+        }
+        tr.dataset.selected = oddsName;
+        currentElement.classList.add('selected');
+    }
+</script>
 {% endblock %}
 

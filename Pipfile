@@ -15,6 +15,7 @@ jinja2 = "*"
 selenium = "*"
 django = "*"
 pyquery = "*"
+rich = "*"
 
 [dev-packages]
 

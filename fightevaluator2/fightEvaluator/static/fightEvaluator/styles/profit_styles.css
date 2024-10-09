@@ -9,13 +9,22 @@
 .odds-table {
   text-transform: capitalize;
 }
+.odds-table td.odds {
+  cursor: pointer;
+}
 .odds-table p {
   margin: 0px;
   padding: 0px;
   text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
-.odds-table p.odds {
+.odds-table .odds {
   color: rgb(0, 255, 0);
+}
+.odds-table .selected {
+  background-color: whitesmoke;
 }
 
 @media (max-width: 1280px) {

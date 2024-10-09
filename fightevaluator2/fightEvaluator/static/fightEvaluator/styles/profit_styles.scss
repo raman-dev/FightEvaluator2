@@ -8,13 +8,21 @@
 
 .odds-table {
   text-transform: capitalize;
-  p {
+  td.odds {
+    cursor: pointer;
+  }
+  p { 
     margin: 0px;
     padding: 0px;
     text-align: center;
+    user-select: none;
   }
-  p.odds {
+  .odds {
     color: rgb(0, 255, 0);
+  }
+
+  .selected{
+    background-color: whitesmoke;
   }
 }
 
