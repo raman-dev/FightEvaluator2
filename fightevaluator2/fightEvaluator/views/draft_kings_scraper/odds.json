@@ -1,14 +1,13 @@
 {
-  "updated": "2024-10-08",
+  "updated": "2024-10-09",
   "odds": [
-    ["Clayton Carpenter", "Lucas Rocha", "-198", "+164"],
-    ["Daniel Argueta", "Cody Haddon", "+154", "-185"],
-    ["Chris Barnett", "Junior Tafa", "+300", "-380"],
-    ["Themba Gorimbo", "Niko Price", "-298", "+240"],
-    ["Jonathan Pearce", "Pat Sabatini", "-142", "+120"],
-    ["CJ Vergara", "Ramazonbek Temirov", "+240", "-298"],
-    ["Chidi Njokuani", "Jared Gooden", "-185", "+154"],
-    ["Abdul Razak Alhassan", "Josh Fremd", "-155", "+130"],
-    ["Daniel Rodriguez", "Alex Morono", "-205", "+170"]
+    ["Clayton Carpenter", "Lucas Rocha", "\u2212205", "+170"],
+    ["Daniel Argueta", "Cody Haddon", "+150", "\u2212180"],
+    ["Julia Polastri", "Cory McKenna", "\u2212130", "+110"],
+    ["Themba Gorimbo", "Niko Price", "\u2212345", "+275"],
+    ["Jonathan Pearce", "Pat Sabatini", "\u2212185", "+154"],
+    ["CJ Vergara", "Ramazonbek Temirov", "+275", "\u2212345"],
+    ["Abdul Razak Alhassan", "Josh Fremd", "\u2212166", "+140"],
+    ["Daniel Rodriguez", "Alex Morono", "\u2212218", "+180"]
   ]
 }

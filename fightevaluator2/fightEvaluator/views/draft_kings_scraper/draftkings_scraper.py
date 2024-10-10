@@ -46,7 +46,18 @@ def run():
         else:
             rprint('Reading from file...')
             oddsList = oddsJson['odds']
-
+    n = len(oddsList)
+    for i in range(0,n):
+        _,_,a,b = oddsList[i]
+        if a[0] == '\u2212':
+            oddsList[i][2] = -int(a[1:])
+        else:
+            oddsList[i][2] = int(a)
+        if b[0] == '\u2212':
+            oddsList[i][3] = -int(b[1:])
+        else:
+            oddsList[i][3] = int(b)
+        # print(oddsList[i][2],type(oddsList[i][2]))
     table = Table(title="Odds",show_lines=True)
     
 
@@ -56,7 +67,7 @@ def run():
     table.add_column('odds_b',vertical="middle",justify="center",style="green")
 
     for fighter_a,fighter_b,oddsA,oddsB in oddsList:
-        table.add_row(fighter_a,fighter_b,oddsA,oddsB)
+        table.add_row(fighter_a,fighter_b,str(oddsA),str(oddsB))
     console.print(table)
 
     return oddsList

@@ -19,8 +19,8 @@ def profit_calculator(request):
                 oddsListMap.append({
                         'fighter_a':fa,
                         'fighter_b':fb,
-                        'mult_a':toMultiplier(int(oa)),
-                        'mult_b':toMultiplier(int(ob)),
+                        'mult_a':toMultiplier(oa),
+                        'mult_b':toMultiplier(ob),
                         'odds_a':oa,
                         'odds_b':ob
                         })

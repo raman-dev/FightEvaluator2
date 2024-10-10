@@ -22,29 +22,30 @@
                     <th>fighter b</th>
                     <th>odds a</th>
                     <th>odds b</th>
-                    <th>Rounds > 1.5</th>
+                    <!-- <th>Rounds > 1.5</th> -->
                 </thead>
                 <tbody>
-                    <tr data-selected="">
+                    <!-- <tr data-selected="">
                         <td><p>Fighter A Name</p></td>
                         <td><p>Fighter B Name</p></td>
                         <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>-100</strong></p></td>
                         <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>+100</strong></p></td>
                         <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td>
-                    </tr>
+                    </tr> -->
                     {% for odds in oddsList %}
                         <tr data-selected="">
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
                             <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
                             <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
-                            <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td>
+                            <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="odds-result">
+        <div class="odds-result d-flex justify-content-center">
+            <p>1 x 0 = 0</p>
         </div>
     </div>
 
@@ -52,7 +53,30 @@
 
 {% block scripts %}
 <script>
-                 
+    function updateMultiFunction(){
+        const multis = [1];
+        let product = 1;
+        document.querySelectorAll('.odds-table tbody tr').forEach((tr)=>{
+            // console.log(tr);
+            
+            let selectedName = tr.dataset.selected;
+            if (selectedName.length > 0){
+                let selected = tr.querySelector('.selected');
+                let text = selected.querySelector('p strong').innerHTML;
+                let multiplier = parseFloat(text.split('(')[0]);
+                multis.push(multiplier);
+                product *= multiplier;
+            }
+         });
+         console.log(multis);
+         let oddsResultP = document.querySelector('.odds-result p');
+         let resultString = multis.join(" x ");
+         
+         resultString += ' = ' + product.toFixed(2);
+         oddsResultP.textContent = resultString;
+         
+    }
+
     function onClickOdds(event){
 
         // console.log(event.currentTarget);
@@ -65,6 +89,7 @@
         if (selected == oddsName){
             currentElement.classList.remove('selected');
             tr.dataset.selected="";//remove name from selected
+            updateMultiFunction();
             return;
         }
         let prevSelected = tr.querySelector('.selected');
@@ -73,6 +98,7 @@
         }
         tr.dataset.selected = oddsName;
         currentElement.classList.add('selected');
+        updateMultiFunction();
     }
 </script>
 {% endblock %}
