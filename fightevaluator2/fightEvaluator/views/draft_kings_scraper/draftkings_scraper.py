@@ -34,7 +34,7 @@ def run():
             with Fetcher() as fetcher:
                 source = fetcher.fetch(dk_url,8)
             oddsRaw = DraftKingsParser.parseOdds(source)
-            #save to odds.json
+            #save to odds.jsonat
             
             for a,b in oddsRaw:
                 data = [a[0],b[0],a[1],b[1]]
