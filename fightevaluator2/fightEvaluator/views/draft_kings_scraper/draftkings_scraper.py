@@ -30,8 +30,10 @@ def run():
         oddsJson = json.load(oddsFile)
         if oddsJson['updated'] == None or datetime.datetime.strptime(oddsJson['updated'],"%Y-%m-%d").date() != currentDate:
             rprint('Fetching from site...')
-            oddsRaw = DraftKingsParser.parseOdds(
-                Fetcher.fetchWithRequests(dk_url))
+            source = ""
+            with Fetcher() as fetcher:
+                source = fetcher.fetch(dk_url,8)
+            oddsRaw = DraftKingsParser.parseOdds(source)
             #save to odds.json
             
             for a,b in oddsRaw:

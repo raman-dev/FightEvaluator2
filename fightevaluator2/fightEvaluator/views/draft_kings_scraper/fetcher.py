@@ -2,6 +2,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import requests
+import time
 
 DRIVER_PATH='chromedriver-win64/chromedriver'
 # DEFAULT_OPTIONS = Options()
@@ -34,9 +35,12 @@ class Fetcher:
         self.browser = webdriver.Chrome(options=Fetcher.DEFAULT_OPTIONS)
         return self
 
-    def fetch(self,url) -> str:
+    def fetch(self,url,wait_time=0) -> str:
         self.browser.get(url)
         source = self.browser.page_source
+        if wait_time > 0:
+            time.sleep(wait_time)
+        
         return source
 
     def __exit__(self,exception_type,exception_value,traceback):
