@@ -176,7 +176,7 @@ class MatchUp(models.Model):
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
      outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
-     watchlist = models.ForeignKey('WatchList',on_delete=models.SET_NULL,default=None,blank=True,null=True)
+     inWatchList = models.BooleanField(default=False,null=True,blank=True)#models.ForeignKey('WatchList',on_delete=models.SET_NULL,default=None,blank=True,null=True)
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
@@ -241,6 +241,6 @@ class Prediction(models.Model):
              return self.prediction.fighter.name +", " + str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
         return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
 
-class WatchList(models.Model):
-     event = models.ForeignKey('FightEvent',on_delete=models.CASCADE)
-     #a list of matchups
+# class WatchList(models.Model):
+#      event = models.ForeignKey('FightEvent',on_delete=models.CASCADE)
+#      #a list of matchups

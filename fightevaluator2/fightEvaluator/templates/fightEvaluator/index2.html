@@ -312,7 +312,7 @@
           </div>
           {% for matchup in matchups %}
           
-          <div class="matchup row" data-order="{{forloop.counter}}"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
+          <div class="matchup row" data-in-watch-list="{{ matchup.inWatchList }}" data-order="{{forloop.counter}}"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
             <div class="col-6 fighters">
               <div class="d-flex">
                 <a class="fighter-link" href="/assessment/{{matchup.fighter_a.id}}" data-fighter-id="{{matchup.fighter_a.id}}">{{matchup.fighter_a.name}}</a>
@@ -863,6 +863,7 @@
 
     function onClickWatch(event){
       toggleWatchListItem();
+      //
     }
 
     function onClickMatchup(event){
