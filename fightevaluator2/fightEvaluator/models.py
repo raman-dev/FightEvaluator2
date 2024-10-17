@@ -163,6 +163,7 @@ class MatchUp(models.Model):
             UPCOMING = "Upcoming"
             NA = "N/A"
 
+    #  created_at = models.DateField(auto_now_add=True)
      fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
      fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
      weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)

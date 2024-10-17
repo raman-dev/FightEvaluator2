@@ -14,3 +14,9 @@ def toage(value: datetime.date):
     today = datetime.now().date()
     age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
     return age
+
+@register.filter
+def height_str(value: int):
+    if not value:
+        return None
+    return f'{value // 12}\'{value % 12}'

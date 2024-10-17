@@ -38,7 +38,7 @@
                 <div class="card-body">
                   <div class="info-wrapper">
                     <h6>height:&nbsp;</h6>
-                    <p class="fighter-height">{{ fighter.height }}</p>
+                    <p class="fighter-height">{{ fighter.height|height_str }}</p>
                   </div>
                   <div class="info-wrapper">
                     <h6>age:&nbsp;</h6>
@@ -586,7 +586,7 @@
           //fighter-weight
           document.querySelector('.fighter-weight').textContent = fighter_data.weight_class.replace("_"," ");
           //fighter-height
-          document.querySelector('.fighter-height').textContent = fighter_data.height;
+          document.querySelector('.fighter-height').textContent = `${Math.floor(fighter_data.height / 12)}'${fighter_data.height % 12}`;
           //fighter-age
           document.querySelector('.fighter-age').textContent = dobToAge(fighter_data.date_of_birth);
           //fighter-record
