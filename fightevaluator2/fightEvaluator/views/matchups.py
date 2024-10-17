@@ -8,6 +8,7 @@ from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,FightOutcome,Eve
 from ..forms import *
 import json
 import datetime
+from rich import print as rprint
 
 
 @require_GET
@@ -109,6 +110,28 @@ def update_matchup(request,matchupId):
 
     return JsonResponse(model_to_dict(matchup))
 
+
+@require_http_methods(["PATCH"])
+def update_matchup2(request,matchupId):
+    matchup = get_object_or_404(MatchUp,id=matchupId)
+    inputBody = json.loads(request.body)
+    matchupUpdateForm = MatchUpFormMF(inputBody)
+    if matchupUpdateForm.is_valid():
+        rprint('Valid data')
+    else:
+        rprint('Shits invalid')
+    rprint(inputBody)
+    """
+        updateable matchup attributes are
+            fighter_a 
+            fighter_b
+            weight_class
+            rounds
+            isprelim
+    """
+    # if 'isprelim' in queryParams:
+        
+    return JsonResponse(model_to_dict(matchup))
 
 @require_http_methods(["PUT"])
 def updateMatchUpEventLikelihood(request):

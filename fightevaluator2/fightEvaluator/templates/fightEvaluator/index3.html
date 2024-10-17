@@ -253,30 +253,30 @@
       <div class="action-bar d-flex align-items-center w-100">
         <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
           <div class="action-wrapper" >
-            <button type="button" class="btn btn-primary active-independent" data-bs-toggle="modal" data-bs-target="#matchupModal">
+            <button type="button" class="btn btn-primary active-independent" onclick="onToggleMatchupModal(false)">
               add
             </button>
             <p>&nbsp;- add matchup</p>
           </div>
           <!--edit matchup action-->
           <div class="action-wrapper">
-            <button type="button" class="edit btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#matchupModal" onclick="onClickEdit()">
+            <button type="button" class="edit btn btn-primary " onclick="onToggleMatchupModal(true)">
               edit
             </button>
             <p>&nbsp;- edit matchup</p>
           </div>
           <div class="action-wrapper">
-            <a class="analyze btn btn-primary disabled" href="#">
+            <a class="analyze btn btn-primary " href="#">
               analyze
             </a>
             <p class="m-0">&nbsp;- view matchup</p>
           </div>
           <div class="action-wrapper">
-            <button class="watch btn btn-primary disabled">watch</button>
+            <button class="watch btn btn-primary" onclick="onClickWatch(event)">watch</button>
             <p>&nbsp;- add to watchlist</p>
           </div>
           <div class="action-wrapper">
-            <button class="delete btn btn-danger disabled">delete</button>
+            <button class="delete btn btn-danger ">delete</button>
             <p>&nbsp;- delete matchup</p>
           </div>
         </div>
@@ -284,82 +284,35 @@
     </div>
   
     <div class="tables-wrapper">
-      <div class="matchups-container watchlist" id="watchlist">
-          <div class="matchups-header">
-            <h4>Watchlist</h4>
-            <p class="table-note">currently not watching any matchups.</p>
-          </div>
-          <div class="matchups container-fluid">
-            <div class="matchup-columns row">
-              <div class="col col-6">
-                <p class="m-0 text-center">matchup</p>
-              </div>
-              <div class="col col-3 weightclass">
-                <p class="m-0 text-center">weightclass </p>
-              </div>  
-              <div class="col col-3 rounds">
-                <p class="m-0 text-center">rounds</p>
-              </div>  
-            </div>
-          </div>
+      <div class="watchlist-matchups" id="watchlist">
+        <div class="list-title">
+          <h4>watchlist</h4>
+        </div>
+        <ul class="list-group">
+          {% for matchups in matchupsList %}
+          {% for matchup in matchups %}
+            <!--render matchup object iff it is in watchlist-->
+            {% if matchup.inWatchList %}
+              <li class="watchlist-matchup" data-matchup-id="-1">
+                fightera vs fighter b
+              </li>
+            {% endif %}
+          {% endfor %}
+          {% endfor %}
+        </ul>
       </div>
       <!--main card fighter table-->
       {% for matchups in matchupsList %}
-      <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>
-        <div class="matchups-header">
-          {% if forloop.counter == 1 %}
-          <h4>Main Card</h4>
-          {% elif forloop.counter == 2 %}
-          <h4>Prelims</h4>
-          {% endif %}
-        </div>
-        <div class="matchups container-fluid">
-            <div class="matchup-menu visible d-none">
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-action">
-                    edit
-                    </li>
-                    <li class="list-group-item list-group-item-action">
-                    analyze
-                    </li>
-                    <li class="list-group-item list-group-item-action">
-                    watch
-                    </li>
-                    <li class="list-group-item list-group-item-action">
-                    delete
-                    </li>
-                </ul>
-            </div>
-          <div class="matchup-columns row">
-            <div class="col col-6">
-              <p class="m-0 text-center">matchup</p>
-            </div>
-            <div class="col col-3 weightclass">
-              <p class="m-0 text-center">weightclass </p>
-            </div>  
-            <div class="col col-3 rounds">
-              <p class="m-0 text-center">rounds</p>
-            </div>  
-          </div>
-          {% for matchup in matchups %}
-          
-          <div class="matchup row" onclick="onClickMatchUp(event)" data-order="{{forloop.counter}}"  tabindex="50" data-matchup-id="{{matchup.id}}" data-isprelim="{{ matchup.isprelim }}">
-            <div class="col-6 fighters">
-              <div class="d-flex">
-                <a class="fighter-link" href="/assessment/{{matchup.fighter_a.id}}" data-fighter-id="{{matchup.fighter_a.id}}">{{matchup.fighter_a.name}}</a>
-                  <p class="vs">vs</p>
-                <a class="fighter-link" href="/assessment/{{matchup.fighter_b.id}}" data-fighter-id="{{matchup.fighter_b.id}}">{{matchup.fighter_b.name}}</a>
+      <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
+          <ul class="list-group" style="max-width: fit-content;">
+            {% for matchup in matchups %}
+            <li class="list-group-item" onclick="onClickMatchUp(event)">
+              <div class="matchup" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                <p>{{matchup}}</p>
               </div>
-            </div>
-            <div class="col-3 weightclass">
-              <p>{{matchup.weight_class|rmscores}}</p>
-            </div>
-            <div class="col-3 rounds">
-              <p>{{matchup.rounds}} x 5</p>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
+            </li>
+            {% endfor %}
+          </ul> 
       </div>
       {% endfor %}  
     </div>
@@ -385,26 +338,87 @@
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
  <script>
 
-    var fightEventId = {{ event.id }};
+    const fightEventId = {{ event.id }};
     const postHeaders = {
       accept: "application/json",
       "Content-Type": "application/json",
       "X-CSRFToken": Cookies.get('csrftoken'),
     };
-    
-    function onClickMatchUp(event) {
-        let matchup = event.currentTarget;
-        let isActive = matchup.classList.contains('active');
-        let prevActive = document.querySelector('.matchup.active');
-        if (prevActive != null){
-            prevActive.classList.remove('active');
+    var activeMatchup = null;
+    const editModal = new bootstrap.Modal(document.querySelector('#matchupModal'));
+    //show and dismiss edit modal
+    function onToggleMatchupModal(isEditMode){
+      if (isEditMode){
+        //check for an active 
+        console.log('in edit mode!');
+        if (activeMatchup == null){
+          //don't open edit modal return
+          return;
         }
-        if (isActive){
-            return;
-        }
-        matchup.classList.add('active');
+        //modal needs to have matchup data filled in to be edited
+        editModal.show();
+        return;
+      }
+      editModal.show();
     }
 
+    function onClickMatchUp(event) {
+        let matchup = event.currentTarget;
+        // let matchup = matchupLi.childNodes[0];//matchupLi.querySelector('.matchup');
+        let isActive = matchup.classList.contains('active');
+        //deactivate previous active element
+        if (activeMatchup != null){
+            activeMatchup.classList.remove('active');
+        }
+        activeMatchup = null;
+        //if prevactive element is not current element
+        if (!isActive){
+          matchup.classList.add('active');
+          activeMatchup = matchup;
+        }
+    }
+    function onClickWatch(event){
+      // let activeMatchup = document.querySelector('li.active');
+      if (activeMatchup != null){
+        //continue
+        //add to watchlist
+        let matchupDataContainer = activeMatchup.querySelector('.matchup').dataset;
+        let matchupId = matchupDataContainer.matchupId;
+        let fighterAId = matchupDataContainer.fighterAId;
+        let fighterBId = matchupDataContainer.fighterBId;
+        console.log(matchupId,fighterAId,fighterBId);
+        //tell server we watching this matchup
+        //reflect change 
+        // updateServer();
+        fetch(`/matchup/update-matchup2/${matchupId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          inWatchList:true,
+        }),
+        headers: postHeaders,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          
+          /*
+          
+              "id": 299,
+              "fighter_a": 1,
+              "fighter_b": 1,
+              "weight_class": "bantamweight",
+              "rounds": 3,
+              "scheduled": null,
+              "event": 36,
+              "isprelim": false
+          
+          */
+          console.log(data);
+          //update matchup table
+          let matchupData = data;
+          
+        });
+      }
+    }
 </script>
 
 
