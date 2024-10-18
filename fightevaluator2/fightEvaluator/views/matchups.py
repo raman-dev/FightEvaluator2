@@ -115,10 +115,11 @@ def update_matchup(request,matchupId):
 def update_matchup2(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     inputBody = json.loads(request.body)
-    matchupUpdateForm = MatchUpFormMF(inputBody)
+    matchupUpdateForm = MatchUpWatchListForm(inputBody)
     if matchupUpdateForm.is_valid():
         rprint('Valid data')
     else:
+        rprint(matchupUpdateForm.errors)
         rprint('Shits invalid')
     rprint(inputBody)
     """

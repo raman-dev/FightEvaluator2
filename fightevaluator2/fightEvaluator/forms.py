@@ -49,6 +49,11 @@ class MatchUpFormMF(ModelForm):
         model = MatchUp
         fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','scheduled','inWatchList']
 
+class MatchUpWatchListForm(ModelForm):
+    class Meta:
+        model = MatchUp
+        fields =['inWatchList']
+
 
 class MatchUpForm(forms.Form):
     fighter_a_id = forms.IntegerField(label='Fighter A Id')
