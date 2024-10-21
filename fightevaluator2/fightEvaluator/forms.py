@@ -49,11 +49,30 @@ class MatchUpFormMF(ModelForm):
         model = MatchUp
         fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','scheduled','inWatchList']
 
-class MatchUpWatchListForm(ModelForm):
-    class Meta:
-        model = MatchUp
-        fields =['inWatchList']
+class MatchUpUpdateForm(forms.Form):
+    fighter_a_id = forms.IntegerField(label='Fighter A Id',required=False)
+    fighter_b_id = forms.IntegerField(label='Fighter B Id',required=False)   
+    weight_class = forms.CharField(label='Weight Class',max_length=100,required=False)
+    rounds = forms.IntegerField(label='Rounds',initial=3,required=False)
 
+    scheduled = forms.DateField(label='Scheduled',initial=None,required=False)
+    event_id = forms.IntegerField(label='Event Id',initial=None,required=False)
+    isprelim = forms.BooleanField(label='Is Prelim',initial=True,required=False)
+    inWatchList = forms.BooleanField(label='In Watch List',required=False)
+
+    def is_valid(self) -> bool:
+        if not super().is_valid():
+            # print('invalid!!')
+            return False
+        
+        #check if weight_class is a valid weight_class
+        weight_class = self.cleaned_data['weight_class'].lower()
+        if weight_class not in WeightClass and len(weight_class) > 0:
+            # print('invalid weight_class yo')
+            return False
+        #valid weight_class string
+        self.cleaned_data['weight_class'] = weight_class
+        return True
 
 class MatchUpForm(forms.Form):
     fighter_a_id = forms.IntegerField(label='Fighter A Id')
