@@ -266,9 +266,9 @@
             <p>&nbsp;- edit matchup</p>
           </div>
           <div class="action-wrapper">
-            <a class="analyze btn btn-primary " href="#">
+            <button class="analyze btn btn-primary " href="#" onclick="onClickAnalyze(event)">
               analyze
-            </a>
+            </button>
             <p class="m-0">&nbsp;- view matchup</p>
           </div>
           <div class="action-wrapper">
@@ -306,8 +306,8 @@
       <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
           <ul class="list-group" style="max-width: fit-content;">
             {% for matchup in matchups %}
-            <li class="list-group-item" onclick="onClickMatchUp(event)">
-              <div class="matchup" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+            <li class="list-group-item" >
+              <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                 <p>{{matchup}}</p>
               </div>
             </li>
@@ -337,7 +337,26 @@
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
  <script>
-
+  
+  
+    let matchupMap = {
+    {% for matchups in matchupsList %}
+      {% for matchup in matchups %}
+          
+            {{matchup.id}} : 
+              {
+                'fighter_a_id':{{matchup.fighter_a.id}},
+                'fighter_b_id':{{matchup.fighter_b.id}},
+                'rounds':{{matchup.rounds}},
+                'weight_class':'{{matchup.weight_class}}',
+                'isprelim': {{matchup.isprelim|lower}},
+                'inWatchList': {{matchup.inWatchList|lower}}
+              }
+          ,
+      {% endfor %}
+    {% endfor %}
+      };
+   
     const fightEventId = {{ event.id }};
     const postHeaders = {
       accept: "application/json",
@@ -356,10 +375,51 @@
           return;
         }
         //modal needs to have matchup data filled in to be edited
+        let matchupId = activeMatchup.dataset.matchupId;
+        let matchupData = matchupMap[matchupId];
+        let weightClass = matchupData['weight_class'];
+        let rounds = matchupData['rounds'];
+        //populate modal form data
+        let matchupModal = document.querySelector("#matchupModal");
+        matchupModal.dataset.matchupId = matchupId;
+        //fill out names of fighters from current active matchup
+        let searchBoxA = matchupModal.querySelector(".fighter-a .search-box input");
+        let searchBoxB = matchupModal.querySelector(".fighter-b .search-box input");
+
+        searchBoxA.setAttribute("disabled",true);
+        searchBoxB.setAttribute("disabled",true);
+
+        // searchBoxA.value = fighterA.textContent;
+        // searchBoxB.value = fighterB.textContent;
+
+        // set fighter id's
+        matchupModal.querySelector(".fighter-a").dataset.selectedId = matchupData['fighter_a_id'];
+        matchupModal.querySelector(".fighter-b").dataset.selectedId = matchupData['fighter_b_id'];
+
+        //capitalize weightclass
+        weightClass = weightClass.split("_").map((x) => {return x.substr(0,1).toUpperCase() + x.substr(1);}).join(" ");
+        
+        matchupModal.querySelector(".weight-class .dropdown-toggle").textContent = weightClass;
+        //set rounds
+        matchupModal.querySelector(`#roundOption-${rounds}`).checked = true;
+        //set isprelim
+        matchupModal.querySelector("#isprelim").checked = matchupMap['isprelim'];
+
+        //show update button
+        matchupModal.querySelector(".create-matchup-btn").classList.add("d-none");
+        matchupModal.querySelector(".update-matchup-btn").classList.remove("d-none");
+        
         editModal.show();
         return;
       }
       editModal.show();
+    }
+
+    function onClickAnalyze(event){
+      if (activeMatchup != null){
+        //navigate to that path
+        window.location.href = `matchup/${activeMatchup.dataset.matchupId}`;
+      }
     }
 
     function onClickMatchUp(event) {
@@ -382,41 +442,30 @@
       if (activeMatchup != null){
         //continue
         //add to watchlist
-        let matchupDataContainer = activeMatchup.querySelector('.matchup').dataset;
+        let matchupDataContainer = activeMatchup.dataset;
         let matchupId = matchupDataContainer.matchupId;
-        let fighterAId = matchupDataContainer.fighterAId;
-        let fighterBId = matchupDataContainer.fighterBId;
-        console.log(matchupId,fighterAId,fighterBId);
-        //tell server we watching this matchup
-        //reflect change 
-        // updateServer();
-        fetch(`/matchup/update-watchlist/${matchupId}`, {
+        fetch(`/matchup/toggle-watchlist/${matchupId}`, {
         method: "PATCH",
         body: JSON.stringify({
-          inWatchList:true,
+          toggle:true,
         }),
         headers: postHeaders,
       })
         .then((response) => response.json())
         .then((data) => {
-          
-          /*
-          
-              "id": 299,
-              "fighter_a": 1,
-              "fighter_b": 1,
-              "weight_class": "bantamweight",
-              "rounds": 3,
-              "scheduled": null,
-              "event": 36,
-              "isprelim": false
-          
-          */
           console.log(data);
           //update matchup table
           let matchupData = data;
-          
+          updateWatchlist(matchupData.id);
         });
+      }
+    }
+
+    function updateWatchlist(matchupId,addFlag){
+      if (!addFlag){
+        //remove from watchlist
+      }else{
+        //add to watchlist
       }
     }
 </script>

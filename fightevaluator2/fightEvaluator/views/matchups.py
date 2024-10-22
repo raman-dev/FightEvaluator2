@@ -112,14 +112,10 @@ def update_matchup(request,matchupId):
 
 
 @require_http_methods(["PATCH"])
-def update_watchlist(request,matchupId):
+def toggle_watchlist(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
-    inputBody = json.loads(request.body)
-    if 'inWatchList' not in inputBody or type(inputBody['inWatchList']) != bool:
-        #do nothing error
-        return JsonResponse({'error':'data wrong format or type or incorrect key'})
-    # rprint(inputBody)
-    matchup.inWatchList = inputBody['inWatchList']
+    matchup.inWatchList = not matchup.inWatchList
+    matchup.save()
     return JsonResponse(model_to_dict(matchup))
 
 @require_http_methods(["PUT"])
