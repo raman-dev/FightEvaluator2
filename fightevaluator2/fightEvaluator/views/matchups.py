@@ -112,28 +112,14 @@ def update_matchup(request,matchupId):
 
 
 @require_http_methods(["PATCH"])
-def update_matchup2(request,matchupId):
+def update_watchlist(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     inputBody = json.loads(request.body)
-    matchupUpdateForm = MatchUpUpdateForm(inputBody)
-    rprint(matchupUpdateForm.data)
-    if matchupUpdateForm.is_valid():
-        rprint('Valid data')
-        rprint(matchupUpdateForm.cleaned_data['inWatchList'])
-    else:
-        rprint(matchupUpdateForm.errors)
-        rprint('Shits invalid')
-    rprint(inputBody)
-    """
-        updateable matchup attributes are
-            fighter_a 
-            fighter_b
-            weight_class
-            rounds
-            isprelim
-    """
-    # if 'isprelim' in queryParams:
-        
+    if 'inWatchList' not in inputBody or type(inputBody['inWatchList']) != bool:
+        #do nothing error
+        return JsonResponse({'error':'data wrong format or type or incorrect key'})
+    # rprint(inputBody)
+    matchup.inWatchList = inputBody['inWatchList']
     return JsonResponse(model_to_dict(matchup))
 
 @require_http_methods(["PUT"])

@@ -230,7 +230,6 @@ class EventLikelihood(models.Model):
 #only 1 prediction per matchup
 class Prediction(models.Model):
 
-
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
     prediction = models.ForeignKey('EventLikelihood',on_delete=models.CASCADE)
     isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis

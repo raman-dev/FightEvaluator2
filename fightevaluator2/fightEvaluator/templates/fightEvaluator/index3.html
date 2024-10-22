@@ -390,10 +390,10 @@
         //tell server we watching this matchup
         //reflect change 
         // updateServer();
-        fetch(`/matchup/update-matchup2/${matchupId}`, {
+        fetch(`/matchup/update-watchlist/${matchupId}`, {
         method: "PATCH",
         body: JSON.stringify({
-          // inWatchList:-1,
+          inWatchList:true,
         }),
         headers: postHeaders,
       })

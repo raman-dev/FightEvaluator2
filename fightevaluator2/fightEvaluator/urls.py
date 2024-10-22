@@ -33,7 +33,7 @@ urlpatterns = [
     path('matchup/update-matchup/<int:matchupId>',views.update_matchup, name='update_matchup'),#working
     path('matchup/delete-matchup/<int:matchupId>',views.delete_matchup, name='delete_matchup'),#working
     path('matchup/<int:matchupId>',views.matchup_index, name='matchup'),#working
-    path('matchup/update-matchup2/<int:matchupId>',views.update_matchup2,name='update_matchup2'),
+    path('matchup/update-watchlist/<int:matchupId>',views.update_watchlist,name='watchlist_update'),
 
     path('matchup/update-event-likelihood/',views.updateMatchUpEventLikelihood, name='update_event_likelihood'),#working
     path('matchup/update-event-prediction/',views.updateMatchUpEventPrediction,name='update_event_prediction'),#not working
