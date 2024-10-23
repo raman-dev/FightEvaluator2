@@ -108,7 +108,10 @@ def update_matchup(request,matchupId):
     else:
         return JsonResponse({"success":"false","errors":matchupUpdateForm.errors})
 
-    return JsonResponse(model_to_dict(matchup))
+    data = model_to_dict(matchup)
+    data['fighter_a_name'] = matchup.fighter_a.name
+    data['fighter_b_name'] = matchup.fighter_b.name
+    return JsonResponse(data)
 
 
 @require_http_methods(["PATCH"])
