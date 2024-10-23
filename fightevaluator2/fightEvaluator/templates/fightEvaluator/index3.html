@@ -358,7 +358,72 @@
       {% endfor %}
     {% endfor %}
     };
-   
+
+    /*
+    
+        DataStateHandler 
+          int data = 0;
+          updateState(val){
+            data += val
+            send update to all objects that change when this data changes
+            for (dataStateListeners: listeners){
+              dataStateListeners.update();
+            }
+          }
+        
+        
+        dataStateHandler.updateState(1);//do whatever to the state
+
+    */
+    
+    class DataStateHandler{
+      constructor(){
+        this.dataStateListeners = [];
+      }
+
+      //modify the data somehow
+      modify(){
+        //after modifying the data any state listeners that depend on this data
+        //must be notified
+        this.dataStateListeners.forEach((x) => {
+          x(this.data);
+        });
+      }
+
+      addDataStateListener(listener){
+        this.dataStateListeners.push(listener);
+      }
+    }
+    //interact with data through subclass
+    class MatchUpMapDataStateHandler extends DataStateHandler {
+      constructor(matchupMap){
+        super();
+        this.matchupMap = matchupMap;
+      }
+
+      replaceMatchup(data){
+        matchupMap[data['id']] = {
+          'fighter_a_id' : data['fighter_a_id'],
+          'fighter_a_name':data['fighter_a_name'],
+          'fighter_b_id' : data['fighter_b_id'],
+          'fighter_b_name':data['fighter_b_name'],
+          'rounds':data['rounds'],
+          'isprelim':data['isprelim'],
+          'inWatchList':data['inWatchList'],
+          'weight_class':data['weight_class']
+        };
+        modify();
+      }
+
+      addMatchup(data){
+        modify();
+      }
+
+    };
+
+    const matchupMapDataStateHandler = new MatchUpMapDataStateHandler(matchupMap);
+    
+    
     const fightEventId = {{ event.id }};
     const postHeaders = {
       accept: "application/json",
@@ -417,6 +482,7 @@
       clearMatchupDialog();
       editModal.show();
     }
+    
     function createMatchUp(event) {
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
@@ -467,6 +533,7 @@
           
           */
           console.log(data);
+          matchupMapDataStateHandler.addMatchup(data);
           //update matchup table
           let matchup = data;
           let matchupElement = document.createElement("div");
@@ -522,17 +589,7 @@
         .then((data) => {
           console.log(data);
           //reflect change in matchup table
-          matchupMap[data['id']] = {
-            'fighter_a_id' : data['fighter_a_id'],
-            'fighter_a_name':data['fighter_a_name'],
-            'fighter_b_id' : data['fighter_b_id'],
-            'fighter_b_name':data['fighter_b_name'],
-            'rounds':data['rounds'],
-            'isprelim':data['isprelim'],
-            'inWatchList':data['inWatchList'],
-            'weight_class':data['weight_class']
-          };
-          //propogate change into ui
+          matchupMapDataStateHandler.replaceMatchup(data);
         });
     }
     function clearMatchupDialog(){
