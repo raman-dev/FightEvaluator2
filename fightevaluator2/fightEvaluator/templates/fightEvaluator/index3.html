@@ -419,6 +419,11 @@
         modify();
       }
 
+      //
+      addToWatchList(matchupId){
+        this.matchupMap[matchupId]['inWatchList'] = true;
+      }
+
     };
 
     const matchupMapDataStateHandler = new MatchUpMapDataStateHandler(matchupMap);
