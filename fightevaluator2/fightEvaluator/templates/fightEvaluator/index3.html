@@ -352,81 +352,41 @@
                 'rounds':{{matchup.rounds}},
                 'weight_class':'{{matchup.weight_class}}',
                 'isprelim': {{matchup.isprelim|lower}},
-                'inWatchList': {{matchup.inWatchList|lower}}
+                'inWatchList': {{ matchup.inWatchList|default_if_none:"false" | lower}}
               }
           ,
       {% endfor %}
     {% endfor %}
     };
 
-    /*
-    
-        DataStateHandler 
-          int data = 0;
-          updateState(val){
-            data += val
-            send update to all objects that change when this data changes
-            for (dataStateListeners: listeners){
-              dataStateListeners.update();
-            }
-          }
-        
-        
-        dataStateHandler.updateState(1);//do whatever to the state
-
-    */
-    
-    class DataStateHandler{
+    class MatchupTable{
       constructor(){
-        this.dataStateListeners = [];
+        this.matchup_ids = [];
       }
-
-      //modify the data somehow
-      modify(){
-        //after modifying the data any state listeners that depend on this data
-        //must be notified
-        this.dataStateListeners.forEach((x) => {
-          x(this.data);
-        });
-      }
-
-      addDataStateListener(listener){
-        this.dataStateListeners.push(listener);
+      addMatchup(matchupId){
+        this.matchup_ids.push(matchupId);
       }
     }
-    //interact with data through subclass
-    class MatchUpMapDataStateHandler extends DataStateHandler {
-      constructor(matchupMap){
-        super();
-        this.matchupMap = matchupMap;
+
+    class WatchListTable extends MatchupTable{
+      addMatchup(matchup){
+        super(matchup['id']);
+        //
       }
+    }
+    
+    const mainCardTable = new MatchupTable();
+    const prelimTable = new MatchupTable();
+    const watchlistTable = new WatchListTable();
 
-      replaceMatchup(data){
-        matchupMap[data['id']] = {
-          'fighter_a_id' : data['fighter_a_id'],
-          'fighter_a_name':data['fighter_a_name'],
-          'fighter_b_id' : data['fighter_b_id'],
-          'fighter_b_name':data['fighter_b_name'],
-          'rounds':data['rounds'],
-          'isprelim':data['isprelim'],
-          'inWatchList':data['inWatchList'],
-          'weight_class':data['weight_class']
-        };
-        modify();
+    for (const key in matchupMap){
+      let matchup =  matchupMap[key];
+      if (matchup.isprelim){
+        prelimTable.addMatchup(key);
+      }else{
+        mainCardTable.addMatchup(key);
       }
-
-      addMatchup(data){
-        modify();
-      }
-
-      //
-      addToWatchList(matchupId){
-        this.matchupMap[matchupId]['inWatchList'] = true;
-      }
-
-    };
-
-    const matchupMapDataStateHandler = new MatchUpMapDataStateHandler(matchupMap);
+    }
     
     
     const fightEventId = {{ event.id }};
@@ -538,7 +498,7 @@
           
           */
           console.log(data);
-          matchupMapDataStateHandler.addMatchup(data);
+          // matchupMapDataStateHandler.addMatchup(data);
           //update matchup table
           let matchup = data;
           let matchupElement = document.createElement("div");
@@ -594,7 +554,17 @@
         .then((data) => {
           console.log(data);
           //reflect change in matchup table
-          matchupMapDataStateHandler.replaceMatchup(data);
+          matchupMap[data['id']] = {
+            'fighter_a_id' : data['fighter_a_id'],
+            'fighter_a_name':data['fighter_a_name'],
+            'fighter_b_id' : data['fighter_b_id'],
+            'fighter_b_name':data['fighter_b_name'],
+            'rounds':data['rounds'],
+            'isprelim':data['isprelim'],
+            'inWatchList':data['inWatchList'],
+            'weight_class':data['weight_class']
+          }
+          // matchupMapDataStateHandler.replaceMatchup(data);
         });
     }
     function clearMatchupDialog(){
@@ -739,16 +709,17 @@
           console.log(data);
           //update matchup table
           let matchupData = data;
-          updateWatchlist(matchupData.id);
+          updateWatchlist(matchupData.id,matchupData.inWatchList);
         });
       }
     }
 
-    function updateWatchlist(matchupId,addFlag){
-      if (!addFlag){
-        //remove from watchlist
-      }else{
+    function updateWatchlist(matchupId,watch){
+      if (watch){
         //add to watchlist
+        watchlistTable.addMatchup(matchupMap[matchupId]);
+      }else{
+        watchlistTable.removeMatchup(matchupMap[matchupId]);
       }
     }
 </script>
