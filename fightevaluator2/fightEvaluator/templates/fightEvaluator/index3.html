@@ -293,9 +293,11 @@
           {% for matchup in matchups %}
             <!--render matchup object iff it is in watchlist-->
             {% if matchup.inWatchList %}
-              <li class="watchlist-matchup" data-matchup-id="-1">
-                fightera vs fighter b
-              </li>
+            <li class="watchlist-matchup list-group-item">
+              <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                <p>{{matchup}}</p>
+              </div>
+            </li>
             {% endif %}
           {% endfor %}
           {% endfor %}
@@ -337,7 +339,22 @@
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
  <script>
-  
+
+    function createMatchUpElement(matchup){
+      console.log(matchup,matchup['id']);
+      return $(`
+        <li class="list-group-item" >
+          <div class="matchup" 
+            onclick="onClickMatchUp(event)" 
+            data-in-watch-list="${matchup['inWatchList']}" 
+            tabindex="50" data-matchup-id="${matchup['id']}" 
+            data-fighter-a-id="${matchup['fighter_a_id']}" 
+            data-fighter-b-id="${matchup['fighter_b_id']}">
+            <p>${matchup['fighter_a_name']} vs ${matchup['fighter_b_name']}</p>
+          </div>
+        </li>
+      `)[0];
+    }
   
     let matchupMap = {
     {% for matchups in matchupsList %}
@@ -352,7 +369,8 @@
                 'rounds':{{matchup.rounds}},
                 'weight_class':'{{matchup.weight_class}}',
                 'isprelim': {{matchup.isprelim|lower}},
-                'inWatchList': {{ matchup.inWatchList|default_if_none:"false" | lower}}
+                'inWatchList': {{ matchup.inWatchList|default_if_none:"false" | lower}},
+                'id':{{matchup.id}}
               }
           ,
       {% endfor %}
@@ -370,8 +388,13 @@
 
     class WatchListTable extends MatchupTable{
       addMatchup(matchup){
-        super(matchup['id']);
+        super.addMatchup(matchup['id']);
         //create a list element in the watchlist-matchupTable
+        let element = createMatchUpElement(matchup);
+        console.log(element,typeof element);
+        
+        let watchlist_list = document.querySelector('#watchlist ul');
+        watchlist_list.appendChild(element);
       }
     }
     
