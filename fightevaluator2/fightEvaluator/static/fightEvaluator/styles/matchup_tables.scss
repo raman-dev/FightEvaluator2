@@ -1,0 +1,21 @@
+.tables-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.matchups-container {
+    border: 1px solid lime;
+    ul {
+        padding: 0px;
+        border: 1px solid red !important;
+    }
+    li {
+        list-style: none;
+        padding: 0px !important;
+        
+        .matchup:hover{
+            background-color: hsl(50, 10%, 50%);
+        }
+    }
+}

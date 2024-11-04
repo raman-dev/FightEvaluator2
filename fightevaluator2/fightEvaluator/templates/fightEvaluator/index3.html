@@ -4,6 +4,7 @@
 {% block title %}Fight Evaluator {% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{% static  'fightEvaluator/styles/index.css' %}" />
+<link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup_tables.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -11,22 +12,6 @@
   <!--container-->
   
   <div class="container-fluid main-container" style="position: relative">
-    <!-- <div class="matchup-menu visible">
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-action">
-          edit
-        </li>
-        <li class="list-group-item list-group-item-action">
-          analyze
-        </li>
-        <li class="list-group-item list-group-item-action">
-          watch
-        </li>
-        <li class="list-group-item list-group-item-action">
-          delete
-        </li>
-      </ul>
-    </div> -->
     <!-- Modal -->
     <div class="modal fade" id="matchupModal" tabindex="-1" aria-labelledby="matchupModalLabel" aria-hidden="true" data-matchup-id="-1">
       <div class="modal-dialog modal-dialog-centered">
@@ -284,16 +269,15 @@
     </div>
   
     <div class="tables-wrapper">
-      <div class="watchlist-matchups" id="watchlist">
+      <div class="watchlist-matchups matchups-container my-2"  id="watchlist">
         <div class="list-title">
           <h4>watchlist</h4>
         </div>
-        <ul class="list-group">
+        <ul class="">
           {% for matchups in matchupsList %}
           {% for matchup in matchups %}
-            <!--render matchup object iff it is in watchlist-->
             {% if matchup.inWatchList %}
-            <li class="watchlist-matchup list-group-item">
+            <li class="watchlist-matchup">
               <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                 <p>{{matchup}}</p>
               </div>
@@ -306,9 +290,14 @@
       <!--main card fighter table-->
       {% for matchups in matchupsList %}
       <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
-          <ul class="list-group" style="max-width: fit-content;">
+          <div class="list-title">
+            <h3>
+              {% if forloop.counter == 1%}main card{% else %}prelims{% endif %}
+            </h3>
+          </div>
+          <ul class="">
             {% for matchup in matchups %}
-            <li class="list-group-item" >
+            <li class="" >
               <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                 <p>{{matchup}}</p>
               </div>

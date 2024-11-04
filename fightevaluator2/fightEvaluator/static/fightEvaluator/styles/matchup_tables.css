@@ -1,0 +1,20 @@
+.tables-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.matchups-container {
+  border: 1px solid lime;
+}
+.matchups-container ul {
+  padding: 0px;
+  border: 1px solid red !important;
+}
+.matchups-container li {
+  list-style: none;
+  padding: 0px !important;
+}
+.matchups-container li .matchup:hover {
+  background-color: hsl(50, 10%, 50%);
+}/*# sourceMappingURL=matchup_tables.css.map */
