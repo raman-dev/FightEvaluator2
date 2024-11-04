@@ -330,6 +330,7 @@
  <script>
 
     function createMatchUpElement(matchup){
+      console.log('creating element => ',matchup);
       console.log(matchup,matchup['id']);
       return $(`
         <li class="list-group-item" >
@@ -366,30 +367,55 @@
     {% endfor %}
     };
 
+    
+
     class MatchupTable{
       constructor(){
-        this.matchup_ids = [];
+        this.matchup_ids = new Set();
       }
       addMatchup(matchupId){
-        this.matchup_ids.push(matchupId);
+        this.matchup_ids.add(matchupId);
       }
     }
 
     class WatchListTable extends MatchupTable{
-      addMatchup(matchup){
-        super.addMatchup(matchup['id']);
-        //create a list element in the watchlist-matchupTable
-        let element = createMatchUpElement(matchup);
-        console.log(element,typeof element);
+      constructor(matchupMap){
+        super();
+        //initialize watchlist with matchup ids of matchups already with inWatchList = true
+        for (const key in matchupMap){
+          let matchup = matchupMap[key];
+          if (matchup.inWatchList == true){
+            this.matchup_ids.add(matchup.id);
+          }
+        }
+        console.log(this.matchup_ids);
         
+      }
+
+      addMatchup(matchup){
+        //create a list element in the watchlist-matchupTable
+        super.addMatchup(matchup['id']);
+        console.log(matchup,typeof matchup);
+        let element = createMatchUpElement(matchup);
         let watchlist_list = document.querySelector('#watchlist ul');
         watchlist_list.appendChild(element);
+      }
+
+      removeMatchup(matchup){
+        console.log('removing => ',matchup);
+        
+        if (this.matchup_ids.has(matchup['id'])){
+          this.matchup_ids.delete(matchup['id']);
+          //remove element from table
+          let watchlist_list = document.querySelector('#watchlist ul');
+          let element = watchlist_list.querySelector(`[data-matchup-id="${matchup['id']}"]`);
+          element.remove();
+        }
       }
     }
     
     const mainCardTable = new MatchupTable();
     const prelimTable = new MatchupTable();
-    const watchlistTable = new WatchListTable();
 
     for (const key in matchupMap){
       let matchup =  matchupMap[key];
@@ -399,7 +425,7 @@
         mainCardTable.addMatchup(key);
       }
     }
-    
+    const watchlistTable = new WatchListTable(matchupMap);
     
     const fightEventId = {{ event.id }};
     const postHeaders = {
@@ -527,6 +553,7 @@
           bootstrap.Modal.getInstance(document.querySelector('#matchupModal')).hide();
         });
     }
+    
     function updateMatchUp(event){
       let matchupId = activeMatchup.dataset.matchupId;//document.querySelector("#matchupModal").dataset.matchupId;
       //grab fighter-id from fighter-a and fighter-b
@@ -718,20 +745,16 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           //update matchup table
-          let matchupData = data;
-          updateWatchlist(matchupData.id,matchupData.inWatchList);
+          matchupMap[data.id]['inWatchList'] = data.inWatchList;
+          if (data.inWatchList){
+            watchlistTable.addMatchup(matchupMap[data.id]);
+          }else{
+            // console.log('removing !!!!',data,data.id,matchupMap[data.id]);
+            watchlistTable.removeMatchup(matchupMap[data.id]);
+          }
         });
-      }
-    }
-
-    function updateWatchlist(matchupId,watch){
-      if (watch){
-        //add to watchlist
-        watchlistTable.addMatchup(matchupMap[matchupId]);
-      }else{
-        watchlistTable.removeMatchup(matchupMap[matchupId]);
       }
     }
 </script>
