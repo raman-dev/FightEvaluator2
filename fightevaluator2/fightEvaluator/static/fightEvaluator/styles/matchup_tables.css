@@ -19,6 +19,10 @@
 .matchups-container li .matchup:hover {
   background-color: hsl(50, 10%, 50%);
 }
+.matchups-container li .matchup.active {
+  background-color: violet;
+  color: black;
+}
 
 .guide {
   background-color: cyan;
@@ -34,4 +38,16 @@
   width: 1px;
   height: 100%;
   top: 0%;
+}
+
+.matchup-actions-menu-container {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  z-index: 1000;
+}
+.matchup-actions-menu-container li:hover {
+  cursor: pointer;
+  background-color: violet;
+  color: black;
 }/*# sourceMappingURL=matchup_tables.css.map */

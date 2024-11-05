@@ -261,7 +261,7 @@
             <p>&nbsp;- add to watchlist</p>
           </div>
           <div class="action-wrapper">
-            <button class="delete btn btn-danger ">delete</button>
+            <button class="delete btn btn-danger "onclick="onClickDelete(event)" >delete</button>
             <p>&nbsp;- delete matchup</p>
           </div>
         </div>
@@ -304,6 +304,13 @@
             </li>
             {% endfor %}
           </ul>
+          <div class="matchup-actions-menu-container">
+            <ul class="list-group">
+              <li class="list-group-item">edit</li>
+              <li class="list-group-item">analyze</li>
+              <li class="list-group-item">delete/unwatch</li>
+            </ul>
+          </div>
           <div class="guide guide-horizontal"></div> 
           <div class="guide guide-vertical"></div>
           <div class="position-label">
@@ -323,8 +330,8 @@
         <p class="m-0">Matchup name.</p>
       </div>
       <div class="dialog-actions">
-        <button class="cancel btn btn-secondary">cancel</button>
-        <button class="confirm btn btn-primary">confirm</button>
+        <button class="cancel btn btn-secondary" onclick="onClickCancelDelete(event)">cancel</button>
+        <button class="confirm btn btn-primary" onclick="deleteMatchup()">confirm</button>
       </div>
     </div>
   </div>
@@ -380,6 +387,15 @@
       }
       addMatchup(matchupId){
         this.matchup_ids.add(matchupId);
+      }
+
+      removeMatchup(matchupId){
+        if (this.matchup_ids.has(matchupId)){
+          this.matchup_ids.delete(matchupId);
+          //remove from html aswell
+          let element = document.querySelector(`[data-matchup-id="${matchup['id']}"]`);
+          element.remove();
+        }
       }
     }
 
@@ -540,7 +556,7 @@
               "isprelim": false
           
           */
-          console.log(data);
+          console.log('Created Matchup...',data);
           // matchupMapDataStateHandler.addMatchup(data);
           //update matchup table
           let matchup = data;
@@ -550,10 +566,11 @@
           
           let matchupTableContainer = null;
           if (matchup.isprelim){
-            matchupTableContainer = document.querySelector('#prelims .matchups');
+            matchupTableContainer = document.querySelector('#prelims ul');
           }else{
-            matchupTableContainer = document.querySelector('#main-card .matchups');
+            matchupTableContainer = document.querySelector('#main-card ul');
           }
+          // console.log(matchupTableContainer,element);
           matchupTableContainer.appendChild(element);
           bootstrap.Modal.getInstance(document.querySelector('#matchupModal')).hide();
         });
@@ -732,8 +749,28 @@
         if (!isActive){
           matchup.classList.add('active');
           activeMatchup = matchup;
+
+          let tableId = '#main-card';
+          if (matchupMap[activeMatchup.dataset.matchupId].isprelim){
+            tableId = '#prelims';
+          }
+          
+          let menuContainer = document.querySelector(`${tableId}`);
+          let menu = menuContainer.querySelector('.matchup-actions-menu-container');
+          showActionMenu(menuContainer,menu,event);
         }
     }
+
+    function showActionMenu(menuContainer,menu,event){
+      console.log('Showing Action Menu....',menu);
+      let rect = menuContainer.getBoundingClientRect(); // Get element's position and size
+      let x = event.clientX - rect.left;
+      let y = event.clientY - rect.top;
+      let height = menu.offsetHeight;
+      menu.style.left = `${x}px`;
+      menu.style.top = `${y - height}px`;
+    }
+
     function onClickWatch(event){
       // let activeMatchup = document.querySelector('li.active');
       if (activeMatchup != null){
@@ -762,6 +799,52 @@
         });
       }
     }
+
+    function onClickDelete(event){
+      //check if matchup selected
+      if (activeMatchup == null) return;
+      //no longer need this since it is not clickable if no matchup is selected
+      //send delete request to /matchup/delete-matchup
+      let matchupId = activeMatchup.dataset.matchupId;
+      //show confirmation dialog
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      // confirmationDialog.dataset.matchupId = matchupId;
+      //set the matchup name
+      let matchupData = matchupMap[matchupId];
+      confirmationDialog.querySelector(".dialog-body p").textContent = `\"${matchupData['fighter_a_name']} vs ${matchupData['fighter_b_name']}\"`;
+      confirmationDialog.classList.remove("d-none");
+    }
+    function deleteMatchup(){
+      if (activeMatchup == null) return;
+      let matchupId = activeMatchup.dataset.matchupId;
+      fetch(`/matchup/delete-matchup/${matchupId}`, {
+        method: "DELETE",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get('csrftoken'),
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          //remove matchup from table
+          document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"]`).forEach((matchup) => {
+            matchup.remove();
+          });
+          //hide confirmation dialog
+          document.querySelector(".confirmation-dialog").dataset.matchupId = "-1";
+          document.querySelector(".confirmation-dialog").classList.add("d-none");
+          watchlistTable.removeMatchup(matchupId);
+          mainCardTable.removeMatchup(matchupId);
+          prelimTable.removeMatchup(matchupId);
+        });
+    }
+
+    function onClickCancelDelete(){
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      document.querySelector(".confirmation-dialog").classList.add("d-none");
+    }
 </script>
 
 <script>
@@ -782,7 +865,7 @@
     guideHorizontal.style.top = `${y}px`;
     guideVertical.style.left = `${x}px`;
   }
-  document.querySelector('#main-card').addEventListener('mousemove',onMouseEnterEventHandler);
+  // document.querySelector('#main-card').addEventListener('mousemove',onMouseEnterEventHandler);
   document.querySelector('#prelims').addEventListener('mousemove',onMouseEnterEventHandler);
 </script>
 
