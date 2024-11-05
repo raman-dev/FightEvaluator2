@@ -5,6 +5,7 @@
 }
 
 .matchups-container {
+  position: relative;
   border: 1px solid lime;
 }
 .matchups-container ul {
@@ -17,4 +18,20 @@
 }
 .matchups-container li .matchup:hover {
   background-color: hsl(50, 10%, 50%);
+}
+
+.guide {
+  background-color: cyan;
+  position: absolute;
+}
+
+.guide-horizontal {
+  width: 100%;
+  height: 1px;
+}
+
+.guide-vertical {
+  width: 1px;
+  height: 100%;
+  top: 0%;
 }/*# sourceMappingURL=matchup_tables.css.map */

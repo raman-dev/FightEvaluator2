@@ -303,7 +303,12 @@
               </div>
             </li>
             {% endfor %}
-          </ul> 
+          </ul>
+          <div class="guide guide-horizontal"></div> 
+          <div class="guide guide-vertical"></div>
+          <div class="position-label">
+            0,0
+          </div>
       </div>
       {% endfor %}  
     </div>
@@ -331,7 +336,7 @@
 
     function createMatchUpElement(matchup){
       console.log('creating element => ',matchup);
-      console.log(matchup,matchup['id']);
+      // console.log(matchup,matchup['id']);
       return $(`
         <li class="list-group-item" >
           <div class="matchup" 
@@ -395,7 +400,7 @@
       addMatchup(matchup){
         //create a list element in the watchlist-matchupTable
         super.addMatchup(matchup['id']);
-        console.log(matchup,typeof matchup);
+        // console.log(matchup,typeof matchup);
         let element = createMatchUpElement(matchup);
         let watchlist_list = document.querySelector('#watchlist ul');
         watchlist_list.appendChild(element);
@@ -759,6 +764,27 @@
     }
 </script>
 
+<script>
+  //onmouseenter main-card
+  function onMouseEnterEventHandler(event){
+    
+    // event.stopPropagation();
+    let div = event.currentTarget;
+    let rect = div.getBoundingClientRect(); // Get element's position and size
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    let posLabel = div.querySelector('.position-label');
+    posLabel.textContent = `${x},${y}`;
+    //move horizontal guide
+    let guideHorizontal = div.querySelector('.guide-horizontal');
+    let guideVertical = div.querySelector('.guide-vertical');
+    //move vertical guide 
+    guideHorizontal.style.top = `${y}px`;
+    guideVertical.style.left = `${x}px`;
+  }
+  document.querySelector('#main-card').addEventListener('mousemove',onMouseEnterEventHandler);
+  document.querySelector('#prelims').addEventListener('mousemove',onMouseEnterEventHandler);
+</script>
 
 {% endblock %} 
   
