@@ -6,10 +6,9 @@
 
 .matchups-container {
     position: relative;
-    border: 1px solid lime;
     ul {
         padding: 0px;
-        border: 1px solid red !important;
+        // border: 1px solid red !important;
     }
     li {
         list-style: none;
@@ -21,6 +20,18 @@
         .matchup.active{
             background-color: violet;
             color: black;
+        }
+    }
+
+    table{
+        th{
+            text-transform: capitalize;
+        }
+        td{
+            padding: 0px !important;
+            p{
+                margin: 0px;
+            }
         }
     }
 }
