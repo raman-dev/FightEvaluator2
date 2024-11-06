@@ -184,6 +184,9 @@ class MatchUp(models.Model):
     
      def title(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize()
+    
+     def title_full(self) -> str:
+          return self.fighter_a.name + " vs " + self.fighter_b.name
 
 
 class Likelihood(models.IntegerChoices):

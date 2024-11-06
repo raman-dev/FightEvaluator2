@@ -270,38 +270,27 @@
   
     <div class="tables-wrapper">
       <div class="watchlist-matchups matchups-container my-2"  id="watchlist">
-        <div class="list-title">
-          <h4 style="text-transform:capitalize;">watchlist</h4>
-        </div>
-        <!-- <ul class="">
-          {% for matchups in matchupsList %}
-          {% for matchup in matchups %}
-            {% if matchup.inWatchList %}
-            <li class="watchlist-matchup">
-              <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
-                <p>{{matchup}}</p>
-              </div>
-            </li>
-            {% endif %}
-          {% endfor %}
-          {% endfor %}
-        </ul> -->
         <div class="watchlist-table">
-          <table class="table table-bordered">
-            <thead></thead>
-            <tbody>
+          <table>
+            <caption style="caption-side:top">
+              <h3>Watchlist</h3>
+            </caption>
+            <thead>
               <tr>
-                <th>matchup</th>
+                <th>MatchUp</th>
                 <th>weight class</th>
                 <th>rounds</th>
               </tr>
+            </thead>
+            <tbody>
+              
               {% for matchups in matchupsList %}
               {% for matchup in matchups %}
                 {% if matchup.inWatchList %}
-                  <tr class="watchlist-matchup">
+                  <tr class="watchlist-matchup matchup">
                     <td class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                       <div class="d-flex align-items-center justify-content-center p-2">
-                        <p>{{matchup.title}}</p>
+                        <p>{{matchup.title_full}}</p>
                       </div>
                     </td>
                     <td>
@@ -325,12 +314,12 @@
       <!--main card fighter table-->
       {% for matchups in matchupsList %}
       <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
-          <div class="list-title">
+          <!-- <div class="list-title">
             <h3>
               {% if forloop.counter == 1%}main card{% else %}prelims{% endif %}
             </h3>
-          </div>
-          <ul class="">
+          </div> -->
+          <!-- <ul class="">
             {% for matchup in matchups %}
             <li class="" >
               <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
@@ -338,7 +327,40 @@
               </div>
             </li>
             {% endfor %}
-          </ul>
+          </ul> -->
+          <table>
+            <caption style="caption-side:top">
+              <h3 style="text-transform: capitalize;">{% if forloop.counter == 1%}main card{% else %}prelims{% endif %}</h3>
+            </caption>
+            <thead>
+              <tr>
+                <th>MatchUp</th>
+                <th>Weight Class</th>
+                <th>Rounds</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for matchup in matchups %}
+              <tr class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                <td>
+                  <div class="d-flex align-items-center justify-content-center p-2">
+                    <p>{{matchup.title_full}}</p>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center p-2">
+                    <p>{{matchup.weight_class|rmscores|title}}</p>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center p-2">
+                    <p>{{matchup.rounds}}</p>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
           <div class="matchup-actions-menu-container d-none" data-open="false">
             <ul class="list-group">
               <li class="list-group-item">edit</li>
