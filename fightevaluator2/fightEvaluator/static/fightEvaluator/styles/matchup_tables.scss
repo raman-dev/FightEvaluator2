@@ -32,20 +32,20 @@ table{
     thead{
         border: 1px solid lavender;
     };
-    tr{
-        border: 1px solid #fff0f5aa;
-    };
+    // thead tr{
+    //     border: 1px solid #fff0f5aa;
+    // };
 
     th, td{
         text-transform: capitalize;
         text-align: center;
         vertical-align: middle;
         padding: 0.4rem;
-        padding-top: 0.6rem;
-        padding-bottom: 0.6rem;
-    }
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+    } 
     td{
-        padding: 0px !important;
+        // padding: 0px !important;
         p{
             margin: 0px;
         }

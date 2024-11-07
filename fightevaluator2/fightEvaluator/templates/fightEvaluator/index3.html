@@ -289,17 +289,17 @@
                 {% if matchup.inWatchList %}
                   <tr class="watchlist-matchup matchup">
                     <td class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
-                      <div class="d-flex align-items-center justify-content-center p-2">
+                      <div class="d-flex align-items-center justify-content-center ">
                         <p>{{matchup.title_full}}</p>
                       </div>
                     </td>
                     <td>
-                      <div class="d-flex align-items-center justify-content-center p-2">
+                      <div class="d-flex align-items-center justify-content-center ">
                         <p>{{matchup.weight_class|rmscores|title}}</p>
                       </div>
                     </td>
                     <td>
-                      <div class="d-flex align-items-center justify-content-center p-2">
+                      <div class="d-flex align-items-center justify-content-center ">
                         <p>{{matchup.rounds}}</p>
                       </div>
                     </td>
@@ -330,7 +330,14 @@
           </ul> -->
           <table>
             <caption style="caption-side:top">
-              <h3 style="text-transform: capitalize;">{% if forloop.counter == 1%}main card{% else %}prelims{% endif %}</h3>
+              <div class="d-flex justify-content-between">
+                <h3 style="text-transform: capitalize;">{% if forloop.counter == 1%}main card{% else %}prelims{% endif %}</h3>
+                <div class="action-wrapper">
+                  <button type="button" class="btn btn-primary active-independent" onclick="onToggleMatchupModal(false)">
+                    add
+                  </button>
+                </div>
+              </div>
             </caption>
             <thead>
               <tr>
