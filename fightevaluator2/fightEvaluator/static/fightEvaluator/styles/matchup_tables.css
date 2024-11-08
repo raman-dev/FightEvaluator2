@@ -66,4 +66,10 @@ table td p {
   cursor: pointer;
   background-color: violet;
   color: black;
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }/*# sourceMappingURL=matchup_tables.css.map */

@@ -287,8 +287,8 @@
               {% for matchups in matchupsList %}
               {% for matchup in matchups %}
                 {% if matchup.inWatchList %}
-                  <tr class="watchlist-matchup matchup">
-                    <td class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                  <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                    <td >
                       <div class="d-flex align-items-center justify-content-center ">
                         <p>{{matchup.title_full}}</p>
                       </div>
@@ -304,68 +304,9 @@
                       </div>
                     </td>
                   </tr>
-            {% endif %}
-          {% endfor %}
-          {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <!--main card fighter table-->
-      {% for matchups in matchupsList %}
-      <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
-          <!-- <div class="list-title">
-            <h3>
-              {% if forloop.counter == 1%}main card{% else %}prelims{% endif %}
-            </h3>
-          </div> -->
-          <!-- <ul class="">
-            {% for matchup in matchups %}
-            <li class="" >
-              <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
-                <p>{{matchup}}</p>
-              </div>
-            </li>
-            {% endfor %}
-          </ul> -->
-          <table>
-            <caption style="caption-side:top">
-              <div class="d-flex justify-content-between">
-                <h3 style="text-transform: capitalize;">{% if forloop.counter == 1%}main card{% else %}prelims{% endif %}</h3>
-                <div class="action-wrapper">
-                  <button type="button" class="btn btn-primary active-independent" onclick="onToggleMatchupModal(false)">
-                    add
-                  </button>
-                </div>
-              </div>
-            </caption>
-            <thead>
-              <tr>
-                <th>MatchUp</th>
-                <th>Weight Class</th>
-                <th>Rounds</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for matchup in matchups %}
-              <tr class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
-                <td>
-                  <div class="d-flex align-items-center justify-content-center p-2">
-                    <p>{{matchup.title_full}}</p>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center p-2">
-                    <p>{{matchup.weight_class|rmscores|title}}</p>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center p-2">
-                    <p>{{matchup.rounds}}</p>
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
+                  {% endif %}
+                {% endfor %}
+                {% endfor %}
             </tbody>
           </table>
           <div class="matchup-actions-menu-container d-none" data-open="false">
@@ -375,13 +316,81 @@
               <li class="list-group-item">delete/unwatch</li>
             </ul>
           </div>
-          <!-- <div class="guide guide-horizontal"></div> 
-          <div class="guide guide-vertical"></div>
-          <div class="position-label">
-            0,0
-          </div> -->
+        </div>
       </div>
-      {% endfor %}  
+      <!--main card fighter table-->
+      <div class="table-grid">
+        {% for matchups in matchupsList %}
+        <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
+            <!-- <div class="list-title">
+              <h3>
+                {% if forloop.counter == 1%}main card{% else %}prelims{% endif %}
+              </h3>
+            </div> -->
+            <!-- <ul class="">
+              {% for matchup in matchups %}
+              <li class="" >
+                <div class="matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                  <p>{{matchup}}</p>
+                </div>
+              </li>
+              {% endfor %}
+            </ul> -->
+            <table>
+              <caption style="caption-side:top">
+                <div class="d-flex justify-content-between">
+                  <h4 style="text-transform: capitalize;">{% if forloop.counter == 1%}main card{% else %}prelims{% endif %}</h4>
+                  <div class="action-wrapper">
+                    <button type="button" class="btn btn-primary active-independent" onclick="onToggleMatchupModal(false)">
+                      add
+                    </button>
+                  </div>
+                </div>
+              </caption>
+              <thead>
+                <tr>
+                  <th>MatchUp</th>
+                  <th>Weight Class</th>
+                  <th>Rounds</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for matchup in matchups %}
+                <tr class="matchup" onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center p-2">
+                      <p>{{matchup.title_full}}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center p-2">
+                      <p>{{matchup.weight_class|rmscores|title}}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center p-2">
+                      <p>{{matchup.rounds}}</p>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="matchup-actions-menu-container d-none" data-open="false">
+              <ul class="list-group">
+                <li class="list-group-item">edit</li>
+                <li class="list-group-item">analyze</li>
+                <li class="list-group-item">delete/unwatch</li>
+              </ul>
+            </div>
+            <!-- <div class="guide guide-horizontal"></div> 
+            <div class="guide guide-vertical"></div>
+            <div class="position-label">
+              0,0
+            </div> -->
+        </div>
+        {% endfor %}  
+      </div>
     </div>
   </div>
 
@@ -808,24 +817,35 @@
         if (activeMatchup != null){
             activeMatchup.classList.remove('active');
         }
-        activeMatchup = null;
-        //if prevactive element is not current element
-        if (!isActive){
-          matchup.classList.add('active');
-          activeMatchup = matchup;
-
-          let tableId = '#main-card';
-          if (matchupMap[activeMatchup.dataset.matchupId].isprelim){
-            tableId = '#prelims';
-          }
-          
-          let menuContainer = document.querySelector(`${tableId}`);
-          let menu = menuContainer.querySelector('.matchup-actions-menu-container');
-          showActionMenu(menuContainer,menu,event);
-        }else{
-          let menu = document.querySelector('.matchup-actions-menu-container[data-open="true"]');
+        
+        let menu = document.querySelector('.matchup-actions-menu-container[data-open="true"]');
+        if (menu != null){
           hideActionMenu(menu);
         }
+        activeMatchup = null;
+        //if prevactive element is not current element
+        if (!isActive){//now active
+          matchup.classList.add('active');
+          activeMatchup = matchup;
+        }
+    }
+
+    function onRightClickMatchup(event){
+      event.preventDefault();
+      if (activeMatchup == null) return;
+      console.log('Right Clicked Matchup!',event.currentTarget);
+      
+      let tableId = '#main-card';
+      if (matchupMap[activeMatchup.dataset.matchupId].isprelim){
+        tableId = '#prelims';
+      }
+      if (event.currentTarget.classList.contains('watchlist-matchup')){
+        tableId = '#watchlist';
+      }
+      
+      let menuContainer = document.querySelector(`${tableId}`);
+      let menu = menuContainer.querySelector('.matchup-actions-menu-container');
+      showActionMenu(menuContainer,menu,event);
     }
 
     function showActionMenu(menuContainer,menu,event){
