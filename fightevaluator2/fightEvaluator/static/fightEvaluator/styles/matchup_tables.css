@@ -72,4 +72,10 @@ table td p {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+@media (max-width: 924px) {
+  .table-grid {
+    grid-template-columns: 1fr;
+  }
 }/*# sourceMappingURL=matchup_tables.css.map */

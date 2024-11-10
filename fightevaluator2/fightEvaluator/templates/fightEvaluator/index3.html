@@ -287,7 +287,7 @@
               {% for matchups in matchupsList %}
               {% for matchup in matchups %}
                 {% if matchup.inWatchList %}
-                  <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchcup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                  <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchup.inWatchList}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                     <td >
                       <div class="d-flex align-items-center justify-content-center ">
                         <p>{{matchup.title_full}}</p>
@@ -316,6 +316,9 @@
               <li class="list-group-item">delete/unwatch</li>
             </ul>
           </div>
+        </div>
+        <div class="watchlist-empty-message d-none">
+          <p>No matchups in watch list.</p>
         </div>
       </div>
       <!--main card fighter table-->
@@ -418,16 +421,28 @@
       console.log('creating element => ',matchup);
       // console.log(matchup,matchup['id']);
       return $(`
-        <li class="list-group-item" >
-          <div class="matchup" 
+        <tr class="matchup" 
             onclick="onClickMatchUp(event)" 
-            data-in-watch-list="${matchup['inWatchList']}" 
-            tabindex="50" data-matchup-id="${matchup['id']}" 
-            data-fighter-a-id="${matchup['fighter_a_id']}" 
-            data-fighter-b-id="${matchup['fighter_b_id']}">
-            <p>${matchup['fighter_a_name']} vs ${matchup['fighter_b_name']}</p>
-          </div>
-        </li>
+            data-in-watch-list="${matchup.inWatchList}" tabindex="50" 
+            data-matchup-id="${matchup.id}" 
+            data-fighter-a-id="${matchup.fighter_a}" 
+            data-fighter-b-id="${matchup.fighter_b}">
+            <td >
+              <div class="d-flex align-items-center justify-content-center ">
+                <p>${matchup.fighter_a_name} vs ${matchup.fighter_b_name}</p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center justify-content-center ">
+                <p>${matchup.weight_class}</p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center justify-content-center ">
+                <p>${matchup.rounds}</p>
+              </div>
+            </td>
+          </tr>
       `)[0];
     }
   
@@ -483,15 +498,24 @@
           }
         }
         console.log(this.matchup_ids);
-        
+        if (this.matchup_ids.size == 0){
+          //hide table and show empty watchlist message
+          this.hideWatchlist();
+        }else{
+          this.showWatchlist();
+        }
       }
 
       addMatchup(matchup){
         //create a list element in the watchlist-matchupTable
         super.addMatchup(matchup['id']);
+        if (this.matchup_ids.size == 1){
+          this.showWatchlist();
+        }
         // console.log(matchup,typeof matchup);
         let element = createMatchUpElement(matchup);
-        let watchlist_list = document.querySelector('#watchlist ul');
+        element.classList.add('watchlist-matchup');
+        let watchlist_list = document.querySelector('#watchlist table');
         watchlist_list.appendChild(element);
       }
 
@@ -501,10 +525,22 @@
         if (this.matchup_ids.has(matchup['id'])){
           this.matchup_ids.delete(matchup['id']);
           //remove element from table
-          let watchlist_list = document.querySelector('#watchlist ul');
+          let watchlist_list = document.querySelector('#watchlist table');
           let element = watchlist_list.querySelector(`[data-matchup-id="${matchup['id']}"]`);
           element.remove();
         }
+        if (this.matchup_ids.size == 0){
+          this.hideWatchlist();
+        }
+      }
+
+      showWatchlist(){
+        document.querySelector('.watchlist-table').classList.remove('d-none');
+        document.querySelector('.watchlist-empty-message').classList.add('d-none');
+      }
+      hideWatchlist(){
+        document.querySelector('.watchlist-table').classList.add('d-none');
+        document.querySelector('.watchlist-empty-message').classList.remove('d-none');
       }
     }
     
