@@ -28,7 +28,19 @@
   width: 100%;
 }
 
+.watchlist-empty-message {
+  border: 1px solid lavender;
+  border-radius: 0.4rem;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.4rem;
+}
+.watchlist-empty-message * {
+  margin: 0px;
+}
+
 table {
+  transition: all 0.3s ease-out;
   background-color: #111519 !important;
 }
 table thead {

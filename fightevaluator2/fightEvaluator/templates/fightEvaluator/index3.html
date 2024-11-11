@@ -235,37 +235,7 @@
           <label class="form-check-label" for="showResultsSwitch">Results Not Available</label>
         </div>
       </div>
-      <div class="action-bar d-flex align-items-center w-100">
-        <div class="matchup-actions d-flex justify-content-around my-2 border rounded-2 flex-wrap">
-          <div class="action-wrapper" >
-            <button type="button" class="btn btn-primary active-independent" onclick="onToggleMatchupModal(false)">
-              add
-            </button>
-            <p>&nbsp;- add matchup</p>
-          </div>
-          <!--edit matchup action-->
-          <div class="action-wrapper">
-            <button type="button" class="edit btn btn-primary " onclick="onToggleMatchupModal(true)">
-              edit
-            </button>
-            <p>&nbsp;- edit matchup</p>
-          </div>
-          <div class="action-wrapper">
-            <button class="analyze btn btn-primary " href="#" onclick="onClickAnalyze(event)">
-              analyze
-            </button>
-            <p class="m-0">&nbsp;- view matchup</p>
-          </div>
-          <div class="action-wrapper">
-            <button class="watch btn btn-primary" onclick="onClickWatch(event)">watch</button>
-            <p>&nbsp;- add to watchlist</p>
-          </div>
-          <div class="action-wrapper">
-            <button class="delete btn btn-danger "onclick="onClickDelete(event)" >delete</button>
-            <p>&nbsp;- delete matchup</p>
-          </div>
-        </div>
-      </div> 
+     
     </div>
   
     <div class="tables-wrapper">
@@ -287,7 +257,7 @@
               {% for matchups in matchupsList %}
               {% for matchup in matchups %}
                 {% if matchup.inWatchList %}
-                  <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                  <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                     <td >
                       <div class="d-flex align-items-center justify-content-center ">
                         <p>{{matchup.title_full}}</p>
@@ -309,16 +279,11 @@
                 {% endfor %}
             </tbody>
           </table>
-          <div class="matchup-actions-menu-container d-none" data-open="false">
-            <ul class="list-group">
-              <li class="list-group-item">edit</li>
-              <li class="list-group-item">analyze</li>
-              <li class="list-group-item">delete/unwatch</li>
-            </ul>
-          </div>
+          {% include "fightEvaluator/index-right-click-menu.html" %}
+
         </div>
         <div class="watchlist-empty-message d-none">
-          <p>No matchups in watch list.</p>
+          <h6>No matchups in watch list.</h6>
         </div>
       </div>
       <!--main card fighter table-->
@@ -366,29 +331,8 @@
                 {% endfor %}
               </tbody>
             </table>
-            <div class="matchup-actions-menu-container d-none" data-open="false">
-              <ul class="list-group">
-                <li class="list-group-item">
-                  <div class="menu-item" onclick="onToggleMatchupModal(true)">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/></svg>
-                    <span>edit</span>
-                  </div>
-                </li>
-                <li class="list-group-item">
-                  <div class="menu-item" onclick="onClickAnalyze(event)">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
-                    <span>analyze</span>
-                  </div>
-                </li>
-                <li class="list-group-item">
-                  <div class="menu-item watch-menu-item" onclick="onClickWatch(event)">
-                    <svg id="unwatch-icon" class="d-none" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"/></svg>
-                    <svg id="watch-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>
-                    <span>watch</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
+            {% include "fightEvaluator/index-right-click-menu.html" %}
+            
             <!-- <div class="guide guide-horizontal"></div> 
             <div class="guide guide-vertical"></div>
             <div class="position-label">
@@ -418,7 +362,8 @@
 
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
- <script>
+{% include "fightEvaluator/matchup-data-script.html" %}
+<script>
 
     function createMatchUpElement(matchup){
       console.log('creating element => ',matchup);
@@ -426,10 +371,11 @@
       return $(`
         <tr class="matchup" 
             onclick="onClickMatchUp(event)" 
+            oncontextmenu="onRightClickMatchup(event)"
             data-in-watch-list="${matchup.inWatchList}" tabindex="50" 
             data-matchup-id="${matchup.id}" 
-            data-fighter-a-id="${matchup.fighter_a_id}" 
-            data-fighter-b-id="${matchup.fighter_b_id}">
+            data-fighter-a-id="${matchup.fighter_a}" 
+            data-fighter-b-id="${matchup.fighter_b}">
             <td >
               <div class="d-flex align-items-center justify-content-center ">
                 <p>${matchup.fighter_a_name} vs ${matchup.fighter_b_name}</p>
@@ -449,50 +395,38 @@
       `)[0];
     }
   
-    let matchupMap = {
-    {% for matchups in matchupsList %}
-      {% for matchup in matchups %}
-          
-            {{matchup.id}} : 
-              {
-                'fighter_a_id':{{matchup.fighter_a.id}},
-                'fighter_a_name':'{{matchup.fighter_a.name}}',
-                'fighter_b_id':{{matchup.fighter_b.id}},
-                'fighter_b_name':'{{matchup.fighter_b.name}}',
-                'rounds':{{matchup.rounds}},
-                'weight_class':'{{matchup.weight_class}}',
-                'isprelim': {{matchup.isprelim|lower}},
-                'inWatchList': {{ matchup.inWatchList|default_if_none:"false" | lower}},
-                'id':{{matchup.id}}
-              }
-          ,
-      {% endfor %}
-    {% endfor %}
-    };
-
-    
 
     class MatchupTable{
-      constructor(){
+      constructor(table,matchupMap){
         this.matchup_ids = new Set();
+        this.table = table;
       }
-      addMatchup(matchupId){
-        this.matchup_ids.add(matchupId);
+      addMatchup(matchup){
+        this.matchup_ids.add(matchup.id);
+        let element = createMatchUpElement(matchup);
+        let tbody = this.table.querySelector('tbody');
+        tbody.appendChild(element);
+        return element;
       }
 
-      removeMatchup(matchupId){
-        if (this.matchup_ids.has(matchupId)){
-          this.matchup_ids.delete(matchupId);
+      removeMatchup(matchup){
+        console.log(this.matchup_ids,matchup.id);
+        if (this.matchup_ids.has(matchup.id)){
+          this.matchup_ids.delete(matchup.id);
           //remove from html aswell
-          let element = document.querySelector(`[data-matchup-id="${matchup['id']}"]`);
+          console.log('Removing matchup...',matchup);
+          let element = this.table.querySelector(`[data-matchup-id="${matchup['id']}"]`);
+          
           element.remove();
+          return element;//return removed element
         }
+        return null;
       }
     }
 
     class WatchListTable extends MatchupTable{
-      constructor(matchupMap){
-        super();
+      constructor(table,matchupMap){
+        super(table,matchupMap);
         //initialize watchlist with matchup ids of matchups already with inWatchList = true
         for (const key in matchupMap){
           let matchup = matchupMap[key];
@@ -500,7 +434,7 @@
             this.matchup_ids.add(matchup.id);
           }
         }
-        console.log(this.matchup_ids);
+        // console.log(this.matchup_ids);
         if (this.matchup_ids.size == 0){
           //hide table and show empty watchlist message
           this.hideWatchlist();
@@ -511,30 +445,20 @@
 
       addMatchup(matchup){
         //create a list element in the watchlist-matchupTable
-        super.addMatchup(matchup['id']);
+        let element = super.addMatchup(matchup);
         if (this.matchup_ids.size == 1){
           this.showWatchlist();
         }
-        // console.log(matchup,typeof matchup);
-        let element = createMatchUpElement(matchup);
         element.classList.add('watchlist-matchup');
-        let watchlist_list = document.querySelector('#watchlist table');
-        watchlist_list.appendChild(element);
+        return element;
       }
 
       removeMatchup(matchup){
-        console.log('removing => ',matchup);
-        
-        if (this.matchup_ids.has(matchup['id'])){
-          this.matchup_ids.delete(matchup['id']);
-          //remove element from table
-          let watchlist_list = document.querySelector('#watchlist table');
-          let element = watchlist_list.querySelector(`[data-matchup-id="${matchup['id']}"]`);
-          element.remove();
-        }
+        let element = super.removeMatchup(matchup);
         if (this.matchup_ids.size == 0){
           this.hideWatchlist();
         }
+        return element;
       }
 
       showWatchlist(){
@@ -547,18 +471,19 @@
       }
     }
     
-    const mainCardTable = new MatchupTable();
-    const prelimTable = new MatchupTable();
+    const mainCardTable = new MatchupTable(document.querySelector('#main-card table'),matchupMap);
+    const prelimTable = new MatchupTable(document.querySelector('#prelims table'),matchupMap);
 
     for (const key in matchupMap){
       let matchup =  matchupMap[key];
+
       if (matchup.isprelim){
-        prelimTable.addMatchup(key);
+        prelimTable.matchup_ids.add(parseInt(key));
       }else{
-        mainCardTable.addMatchup(key);
+        mainCardTable.matchup_ids.add(parseInt(key));
       }
     }
-    const watchlistTable = new WatchListTable(matchupMap);
+    const watchlistTable = new WatchListTable(document.querySelector('#watchlist table'),matchupMap);
     
     const fightEventId = {{ event.id }};
     const postHeaders = {
@@ -596,8 +521,8 @@
         searchBoxB.value = matchupData['fighter_b_name'];
 
         // set fighter id's
-        matchupModal.querySelector(".fighter-a").dataset.selectedId = matchupData['fighter_a_id'];
-        matchupModal.querySelector(".fighter-b").dataset.selectedId = matchupData['fighter_b_id'];
+        matchupModal.querySelector(".fighter-a").dataset.selectedId = matchupData['fighter_a'];
+        matchupModal.querySelector(".fighter-b").dataset.selectedId = matchupData['fighter_b'];
 
         //capitalize weightclass
         weightClass = weightClass.split("_").map((x) => {return x.substr(0,1).toUpperCase() + x.substr(1);}).join(" ");
@@ -669,21 +594,19 @@
           
           */
           console.log('Created Matchup...',data);
-          // matchupMapDataStateHandler.addMatchup(data);
           //update matchup table
-          let matchup = data;
-          let matchupElement = document.createElement("div");
-          //reflect change in matchup table
-          let element = createMatchUpElement(matchup);
-          
-          let matchupTableContainer = null;
-          if (matchup.isprelim){
-            matchupTableContainer = document.querySelector('#prelims ul');
-          }else{
-            matchupTableContainer = document.querySelector('#main-card ul');
+          //update on server
+          if (data.inWatchList == null){
+            data.inWatchList = false;
           }
-          // console.log(matchupTableContainer,element);
-          matchupTableContainer.appendChild(element);
+          let matchup = data;
+          //reflect change in matchup table
+          let matchupTable = mainCardTable;
+          if (matchup.isprelim){
+            matchupTable = prelimTable;
+          }
+          matchupMap[matchup.id] = matchup;
+          matchupTable.addMatchup(matchupMap[data.id]);
           bootstrap.Modal.getInstance(document.querySelector('#matchupModal')).hide();
         });
     }
@@ -728,9 +651,9 @@
           console.log(data);
           //reflect change in matchup table
           matchupMap[data['id']] = {
-            'fighter_a_id' : data['fighter_a_id'],
+            'fighter_a' : data['fighter_a_id'],
             'fighter_a_name':data['fighter_a_name'],
-            'fighter_b_id' : data['fighter_b_id'],
+            'fighter_b' : data['fighter_b_id'],
             'fighter_b_name':data['fighter_b_name'],
             'rounds':data['rounds'],
             'isprelim':data['isprelim'],
@@ -872,7 +795,7 @@
     function onRightClickMatchup(event){
       event.preventDefault();
       if (activeMatchup == null) return;
-      console.log('Right Clicked Matchup!',event.currentTarget);
+      // console.log('Right Clicked Matchup!',event.currentTarget);
       let tableId = '#main-card';
       if (matchupMap[activeMatchup.dataset.matchupId].isprelim){
         tableId = '#prelims';
@@ -887,8 +810,15 @@
       showActionMenu(menuContainer,menu,event,inWatchList);
     }
 
+    document.querySelectorAll('.menu-item').forEach((menu_item) => {
+      menu_item.addEventListener('click',(event)=>{
+        // hideActionMenu();
+        hideActionMenu(document.querySelector('.matchup-actions-menu-container[data-open="true"]'));
+      });
+    });
+
     function showActionMenu(menuContainer,menu,event,matchupInWatchList){
-      console.log('Showing Action Menu....',menu);
+      console.log('Showing Action Menu....');//,menu);
       let rect = menuContainer.getBoundingClientRect(); // Get element's position and size
       let x = event.clientX - rect.left;
       let y = event.clientY - rect.top;
@@ -908,18 +838,19 @@
       }
       
       menu.classList.remove('d-none');
-      let height = menu.offsetHeight;
+      let height = 0;//menu.offsetHeight;
       menu.style.left = `${x}px`;
       menu.style.top = `${y - height}px`;
     }
 
     function hideActionMenu(menu){
+      console.log('Hiding action menu...');//,menu);
+      
       menu.classList.add('d-none');
       menu.dataset.open = false;
     }
 
     function onClickWatch(event){
-      // let activeMatchup = document.querySelector('li.active');
       if (activeMatchup != null){
         //continue
         //add to watchlist
@@ -976,15 +907,14 @@
         .then((data) => {
           // console.log(data);
           //remove matchup from table
-          document.querySelectorAll(`.matchup[data-matchup-id="${matchupId}"]`).forEach((matchup) => {
-            matchup.remove();
-          });
           //hide confirmation dialog
           document.querySelector(".confirmation-dialog").dataset.matchupId = "-1";
           document.querySelector(".confirmation-dialog").classList.add("d-none");
-          watchlistTable.removeMatchup(matchupId);
-          mainCardTable.removeMatchup(matchupId);
-          prelimTable.removeMatchup(matchupId);
+         
+          watchlistTable.removeMatchup(matchupMap[matchupId]);
+          mainCardTable.removeMatchup(matchupMap[matchupId]);
+          prelimTable.removeMatchup(matchupMap[matchupId]);
+          delete matchupMap[matchupId];
         });
     }
 

@@ -1,0 +1,22 @@
+<script>
+    const matchupMap = {
+    {% for matchups in matchupsList %}
+      {% for matchup in matchups %}
+          
+            {{matchup.id}} : 
+              {
+                'fighter_a':{{matchup.fighter_a.id}},
+                'fighter_a_name':'{{matchup.fighter_a.name}}',
+                'fighter_b':{{matchup.fighter_b.id}},
+                'fighter_b_name':'{{matchup.fighter_b.name}}',
+                'rounds':{{matchup.rounds}},
+                'weight_class':'{{matchup.weight_class}}',
+                'isprelim': {{matchup.isprelim|lower}},
+                'inWatchList': {{ matchup.inWatchList|default_if_none:"false" | lower}},
+                'id':{{matchup.id}}
+              }
+          ,
+      {% endfor %}
+    {% endfor %}
+    };
+</script>

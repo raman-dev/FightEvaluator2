@@ -33,8 +33,18 @@ $tableBackground: #111519;
         width: 100%;
     }
 }
+.watchlist-empty-message{
+    border: 1px solid lavender;
+    border-radius: 0.4rem;
+    width: fit-content;
+    padding: 0.4rem;
+    * {
+        margin: 0px;
+    }
+}
 
 table{
+    transition: all 0.3s ease-out;
     background-color: $tableBackground !important;
     thead{
         border: 1px solid lavender;
