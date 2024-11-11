@@ -243,7 +243,7 @@
         <div class="watchlist-table">
           <table>
             <caption style="caption-side:top">
-              <h3>Watchlist</h3>
+              <h4>Watchlist</h4>
             </caption>
             <thead>
               <tr>
@@ -259,17 +259,17 @@
                 {% if matchup.inWatchList %}
                   <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                     <td >
-                      <div class="d-flex align-items-center justify-content-center ">
+                      <div class="d-flex align-items-center justify-content-center p-1">
                         <p>{{matchup.title_full}}</p>
                       </div>
                     </td>
                     <td>
-                      <div class="d-flex align-items-center justify-content-center ">
+                      <div class="d-flex align-items-center justify-content-center p-1">
                         <p>{{matchup.weight_class|rmscores|title}}</p>
                       </div>
                     </td>
                     <td>
-                      <div class="d-flex align-items-center justify-content-center ">
+                      <div class="d-flex align-items-center justify-content-center p-1">
                         <p>{{matchup.rounds}}</p>
                       </div>
                     </td>
@@ -313,17 +313,17 @@
                 {% for matchup in matchups %}
                 <tr class="matchup" onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|default_if_none:"false"|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                   <td>
-                    <div class="d-flex align-items-center justify-content-center p-2">
+                    <div class="d-flex align-items-center justify-content-center p-1">
                       <p>{{matchup.title_full}}</p>
                     </div>
                   </td>
                   <td>
-                    <div class="d-flex align-items-center justify-content-center p-2">
+                    <div class="d-flex align-items-center justify-content-center p-1">
                       <p>{{matchup.weight_class|rmscores|title}}</p>
                     </div>
                   </td>
                   <td>
-                    <div class="d-flex align-items-center justify-content-center p-2">
+                    <div class="d-flex align-items-center justify-content-center p-1">
                       <p>{{matchup.rounds}}</p>
                     </div>
                   </td>

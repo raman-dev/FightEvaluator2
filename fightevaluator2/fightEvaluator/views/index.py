@@ -34,7 +34,7 @@ def indexById(request,eventId):
         'matchupsList': [mainCard,prelims],
     }
 
-    return render(request, "fightEvaluator/index2.html",context)
+    return render(request, "fightEvaluator/index3.html",context)
 
 # Create your views here.
 @require_GET
