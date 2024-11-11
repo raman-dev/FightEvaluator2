@@ -27,6 +27,9 @@
 .watchlist-matchups table {
   width: 100%;
 }
+.watchlist-matchups table p.weight-class {
+  text-transform: capitalize;
+}
 
 .watchlist-empty-message {
   border: 1px solid lavender;
@@ -45,12 +48,12 @@ table {
 }
 table thead {
   border: 1px solid lavender;
+  text-transform: capitalize;
 }
 table tbody {
   border: 1px solid lavender;
 }
 table th, table td {
-  text-transform: capitalize;
   text-align: center;
   vertical-align: middle;
   padding: 0.4rem;
@@ -99,6 +102,10 @@ table td p {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  width: 100%;
+}
+.table-grid table {
+  width: 100%;
 }
 
 @media (max-width: 924px) {

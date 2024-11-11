@@ -14,7 +14,7 @@ class MatchUpAdmin(admin.ModelAdmin):
     @admin.display(description="Fighter B")
     def fighterB(obj):
         return obj.fighter_b.first_name.capitalize() + " " + obj.fighter_b.last_name.capitalize()
-    list_display = [fighterA,fighterB,"isprelim","weight_class","scheduled","event","event_id"]
+    list_display = [fighterA,fighterB,"isprelim","weight_class","analysisComplete","scheduled","event","event_id"]
 
 @admin.register(Fighter)
 class FighterAdmin(admin.ModelAdmin):

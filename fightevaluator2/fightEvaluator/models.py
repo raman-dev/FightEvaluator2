@@ -178,6 +178,7 @@ class MatchUp(models.Model):
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
      outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
      inWatchList = models.BooleanField(null=True,blank=True)
+     analysisComplete = models.BooleanField(null=True,blank=True,default=False)
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class

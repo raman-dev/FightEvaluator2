@@ -13,9 +13,7 @@ $tableBackground: #111519;
         // border: 1px solid red !important;
     }
     li {
-        list-style: none;
-        // padding: 0px !important;
-        
+        list-style: none;        
         .matchup:hover{
             background-color: hsl(50, 10%, 50%); 
         }
@@ -31,6 +29,9 @@ $tableBackground: #111519;
     width: 100%;
     table{
         width: 100%;
+        p.weight-class{
+            text-transform: capitalize;
+        }
     }
 }
 .watchlist-empty-message{
@@ -48,12 +49,12 @@ table{
     background-color: $tableBackground !important;
     thead{
         border: 1px solid lavender;
+        text-transform: capitalize;
     };
     tbody{
         border: 1px solid lavender;
     }
     th, td{
-        text-transform: capitalize;
         text-align: center;
         vertical-align: middle;
         padding: 0.4rem;
@@ -104,6 +105,10 @@ table{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+    width: 100%;
+    table{
+        width: 100%;
+    }
 } 
 
 

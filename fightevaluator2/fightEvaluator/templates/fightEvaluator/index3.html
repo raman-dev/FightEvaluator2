@@ -239,7 +239,7 @@
     </div>
   
     <div class="tables-wrapper">
-      <div class="watchlist-matchups matchups-container my-2"  id="watchlist">
+      <div class="watchlist-matchups matchups-container mb-3 "  id="watchlist">
         <div class="watchlist-table">
           <table>
             <caption style="caption-side:top">
@@ -250,6 +250,7 @@
                 <th>MatchUp</th>
                 <th>weight class</th>
                 <th>rounds</th>
+                <th>analysis complete</th>
               </tr>
             </thead>
             <tbody>
@@ -265,12 +266,18 @@
                     </td>
                     <td>
                       <div class="d-flex align-items-center justify-content-center p-1">
-                        <p>{{matchup.weight_class|rmscores|title}}</p>
+                        <p class="weight-class">{{matchup.weight_class|rmscores|title}}</p>
                       </div>
                     </td>
                     <td>
                       <div class="d-flex align-items-center justify-content-center p-1">
                         <p>{{matchup.rounds}}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center p-1">
+                        <svg class="incomplete-icon " xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path d="M680-80q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80Zm67-105 28-28-75-75v-112h-40v128l87 87Zm-547 65q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v250q-18-13-38-22t-42-16v-212h-80v120H280v-120h-80v560h212q7 22 16 42t22 38H200Zm280-640q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z"/></svg>                                              
+                        <svg class="complete-icon d-none" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#75FB4C"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>
                       </div>
                     </td>
                   </tr>
@@ -319,7 +326,7 @@
                   </td>
                   <td>
                     <div class="d-flex align-items-center justify-content-center p-1">
-                      <p>{{matchup.weight_class|rmscores|title}}</p>
+                      <p class="weight-class">{{matchup.weight_class|rmscores|title}}</p>
                     </div>
                   </td>
                   <td>
@@ -383,7 +390,7 @@
             </td>
             <td>
               <div class="d-flex align-items-center justify-content-center ">
-                <p>${matchup.weight_class}</p>
+                <p class="weight-class" >${matchup.weight_class}</p>
               </div>
             </td>
             <td>
@@ -450,7 +457,20 @@
           this.showWatchlist();
         }
         element.classList.add('watchlist-matchup');
+        let analysisElement = this.createAnalysisElement();
+        // console.log(analysisElement);
+        element.appendChild(analysisElement);
+        
         return element;
+      }
+
+      createAnalysisElement(){
+        return $(`<td>
+            <div class="d-flex align-items-center justify-content-center p-1">
+              <svg class="incomplete-icon " xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path d="M680-80q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80Zm67-105 28-28-75-75v-112h-40v128l87 87Zm-547 65q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v250q-18-13-38-22t-42-16v-212h-80v120H280v-120h-80v560h212q7 22 16 42t22 38H200Zm280-640q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z"/></svg>                                              
+              <svg class="complete-icon d-none" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#75FB4C"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>
+            </div>
+          </td>`)[0];
       }
 
       removeMatchup(matchup){
@@ -473,6 +493,7 @@
     
     const mainCardTable = new MatchupTable(document.querySelector('#main-card table'),matchupMap);
     const prelimTable = new MatchupTable(document.querySelector('#prelims table'),matchupMap);
+    const watchlistTable = new WatchListTable(document.querySelector('#watchlist table'),matchupMap);
 
     for (const key in matchupMap){
       let matchup =  matchupMap[key];
@@ -483,7 +504,6 @@
         mainCardTable.matchup_ids.add(parseInt(key));
       }
     }
-    const watchlistTable = new WatchListTable(document.querySelector('#watchlist table'),matchupMap);
     
     const fightEventId = {{ event.id }};
     const postHeaders = {
