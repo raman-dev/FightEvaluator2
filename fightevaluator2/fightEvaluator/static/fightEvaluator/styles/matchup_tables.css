@@ -12,7 +12,6 @@
 }
 .matchups-container li {
   list-style: none;
-  padding: 0px !important;
 }
 .matchups-container li .matchup:hover {
   background-color: hsl(50, 10%, 50%);
@@ -22,10 +21,20 @@
   color: black;
 }
 
+.watchlist-matchups {
+  width: 100%;
+}
+.watchlist-matchups table {
+  width: 100%;
+}
+
 table {
   background-color: #111519 !important;
 }
 table thead {
+  border: 1px solid lavender;
+}
+table tbody {
   border: 1px solid lavender;
 }
 table th, table td {
@@ -66,6 +75,12 @@ table td p {
   cursor: pointer;
   background-color: violet;
   color: black;
+}
+.matchup-actions-menu-container li {
+  padding: 0.4rem !important;
+}
+.matchup-actions-menu-container .menu-item {
+  text-transform: capitalize;
 }
 
 .table-grid {

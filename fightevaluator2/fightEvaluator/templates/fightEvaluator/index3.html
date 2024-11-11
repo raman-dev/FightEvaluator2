@@ -381,9 +381,24 @@
             </table>
             <div class="matchup-actions-menu-container d-none" data-open="false">
               <ul class="list-group">
-                <li class="list-group-item">edit</li>
-                <li class="list-group-item">analyze</li>
-                <li class="list-group-item">delete/unwatch</li>
+                <li class="list-group-item">
+                  <div class="menu-item" onclick="onToggleMatchupModal(true)">
+                    edit
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="menu-item" onclick="onClickAnalyze(event)">
+                    analyze
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="menu-item" onclick="onClickWatch(event)">
+                    <strong>
+                      watch/unwatch
+                    </strong>
+                    
+                  </div>
+                </li>
               </ul>
             </div>
             <!-- <div class="guide guide-horizontal"></div> 

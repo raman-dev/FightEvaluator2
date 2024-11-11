@@ -14,7 +14,7 @@ $tableBackground: #111519;
     }
     li {
         list-style: none;
-        padding: 0px !important;
+        // padding: 0px !important;
         
         .matchup:hover{
             background-color: hsl(50, 10%, 50%); 
@@ -27,15 +27,21 @@ $tableBackground: #111519;
 
 }
 
+.watchlist-matchups{
+    width: 100%;
+    table{
+        width: 100%;
+    }
+}
+
 table{
     background-color: $tableBackground !important;
     thead{
         border: 1px solid lavender;
     };
-    // thead tr{
-    //     border: 1px solid #fff0f5aa;
-    // };
-
+    tbody{
+        border: 1px solid lavender;
+    }
     th, td{
         text-transform: capitalize;
         text-align: center;
@@ -45,7 +51,6 @@ table{
         padding-right: 0.8rem;
     } 
     td{
-        // padding: 0px !important;
         p{
             margin: 0px;
         }
@@ -75,6 +80,13 @@ table{
         cursor: pointer;
         background-color: violet;
         color: black;
+    }
+
+    li{
+        padding: 0.4rem !important;
+    }
+    .menu-item{
+        text-transform: capitalize;       
     }
 }
 
