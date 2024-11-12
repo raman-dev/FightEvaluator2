@@ -34,6 +34,7 @@ urlpatterns = [
     path('matchup/delete-matchup/<int:matchupId>',views.delete_matchup, name='delete_matchup'),#working
     path('matchup/<int:matchupId>',views.matchup_index, name='matchup'),#working
     path('matchup/toggle-watchlist/<int:matchupId>',views.toggle_watchlist,name='watchlist_toggle'),
+    path('matchup/<int:matchupId>/analysis-complete',views.analysis_complete,name='analysis_toggle'),
 
     path('matchup/update-event-likelihood/',views.updateMatchUpEventLikelihood, name='update_event_likelihood'),#working
     path('matchup/update-event-prediction/',views.updateMatchUpEventPrediction,name='update_event_prediction'),#not working

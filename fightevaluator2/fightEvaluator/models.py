@@ -179,6 +179,8 @@ class MatchUp(models.Model):
      outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
      inWatchList = models.BooleanField(null=True,blank=True)
      analysisComplete = models.BooleanField(null=True,blank=True,default=False)
+     fighter_a_references = models.IntegerField(default=0,null=True,blank=True)
+     fighter_b_references = models.IntegerField(default=0,null=True,blank=True)
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class

@@ -209,7 +209,31 @@ h6 {
     grid-column: 2/4;
   }
 }
-  
+
+.analysis-check-container{
+  margin: auto;
+  width: fit-content;
+  padding: 0.4rem;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+  outline: 2px solid #e6e6fa22;
+  border-radius: 0.4rem;
+  user-select: none;
+
+  transition: outline 0.15s ease-in;
+  * {
+    cursor: pointer;
+  }
+}
+
+.analysis-check-container:hover{
+  cursor: pointer;
+}
+
+.analysis-check-container.checked{
+  // outline-width: 3px;
+  outline-color: #00FF00;
+}
 
 
 @media (max-width: 1280px) {

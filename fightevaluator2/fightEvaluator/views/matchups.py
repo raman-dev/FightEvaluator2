@@ -115,6 +115,17 @@ def update_matchup(request,matchupId):
 
 
 @require_http_methods(["PATCH"])
+def analysis_complete(request,matchupId):
+    
+    data = json.loads(request.body)
+
+    matchup = get_object_or_404(MatchUp,id=matchupId)
+    matchup.analysisComplete = data['complete']
+    matchup.save()
+
+    return JsonResponse(model_to_dict(matchup))
+
+@require_http_methods(["PATCH"])
 def toggle_watchlist(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     matchup.inWatchList = not matchup.inWatchList

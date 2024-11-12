@@ -14,7 +14,12 @@ class MatchUpAdmin(admin.ModelAdmin):
     @admin.display(description="Fighter B")
     def fighterB(obj):
         return obj.fighter_b.first_name.capitalize() + " " + obj.fighter_b.last_name.capitalize()
-    list_display = [fighterA,fighterB,"isprelim","weight_class","analysisComplete","scheduled","event","event_id"]
+    
+    @admin.display(description="Reference Ratio")
+    def referenceRatio(obj):
+        return str(obj.fighter_a_references) + ":" +str(obj.fighter_b_references)
+
+    list_display = [fighterA,fighterB,"isprelim","weight_class","analysisComplete",referenceRatio,"event"]
 
 @admin.register(Fighter)
 class FighterAdmin(admin.ModelAdmin):

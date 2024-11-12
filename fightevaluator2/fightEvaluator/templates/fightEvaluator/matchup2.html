@@ -135,7 +135,12 @@
 
   </div>
 
-  
+  <div class="analysis-check-container d-flex justify-content-center {% if matchup.analysisComplete %} checked {% endif %}">
+    <input class="form-check-input" type="checkbox" value="{{ matchup.analysisComplete|default_if_none:"false"|lower }}" id="flexCheckDefault">
+    <label class="form-check-label mx-2" for="flexCheckDefault">
+      Analysis Complete
+    </label>
+  </div>
 
   <div class="outcomes-container my-4">
     <!--
@@ -285,7 +290,37 @@
 {% endblock %}
 
 {% block scripts %}
-
+<script>
+  
+  let checkbox = document.querySelector('.analysis-check-container input');
+  if (checkbox.value == 'true'){
+    checkbox.checked = true;
+  }
+  document.querySelector('.analysis-check-container input').addEventListener('change',(event)=>{
+    //send to server analysis complete for this matchup
+    let checkbox = event.currentTarget;
+    let checkboxContainer = checkbox.parentElement;
+    
+    //propagate the state 
+    fetch(`/matchup/${matchupId}/analysis-complete`, {
+        method: "PATCH",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get("csrftoken"),
+        },
+        body: JSON.stringify({complete:checkbox.checked}),
+    }).then((response) => response.json())
+      .then((data)=>{
+        // console.log(data);
+        if (data.analysisComplete){
+          checkboxContainer.classList.add('checked');
+        }else{
+          checkboxContainer.classList.remove('checked');
+        }    
+      });
+  });
+</script>
 <script>
   
   const matchupId = {{ matchup.id }};

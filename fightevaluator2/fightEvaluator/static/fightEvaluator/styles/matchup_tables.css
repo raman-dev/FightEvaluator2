@@ -85,6 +85,7 @@ table td p {
   top: 0%;
   left: 0%;
   z-index: 1000;
+  min-width: 13.5ch;
 }
 .matchup-actions-menu-container ul {
   background-color: #111519;
