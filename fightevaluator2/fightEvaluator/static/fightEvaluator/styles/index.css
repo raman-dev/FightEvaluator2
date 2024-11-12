@@ -164,7 +164,7 @@
   text-decoration: underline;
 }
 .matchups-container .matchup.active {
-  background-color: hsl(210, 18%, 15%);
+  background-color: hsl(175, 61.57%, 24.95%);
   cursor: pointer;
 }
 .matchups-container .matchup.active .weightclass {

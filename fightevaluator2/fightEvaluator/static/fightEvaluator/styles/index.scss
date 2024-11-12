@@ -195,7 +195,7 @@ $cardBorderColor: #131b23;
   }
 
   .matchup.active{
-    background-color: hsl(210, 18%, 15%);
+    background-color: hsl(175deg 61.57% 24.95%);//hsl(210, 18%, 15%);
     cursor: pointer;
     .weightclass {
       text-decoration: underline;
