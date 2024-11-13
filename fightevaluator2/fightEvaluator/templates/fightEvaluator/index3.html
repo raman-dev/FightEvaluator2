@@ -319,7 +319,7 @@
               </thead>
               <tbody>
                 {% for matchup in matchups %}
-                <tr class="matchup" onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|default_if_none:"false"|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                <tr class="matchup {% if matchup.inWatchList %} watching {% endif %} " onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|default_if_none:"false"|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
                   <td>
                     <div class="d-flex align-items-center justify-content-center p-1">
                       <p>{{matchup.title_full}}</p>
@@ -453,15 +453,16 @@
 
       addMatchup(matchup){
         //create a list element in the watchlist-matchupTable
+        let original = document.querySelector(`[data-matchup-id="${matchup.id}"]`);
         let element = super.addMatchup(matchup);
         if (this.matchup_ids.size == 1){
           this.showWatchlist();
         }
         element.classList.add('watchlist-matchup');
         let analysisElement = this.createAnalysisElement();
-        // console.log(analysisElement);
+        //add watching class to original matchup
         element.appendChild(analysisElement);
-        
+        original.classList.add('watching');
         return element;
       }
 
@@ -479,6 +480,8 @@
         if (this.matchup_ids.size == 0){
           this.hideWatchlist();
         }
+        let original = document.querySelector(`[data-matchup-id="${matchup.id}"]`);
+        original.classList.remove('watching');
         return element;
       }
 
