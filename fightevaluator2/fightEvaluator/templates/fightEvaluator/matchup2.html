@@ -15,7 +15,7 @@
 <div class="container-fluid xmain-container main-container">
   <div class="matchup-info">
     <h4>
-      {{ matchup.weight_class|rmscores }} | Rounds: {{ matchup.rounds }}
+      {{matchup.title}} | {{ matchup.weight_class|rmscores }} | Rounds: {{ matchup.rounds }}
     </h4>
   </div>
   <div class="matchup-container justify-content-center">
@@ -90,6 +90,8 @@
         <div class="fight-result-label d-none"></div>
       </div>
     </div>
+    
+  
   </div>
 
   <div class="prediction-result-container my-4">
@@ -132,7 +134,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="analysis-check-container d-flex justify-content-center {% if matchup.analysisComplete %} checked {% endif %}">

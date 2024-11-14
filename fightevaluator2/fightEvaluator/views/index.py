@@ -126,8 +126,13 @@ def index_alt(request):
 def events(request):
     #return a list of all events sorted by date
     events = FightEvent.objects.all().order_by('date').reverse()
-    
-    return render(request,"fightEvaluator/events.html",{'events':events})
+    events_by_month = {}
+    for event in events:
+        month_year = event.date.strftime("%B %Y")
+        if month_year not in events_by_month:
+            events_by_month[month_year] = []
+        events_by_month[month_year].append(event)
+    return render(request,"fightEvaluator/events.html",{'events':events,'events_by_month':events_by_month})
 
 def focusTest(request):
     return render(request,"fightEvaluator/focusTest.html",{})

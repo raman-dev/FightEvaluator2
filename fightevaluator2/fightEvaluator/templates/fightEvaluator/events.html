@@ -13,19 +13,25 @@
 
 <div class="main-container container-fluid d-flex flex-column align-items-center">
     <h1>Events</h1>
-    <ul class="border event-list mx-auto row justify-content-evenly">
-        {% for event in events %}
-            <li class="m-1 col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4">
-                <div class="border rounded-3 py-3 px-1">
-                    <a href="/{{event.id}}">
-                        <h6 class="m-0 text-center">
-                            {{ event.title }}
-                        </h6>
-                    </a>
-                </div>
+    {% for month_year,events in events_by_month.items %}
+        <div class="d-flex flex-column justify-content-center m-1 event-container">
+            <h4 class="date-title">{{ month_year }}</h4>
+            <ul class="border event-list mx-auto row justify-content-evenly">
                 
-            </li>
-        {% endfor %}
-    </ul>
+                {% for event in events %}
+                    <li class="m-1 col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4">
+                        <div class="border rounded-3 py-3 px-1">
+                            <a href="/{{event.id}}">
+                                <h6 class="m-0 text-center">
+                                    {{ event.title }}
+                                </h6>
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+    {% endfor %}
 </div>
 {% endblock %}

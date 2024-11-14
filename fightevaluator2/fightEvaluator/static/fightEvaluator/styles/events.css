@@ -1,7 +1,12 @@
+.event-container .date-title {
+  margin: auto;
+}
+
 ul.event-list {
   list-style-type: none;
   padding: 0.4rem;
   margin: 0;
+  background-color: #111519 !important;
 }
 ul.event-list li {
   padding: 0px;
