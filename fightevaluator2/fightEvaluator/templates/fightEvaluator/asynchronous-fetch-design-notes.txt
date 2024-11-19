@@ -1,0 +1,25 @@
+Requirements
+------------------
+    - do not block the main django process when fetching and parsing web pages
+    - write to the django server when fetched 
+
+
+http.GET --> django
+    django
+        views.index --->
+            check if events are upto date?
+                true --> 
+                    check new?
+                        read from write target into django-server
+
+                    return from django-server
+                false -->
+                    async_fetcher.fetch()
+                    return {'fetching data'}
+    
+
+    async_fetcher
+        perform tasks on seperate process 
+        on completion write to database or some target
+        python pipe with a process?
+
