@@ -12,6 +12,8 @@ import re
 from .. import scraper
 # from ..scraper import getUpcomingFightEvent
 
+# index_global_var = 0
+
 @require_GET
 def indexById(request,eventId):
     eventQuerySet = FightEvent.objects.filter(id=eventId)
@@ -40,6 +42,9 @@ def indexById(request,eventId):
 @require_GET
 def index(request):
     #purpose of index
+    # global index_global_var
+    # index_global_var += 1
+    # print(f'ACCESSED index_global_var {index_global_var} times')
     #show next upcoming fight event
     nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
     #compare current date and next event date
