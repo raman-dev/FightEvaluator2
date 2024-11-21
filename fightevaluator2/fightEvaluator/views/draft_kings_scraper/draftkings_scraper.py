@@ -10,6 +10,17 @@ from pathlib import Path
 
 console = Console()
 dk_url = 'https://sportsbook.draftkings.com/leagues/mma/ufc'
+
+def isStaleOrEmpty() -> bool:
+    uptoDateOrStale = False
+    currentDate = datetime.date.today()
+
+    with open("fightEvaluator/views/draft_kings_scraper/odds.json","r+",encoding="ascii") as oddsFile:
+        oddsJson = json.load(oddsFile)
+        if oddsJson['updated'] == None or datetime.datetime.strptime(oddsJson['updated'],"%Y-%m-%d").date() != currentDate:
+            uptoDateOrStale = True
+    
+    return uptoDateOrStale
 def run():
 
     # print('OS.GETCWD => ',os.getcwd())

@@ -52,6 +52,9 @@
 {% endblock %}
 
 {% block scripts %}
+{% if not oddsList %}
+    <script src="{% static 'fightEvaluator/js/profit-polling.js' %}"></script>
+{% endif %}
 <script>
     function updateMultiFunction(){
         const multis = [1];
