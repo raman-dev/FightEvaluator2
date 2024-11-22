@@ -200,6 +200,10 @@ $cardBorderColor: #131b23;
     .weightclass {
       text-decoration: underline;
     }
+    user-select: none;
+    * {
+      user-select: none;
+    }
   }
 
   .matchup:focus{

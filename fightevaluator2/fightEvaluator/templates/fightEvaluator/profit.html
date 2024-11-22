@@ -13,7 +13,7 @@
         
         <div class="table-wrapper">
 
-            <table class="odds-table table table-bordered">
+            <table class="odds-table table table-bordered {% if not oddsList %} transparent {% endif %}">
                 <caption style="caption-side:top">
                     <h3>Odds Table</h3>
                 </caption>
@@ -45,7 +45,8 @@
             </table>
         </div>
         <div class="odds-result d-flex justify-content-center">
-            <p>1 x 0 = 0</p>
+            <span>Multiplier :&nbsp;</span>
+            <p class="odds-result-label">1</p>
         </div>
     </div>
 
@@ -74,11 +75,14 @@
             }
          });
          console.log(multis);
-         let oddsResultP = document.querySelector('.odds-result p');
+         let oddsResultLabel = document.querySelector('.odds-result-label');
          let resultString = multis.join(" x ");
-         
-         resultString += ' = ' + product.toFixed(2);
-         oddsResultP.textContent = resultString;
+         if (multis.length != 1){
+            resultString += ' = ' + product.toFixed(2);
+         }else{
+            resultString = '1';
+         }
+         oddsResultLabel.textContent = resultString;
          
     }
 

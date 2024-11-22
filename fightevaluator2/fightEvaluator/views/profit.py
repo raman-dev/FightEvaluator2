@@ -43,7 +43,7 @@ def get_odds(request):
         return JsonResponse({"available":True,'oddsList':oddsListMap})
     # if not updating then check if
     # else return empty list or flag
-    return JsonResponse({"available": False})
+    return JsonResponse({"available": False,'message':'updating odds.'})
 
 
 def OddsWorkerThreadControlFunction():

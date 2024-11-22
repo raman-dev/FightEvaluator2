@@ -1,6 +1,6 @@
-const pollingInterval = 5000;//500ms or 0.5s
+const pollingInterval = 3000;//500ms or 0.5s
 // var pollingIntervalHandle = null;
-
+const oddsResultLabel = document.querySelector('.odds-result-label');
 function createOddsElement(odds){
     /*
         "fighter_a": fa,
@@ -38,6 +38,7 @@ function pollEndpoint(){
           //update matchup table
           //update on server
           //check if we have data or data not ready
+          document.querySelector('table').classList.remove('transparent');//make visible
           if (data.available){
             clearInterval(pollingIntervalHandle);
             let tableBody = document.querySelector('.odds-table tbody');
@@ -46,8 +47,11 @@ function pollEndpoint(){
                 let row = createOddsElement(odd);
                 tableBody.appendChild(row);
             }
+            oddsResultLabel.textContent = 'Multiplier: 1';
           }else{
             //data is unavailble currently try again later
+            //display the update message
+            oddsResultLabel.textContent = 'Server is....' + data.message;
           } 
         });
     
