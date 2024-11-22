@@ -191,6 +191,10 @@ class MatchUp(models.Model):
      def title_full(self) -> str:
           return self.fighter_a.name + " vs " + self.fighter_b.name
 
+class OddsDataState(models.Model):
+     staleOrEmpty = models.BooleanField(default=False)
+     updating = models.BooleanField(default=False)
+     date = models.DateField(default=None,blank=True,null=True)
 
 class Likelihood(models.IntegerChoices):
     UNLIKELY = (5,"Very Unlikely")

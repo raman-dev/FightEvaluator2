@@ -6,6 +6,7 @@ urlpatterns = [
     path('alt',views.index_alt,name='index_alt'),
 
     path('profit',views.profit_calculator,name="profit_calculator"),
+    path('profit/get-odds',views.get_odds,name='odds_endpoint'),
 
     path('predictions',views.predictions,name="predictions"),
     path('predictions/publish',views.publishResults,name="publish-results"),

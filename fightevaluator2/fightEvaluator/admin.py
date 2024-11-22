@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Fighter,Assessment,Note,MatchUp,FightEvent,FightOutcome,EventLikelihood,Prediction
+from .models import Fighter,Assessment,Note,MatchUp,FightEvent,FightOutcome,EventLikelihood,Prediction,OddsDataState
 # Register your models here.
 
 @admin.register(FightEvent)
@@ -90,3 +90,8 @@ class FightOutcomeAdmin(admin.ModelAdmin):
         return obj.winner.name
     list_display = ["method","time","final_round",winnerName]
     # search_fields = ["matchup__fighter_a__first_name","matchup__fighter_a__last_name","matchup__fighter_b__first_name","matchup__fighter_b__last_name"]
+
+@admin.register(OddsDataState)
+class OddsDataStateAdmin(admin.ModelAdmin):
+    pass
+    list_display = ["date","updating","staleOrEmpty"]
