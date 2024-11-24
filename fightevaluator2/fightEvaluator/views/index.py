@@ -4,15 +4,16 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
-from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event
+from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
 import re
 from .. import scraper
+from threading import Thread
 # from ..scraper import getUpcomingFightEvent
 
-# index_global_var = 0
+WorkerThread = None
 
 @require_GET
 def indexById(request,eventId):
@@ -33,6 +34,96 @@ def indexById(request,eventId):
         #results not generated but may be available for query
     context = {
         'event': event,
+        'matchupsList': [mainCard,prelims],
+    }
+
+    return render(request, "fightEvaluator/index3.html",context)
+
+def WorkerThreadControlFunction():
+    # fightEventData = scraper.getUpcomingFightEvent()
+    # fightEventForm = FightEventForm(fightEventData['eventData'])
+    # if not fightEventForm.is_valid():
+    #     return JsonResponse({'fightEventForm':'FUCKED','error':fightEventForm.errors})
+    print('WorkerThread running....')
+# Create your views here.
+
+@require_GET
+def index_endpoint(request):
+    feds = FightEventDataState.objects.first()
+    if feds.updating or feds.staleOrEmpty:
+        return JsonResponse({"message":'currently updating'})
+    
+    # nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
+    # matchups = MatchUp.objects.filter(event=nextEvent)
+    # #split into main card and prelims
+    # mainCard = []
+    # prelims = []
+    # for matchup in matchups:
+    #     if matchup.isprelim:
+    #         prelims.append(matchup)
+    #     else:
+    #         mainCard.append(matchup)
+    
+    # context = {
+    #     'event': nextEvent,
+    #     'matchupsList': [mainCard,prelims],
+    # }
+
+    # return render(request, "fightEvaluator/index3.html",context)
+    return JsonResponse({"message":'data should be available','data':'its the data yo!'})
+
+@require_GET
+def index13(request):
+    #purpose of index
+    global WorkerThread
+
+    fightEventDataState = FightEventDataState.objects.select_for_update().first()
+    #show next upcoming fight event
+    # nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
+    nextEvent = None
+    if fightEventDataState.staleOrEmpty:
+        #compare current date and next event date
+        if WorkerThread == None or not WorkerThread.is_alive():
+            WorkerThread = Thread(target=WorkerThreadControlFunction)
+            WorkerThread.start()
+            #create new
+        else:
+            print('Currently updating from site.....')
+        # if not nextEvent:
+        #     fightEventData = scraper.getUpcomingFightEvent()
+        #     fightEventForm = FightEventForm(fightEventData['eventData'])
+            
+        #     if not fightEventForm.is_valid():
+        #         return JsonResponse({'fightEventForm':'FUCKED','error':fightEventForm.errors})
+        #     nextEvent = fightEventForm.save()
+            
+        #     for matchup in fightEventData['matchups']:
+        #         matchup['event'] = nextEvent
+        #         # print(matchup)
+        #         matchup['scheduled'] = nextEvent.date
+        #         # print(matchup)
+        #         matchupForm = MatchUpFormMF(matchup)
+        #         if not matchupForm.is_valid():
+        #             return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
+        #         matchupForm.save()
+    else:
+        nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
+    #show next upcoming fight event
+    # nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
+    #if next event is in the  past use webscraper to grab next event
+    #retreive matchups for next event
+    matchups = MatchUp.objects.filter(event=nextEvent)
+    #split into main card and prelims
+    mainCard = []
+    prelims = []
+    for matchup in matchups:
+        if matchup.isprelim:
+            prelims.append(matchup)
+        else:
+            mainCard.append(matchup)
+    
+    context = {
+        'event': nextEvent,
         'matchupsList': [mainCard,prelims],
     }
 
