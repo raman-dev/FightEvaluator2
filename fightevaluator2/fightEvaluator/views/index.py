@@ -72,6 +72,7 @@ def matchupDictWithName(matchup: MatchUp):
     result = model_to_dict(matchup)
     result['fighter_a_name'] = name_a
     result['fighter_b_name'] = name_b
+    result['title_full'] = matchup.title_full()
 
     return result
 @require_GET

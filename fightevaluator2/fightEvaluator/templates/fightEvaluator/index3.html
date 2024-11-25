@@ -373,9 +373,9 @@
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
  {% if event is None %}
- <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script>
+  <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script>
 {% endif %}
- {% include "fightEvaluator/matchup-data-script.html" %}
+{% include "fightEvaluator/matchup-data-script.html" %}
 
 <script>
 
@@ -392,12 +392,13 @@
             data-fighter-b-id="${matchup.fighter_b}">
             <td >
               <div class="d-flex align-items-center justify-content-center ">
-                <p>${matchup.fighter_a_name} vs ${matchup.fighter_b_name}</p>
+                <p>${matchup.title_full}</p>
               </div>
             </td>
             <td>
               <div class="d-flex align-items-center justify-content-center ">
-                <p class="weight-class" >${matchup.weight_class}</p>
+                <p class="weight-class" >
+                  ${matchup.weight_class.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}</p>
               </div>
             </td>
             <td>
