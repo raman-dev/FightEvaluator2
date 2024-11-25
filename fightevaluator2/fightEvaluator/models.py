@@ -164,15 +164,15 @@ class MatchUp(models.Model):
             NA = "N/A"
 
     #  created_at = models.DateField(auto_now_add=True)
-     fighter_a = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_a")
-     fighter_b = models.ForeignKey('Fighter',on_delete=models.CASCADE,related_name="fighter_b")
+     fighter_a = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighter_a",null=True)
+     fighter_b = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighter_b",null=True)
      weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
      #optional number of rounds
      rounds = models.IntegerField(default=3, null=True,blank=True)
      #optional date of bout
      scheduled = models.DateField(default=None, null=True,blank=True)
      #optional event 
-     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.DO_NOTHING)#don't delete matchup if event is deleted
+     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.CASCADE)#don't delete matchup if event is deleted
      #optional result
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True) 

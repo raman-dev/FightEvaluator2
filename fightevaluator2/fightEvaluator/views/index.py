@@ -64,26 +64,33 @@ def WorkerThreadControlFunction():
     fightEventDataState.save()
     print('WorkerThread complete....')
 
+def matchupDictWithName(matchup: MatchUp):
+    
+    name_a = matchup.fighter_a.name_unmod
+    name_b = matchup.fighter_b.name_unmod
+    
+    result = model_to_dict(matchup)
+    result['fighter_a_name'] = name_a
+    result['fighter_b_name'] = name_b
 
+    return result
 @require_GET
 def index_endpoint(request):
-    fightEventDataState = FightEventDataState.objects.first()
+    fightEventDataState = FightEventDataState.objects.select_for_update().first()
 
-    # if fightEventDataState.updating and fightEventDataState.staleOrEmpty and not WorkerThread:
-    #     #in an invalid state
+    global WorkerThread
+    if WorkerThread == None and fightEventDataState.updating:
+        #invalid state start worker 
+        WorkerThread = Thread(target=WorkerThreadControlFunction)
+        WorkerThread.start()
+    #in an invalid state
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
         return JsonResponse({'available':False,"message":'currently updating'})
     
     nextEvent = FightEvent.objects.filter(date__gte=datetime.today().date()).order_by('date').first()
-    matchups = MatchUp.objects.filter(event=nextEvent)
+    prelims = list(map(lambda x:matchupDictWithName(x),MatchUp.objects.filter(event=nextEvent,isprelim=True)))
+    mainCard = list(map(lambda x: matchupDictWithName(x),MatchUp.objects.filter(event=nextEvent,isprelim=False)))
     #split into main card and prelims
-    mainCard = []
-    prelims = []
-    for matchup in matchups:
-        if matchup.isprelim:
-            prelims.append(model_to_dict(matchup))
-        else:
-            mainCard.append(model_to_dict(matchup))
     
     context = {
         'available' : True,
@@ -100,22 +107,27 @@ def index_alt(request):
     #purpose of index
     global WorkerThread
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
-    #show next upcoming fight event
-    # nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
     
-    nextEvent = None
+    #event is stale if the latest event has a date before today
+    today = datetime.today().date()
+    nextEvent = FightEvent.objects.filter(date__gte=today).order_by('date').first()
+    if nextEvent == None:
+        fightEventDataState.staleOrEmpty = True
+        fightEventDataState.save()
+
     if fightEventDataState.staleOrEmpty:
         print('EVENT IS STALE OR EMPTY')
         #compare current date and next event date
+        fightEventDataState.updating=True
         if WorkerThread == None or not WorkerThread.is_alive():
             WorkerThread = Thread(target=WorkerThreadControlFunction)
             WorkerThread.start()
             #create new
         else:
             print('Currently updating from site.....')
+        fightEventDataState.save()
     else:
-        
-        nextEvent = FightEvent.objects.filter(date__gte=datetime.today().date()).order_by('date').first()
+        nextEvent = FightEvent.objects.filter(date__gte=today).order_by('date').first()
     #show next upcoming fight event
     # nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
     #if next event is in the  past use webscraper to grab next event
