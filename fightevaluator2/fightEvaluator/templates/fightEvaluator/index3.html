@@ -367,12 +367,16 @@
     </div>
   </div>
 {% endblock %}
-{% if not event or not matchupsList %}
-    <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script>
-{% endif %}
+
+
+
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
-{% include "fightEvaluator/matchup-data-script.html" %}
+ {% if event is None %}
+ <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script>
+{% endif %}
+ {% include "fightEvaluator/matchup-data-script.html" %}
+
 <script>
 
     function createMatchUpElement(matchup){
@@ -511,7 +515,11 @@
       }
     }
     
-    const fightEventId = {{ event.id }};
+    const fightEventIdWrapper = [0];
+
+    {% if event %}
+      fightEventIdWrapper[0] = {{  event.id }};
+    {% endif %}
     const postHeaders = {
       accept: "application/json",
       "Content-Type": "application/json",

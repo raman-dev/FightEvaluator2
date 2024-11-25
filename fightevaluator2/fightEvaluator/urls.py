@@ -2,8 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('alt',views.index_alt,name='index_alt'),
+    path('', views.index_alt, name='index'),
+    path('index-endpoint',views.index_endpoint,name='index_endpoint'),
+    # path('', views.index, name='index'),
+    # path('alt',views.index_alt,name='index_alt'),
 
     path('profit',views.profit_calculator,name="profit_calculator"),
     path('profit/get-odds',views.get_odds,name='odds_endpoint'),

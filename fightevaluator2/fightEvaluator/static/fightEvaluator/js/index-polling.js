@@ -1,38 +1,39 @@
 
-const timeDelay = 3000;//3s
+console.log('index poller included!');
+
+const timeDelay = 3000;
 const headers = {
     accept: "application/json",
     "Content-Type": "application/json",
     "X-CSRFToken": Cookies.get("csrftoken"),
 }
-const indexPoller = new Poller('/index-endpoint',headers,onReceiveIndexPollResult);
+const indexEndpoint = '/index-endpoint'
+// const indexPoller = new Poller('/index-endpoint',headers,onReceiveIndexPollResult);
 
 class Poller {
     static DEFAULT_POLLING_RATE = 3000;
-    constructor(url, headers, resultFunction,pollingRate = DEFAULT_POLLING_RATE) {
+    constructor(url, headers, resultFunction,pollingRate = Poller.DEFAULT_POLLING_RATE) {
         this.endpoint = url;
         this.headers = headers;
-        this.functionHandle = null;
-        this.timeDelay = pollingRate;
         this.resultFunction = resultFunction;
+        this.timeDelay = pollingRate;
+        this.functionHandle = null;
     }
 
     startPolling() {
-        this.functionHandle = setInterval(poll, this.timeDelay);
+        this.functionHandle = setInterval(this.poll.bind({poller:this}), this.timeDelay);
     }
 
-    poll() {
-        fetch(`${this.endpoint}`, {
+    async poll() {
+        const response = await fetch(`${this.poller.endpoint}`, {
             method: 'GET',
-            headers: this.headers
-        })
-        .then(response => response.json())
-        .then((data) => {
-            if (data.available){
-                this.stopPolling();
-            }
-            this.resultFunction(data);
+            headers: this.poller.headers
         });
+        const data = await response.json();
+        if (data.available){
+            this.poller.stopPolling();
+        }
+        this.poller.resultFunction(data);
     }
 
     stopPolling(){
@@ -41,19 +42,14 @@ class Poller {
     }
 }
 
-function onReceiveIndexPollResult(data) {
-    console.log('Received data...', data);
-    //update matchup table
-    //update on server
-    //check if we have data or data not ready
-    // document.querySelector('table').classList.remove('transparent');//make visible
+function pollResult(data) {
+    console.log(data);
     if (data.available) {
-        
+        console.log('Received data...', data);
     } else {
-        //data is unavailble currently try again later
-        //display the update message
-        console.log(`'Server is....' + ${data.message}`);
+        console.log(`Server is.... ${data.message}`);
     }
 }
 
-const pollingIntervalHandle = setInterval(indexPollingFunction, timeDelay);
+const indexPoller = new Poller(indexEndpoint,headers,pollResult);
+indexPoller.startPolling();
