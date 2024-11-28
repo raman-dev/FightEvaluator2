@@ -1,35 +1,31 @@
 class Poller {
     static DEFAULT_POLLING_RATE = 3000;
-    constructor(url, headers, resultFunction,pollingRate = DEFAULT_POLLING_RATE) {
+    constructor(url, headers, resultFunction, pollingRate = Poller.DEFAULT_POLLING_RATE) {
         this.endpoint = url;
         this.headers = headers;
-        this.functionHandle = null;
-        this.timeDelay = pollingRate;
         this.resultFunction = resultFunction;
+        this.timeDelay = pollingRate;
+        this.functionHandle = null;
     }
 
     startPolling() {
-        this.functionHandle = setInterval(poll, this.timeDelay);
+        this.functionHandle = setInterval(this.poll.bind({ poller: this }), this.timeDelay);
     }
 
-    poll() {
-        fetch(`${this.endpoint}`, {
+    async poll() {
+        const response = await fetch(`${this.poller.endpoint}`, {
             method: 'GET',
-            headers: this.headers
-        })
-        .then(response => response.json())
-        .then((data) => {
-            if (data.available){
-                this.stopPolling();
-            }
-            this.resultFunction(data);
+            headers: this.poller.headers
         });
+        const data = await response.json();
+        if (data.available) {
+            this.poller.stopPolling();
+        }
+        this.poller.resultFunction(data);
     }
 
-    stopPolling(){
+    stopPolling() {
         clearInterval(this.functionHandle);
         this.functionHandle = null;
     }
 }
-
-// export default Poller;

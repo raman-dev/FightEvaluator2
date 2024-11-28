@@ -373,7 +373,62 @@
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
  {% if event is None %}
-  <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script>
+  <!-- <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script> -->
+   <script src="{% static 'fightEvaluator/js/polling.js' %}"></script>
+  <script>
+    
+    console.log('index poller included!');
+    const timeDelay = 3000;
+    const headers = {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+    }
+    const indexEndpoint = '/index-endpoint';
+    
+    function pollResult(data) {
+        // console.log(data);
+        if (!data.available) {
+            console.log(`Server is.... ${data.message}`);
+        } else {
+            console.log('Received data...');//, data);
+            //populate the tables with the data
+            const eventData = data['event'];
+            const mainCard = data['mainCard'];
+            const prelims = data['prelims'];
+            fightEventIdWrapper[0] = eventData.id;
+            
+            //set title
+            document.querySelector('.event-title').textContent = eventData.title;
+            //mainCardTable -> object
+            for (const matchup of mainCard){
+                matchupMap[matchup.id] = matchup;
+                mainCardTable.addMatchup(matchup);
+            }
+            for (const matchup of prelims){
+                matchupMap[matchup.id] = matchup;
+                prelimTable.addMatchup(matchup);
+            }
+        }
+        /*
+            
+        event_structure {
+            "id": 77, "title": "UFC 310: Pantoja vs. Asakura",
+            "date": "2024-12-07", "location": null,
+            "link": "https://www.tapology.com/fightcenter/events/116766-ufc-310", "hasResults": false
+        }
+        
+        matchup structure {
+            "id": 780, "fighter_a": 2453, "fighter_b": 3799, "weight_class": "flyweight", "rounds": 5,
+            "scheduled": "2024-12-07","event": 77, "isprelim": false, "outcome": null, "inWatchList": null,
+            "analysisComplete": false, "fighter_a_references": 0, "fighter_b_references": 0, "fighter_a_name": "alexandre pantoja", "fighter_b_name": "kai asakura"
+        }
+        */
+    }
+
+    const indexPoller = new Poller(indexEndpoint, headers, pollResult);
+    indexPoller.startPolling();
+  </script>
 {% endif %}
 {% include "fightEvaluator/matchup-data-script.html" %}
 

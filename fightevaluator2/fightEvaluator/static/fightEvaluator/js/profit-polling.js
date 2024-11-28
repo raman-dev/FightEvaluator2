@@ -21,42 +21,73 @@ function createOddsElement(odds){
         `)[0];
 }
 
-function pollEndpoint(){
-    console.log(`${this.query}: Polling endpoint...`);
-    
-    fetch("/profit/get-odds", {
-        method: "GET",
-        headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": Cookies.get("csrftoken"),
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Received data...',data);
-          //update matchup table
-          //update on server
-          //check if we have data or data not ready
-          document.querySelector('table').classList.remove('transparent');//make visible
-          if (data.available){
-            clearInterval(pollingIntervalHandle);
-            let tableBody = document.querySelector('.odds-table tbody');
-            let oddsList = data.oddsList;
-            for (const odd of oddsList){
-                let row = createOddsElement(odd);
-                tableBody.appendChild(row);
-            }
-            oddsResultLabel.textContent = 'Multiplier: 1';
-          }else{
-            //data is unavailble currently try again later
-            //display the update message
-            oddsResultLabel.textContent = 'Server is....' + data.message;
-          } 
-        });
-    
-    this.query = this.query + 1;
-
+const profitEndpoint = '/profit/get-odds';
+const headers = {
+  accept: "application/json",
+  "Content-Type": "application/json",
+  "X-CSRFToken": Cookies.get("csrftoken"),
 }
 
-const pollingIntervalHandle = setInterval(pollEndpoint.bind({query:0}),pollingInterval);
+function pollResult(data){
+     console.log('Received data...',data);
+    //update matchup table
+    //update on server
+    //check if we have data or data not ready
+    document.querySelector('table').classList.remove('transparent');//make visible
+    if (data.available){
+      let tableBody = document.querySelector('.odds-table tbody');
+      let oddsList = data.oddsList;
+      for (const odd of oddsList){
+          let row = createOddsElement(odd);
+          tableBody.appendChild(row);
+      }
+      oddsResultLabel.textContent = 'Multiplier: 1';
+    }else{
+      //data is unavailble currently try again later
+      //display the update message
+      oddsResultLabel.textContent = 'Server is....' + data.message;
+    }
+}
+
+// function pollEndpoint(){
+//     console.log(`${this.query}: Polling endpoint...`);
+    
+//     fetch("/profit/get-odds", {
+//         method: "GET",
+//         headers: {
+//             accept: "application/json",
+//             "Content-Type": "application/json",
+//             "X-CSRFToken": Cookies.get("csrftoken"),
+//         },
+//       })
+//         .then((response) => response.json())
+//         .then((data) => {
+//           console.log('Received data...',data);
+//           //update matchup table
+//           //update on server
+//           //check if we have data or data not ready
+//           document.querySelector('table').classList.remove('transparent');//make visible
+//           if (data.available){
+//             clearInterval(pollingIntervalHandle);
+//             let tableBody = document.querySelector('.odds-table tbody');
+//             let oddsList = data.oddsList;
+//             for (const odd of oddsList){
+//                 let row = createOddsElement(odd);
+//                 tableBody.appendChild(row);
+//             }
+//             oddsResultLabel.textContent = 'Multiplier: 1';
+//           }else{
+//             //data is unavailble currently try again later
+//             //display the update message
+//             oddsResultLabel.textContent = 'Server is....' + data.message;
+//           } 
+//         });
+    
+//     this.query = this.query + 1;
+
+// }
+
+// const pollingIntervalHandle = setInterval(pollEndpoint.bind({query:0}),pollingInterval);
+
+const poller = new Poller(profitEndpoint,headers,pollResult);
+poller.startPolling();
