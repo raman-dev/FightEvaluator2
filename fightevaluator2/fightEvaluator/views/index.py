@@ -38,7 +38,7 @@ def indexById(request,eventId):
         'matchupsList': [mainCard,prelims],
     }
 
-    return render(request, "fightEvaluator/index3.html",context)
+    return render(request, "fightEvaluator/index.html",context)
 
 def WorkerThreadControlFunction():
     
@@ -149,7 +149,7 @@ def index(request):
         'matchupsList': [mainCard,prelims],
     }
 
-    return render(request, "fightEvaluator/index3.html",context)
+    return render(request, "fightEvaluator/index.html",context)
 
 @require_GET
 def events(request):
