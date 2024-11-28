@@ -104,7 +104,7 @@ def index_endpoint(request):
     return JsonResponse(context)
 
 @require_GET
-def index_alt(request):
+def index(request):
     #purpose of index
     global WorkerThread
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
@@ -151,49 +151,6 @@ def index_alt(request):
 
     return render(request, "fightEvaluator/index3.html",context)
 
-# Create your views here.
-@require_GET
-def index(request):
-    #purpose of index
-    #show next upcoming fight event
-    nextEvent = FightEvent.objects.filter(date__gte=datetime.date.today()).order_by('date').first()
-    #compare current date and next event date
-    if not nextEvent:
-        fightEventData = scraper.getUpcomingFightEvent()
-        fightEventForm = FightEventForm(fightEventData['eventData'])
-        
-        if not fightEventForm.is_valid():
-            return JsonResponse({'fightEventForm':'FUCKED','error':fightEventForm.errors})
-        nextEvent = fightEventForm.save()
-        
-        for matchup in fightEventData['matchups']:
-            matchup['event'] = nextEvent
-            # print(matchup)
-            matchup['scheduled'] = nextEvent.date
-            # print(matchup)
-            matchupForm = MatchUpFormMF(matchup)
-            if not matchupForm.is_valid():
-                return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
-            matchupForm.save()
-    #if next event is in the  past use webscraper to grab next event
-    #retreive matchups for next event
-    matchups = MatchUp.objects.filter(event=nextEvent)
-    #split into main card and prelims
-    mainCard = []
-    prelims = []
-    for matchup in matchups:
-        if matchup.isprelim:
-            prelims.append(matchup)
-        else:
-            mainCard.append(matchup)
-    
-    context = {
-        'event': nextEvent,
-        'matchupsList': [mainCard,prelims],
-    }
-
-    return render(request, "fightEvaluator/index3.html",context)
-
 @require_GET
 def events(request):
     #return a list of all events sorted by date
@@ -205,9 +162,6 @@ def events(request):
             events_by_month[month_year] = []
         events_by_month[month_year].append(event)
     return render(request,"fightEvaluator/events.html",{'events':events,'events_by_month':events_by_month})
-
-def focusTest(request):
-    return render(request,"fightEvaluator/focusTest.html",{})
 
 def getFightEndMethod(rawIn):
     raw_method = rawIn.lower()
@@ -338,7 +292,6 @@ def getFightEventResults2(request,eventId):
     verifyPrediction(matchups)
     return JsonResponse({'puta':'madre'})
     
-
 #maybe asynchronous in the future evaluate
 #fetch results from web if not already in database
 @require_GET
