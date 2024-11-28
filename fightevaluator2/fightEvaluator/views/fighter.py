@@ -71,6 +71,7 @@ def update_fighter(request,fighterId):
         fighter.save()
     else:
         print('invalid fighter input')
+        print(form.errors)
         # return JsonResponse({'error':'invalid form'})
 
     return JsonResponse(getFighterJSON(fighter))
