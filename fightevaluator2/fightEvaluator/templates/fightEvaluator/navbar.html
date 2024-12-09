@@ -21,3 +21,16 @@
     </div>
   </a>
 </nav>
+<script>
+  //
+  let currentPath = window.location.pathname;
+  //remove right parentheses
+  if (currentPath[currentPath.length - 1] == '/' && currentPath.length > 1){
+    currentPath = currentPath.substring(0,currentPath.length - 1);
+  }
+  console.log(currentPath);
+  
+  let currentLink = document.querySelector(`[href="${currentPath}"]`);
+  //make it active 
+  currentLink.classList.add('active');
+</script>

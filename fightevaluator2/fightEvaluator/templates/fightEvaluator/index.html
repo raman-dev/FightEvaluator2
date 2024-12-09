@@ -1015,6 +1015,16 @@
 </script>
 
 <script>
+  function showFighterCreatorSection() {
+      console.log("show fighter creator section");
+      let fighterCreatorSection = document.querySelector(".fighter-creator");
+      fighterCreatorSection.classList.toggle("show");
+      if (fighterCreatorSection.classList.contains("show")) {
+        fighterCreatorSection.style.height = fighterCreatorSection.scrollHeight + "px";
+        return;
+      }
+      fighterCreatorSection.style.height = "0px";
+    }
   //onmouseenter main-card
   function onMouseEnterEventHandler(event){
     

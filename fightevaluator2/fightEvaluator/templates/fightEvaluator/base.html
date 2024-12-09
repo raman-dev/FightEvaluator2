@@ -9,14 +9,21 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
     <link rel="stylesheet" href="{% static  'fightEvaluator/styles/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'fightEvaluator/styles/navbar.css' %}">
+
     <title>{% block title %}{% endblock %}</title>
     {% block styles %} {% endblock %}
 </head>
 
 <body data-bs-theme="dark">
     {% block content %}
-
     {% endblock %}
+    <script>
+        let mainContainer  = document.querySelector(".main-container");
+        if (!mainContainer.classList.contains('border')){
+            mainContainer.classList.add('border');
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script
