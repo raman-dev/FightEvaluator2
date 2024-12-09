@@ -9,6 +9,7 @@ class Poller {
     }
 
     startPolling() {
+        
         this.functionHandle = setInterval(this.poll.bind({ poller: this }), this.timeDelay);
     }
 
