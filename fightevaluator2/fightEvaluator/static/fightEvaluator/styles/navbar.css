@@ -1,4 +1,15 @@
 nav {
-  background-color: #111519 !important;
   text-transform: capitalize;
+  font-size: large;
+}
+nav a {
+  padding: 0.4rem;
+  color: rgb(222, 226, 230);
+  margin: 0.4rem;
+  border: 1.5px solid transparent;
+  border-radius: 0.4rem;
+}
+
+a.active {
+  border-color: rgb(222, 226, 230);
 }/*# sourceMappingURL=navbar.css.map */

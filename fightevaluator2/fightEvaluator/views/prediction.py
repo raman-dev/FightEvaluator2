@@ -4,12 +4,15 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.db.models import Count,Q
+from django.db.models.functions import ExtractMonth,ExtractYear
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,Likelihood
 from ..forms import FightEventForm,MatchUpFormMF
 import json
 import datetime
 import re
+from rich import print as rprint
+
 from .. import scraper
 
 def predictions(request):
@@ -22,21 +25,39 @@ def predictions(request):
             isGamble : boolean
         }
     """
-    # context = {
-    #     'predictions':Prediction.objects.all()
-    # }
-    # context = {}
     eventPredictionMap = {}
+    
     for p in Prediction.objects.all():
         if p.matchup.event in eventPredictionMap:
             eventPredictionMap[p.matchup.event].append(p)
         else:
             eventPredictionMap[p.matchup.event] = []
             eventPredictionMap[p.matchup.event].append(p)
+
     predictionsByEvent = list(eventPredictionMap.items())
     predictionsByEvent.sort(key=lambda x: x[0].date)
     predictionsByEvent.reverse()
-    return render(request, "fightEvaluator/prediction.html",{'event_predictions':predictionsByEvent,'stats':getStats()})
+        
+    currentYear = None
+    currentMonth = None
+    year = {}
+    for event,predictions in predictionsByEvent:
+        if currentYear != event.date.year:
+            currentYear = event.date.year
+            year[currentYear] = {}
+        if currentMonth != event.date.month:
+            currentMonth = event.date.month
+            year[currentYear][currentMonth] = {}
+        if event not in year[currentYear][currentMonth]:
+            year[currentYear][currentMonth][event] = []
+        
+        year[currentYear][currentMonth][event] = predictions
+
+    return render(request, "fightEvaluator/prediction.html",{
+        'event_predictions':predictionsByEvent,
+        'predictionsByYearMonth':year,
+        'stats':getStats()
+        })
 
 def verifyPrediction(matchups):
     for matchup in matchups:
@@ -127,12 +148,10 @@ def getStats():
                     ratio
                     percent
         
-        could have a recalibration?
-        one time recalculation of all stats
-
-        how to detect irregularity hash?
-        database
-            record.hash onchange-> calc new hash compare iff different set flag or send signal that table has changed
+        
+        month: 
+            correct_predictions/total_predictions
+        
     """
 
     stats['prediction_type'] = {}

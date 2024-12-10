@@ -160,4 +160,18 @@ ul {
         // background-color: red;
         border-right: none !important;
     }
-} 
+}
+
+.year-container{
+  .year-label-container{
+    text-transform: capitalize;
+  }
+
+  .year-content-container{
+    .month-container{
+      .month-label-container{
+        text-transform: capitalize;
+      }
+    }
+  }
+}

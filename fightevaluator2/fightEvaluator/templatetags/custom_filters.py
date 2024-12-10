@@ -20,3 +20,22 @@ def height_str(value: int):
     if not value:
         return None
     return f'{value // 12}\'{value % 12}'
+
+
+@register.filter
+def month_num_to_name(monthNumber):
+    monthMap = {
+        1:'january',
+        2:'february',
+        3: 'march',
+        4:'april',
+        5:'may',
+        6:'june',
+        7:'july',
+        8:'august',
+        9:'september',
+        10:'october',
+        11:'november',
+        12:'december'
+    }
+    return monthMap[monthNumber]

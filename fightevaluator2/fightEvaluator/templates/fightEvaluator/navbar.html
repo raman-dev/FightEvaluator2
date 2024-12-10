@@ -1,22 +1,22 @@
-<nav>
+<nav class="d-flex">
   <a href="/">
-    <div class="home-link btn">
+    <div class="home-link ">
       <p class="m-0">home</p>
     </div>
   </a>
   <a href="/events">
-    <div class="events-link btn">
+    <div class="events-link ">
       <p class="m-0">events</p>
     </div>
   </a>
   <a href="/predictions">
-    <div class="events-link btn">
+    <div class="events-link ">
       <p class="m-0">predictions</p>
     </div>
   </a>
   
   <a href="/profit">
-    <div class="events-link btn">
+    <div class="events-link ">
       <p class="m-0">profit</p>
     </div>
   </a>
@@ -33,4 +33,10 @@
   let currentLink = document.querySelector(`[href="${currentPath}"]`);
   //make it active 
   currentLink.classList.add('active');
+</script>
+<script class="refresh-poller">
+  function refresh(){
+    window.location.reload();
+  }
+  // setTimeout(refresh,800);//refresh once a second
 </script>

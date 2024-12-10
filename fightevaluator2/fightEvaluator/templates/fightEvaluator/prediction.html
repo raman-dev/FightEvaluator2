@@ -57,8 +57,97 @@
 
                 </ul>
             </div>
+            {% for year,monthEventMap in predictionsByYearMonth.items  %}
+            <div class="year-container mx-auto col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
+                <div class="year-label-container mx-auto">
+                    <h3>{{year}}</h3>
+                </div>
+                <div class="border year-content-container" id="prediction-year-{{year}}">
+                    {% for month,eventMap in monthEventMap.items %}
+                        <div class="border month-container m-1">
+                            <div class="month-label-container d-flex justify-content-between">
+                                <div>
+                                    <h4>{{month|month_num_to_name}}</h4>        
+                                    <div class="month-summary-container">
+                                        <div>{{eventMap|length}} Events</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="height: fit-content;" type="button" data-bs-toggle="collapse" data-bs-target="#prediction-month-{{month}}" aria-expanded="false" aria-controls="prediction-month-{{month}}">
+                                    collapse
+                                </button>
+                            </div>
+                            <div class="collapse" id="prediction-month-{{month}}">
+                                {% for event,predictions in eventMap.items %}
+                                    <div class="prediction-table row flex-column">
+                                        <div class="mx-auto event-name col col-sm-12 col-md-10 col-lg-10 col-xl-10 col-xxl-9 d-flex justify-content-between">
+                                            <p class="m-0">{{ event.date }}</p>
+                                            <p class="m-0 text-end">{{ event.title }}</p>
+                                        </div>
+                                        <ul class="mx-auto border px-2 col col-sm-12 col-md-10 col-lg-10 col-xl-10 col-xxl-9">
+                                            <li>
+                                                <div class="table-header row" data-key-count="0">
+                                                    <div class="col col-4 column-label">
+                                                        <p>
+                                                            MatchUp
+                                                        </p> 
+                                                    </div>
+                                                    <div class="col col-4 column-label" id="prediction" data-sort-order="-1" data-sort="default">
+                                                        <p>Prediction</p>
+                                                        <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                                            <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="col col-2 column-label" id="result" data-sort-order="-1" data-sort="default">
+                                                        <p>Result</p>
+                                                        <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                                            <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="col col-2 column-label" id="likelihood" data-sort-order="-1" data-sort="default">
+                                                        <p>
+                                                            Likelihood
+                                                        </p> 
+                                                        <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                                            <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% for data in predictions %}
+                                                <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-likelihood="{{data.prediction.likelihood}}" data-event="{{ data.matchup.event.title }}" >
+                                                    <div class="row">
+                                                        <div class="col col-4 d-flex align-items-center">{{data.matchup.title}}</div>
+                                                        <div class="col col-4 d-flex align-items-center">{{data.prediction.predictionDisplay}}</div>   
+                                                        <div class="col col-2 data-result d-flex align-items-center">
+                                                            <p  class="mx-auto {% if data.isCorrect %} data-correct {% elif data.isCorrect == False %} data-incorrect {% else %} data-tbd {% endif %}">
+                                                                {% if data.isCorrect == None %}
+                                                                    tbd
+                                                                {% else %}
+                                                                    {{data.isCorrect}}
+                                                                {% endif %} 
+                                                            </p>
+                                                        </div>
+                        
+                                                        <div class="col col-2 d-flex align-items-center justify-content-center likelihood">
+                                                            <p class="confidence likely-{{data.prediction.likelihood}}">very likely</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                    {% endfor %}
+                </div>
+            </div>
+  
+            {% endfor %}
+            
             {% for event,predictions in event_predictions %}
-            <div class="prediction-table row flex-column">
+            <!-- <div class="prediction-table row flex-column">
                 <div class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
                     <p class="m-0">{{ event.date }}</p>
                     <p class="m-0 text-end">{{ event.title }}</p>
@@ -115,8 +204,9 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </div>
+            </div> -->
             {% endfor %}
+            
             
         </div>
     </div>

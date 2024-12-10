@@ -134,4 +134,11 @@ ul .column-label[data-sort=dec] .icon {
 }
 .outcome-type-stats > :last-child {
   border-right: none !important;
+}
+
+.year-container .year-label-container {
+  text-transform: capitalize;
+}
+.year-container .year-content-container .month-container .month-label-container {
+  text-transform: capitalize;
 }/*# sourceMappingURL=prediction_styles.css.map */
