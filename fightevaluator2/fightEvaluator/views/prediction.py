@@ -18,29 +18,14 @@ from .. import scraper
 def predictions(request):
     
     """
-        structure {   
-            matchup : String,
+        structure 
+            matchup : model_obj,
             prediction : String
             isCorrect : boolean
             isGamble : boolean
-        }
+        
     """
     eventPredictionMap = {}
-    
-    for p in Prediction.objects.all():
-        if p.matchup.event in eventPredictionMap:
-            eventPredictionMap[p.matchup.event].append(p)
-        else:
-            eventPredictionMap[p.matchup.event] = []
-            eventPredictionMap[p.matchup.event].append(p)
-
-    predictionsByEvent = list(eventPredictionMap.items())
-    predictionsByEvent.sort(key=lambda x: x[0].date)
-    predictionsByEvent.reverse()
-        
-    currentYear = None
-    currentMonth = None
-    yearMap = {}
     """
 
         select *
@@ -52,40 +37,65 @@ def predictions(request):
             
 
     """
+    events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
+    years = Prediction.objects.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct()#query set of years of predictions
+    
+    rprint(years)
     
     data = Prediction.objects
-    monthlyStats = []
-    for yearMapping in data.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct():
-        rprint(yearMapping)
-        for i in range(1,12 + 1):
-            monthQ = Q(matchup__event__date__year=yearMapping['year'],matchup__event__date__month=i)
-            stats = (data.filter(monthQ).aggregate(
-                total=Count("isCorrect"),
-                correct=Count("isCorrect",filter=Q(isCorrect=True)),
-                incorrect=Count("isCorrect",filter=Q(isCorrect=False))
-            ))
-            records = list(data.filter(monthQ))
-            monthlyStats.append([records,stats])
+    eventsByYearMonth = {}
+    for fightEvent in events:
+        #grab predictions for this event
+        preds = data.filter(matchup__event=fightEvent)
+        if preds.count() > 0:#atleast 1 prediction for this event
+            
+            currDate = fightEvent.date
+            if currDate.year not in eventsByYearMonth:
+                eventsByYearMonth[currDate.year] = {}
+            if currDate.month not in eventsByYearMonth[currDate.year]:
+                eventsByYearMonth[currDate.year][currDate.month] = {}
+                
+            eventPredictionMap[fightEvent] = preds
+            eventsByYearMonth[currDate.year][currDate.month][fightEvent] = preds
+    # rprint(eventsByYearMonth)
+    # stats = {}
+    #for every year
+    # for yearMapping in data.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct():
+    #     currYear = yearMapping['year']
+    #     rprint('Current Year => ',currYear)
+    #     eventsThisYear = data.filter(matchup__event__date__year=currYear)
+    #     #for every month
+    #     stats[currYear] = {}
+    #     for i in range(1,12 + 1):
+    #         monthQ = Q(matchup__event__date__month=i)
+    #         eventsThisMonth = eventsThisYear.filter(monthQ)
+    #         monthlyStats = (eventsThisMonth.aggregate(
+    #             total=Count("isCorrect"),
+    #             correct=Count("isCorrect",filter=Q(isCorrect=True)),
+    #         ))
+    #         monthlyStats['incorrect'] = monthlyStats['total'] - monthlyStats['correct']
+    #         #grab all events in this month
+    #         stats[currYear][i] = monthlyStats
 
     # rprint(monthlyStats)
-    for event,predictions in predictionsByEvent:
+    # for event,predictions in eventPredictionMap.items():
         
-        if currentYear != event.date.year:
-            currentYear = event.date.year
-            yearMap[currentYear] = {}
+    #     if currentYear != event.date.year:
+    #         currentYear = event.date.year
+    #         yearMap[currentYear] = {}
         
-        if currentMonth != event.date.month:
-            currentMonth = event.date.month
-            yearMap[currentYear][currentMonth] = {}
+    #     if currentMonth != event.date.month:
+    #         currentMonth = event.date.month
+    #         yearMap[currentYear][currentMonth] = {}
 
-        if event not in yearMap[currentYear][currentMonth]:
-            yearMap[currentYear][currentMonth][event] = []
+    #     if event not in yearMap[currentYear][currentMonth]:
+    #         yearMap[currentYear][currentMonth][event] = []
         
-        yearMap[currentYear][currentMonth][event] = predictions
-
+    #     yearMap[currentYear][currentMonth][event] = predictions
+    # rprint(yearMap)
     return render(request, "fightEvaluator/prediction.html",{
-        'event_predictions':predictionsByEvent,
-        'predictionsByYearMonth':yearMap,
+        'event_predictions':eventPredictionMap,
+        # 'predictionsByYearMonth':yearMap,
         'stats':getStats()
         })
 

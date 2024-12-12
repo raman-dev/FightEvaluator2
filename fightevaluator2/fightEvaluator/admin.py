@@ -79,7 +79,7 @@ class Prediction(admin.ModelAdmin):
         if not obj.prediction.fighter:
             return "Fighter Not Needed"
         return obj.prediction.fighter.first_name.capitalize() + " " + obj.prediction.fighter.last_name.capitalize()
-    list_display = ["matchup",fighter,event,eventLikelihood,"isCorrect","isGamble"]
+    list_display = ["matchup",fighter,event,eventLikelihood,"isCorrect","isGamble","matchup__event"]
 
 @admin.register(FightOutcome)
 class FightOutcomeAdmin(admin.ModelAdmin):

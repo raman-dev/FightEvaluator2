@@ -57,7 +57,7 @@
 
                 </ul>
             </div>
-            {% for year,monthEventMap in predictionsByYearMonth.items  %}
+            <!-- {% for year,monthEventMap in predictionsByYearMonth.items  %}
             <div class="year-container mx-auto col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
                 <div class="year-label-container mx-auto">
                     <h3>{{year}}</h3>
@@ -144,10 +144,10 @@
                 </div>
             </div>
   
-            {% endfor %}
+            {% endfor %} -->
+            {% for event,predictions in event_predictions.items %}
             
-            {% for event,predictions in event_predictions %}
-            <!-- <div class="prediction-table row flex-column">
+            <div class="prediction-table row flex-column">
                 <div class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
                     <p class="m-0">{{ event.date }}</p>
                     <p class="m-0 text-end">{{ event.title }}</p>
@@ -204,9 +204,9 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </div> -->
+            </div>
+
             {% endfor %}
-            
             
         </div>
     </div>
