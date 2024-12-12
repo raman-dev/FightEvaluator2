@@ -3,7 +3,7 @@ from django.views.decorators.http import require_GET
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
-from django.db.models import Count,Q
+from django.db.models import Avg,Count,Q
 from django.db.models.functions import ExtractMonth,ExtractYear
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,Likelihood
@@ -40,22 +40,52 @@ def predictions(request):
         
     currentYear = None
     currentMonth = None
-    year = {}
+    yearMap = {}
+    """
+
+        select *
+        from
+            prediction
+        order by
+            date.month
+        group by
+            
+
+    """
+    
+    data = Prediction.objects
+    monthlyStats = []
+    for yearMapping in data.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct():
+        rprint(yearMapping)
+        for i in range(1,12 + 1):
+            monthQ = Q(matchup__event__date__year=yearMapping['year'],matchup__event__date__month=i)
+            stats = (data.filter(monthQ).aggregate(
+                total=Count("isCorrect"),
+                correct=Count("isCorrect",filter=Q(isCorrect=True)),
+                incorrect=Count("isCorrect",filter=Q(isCorrect=False))
+            ))
+            records = list(data.filter(monthQ))
+            monthlyStats.append([records,stats])
+
+    # rprint(monthlyStats)
     for event,predictions in predictionsByEvent:
+        
         if currentYear != event.date.year:
             currentYear = event.date.year
-            year[currentYear] = {}
+            yearMap[currentYear] = {}
+        
         if currentMonth != event.date.month:
             currentMonth = event.date.month
-            year[currentYear][currentMonth] = {}
-        if event not in year[currentYear][currentMonth]:
-            year[currentYear][currentMonth][event] = []
+            yearMap[currentYear][currentMonth] = {}
+
+        if event not in yearMap[currentYear][currentMonth]:
+            yearMap[currentYear][currentMonth][event] = []
         
-        year[currentYear][currentMonth][event] = predictions
+        yearMap[currentYear][currentMonth][event] = predictions
 
     return render(request, "fightEvaluator/prediction.html",{
         'event_predictions':predictionsByEvent,
-        'predictionsByYearMonth':year,
+        'predictionsByYearMonth':yearMap,
         'stats':getStats()
         })
 
@@ -121,6 +151,7 @@ def getStats():
     #for all predictions get per event rate
     #get overall rate
     data = Prediction.objects.aggregate(
+        avg_correct=Avg('isCorrect'),
         correct=Count('isCorrect',filter=Q(isCorrect=True)),
         incorrect=Count('isCorrect',filter=Q(isCorrect=False)),
         very_likely=Count('isCorrect',filter=Q(prediction__likelihood=Likelihood.VERY_LIKELY)),
@@ -130,7 +161,8 @@ def getStats():
     stats['general']={}
     stats['general']['total_predictions']= data['correct'] + data['incorrect']
     stats['general']['ratio'] = f"{data['correct']}/{stats['general']['total_predictions']}"
-    stats['general']['accuracy_overall'] = f"{(100 * (data['correct']/stats['general']['total_predictions'])):.2f}%"
+    #data['correct']/stats['general']['total_predictions']
+    stats['general']['accuracy_overall'] = f"{(100 * (data['avg_correct'])):.2f}%"
 
     """
         
