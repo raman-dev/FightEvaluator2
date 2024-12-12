@@ -53,6 +53,19 @@ def predictions(request):
 
     """
     
+    data = Prediction.objects
+    monthlyStats = []
+    for yearMapping in data.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct():
+        rprint(yearMapping)
+        for i in range(1,12 + 1):
+            monthQ = Q(matchup__event__date__year=yearMapping['year'],matchup__event__date__month=i)
+            stats = (data.filter(monthQ).aggregate(
+                total=Count("isCorrect"),
+                correct=Count("isCorrect",filter=Q(isCorrect=True)),
+                incorrect=Count("isCorrect",filter=Q(isCorrect=False))
+            ))
+            records = list(data.filter(monthQ))
+            monthlyStats.append([records,stats])
 
     # rprint(monthlyStats)
     for event,predictions in predictionsByEvent:
