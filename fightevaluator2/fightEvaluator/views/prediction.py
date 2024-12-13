@@ -38,25 +38,18 @@ def predictions(request):
 
     """
     events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
-    years = Prediction.objects.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct()#query set of years of predictions
+    # years = Prediction.objects.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct()#query set of years of predictions
     
-    rprint(years)
+    # rprint(years)
     
     data = Prediction.objects
-    eventsByYearMonth = {}
+    # eventsByYearMonth = {}
     for fightEvent in events:
         #grab predictions for this event
         preds = data.filter(matchup__event=fightEvent)
         if preds.count() > 0:#atleast 1 prediction for this event
-            
-            currDate = fightEvent.date
-            if currDate.year not in eventsByYearMonth:
-                eventsByYearMonth[currDate.year] = {}
-            if currDate.month not in eventsByYearMonth[currDate.year]:
-                eventsByYearMonth[currDate.year][currDate.month] = {}
-                
             eventPredictionMap[fightEvent] = preds
-            eventsByYearMonth[currDate.year][currDate.month][fightEvent] = preds
+            # eventsByYearMonth[currDate.year][currDate.month][fightEvent] = preds
     # rprint(eventsByYearMonth)
     # stats = {}
     #for every year
