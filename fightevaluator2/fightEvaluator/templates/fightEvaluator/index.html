@@ -234,7 +234,12 @@
           <input class="form-check-input" type="checkbox" role="switch" id="showResultsSwitch" disabled>
           <label class="form-check-label" for="showResultsSwitch">Results Not Available</label>
         </div>
-        <a href="{{event.link}}">event link</a>
+        <button class="event-link-btn btn btn-info" data-url="{{event.link}}">event link</button>
+        <script>
+          document.querySelector(".event-link-btn").addEventListener("click",(event)=>{
+              window.open(event.currentTarget.dataset.url,"_blank");
+          });
+        </script>
       </div>
      
     </div>
