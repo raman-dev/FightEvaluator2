@@ -1,3 +1,5 @@
+$event-item-color: #111519;
+
 .event-container{
     .date-title{
         margin: auto;
@@ -26,4 +28,32 @@ ul.event-list{
             text-decoration: underline;
         }
     }
-}  
+}
+
+.events-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    row-gap: 0.6rem;
+
+    border: 2px solid #131b23;
+
+    .event-item{
+        background-color: $event-item-color;
+        transition: background-color 0.2s ease;
+        a{
+            text-decoration: none;
+            color: whitesmoke;
+        }
+    }
+
+    .event-item:hover{
+        // background-color: hsl(175, 61.57%, 24.95%);
+        background-color: hsl(200, 56%, 12%);
+        cursor: pointer;
+        outline-color: whitesmoke;
+        a{
+            text-decoration: underline;
+        }
+    }
+}

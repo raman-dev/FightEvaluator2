@@ -29,7 +29,9 @@
     currentPath = currentPath.substring(0,currentPath.length - 1);
   }
   console.log(currentPath);
-  
+  //we want the first segment of the path
+  //so / or /segment 
+  //
   let currentLink = document.querySelector(`[href="${currentPath}"]`);
   //make it active 
   currentLink.classList.add('active');

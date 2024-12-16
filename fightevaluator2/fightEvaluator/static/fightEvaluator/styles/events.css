@@ -22,4 +22,28 @@ ul.event-list li:hover {
 }
 ul.event-list li:hover a {
   text-decoration: underline;
+}
+
+.events-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  row-gap: 0.6rem;
+  border: 2px solid #131b23;
+}
+.events-container .event-item {
+  background-color: #111519;
+  transition: background-color 0.2s ease;
+}
+.events-container .event-item a {
+  text-decoration: none;
+  color: whitesmoke;
+}
+.events-container .event-item:hover {
+  background-color: hsl(200, 56%, 12%);
+  cursor: pointer;
+  outline-color: whitesmoke;
+}
+.events-container .event-item:hover a {
+  text-decoration: underline;
 }/*# sourceMappingURL=events.css.map */

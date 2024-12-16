@@ -95,6 +95,20 @@
   margin: 0rem;
 }
 
+.event-link-btn {
+  svg{
+    transition: all 0.2s ease;
+  }
+}
+
+.event-link-btn:hover{
+  svg { 
+    g {
+      fill: black;
+    }
+  }
+}
+
 $tableBackgroundColor: #111519;
 $tableBorderRadius: 0.68em;
 $cardBorderColor: #131b23;
