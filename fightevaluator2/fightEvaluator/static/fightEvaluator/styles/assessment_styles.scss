@@ -474,6 +474,7 @@ $flickerDuration: 400ms;
   max-width: 48ch;
   padding: 1rem;
   margin: 0.5rem;
+  height: fit-content;
 
   .notes-title{
     padding: 0.5rem;
@@ -524,8 +525,8 @@ $flickerDuration: 400ms;
     ul {
       // border: 1px solid #343a40 !important
       border-radius: 0.5rem;
-      overflow-y: scroll;
-      overflow-x: hidden;
+      // overflow-y: scroll;
+      // overflow-x: hidden;
       margin: 0px;
       width: 100%;
       padding: 0px;
