@@ -52,6 +52,7 @@ $sidebar-sublink-title-width: 11ch;
 $main-container-leftpadding: calc($sidebar-width + 2ch);
 .main-container{
     overflow: auto;
+    height: 100%;
 }
 
 nav{

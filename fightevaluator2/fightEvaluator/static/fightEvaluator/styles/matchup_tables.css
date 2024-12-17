@@ -7,19 +7,6 @@
 .matchups-container {
   position: relative;
 }
-.matchups-container ul {
-  padding: 0px;
-}
-.matchups-container li {
-  list-style: none;
-}
-.matchups-container li .matchup:hover {
-  background-color: hsl(50, 10%, 50%);
-}
-.matchups-container li .matchup.active {
-  background-color: violet;
-  color: black;
-}
 
 .watchlist-matchups {
   width: 100%;
@@ -87,26 +74,30 @@ table td p {
   z-index: 1000;
   min-width: 13.5ch;
 }
-.matchup-actions-menu-container ul {
+.matchup-actions-menu-container ul.menu-item-list {
+  margin: 0px;
+  padding: 0px;
   background-color: #111519;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   border: 1px solid gray;
-  border-radius: 0.4rem;
+  border-radius: 0.6rem;
+  overflow: hidden;
 }
-.matchup-actions-menu-container ul li:first-child {
+.matchup-actions-menu-container ul.menu-item-list li.menu-list-item {
+  list-style: none;
+  border-top: 1px solid gray;
+}
+.matchup-actions-menu-container ul.menu-item-list li.menu-list-item:first-child {
   border-top: none;
 }
-.matchup-actions-menu-container ul li {
-  border-top: 1px solid gray;
-  padding: 0.6rem;
-}
-.matchup-actions-menu-container li:hover {
+.matchup-actions-menu-container li.menu-list-item :hover {
   cursor: pointer;
   background-color: violet;
   color: black;
 }
 .matchup-actions-menu-container .menu-item {
   text-transform: capitalize;
+  padding: 0.6rem;
 }
 
 .table-grid {

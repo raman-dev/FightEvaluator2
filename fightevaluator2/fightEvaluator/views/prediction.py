@@ -189,8 +189,10 @@ def getStats():
         
     """
 
-    stats['prediction_type'] = {}
-
+    stats['predictionTypeStats'] = {}
+    """
+        for every prediction_type get the corresponding ratio and accuracy
+    """
     for predictionEventType in Event:
         result = Prediction.objects.aggregate(
             total=Count('isCorrect',filter=Q(prediction__event=predictionEventType)),
@@ -198,7 +200,7 @@ def getStats():
         )
         if result['total'] == 0:
             continue
-        stats['prediction_type'][predictionEventType] = {
+        stats['predictionTypeStats'][predictionEventType] = {
             'ratio': f"{result['count']}/{result['total']}", 
             'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
         }

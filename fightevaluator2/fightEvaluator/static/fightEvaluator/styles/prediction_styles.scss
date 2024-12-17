@@ -125,12 +125,6 @@ ul {
         }
     }
 
-    // #result.column-label{
-    //     justify-content: end !important;
-    //     p{
-    //         margin-right: 1rem;
-    //     }
-    // }
 
     .column-label:hover{
         cursor: pointer;
@@ -174,4 +168,30 @@ ul {
       }
     }
   }
+}
+
+.stat-container{
+  border: 2px solid #131b23;
+  
+  .stat-label{
+    text-transform: uppercase;
+  }
+  
+  .prediction-type-stats{
+    // border-top: 1px solid lavender;
+    .prediction-type-stat-container{
+      background-color: #12161A;
+      border-radius: 0.4rem;
+
+      .prediction-type-stat-label{
+        border-bottom: 1px solid lavender;
+        margin-bottom: 0.8rem;
+        margin-top: 0.4rem;
+        p{
+          margin: 0px;
+        }
+      }
+    }
+  }
+  
 }

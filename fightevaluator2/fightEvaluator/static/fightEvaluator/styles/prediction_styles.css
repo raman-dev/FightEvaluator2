@@ -141,4 +141,23 @@ ul .column-label[data-sort=dec] .icon {
 }
 .year-container .year-content-container .month-container .month-label-container {
   text-transform: capitalize;
+}
+
+.stat-container {
+  border: 2px solid #131b23;
+}
+.stat-container .stat-label {
+  text-transform: uppercase;
+}
+.stat-container .prediction-type-stats .prediction-type-stat-container {
+  background-color: #12161A;
+  border-radius: 0.4rem;
+}
+.stat-container .prediction-type-stats .prediction-type-stat-container .prediction-type-stat-label {
+  border-bottom: 1px solid lavender;
+  margin-bottom: 0.8rem;
+  margin-top: 0.4rem;
+}
+.stat-container .prediction-type-stats .prediction-type-stat-container .prediction-type-stat-label p {
+  margin: 0px;
 }/*# sourceMappingURL=prediction_styles.css.map */

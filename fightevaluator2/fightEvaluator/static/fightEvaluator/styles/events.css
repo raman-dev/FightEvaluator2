@@ -33,7 +33,7 @@ ul.event-list li:hover a {
 }
 .events-container .event-item {
   background-color: #111519;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.1s ease;
 }
 .events-container .event-item a {
   text-decoration: none;
