@@ -57,7 +57,7 @@
 
 .confidence {
     min-width: fit-content;
-    border-radius: 0.4rem;
+    border-radius: 0.2rem;
     padding: 0.3rem;
     text-align: center;
     text-transform: capitalize;
@@ -91,14 +91,11 @@ ul {
     .data-result{    
         p{  
             font-family: PoppinsSemiBold;
-            outline: 2px solid lavender;
-            outline-offset: 1px;
-            border-radius: 0.4rem;
+            border-radius: 0.2rem;
             margin: 0px;
 
             width: 6ch;
             text-align: center;
-            text-transform: lowercase;
             color: black;
         }
         p.data-correct{
@@ -118,7 +115,7 @@ ul {
         p{
             margin: 0px;
         }
-        // justify-content: space-between; 
+        justify-content: center; 
         align-items: center;
         .icon{
             color: #313539;//set fill="currentColor"

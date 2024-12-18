@@ -25,7 +25,7 @@
                 {% for k,v in stats.general.items %}
                 <div class="general-stat-row row my-2" style="max-width: 42ch;">
                     <div class="row">
-                        <div class="col stat-label">{{k}}</div>
+                        <div class="col stat-label">{{k|rmscores}}</div>
                         <div class="col"><strong>{{v}}</strong></div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     <p class="m-0">{{ event.date }}</p>
                     <p class="m-0 text-end">{{ event.title }}</p>
                 </div>
-                <ul class="mx-auto border px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
+                <ul class="mx-auto  px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
                     <li>
                         <div class="table-header row" data-key-count="0">
                             <div class="col col-4 column-label">
@@ -66,13 +66,13 @@
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
                                 </svg>
                             </div>
-                            <div class="col col-2 column-label" id="result" data-sort-order="-1" data-sort="default">
+                            <div class="col col-1 column-label" id="result" data-sort-order="-1" data-sort="default">
                                 <p>Result</p>
                                 <svg class="icon"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                                     <path fill="currentColor" d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/>
                                 </svg>
                             </div>
-                            <div class="col col-2 column-label" id="likelihood" data-sort-order="-1" data-sort="default">
+                            <div class="col col-3 column-label" id="likelihood" data-sort-order="-1" data-sort="default">
                                 <p>
                                     Likelihood
                                 </p> 
@@ -83,21 +83,21 @@
                         </div>
                     </li>
                     {% for data in predictions %}
-                        <li tabindex="{{ forloop.counter0 }}" class="data-row" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-likelihood="{{data.prediction.likelihood}}" data-event="{{ data.matchup.event.title }}" >
+                        <li tabindex="{{ forloop.counter0 }}" class="data-row my-2" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-likelihood="{{data.prediction.likelihood}}" data-event="{{ data.matchup.event.title }}" >
                             <div class="row">
                                 <div class="col col-4 d-flex align-items-center">{{data.matchup.title}}</div>
                                 <div class="col col-4 d-flex align-items-center">{{data.prediction.predictionDisplay}}</div>   
-                                <div class="col col-2 data-result d-flex align-items-center">
+                                <div class="col col-1 data-result d-flex align-items-center">
                                     <p  class="mx-auto {% if data.isCorrect %} data-correct {% elif data.isCorrect == False %} data-incorrect {% else %} data-tbd {% endif %}">
                                         {% if data.isCorrect == None %}
-                                            tbd
+                                            tbd|title
                                         {% else %}
-                                            {{data.isCorrect}}
+                                            {{data.isCorrect|title}}
                                         {% endif %} 
                                     </p>
                                 </div>
 
-                                <div class="col col-2 d-flex align-items-center justify-content-center likelihood">
+                                <div class="col col-3 d-flex align-items-center justify-content-end likelihood">
                                     <p class="confidence likely-{{data.prediction.likelihood}}">very likely</p>
                                 </div>
                             </div>

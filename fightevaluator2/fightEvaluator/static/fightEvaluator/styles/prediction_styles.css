@@ -52,7 +52,7 @@
 .confidence {
   min-width: -moz-fit-content;
   min-width: fit-content;
-  border-radius: 0.4rem;
+  border-radius: 0.2rem;
   padding: 0.3rem;
   text-align: center;
   text-transform: capitalize;
@@ -86,13 +86,10 @@ ul li.data-row .col {
 }
 ul .data-result p {
   font-family: PoppinsSemiBold;
-  outline: 2px solid lavender;
-  outline-offset: 1px;
-  border-radius: 0.4rem;
+  border-radius: 0.2rem;
   margin: 0px;
   width: 6ch;
   text-align: center;
-  text-transform: lowercase;
   color: black;
 }
 ul .data-result p.data-correct {
@@ -107,6 +104,7 @@ ul .data-result p.data-tbd {
 ul .column-label {
   padding: 0.2rem;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 ul .column-label p {
