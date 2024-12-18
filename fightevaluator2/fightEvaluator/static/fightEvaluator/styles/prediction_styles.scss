@@ -174,13 +174,13 @@ ul {
     text-transform: uppercase;
   }
   
-  .prediction-type-stats{
+  .stats-row{
     // border-top: 1px solid lavender;
-    .prediction-type-stat-container{
+    .prediction-field-stats-container{
       background-color: #12161A;
       border-radius: 0.4rem;
 
-      .prediction-type-stat-label{
+      .prediction-field-label{
         border-bottom: 1px solid lavender;
         margin-bottom: 0.8rem;
         margin-top: 0.4rem;

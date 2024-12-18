@@ -190,6 +190,7 @@ def getStats():
     """
 
     stats['predictionTypeStats'] = {}
+    stats['predictionLikelihoodStats'] = {}
     """
         for every prediction_type get the corresponding ratio and accuracy
     """
@@ -205,6 +206,20 @@ def getStats():
             'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
         }
 
+    for likelihood in Likelihood.choices:
+        rprint(likelihood)
+        result = Prediction.objects.aggregate(
+            total=Count('isCorrect',filter=Q(prediction__likelihood=likelihood[0])),
+            count=Count('isCorrect',filter=Q(isCorrect=True,prediction__likelihood=likelihood[0]))
+        )
+        if result['total'] == 0:
+            continue
+        
+        rprint(result['total'],result['count'])
+        stats['predictionLikelihoodStats'][likelihood] = {
+            'ratio': f"{result['count']}/{result['total']}", 
+            'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
+        }
     return stats
 
 def stats(request):

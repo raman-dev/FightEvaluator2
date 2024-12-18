@@ -147,15 +147,15 @@ ul .column-label[data-sort=dec] .icon {
 .stat-container .stat-label {
   text-transform: uppercase;
 }
-.stat-container .prediction-type-stats .prediction-type-stat-container {
+.stat-container .stats-row .prediction-field-stats-container {
   background-color: #12161A;
   border-radius: 0.4rem;
 }
-.stat-container .prediction-type-stats .prediction-type-stat-container .prediction-type-stat-label {
+.stat-container .stats-row .prediction-field-stats-container .prediction-field-label {
   border-bottom: 1px solid lavender;
   margin-bottom: 0.8rem;
   margin-top: 0.4rem;
 }
-.stat-container .prediction-type-stats .prediction-type-stat-container .prediction-type-stat-label p {
+.stat-container .stats-row .prediction-field-stats-container .prediction-field-label p {
   margin: 0px;
 }/*# sourceMappingURL=prediction_styles.css.map */
