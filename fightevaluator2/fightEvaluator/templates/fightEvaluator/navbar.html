@@ -25,20 +25,20 @@
   //
   let currentPath = window.location.pathname;
   //remove right parentheses
-  if (currentPath[currentPath.length - 1] == '/' && currentPath.length > 1){
-    currentPath = currentPath.substring(0,currentPath.length - 1);
-  }
-  console.log(currentPath);
+  const segments = currentPath.split('/').filter((segment) => { return segment.length > 0;});
+  // console.log(segments);
   //we want the first segment of the path
-  //so / or /segment 
-  //
-  let currentLink = document.querySelector(`[href="${currentPath}"]`);
-  //make it active 
-  currentLink.classList.add('active');
-</script>
-<script class="refresh-poller">
-  function refresh(){
-    window.location.reload();
+  let linkPath = '/';
+  if (segments.length != 0){
+    if (!isNaN(segments[0])){
+      linkPath = '/';
+    }else{
+      linkPath = '/'+segments[0];
+    }
   }
-  // setTimeout(refresh,800);//refresh once a second
+  let currentLink = document.querySelector(`[href="${linkPath}"]`);
+  //make it active 
+  if (currentLink != null){
+    currentLink.classList.add('active');
+  }
 </script>
