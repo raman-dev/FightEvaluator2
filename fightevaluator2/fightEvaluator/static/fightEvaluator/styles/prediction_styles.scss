@@ -175,12 +175,20 @@ ul {
   }
   
   .stats-row{
-    // border-top: 1px solid lavender;
-    .prediction-field-stats-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.4rem;
+    .prediction-type-stat-container{
+      padding: 0.4rem;
+      padding-left: 0.6rem;
+      padding-right: 0.6rem;
       background-color: #12161A;
       border-radius: 0.4rem;
 
-      .prediction-field-label{
+      display: flex;
+      flex-direction: column;
+
+      .prediction-type-stat-label{
         border-bottom: 1px solid lavender;
         margin-bottom: 0.8rem;
         margin-top: 0.4rem;
@@ -190,5 +198,10 @@ ul {
       }
     }
   }
-  
+}
+
+@media(max-width: 992px){
+  .stats-row{
+    grid-template-columns: 1fr 1fr !important;
+  }
 }

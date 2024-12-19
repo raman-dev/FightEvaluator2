@@ -30,28 +30,17 @@
                     </div>
                 </div>
                 {% endfor %}
-                <div class="prediction-type-stats stats-row row my-1">    
+                <div class="prediction-type-stats stats-row my-1">    
                     {% for predictionType,typeStats in stats.predictionTypeStats.items %}
-                    <div class="prediction-type-stat-container prediction-field-stats-container col mx-2 pb-2 pt-1">
-                        <div class="prediction-type-stat-label prediction-field-label"><p>{{ predictionType.label|title }}</p></div>
-                        <div class="prediction-type-stat d-flex justify-content-between">
+                    <div class="prediction-type-stat-container">
+                        <div class="prediction-type-stat-label">
+                            <p>{{ predictionType|title }}</p>
+                        </div>
+                        <div class="prediction-type-stat d-flex justify-content-between mt-auto">
                             <span class="stat-label">ratio</span> <span class="stat-val"><strong>{{ typeStats.ratio }}</strong></span>
                         </div>
                         <div class="prediction-type-stat d-flex justify-content-between">
                             <span class="stat-label">accuracy</span><span class="stat-val"><strong>{{ typeStats.accuracy }}</strong></span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="prediction-likelihood-stats stats-row row my-1">    
-                    {% for predictionLikelihood,likelihoodStats in stats.predictionLikelihoodStats.items %}
-                    <div class="prediction-likelihood-stat-container prediction-field-stats-container col mx-2 pb-2 pt-1">
-                        <div class="prediction-likelihood-stat-label prediction-field-label "><p>{{ predictionLikelihood.1 }}</p></div>
-                        <div class="prediction-likelihood-stat d-flex justify-content-between">
-                            <span class="stat-label">ratio</span> <span class="stat-val"><strong>{{ likelihoodStats.ratio }}</strong></span>
-                        </div>
-                        <div class="prediction-likelihood-stat d-flex justify-content-between">
-                            <span class="stat-label">accuracy</span><span class="stat-val"><strong>{{ likelihoodStats.accuracy }}</strong></span>
                         </div>
                     </div>
                     {% endfor %}

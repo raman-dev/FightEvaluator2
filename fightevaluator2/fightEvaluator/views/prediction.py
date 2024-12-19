@@ -201,7 +201,7 @@ def getStats():
         )
         if result['total'] == 0:
             continue
-        stats['predictionTypeStats'][predictionEventType] = {
+        stats['predictionTypeStats'][predictionEventType.label] = {
             'ratio': f"{result['count']}/{result['total']}", 
             'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
         }
@@ -216,7 +216,7 @@ def getStats():
             continue
         
         rprint(result['total'],result['count'])
-        stats['predictionLikelihoodStats'][likelihood] = {
+        stats['predictionTypeStats'][likelihood[1]] = {
             'ratio': f"{result['count']}/{result['total']}", 
             'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
         }

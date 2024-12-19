@@ -147,15 +147,31 @@ ul .column-label[data-sort=dec] .icon {
 .stat-container .stat-label {
   text-transform: uppercase;
 }
-.stat-container .stats-row .prediction-field-stats-container {
+.stat-container .stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.4rem;
+}
+.stat-container .stats-row .prediction-type-stat-container {
+  padding: 0.4rem;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
   background-color: #12161A;
   border-radius: 0.4rem;
+  display: flex;
+  flex-direction: column;
 }
-.stat-container .stats-row .prediction-field-stats-container .prediction-field-label {
+.stat-container .stats-row .prediction-type-stat-container .prediction-type-stat-label {
   border-bottom: 1px solid lavender;
   margin-bottom: 0.8rem;
   margin-top: 0.4rem;
 }
-.stat-container .stats-row .prediction-field-stats-container .prediction-field-label p {
+.stat-container .stats-row .prediction-type-stat-container .prediction-type-stat-label p {
   margin: 0px;
+}
+
+@media (max-width: 992px) {
+  .stats-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
 }/*# sourceMappingURL=prediction_styles.css.map */

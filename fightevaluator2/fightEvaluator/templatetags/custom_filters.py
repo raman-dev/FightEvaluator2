@@ -23,10 +23,6 @@ def height_str(value: int):
 
 
 @register.filter
-def likelihood_str(likelihood):
-    return likelihood[1]
-
-@register.filter
 def month_num_to_name(monthNumber):
     monthMap = {
         1:'january',
