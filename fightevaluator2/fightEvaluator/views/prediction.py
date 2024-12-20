@@ -4,13 +4,9 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.db.models import Avg,Count,Q
-from django.db.models.functions import ExtractMonth,ExtractYear
 
-from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,Likelihood
-from ..forms import FightEventForm,MatchUpFormMF
-import json
-import datetime
-import re
+from ..models import FightEvent,FightOutcome,Prediction,Event,Likelihood
+
 from rich import print as rprint
 
 from .. import scraper
@@ -49,43 +45,6 @@ def predictions(request):
         preds = data.filter(matchup__event=fightEvent)
         if preds.count() > 0:#atleast 1 prediction for this event
             eventPredictionMap[fightEvent] = preds
-            # eventsByYearMonth[currDate.year][currDate.month][fightEvent] = preds
-    # rprint(eventsByYearMonth)
-    # stats = {}
-    #for every year
-    # for yearMapping in data.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct():
-    #     currYear = yearMapping['year']
-    #     rprint('Current Year => ',currYear)
-    #     eventsThisYear = data.filter(matchup__event__date__year=currYear)
-    #     #for every month
-    #     stats[currYear] = {}
-    #     for i in range(1,12 + 1):
-    #         monthQ = Q(matchup__event__date__month=i)
-    #         eventsThisMonth = eventsThisYear.filter(monthQ)
-    #         monthlyStats = (eventsThisMonth.aggregate(
-    #             total=Count("isCorrect"),
-    #             correct=Count("isCorrect",filter=Q(isCorrect=True)),
-    #         ))
-    #         monthlyStats['incorrect'] = monthlyStats['total'] - monthlyStats['correct']
-    #         #grab all events in this month
-    #         stats[currYear][i] = monthlyStats
-
-    # rprint(monthlyStats)
-    # for event,predictions in eventPredictionMap.items():
-        
-    #     if currentYear != event.date.year:
-    #         currentYear = event.date.year
-    #         yearMap[currentYear] = {}
-        
-    #     if currentMonth != event.date.month:
-    #         currentMonth = event.date.month
-    #         yearMap[currentYear][currentMonth] = {}
-
-    #     if event not in yearMap[currentYear][currentMonth]:
-    #         yearMap[currentYear][currentMonth][event] = []
-        
-    #     yearMap[currentYear][currentMonth][event] = predictions
-    # rprint(yearMap)
     return render(request, "fightEvaluator/prediction.html",{
         'event_predictions':eventPredictionMap,
         # 'predictionsByYearMonth':yearMap,
