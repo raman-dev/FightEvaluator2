@@ -41,7 +41,7 @@ class NoteForm(forms.Form):
 class FighterForm(ModelForm):
     class Meta:
         model = Fighter
-        fields = ['first_name','last_name','height','weight_class','reach','stance','date_of_birth','wins','losses','draws','img_link']
+        fields = ['first_name','last_name','height','weight_class','reach','stance','date_of_birth','wins','losses','draws','img_link','data_api_link']
     
 
 class MatchUpFormMF(ModelForm):

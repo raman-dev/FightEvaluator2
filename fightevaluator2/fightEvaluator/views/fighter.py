@@ -68,6 +68,7 @@ def update_fighter(request,fighterId):
         fighter.losses = form.cleaned_data['losses']
         fighter.draws = form.cleaned_data['draws']
         fighter.img_link = form.cleaned_data['img_link']
+        fighter.data_api_link = form.cleaned_data['data_api_link']
         fighter.save()
     else:
         print('invalid fighter input')
