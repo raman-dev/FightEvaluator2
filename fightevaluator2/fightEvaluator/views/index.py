@@ -163,6 +163,11 @@ def events(request):
         events_by_month[month_year].append(event)
     return render(request,"fightEvaluator/events.html",{'events':events,'events_by_month':events_by_month})
 
+# class EventListView(ListView):
+#     model = FightEvent
+#     context_object_name = 'events'
+
+
 def getFightEndMethod(rawIn):
     raw_method = rawIn.lower()
     if 'decision' in raw_method:

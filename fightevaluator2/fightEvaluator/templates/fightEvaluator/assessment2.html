@@ -57,7 +57,7 @@
                     <p class="fighter-stance">{{ fighter.stance }}</p>
                   </div>
                   <div class="info-wrapper">
-                    <button class="event-link-btn btn btn-outline-info" data-url="{{fighter.data_api_link|default_if_none:""}}" style="width: 140px;">
+                    <button class="event-link-btn btn btn-outline-info" data-url="{{ fighter.data_api_link|default_if_none:""}}" style="width: 140px;">
                       <svg id="tapology-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 748 117">
                         <g stroke="none" stroke-width="1" fill="none">
                           <g transform="translate(373.500000, 58.500000) scale(1, -1) translate(-373.500000, -58.500000) translate(-1.000000, -1.000000)" fill="rgb(222, 226, 230)">
@@ -706,6 +706,38 @@
         }
       }
     
+    </script>
+    <script>
+      //you should be creating class for the objects
+      //in the page
+      //objects meaning the noteeditor,the biographical element
+      // class NoteEditor {
+      //   constructor(parameters) {
+
+      //   }
+
+      //   add(note){
+      //     //check type or null
+      //     if (note == null || note == undefined){
+      //       return false;
+      //     }
+      //     if (typeof(note) !=='string' || !(note instanceof String)){
+      //       return false;
+      //     }
+      //     // notes.push(note);//add a note
+      //     //send note to server
+      //     //add note to page
+      //     return true;
+      //   }
+
+      //   delete(noteId){
+      //     //remove note from server
+      //     // server.removeNote(noteId);
+      //     //remove note from page
+      //     let noteElement = document.querySelector(`#${noteId}.note`);
+      //     note.remove();//remove from page
+      //   }
+      // }
     </script>
 {% endblock %}
 
