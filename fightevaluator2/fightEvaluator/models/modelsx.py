@@ -34,6 +34,39 @@ class FightOutcome(models.Model):
     def __str__(self):
         return self.method + " " + self.time + " " + str(self.final_round) +"/" +"|" + ("" if not self.winner else str(self.winner.name))
 
+class MatchUpResult(models.TextChoices):
+     WIN = "Win"
+     LOSS = "Loss"
+     DRAW = "Draw"
+     NO_CONTEST = "No Contest"
+     CANCELLED = "Cancelled"
+     POSTPONED = "Postponed"
+     UPCOMING = "Upcoming"
+     NA = "N/A"
+
+class MatchUp2(models.Model):
+     
+     event = models.ForeignKey('FightEvent',on_delete=models.CASCADE)
+     fighter_a = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighterA",null=True)
+     fighter_b = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighterB",null=True)
+
+     weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
+     rounds = models.IntegerField(default=3)
+     is_prelim = models.BooleanField(default=True) 
+
+     in_watchlist = models.BooleanField(default=False)
+     analysis_complete = models.BooleanField(default=False)
+
+     
+     def __str__(self) -> str:
+          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
+    
+     def title(self) -> str:
+          return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize()
+    
+     def title_full(self) -> str:
+          return self.fighter_a.name + " vs " + self.fighter_b.name
+
 class MatchUp(models.Model):
      class MatchUpResult(models.TextChoices):
             WIN = "Win"
@@ -108,3 +141,20 @@ class Prediction(models.Model):
         if self.prediction.fighter != None:
              return self.prediction.fighter.name +", " + str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
         return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
+
+"""
+
+     matchup2:
+        outcome 
+        prediction
+          event *note* not the same as outcome they can have the same value
+          likelihood
+     
+     outcome:
+          foreignKey->matchup
+     
+     EventLikelihood
+          event
+          likelihood
+
+"""
