@@ -142,6 +142,7 @@ class Prediction(models.Model):
              return self.prediction.fighter.name +", " + str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
         return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
 
+
 """
 
      matchup2:
@@ -157,4 +158,5 @@ class Prediction(models.Model):
           event
           likelihood
 
+     
 """
