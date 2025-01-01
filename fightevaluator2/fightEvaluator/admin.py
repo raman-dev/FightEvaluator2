@@ -19,7 +19,7 @@ class MatchUpAdmin(admin.ModelAdmin):
     def referenceRatio(obj):
         return str(obj.fighter_a_references) + ":" +str(obj.fighter_b_references)
 
-    list_display = [fighterA,fighterB,"isprelim","weight_class","analysisComplete",referenceRatio,"event"]
+    list_display = [fighterA,fighterB,"isprelim","weight_class","analysisComplete",referenceRatio,"event__date","event"]
 
 @admin.register(Fighter)
 class FighterAdmin(admin.ModelAdmin):

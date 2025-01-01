@@ -784,7 +784,7 @@
           fighter_b_id: fighterBId,
           weight_class: weightClass,
           rounds: rounds,
-          event_id: fightEventId,
+          // event_id: fightEventId,
           isprelim: isprelim,
         }),
         headers: postHeaders,
@@ -792,18 +792,7 @@
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          //reflect change in matchup table
-          matchupMap[data['id']] = {
-            'fighter_a' : data['fighter_a_id'],
-            'fighter_a_name':data['fighter_a_name'],
-            'fighter_b' : data['fighter_b_id'],
-            'fighter_b_name':data['fighter_b_name'],
-            'rounds':data['rounds'],
-            'isprelim':data['isprelim'],
-            'inWatchList':data['inWatchList'],
-            'weight_class':data['weight_class']
-          }
-          // matchupMapDataStateHandler.replaceMatchup(data);
+          location.reload();//reload page
         });
     }
     function clearMatchupDialog(){
