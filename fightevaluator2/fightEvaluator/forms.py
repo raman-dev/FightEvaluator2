@@ -41,8 +41,16 @@ class NoteForm(forms.Form):
 class FighterForm(ModelForm):
     class Meta:
         model = Fighter
-        fields = ['first_name','last_name','height','weight_class','reach','stance','date_of_birth','wins','losses','draws','img_link','data_api_link']
-    
+        fields = "__all__"
+
+    def __init__(self,*args,**kwargs):
+        super(FighterForm,self).__init__(*args,**kwargs)
+        if 'instance' in kwargs:
+            print('we have an instance!!')
+            # print(kwargs)
+            print(kwargs['instance'])
+            
+        print('constructor called!')
 
 class MatchUpFormMF(ModelForm):
     class Meta:

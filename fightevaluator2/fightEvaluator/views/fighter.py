@@ -77,6 +77,20 @@ def update_fighter(request,fighterId):
 
     return JsonResponse(getFighterJSON(fighter))
 
+# @require_http_methods(["PATCH"])
+# def update_fighter2(request,fighterId):
+#     fighter = get_object_or_404(Fighter,id=fighterId)
+#     #so now what?
+#     #there is a key for the attribute name
+#     #a value for the attribute value
+#     #check if fighter has attribute of 
+#     fighterUpdateData = json.loads(request.body)
+#     for k,v in fighterUpdateData:
+#         if hasattr(Fighter,k):
+#             #and is 
+#             #means fighter can have this class
+#             #check if value is valid for this attr
+
 
 def getFighterJSON(fighter: Fighter):
     fighterjson = model_to_dict(fighter)

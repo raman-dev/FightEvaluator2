@@ -375,9 +375,9 @@
             </div>
             <div class="row">
               <!--close button-->
-              <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="fighterEditor.toggle()" type="button">Close</button>
+              <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="fighterEditor.hide()" type="button">Close</button>
               <button class="btn btn-primary my-2 w-auto" style="margin-right: 1rem;"
-                onclick="updateFighter(event)" type="button">Save Changes</button>
+                onclick="fighterEditor.save()" type="button">Save Changes</button>
             </div>
             
           </form>
@@ -605,70 +605,9 @@
     <script>
       function onEditFighter(event){
         event.currentTarget.classList.toggle('active');
-        // toggleXModal();
         fighterEditor.show();
       }
-      async function updateFighter(){
-        //read and validate values from form
-        let form = document.querySelector(".fighter-creator form");
-        let input_data = {};
-        let formData = new FormData(form);
-        for (let key of formData.keys()){
-          let data = formData.get(key).trim();
-          if (data == ""){
-            continue;
-          }
-          input_data[key] = formData.get(key).trim();
-          if (key == "first_name" || key == "last_name"){
-            input_data[key] = input_data[key].toLowerCase();
-          }
-        }
-        input_data['id'] = fighter_id;
-        //send fighter link update to server
-        console.log(JSON.stringify(input_data));
-        let response = await fetch(`/fighters/update-fighter/${fighter_id}`, {
-          method: "PATCH",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": Cookies.get("csrftoken"),
-          },
-          body: JSON.stringify(input_data),
-        });
-
-        if (response.status == 200){
-          // console.log('img link updated');
-          //read fighter data from response
-          let latestFighterData = await response.json();
-          //update fighter_data object
-          // console.log(latestFighterData);
-          // console.log(fighter_data);
-          for (let key in latestFighterData){
-            fighter_data[key] = latestFighterData[key];
-          }
-           //update bio stuff
-          //fighter-name
-          document.querySelector('.fighter-name').textContent = `${fighter_data.first_name} ${fighter_data.last_name}`;
-          //fighter-weight
-          document.querySelector('.fighter-weight').textContent = fighter_data.weight_class.replace("_"," ");
-          //fighter-height
-          document.querySelector('.fighter-height').textContent = `${Math.floor(fighter_data.height / 12)}'${fighter_data.height % 12}`;
-          //fighter-age
-          document.querySelector('.fighter-age').textContent = dobToAge(fighter_data.date_of_birth);
-          //fighter-record
-          document.querySelector('.fighter-record').textContent = fighter_data.wins + "-" + fighter_data.losses + "-" + fighter_data.draws;
-          //fighter-reach
-          document.querySelector('.fighter-reach').textContent = fighter_data.reach;
-          //fighter-stance
-          document.querySelector('.fighter-stance').textContent = fighter_data.stance;
-          //fighter-image
-          if (fighter_data.img_link != null && fighter_data.img_link != ""){
-            document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
-          }
-        }
-        
-      }
-
+      
       let xmodal = document.querySelector(".xmodal");
       //xmodal on click hide
       xmodal.addEventListener("click", (event) => {
@@ -685,7 +624,6 @@
           if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name" || key =="middle_name") {
             continue;
           }
-          // console.log(key, fighter_data[key]);
           let input = form.querySelector(`[name="${key}"]`);
           input.value = fighter_data[key];
         }
@@ -693,18 +631,76 @@
     
     </script>
     <script>
+
       class FighterEditor{
-        constructor(editorElement){
+        constructor(editorElement,server){
           this.editor = editorElement;
           this.visible = false;
+          this.server = server;
         }
 
-        save(){
-          /*
-            collect data from form elements
-            send to server
-          */
+        async save(){
+          //read and validate values from form
+          let form = document.querySelector(".fighter-creator form");
+          let input_data = {};
+          let formData = new FormData(form);
+          for (let key of formData.keys()){
+            let data = formData.get(key).trim();
+            if (data == ""){
+              continue;
+            }
+            input_data[key] = formData.get(key).trim();
+            if (key == "first_name" || key == "last_name"){
+              input_data[key] = input_data[key].toLowerCase();
+            }
+          }
+          input_data['id'] = fighter_id;
+          //send fighter link update to server
+          console.log(JSON.stringify(input_data));
+
+          let response = await fetch(`/fighters/update-fighter/${fighter_id}`, {
+            method: "PATCH",
+            headers: {
+              accept: "application/json",
+              "Content-Type": "application/json",
+              "X-CSRFToken": Cookies.get("csrftoken"),
+            },
+            body: JSON.stringify(input_data),
+          });
+
+          if (response.status == 200){
+            // console.log('img link updated');
+            //read fighter data from response
+            let latestFighterData = await response.json();
+            //update fighter_data object
+            // console.log(latestFighterData);
+            // console.log(fighter_data);
+            // this.updateFighterBio(latestFighterData)
+            for (let key in latestFighterData){
+              fighter_data[key] = latestFighterData[key];
+            }
+            //update bio stuff
+            //fighter-name
+            document.querySelector('.fighter-name').textContent = `${fighter_data.first_name} ${fighter_data.last_name}`;
+            //fighter-weight
+            document.querySelector('.fighter-weight').textContent = fighter_data.weight_class.replace("_"," ");
+            //fighter-height
+            document.querySelector('.fighter-height').textContent = `${Math.floor(fighter_data.height / 12)}'${fighter_data.height % 12}`;
+            //fighter-age
+            document.querySelector('.fighter-age').textContent = dobToAge(fighter_data.date_of_birth);
+            //fighter-record
+            document.querySelector('.fighter-record').textContent = fighter_data.wins + "-" + fighter_data.losses + "-" + fighter_data.draws;
+            //fighter-reach
+            document.querySelector('.fighter-reach').textContent = fighter_data.reach;
+            //fighter-stance
+            document.querySelector('.fighter-stance').textContent = fighter_data.stance;
+            //fighter-image
+            if (fighter_data.img_link != null && fighter_data.img_link != ""){
+              document.querySelector('.fighter-image').setAttribute('src',fighter_data.img_link);
+            }
+          }
         }
+        
         
         hide(){
           //hide editor ui element
@@ -714,6 +710,8 @@
           }
           document.querySelector('.bio-edit-button').classList.remove('active');
           this.visible = false;
+          // console.log('Closing fighter editor...');
+          
         }
 
         show(){
@@ -724,14 +722,22 @@
           }
           this.visible = true;
           updateEditorForm();
-        }
-
-        toggle(){
-          if (this.visible){
-            this.hide();
-          }else{
-            this.show();
+          let form = document.querySelector(".fighter-creator form");
+          let input_data = {};
+          let formData = new FormData(form);
+          for (let key of formData.keys()){
+            let data = formData.get(key).trim();
+            if (data == ""){
+              continue;
+            }
+            input_data[key] = formData.get(key).trim();
+            if (key == "first_name" || key == "last_name"){
+              input_data[key] = input_data[key].toLowerCase();
+            }
           }
+          input_data['id'] = fighter_id;
+          //send fighter link update to server
+          console.log(input_data);
         }
       }
       const editorElement = document.querySelector(".xmodal");

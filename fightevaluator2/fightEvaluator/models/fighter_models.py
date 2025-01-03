@@ -57,7 +57,6 @@ class Fighter(models.Model):
     date_of_birth = models.DateField(default=None, null=True,blank=True)
     data_api_link = models.CharField(default="",max_length=256,null=True,blank=True)
     img_link = models.CharField(max_length=256,null=True,blank=True)
-    assessment_id = models.IntegerField(default=0,null=True,blank=True)#old field used for migrating data
 
     @property
     def record(self):
