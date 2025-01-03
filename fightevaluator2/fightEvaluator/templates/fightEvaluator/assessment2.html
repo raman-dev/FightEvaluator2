@@ -375,7 +375,7 @@
             </div>
             <div class="row">
               <!--close button-->
-              <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="toggleXModal(event)" type="button">Close</button>
+              <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="fighterEditor.toggle()" type="button">Close</button>
               <button class="btn btn-primary my-2 w-auto" style="margin-right: 1rem;"
                 onclick="updateFighter(event)" type="button">Save Changes</button>
             </div>
@@ -605,7 +605,8 @@
     <script>
       function onEditFighter(event){
         event.currentTarget.classList.toggle('active');
-        toggleXModal();
+        // toggleXModal();
+        fighterEditor.show();
       }
       async function updateFighter(){
         //read and validate values from form
@@ -668,28 +669,12 @@
         
       }
 
-      function toggleXModal(){
-        let xmodal = document.querySelector(".xmodal");
-        let action = xmodal.classList.contains("hide") ? "show" : "hide";
-        //these variables are defined only when showing the modal
-        // console.log('toggle xmodal');
-        if (action == "show"){
-          //show the modal
-          xmodal.classList.remove("hide");
-          xmodal.classList.add("show");
-          updateEditorForm();
-        } else {
-          //hide the modal
-          xmodal.classList.remove("show");
-          xmodal.classList.add("hide");
-          document.querySelector('.bio-edit-button').classList.remove('active');
-        }
-      }
       let xmodal = document.querySelector(".xmodal");
       //xmodal on click hide
       xmodal.addEventListener("click", (event) => {
         if (event.target == event.currentTarget){
-          toggleXModal();
+          // toggleXModal();
+          fighterEditor.hide();
         }
       });
       updateEditorForm();
@@ -708,36 +693,63 @@
     
     </script>
     <script>
-      //you should be creating class for the objects
-      //in the page
-      //objects meaning the noteeditor,the biographical element
-      // class NoteEditor {
-      //   constructor(parameters) {
+      class FighterEditor{
+        constructor(editorElement){
+          this.editor = editorElement;
+          this.visible = false;
+        }
 
-      //   }
+        save(){
+          /*
+            collect data from form elements
+            send to server
+          */
+        }
+        
+        hide(){
+          //hide editor ui element
+          this.editor.classList.remove('show');
+          if (!this.editor.classList.contains('hide')){
+            this.editor.classList.add('hide');
+          }
+          document.querySelector('.bio-edit-button').classList.remove('active');
+          this.visible = false;
+        }
 
-      //   add(note){
-      //     //check type or null
-      //     if (note == null || note == undefined){
-      //       return false;
-      //     }
-      //     if (typeof(note) !=='string' || !(note instanceof String)){
-      //       return false;
-      //     }
-      //     // notes.push(note);//add a note
-      //     //send note to server
-      //     //add note to page
-      //     return true;
-      //   }
+        show(){
+          //show editor ui element
+          this.editor.classList.remove('hide');
+          if (!this.editor.classList.contains('show')){
+            this.editor.classList.add('show');
+          }
+          this.visible = true;
+          updateEditorForm();
+        }
 
-      //   delete(noteId){
-      //     //remove note from server
-      //     // server.removeNote(noteId);
-      //     //remove note from page
-      //     let noteElement = document.querySelector(`#${noteId}.note`);
-      //     note.remove();//remove from page
-      //   }
-      // }
+        toggle(){
+          if (this.visible){
+            this.hide();
+          }else{
+            this.show();
+          }
+        }
+      }
+      const editorElement = document.querySelector(".xmodal");
+      const fighterEditor = new FighterEditor(editorElement);
+      /*
+        form.isEdited
+          save.onclick
+            send data to server
+              on success
+                reflect changes in ui
+              on failure
+                do nothing
+          editor.hide
+            hide editor from view
+          editor.show
+            show editor
+            populate form with fighter data
+      */
     </script>
 {% endblock %}
 
