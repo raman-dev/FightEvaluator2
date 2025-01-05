@@ -5,3 +5,4 @@ from .note import *
 from .fighter import *
 from .prediction import *
 from .profit import *
+from .test_view import *

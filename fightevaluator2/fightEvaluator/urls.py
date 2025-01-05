@@ -4,8 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
-    # path('', views.index, name='index'),
-    # path('alt',views.index_alt,name='index_alt'),
+    path('mf-test',views.modelformfactory_test),
 
     path('profit',views.profit_calculator,name="profit_calculator"),
     path('profit/get-odds',views.get_odds,name='odds_endpoint'),
@@ -25,6 +24,8 @@ urlpatterns = [
     path('fighters/search/',views.fighter_search, name='fighter_search'),#working
     path('fighters/create-fighter',views.create_fighter, name='create_fighter'),#working
     path('fighters/update-fighter/<int:fighterId>',views.update_fighter, name='update_fighter'),#working
+    path('fighters/update-fighter2/<int:fighterId>',views.update_fighter2, name='update_fighter2'),#working
+
 
     path('assessment/<int:fighterId>',views.assessment_index, name='assessment'),#working
     path('assessment/update',views.update_assessment, name='update_assessment'),#working

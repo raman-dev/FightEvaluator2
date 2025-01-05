@@ -43,14 +43,14 @@ class FighterForm(ModelForm):
         model = Fighter
         fields = "__all__"
 
-    def __init__(self,*args,**kwargs):
-        super(FighterForm,self).__init__(*args,**kwargs)
-        if 'instance' in kwargs:
-            print('we have an instance!!')
-            # print(kwargs)
-            print(kwargs['instance'])
+    # def __init__(self,*args,**kwargs):
+    #     super(FighterForm,self).__init__(*args,**kwargs)
+    #     if 'instance' in kwargs:
+    #         print('we have an instance!!')
+    #         # print(kwargs)
+    #         print(kwargs['instance'])
             
-        print('constructor called!')
+    #     print('constructor called!')
 
 class MatchUpFormMF(ModelForm):
     class Meta:

@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse,QueryDict
 from django.db.models import Q
 from django.forms.models import model_to_dict
+from django.forms import modelform_factory
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
 
 from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,WeightClass,Stance
@@ -78,18 +79,35 @@ def update_fighter(request,fighterId):
     return JsonResponse(getFighterJSON(fighter))
 
 # @require_http_methods(["PATCH"])
-# def update_fighter2(request,fighterId):
-#     fighter = get_object_or_404(Fighter,id=fighterId)
-#     #so now what?
-#     #there is a key for the attribute name
-#     #a value for the attribute value
-#     #check if fighter has attribute of 
-#     fighterUpdateData = json.loads(request.body)
-#     for k,v in fighterUpdateData:
-#         if hasattr(Fighter,k):
-#             #and is 
-#             #means fighter can have this class
-#             #check if value is valid for this attr
+def update_fighter2(request,fighterId):
+    fighter = get_object_or_404(Fighter,id=fighterId)
+    #so now what?
+    #there is a key for the attribute name
+    #a value for the attribute value
+    #check if fighter has attribute of 
+    # fighterUpdateData = json.loads(request.body)
+    fighterUpdateData = {
+        'height':71,
+        'last_name':'moises'
+    }
+    #for every key we want to create a form class
+    CustomFighterForm = modelform_factory(Fighter,fields=['height','last_name'])
+    """
+        NOTE 
+            ABOUT FORMS
+            - WHEN PROVIDING DATA IF THE FIELD IS A REQUIRED FIELD IN THE MODEL
+              THEN IT MUST BE PRESENT IN THE DATA
+            - IF THE FIELD IS NOT A REQUIRED FIELD IN THE MODEL THEN IT IS OPTIONAL TO
+              PROVIDE IN THE DATA
+            
+    """
+    form = CustomFighterForm(data=fighterUpdateData,instance=fighter)
+    if form.is_valid():
+        print('form is valid!')
+        form.save()
+    else:
+        print(form.errors)
+    return JsonResponse(model_to_dict(Fighter.objects.get(pk=fighterId)))
 
 
 def getFighterJSON(fighter: Fighter):

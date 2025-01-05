@@ -621,7 +621,7 @@
         //write values from fighter_data to the form
         let form = document.querySelector(".fighter-creator form");
         for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key == "assessment_id" ||key=="nick_name" || key =="middle_name") {
+          if (key == "id" || fighter_data[key] == null || key=="nick_name" || key =="middle_name") {
             continue;
           }
           let input = form.querySelector(`[name="${key}"]`);
@@ -636,7 +636,13 @@
         constructor(editorElement,server){
           this.editor = editorElement;
           this.visible = false;
-          this.server = server;
+          // this.server = server;
+          /*
+            add value changed listener to all form inputs
+          */
+         this.editor.querySelectorAll("input").forEach((inputElement) => {
+             
+         });;
         }
 
         async save(){
@@ -656,7 +662,7 @@
           }
           input_data['id'] = fighter_id;
           //send fighter link update to server
-          console.log(JSON.stringify(input_data));
+          console.log('INPUT_DATA => ',input_data);
 
           let response = await fetch(`/fighters/update-fighter/${fighter_id}`, {
             method: "PATCH",
@@ -701,7 +707,16 @@
           }
         }
         
-        
+        saveChanged(){
+          
+          let data = {}
+          let changed = document.querySelectorAll(".fighter-creator form input.changed");
+          changed.forEach((element) => {
+              data[element.name] = element.value;
+          });
+          // console.log(data);
+        }
+
         hide(){
           //hide editor ui element
           this.editor.classList.remove('show');
