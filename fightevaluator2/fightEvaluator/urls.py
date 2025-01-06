@@ -23,7 +23,6 @@ urlpatterns = [
 
     path('fighters/search/',views.fighter_search, name='fighter_search'),#working
     path('fighters/create-fighter',views.create_fighter, name='create_fighter'),#working
-    path('fighters/update-fighter/<int:fighterId>',views.update_fighter, name='update_fighter'),#working
     path('fighters/update-fighter2/<int:fighterId>',views.update_fighter2, name='update_fighter2'),#working
 
 

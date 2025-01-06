@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.forms import modelform_factory
 from django.views.decorators.http import require_POST,require_GET,require_http_methods
+from django.http.response import HttpResponseBadRequest
 
 from ..models import FightEvent,MatchUp,Fighter,Assessment,Note,WeightClass,Stance
 from ..forms import *
@@ -45,53 +46,14 @@ def create_fighter(request):
         print('invalid fighter input')
     return JsonResponse({'fighter':model_to_dict(fighterForm.instance)})
 
-@require_http_methods(["PATCH"])
-def update_fighter(request,fighterId):
-    fighter = get_object_or_404(Fighter,id=fighterId)
-    #get query params from request object
-    fighterInput = json.loads(request.body)
-    #since attrs are optional we need to check if they exist
-    #validate optional fields if they exist
-    # print(fighterInput)
-    form = FighterForm(fighterInput)
-    if form.is_valid():
-        # print('fighter valid input')
-        # form.save(commit=True)#did this work?
-        fighter.first_name = form.cleaned_data['first_name']
-        fighter.last_name = form.cleaned_data['last_name']
-        fighter.height = form.cleaned_data['height']
-        fighter.weight_class = WeightClass[form.cleaned_data['weight_class'].upper()]
-        fighter.reach = form.cleaned_data['reach']
-        if form.cleaned_data['stance'] != None:
-            fighter.stance = Stance[form.cleaned_data['stance'].upper()]
-        fighter.date_of_birth = form.cleaned_data['date_of_birth']
-        fighter.wins = form.cleaned_data['wins']
-        fighter.losses = form.cleaned_data['losses']
-        fighter.draws = form.cleaned_data['draws']
-        fighter.img_link = form.cleaned_data['img_link']
-        fighter.data_api_link = form.cleaned_data['data_api_link']
-        fighter.save()
-    else:
-        print('invalid fighter input')
-        print(form.errors)
-        # return JsonResponse({'error':'invalid form'})
-
-    return JsonResponse(getFighterJSON(fighter))
-
 # @require_http_methods(["PATCH"])
 def update_fighter2(request,fighterId):
     fighter = get_object_or_404(Fighter,id=fighterId)
     #so now what?
-    #there is a key for the attribute name
-    #a value for the attribute value
-    #check if fighter has attribute of 
-    # fighterUpdateData = json.loads(request.body)
-    fighterUpdateData = {
-        'height':71,
-        'last_name':'moises'
-    }
+    #there is a key for the attribute name, a value for the attribute value
+    fighterUpdateData = json.loads(request.body)
     #for every key we want to create a form class
-    CustomFighterForm = modelform_factory(Fighter,fields=['height','last_name'])
+    CustomFighterFormClass = modelform_factory(Fighter,fields=fighterUpdateData.keys())#['height','last_name'])
     """
         NOTE 
             ABOUT FORMS
@@ -99,15 +61,19 @@ def update_fighter2(request,fighterId):
               THEN IT MUST BE PRESENT IN THE DATA
             - IF THE FIELD IS NOT A REQUIRED FIELD IN THE MODEL THEN IT IS OPTIONAL TO
               PROVIDE IN THE DATA
-            
     """
-    form = CustomFighterForm(data=fighterUpdateData,instance=fighter)
+    form = CustomFighterFormClass(data=fighterUpdateData,instance=fighter)
     if form.is_valid():
         print('form is valid!')
         form.save()
+        result = {}
+        fighter.refresh_from_db()
+        for k in fighterUpdateData:
+            result[k] = getattr(fighter,k)
+        return JsonResponse(result)
     else:
         print(form.errors)
-    return JsonResponse(model_to_dict(Fighter.objects.get(pk=fighterId)))
+        return JsonResponse({'success':False,'errors':form.errors},status=400)
 
 
 def getFighterJSON(fighter: Fighter):
