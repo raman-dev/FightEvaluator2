@@ -52,6 +52,7 @@ def update_fighter2(request,fighterId):
     #so now what?
     #there is a key for the attribute name, a value for the attribute value
     fighterUpdateData = json.loads(request.body)
+    print(fighterUpdateData)
     #for every key we want to create a form class
     CustomFighterFormClass = modelform_factory(Fighter,fields=fighterUpdateData.keys())#['height','last_name'])
     """

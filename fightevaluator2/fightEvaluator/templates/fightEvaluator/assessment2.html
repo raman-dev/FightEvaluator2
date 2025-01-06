@@ -382,8 +382,7 @@
             <div class="row">
               <!--close button-->
               <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="fighterEditor.hide()" type="button">Close</button>
-              <button class="btn btn-primary my-2 w-auto" style="margin-right: 1rem;"
-                onclick="fighterEditor.save()" type="button">Save Changes</button>
+              <button class="btn btn-primary my-2 w-auto" style="margin-right: 1rem;" onclick="fighterEditor.save()" type="button">Save Changes</button>
             </div>
             
           </form>
@@ -435,6 +434,7 @@
               //  console.log('editor.element',inputElement);
               inputElement.addEventListener("input",(event)=>{
                   let element = event.currentTarget;
+                  // console.log('changed added => ',element);
                   element.classList.add('changed');//classList.add only adds non present classes into the classlist
               });
           });
@@ -443,8 +443,9 @@
         async save(){
           //read and validate values from form
           let data = {}
-          let changed = document.querySelectorAll(".fighter-creator form input.changed");
+          let changed = this.editor.querySelectorAll("form .changed");
           changed.forEach((element) => {
+              // console.log(element.name,element.value);
               data[element.name] = element.value;
           });
           console.log('Changed data...',data);
@@ -487,9 +488,9 @@
           this.editor.classList.remove('hide');
           this.editor.classList.add('show');
           this.visible = true;
-          
-          updateEditorForm();
-          let form = document.querySelector(".fighter-creator form");
+
+          this.updateEditorForm();
+          let form = this.editor.querySelector("form");
           let input_data = {};
           let formData = new FormData(form);
           for (let key of formData.keys()){
@@ -505,6 +506,17 @@
           input_data['id'] = fighter_id;
           //send fighter link update to server
           // console.log(input_data);
+        }
+        updateEditorForm(){
+          //write values from fighter_data to the form
+          let form = this.editor.querySelector("form");
+          for (let key in fighter_data) {
+            if (key == "id" || fighter_data[key] == null || key=="nick_name" || key =="middle_name") {
+              continue;
+            }
+            let input = form.querySelector(`[name="${key}"]`);
+            input.value = fighter_data[key];
+          }
         }
       }
       
@@ -740,18 +752,7 @@
           fighterEditor.hide();
         }
       });
-      updateEditorForm();
-      function updateEditorForm(){
-        //write values from fighter_data to the form
-        let form = document.querySelector(".fighter-creator form");
-        for (let key in fighter_data) {
-          if (key == "id" || fighter_data[key] == null || key=="nick_name" || key =="middle_name") {
-            continue;
-          }
-          let input = form.querySelector(`[name="${key}"]`);
-          input.value = fighter_data[key];
-        }
-      }
+      fighterEditor.updateEditorForm();
     
     </script>
    
