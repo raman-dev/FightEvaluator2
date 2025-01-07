@@ -394,6 +394,60 @@
 {% block scripts %}
     <script src="{% static 'fightEvaluator/js/attribute-interaction.js' %}"></script>
     <script>
+      class Server {
+
+        static URLS = {
+          CREATE_NOTE : '/notes/create-note',
+          DELETE_NOTE : '/notes/delete-note/',
+          UPDATE_FIGHTER :'/fighters/update-fighter2/'
+        }
+
+        constructor(headers) {
+            this.headers = headers
+        }
+
+        async update_fighter(data,callback,fighterId){
+          fetch(Server.URLS.UPDATE_FIGHTER + `${fighterId}`,{
+            method:"PATCH",
+            headers:this.headers,
+            body: JSON.stringify(data)
+          }).then(response => response.json())
+          .then((data)=>{
+            callback(data);//
+          });
+        }
+
+        async send_note(data,callback){
+          fetch(Server.URLS.CREATE_NOTE,{
+            method:"POST",
+            headers:this.headers,
+            body: JSON.stringify(data)
+          }).then(response => response.json())
+          .then((data)=>{
+            callback(data);//
+          });
+        }
+
+        async remove_note(callback,noteId){
+          //need error checking, parameter validation
+          fetch(Server.URLS.DELETE_NOTE + `${noteId}`,{
+            method:"DELETE",
+            headers:this.headers
+          }).then(response => response.json())
+          .then((data)=>{
+            callback(data);//
+          });
+        }
+
+      }
+      const server = new Server({
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      });
+    
+    </script>
+    <script>
       function updateFighterBio(data){
         for (key in data){
           if (key == 'id' || key =='middle_name' || key=='nick_name') continue;
@@ -438,35 +492,24 @@
                   element.classList.add('changed');//classList.add only adds non present classes into the classlist
               });
           });
+          this.server = server
         }
 
-        async save(){
-          //read and validate values from form
+        save(){
           let data = {}
           let changed = this.editor.querySelectorAll("form .changed");
           changed.forEach((element) => {
-              // console.log(element.name,element.value);
               data[element.name] = element.value;
           });
           console.log('Changed data...',data);
-          let response = await fetch(`/fighters/update-fighter2/${fighter_id}`, {
-            method: "PATCH",
-            headers: {
-              accept: "application/json",
-              "Content-Type": "application/json",
-              "X-CSRFToken": Cookies.get("csrftoken"),
-            },
-            body: JSON.stringify(data),
-          });
-          if (response.status==200){
-            let latestFighterData = await response.json();
-            //update fighter_data object
-            // console.log('JSON => ',latestFighterData);
-            for (let key in latestFighterData){
+          this.server.update_fighter(data,this.onFighterUpdate,fighter_id);
+        }
+
+        onFighterUpdate(latestFighterData){
+          for (let key in latestFighterData){
               fighter_data[key] = latestFighterData[key];
-            }
-            updateFighterBio(latestFighterData);
           }
+          updateFighterBio(latestFighterData);
         }
 
         hide(){
@@ -518,10 +561,11 @@
             input.value = fighter_data[key];
           }
         }
+      
       }
       
       const editorElement = document.querySelector(".xmodal");
-      const fighterEditor = new FighterEditor(editorElement);
+      const fighterEditor = new FighterEditor(editorElement,server);
      
     </script>
     <script>
@@ -583,73 +627,51 @@
         attribList.appendChild(attribCard);
       });
 
-
       //grab content from note-editor and send it to the server
       //update the notes-list with the new note
-      async function addNote(event) {
-        //from note-editor get the text content make sure it is non empty
+      function addNote(event){
         let noteEditor = document.querySelector(".note-editor");
         let noteText = noteEditor.textContent.trim();
         let tag = noteEditor.dataset.tag;
-        if (noteText.length > 0) {
-          //post request to server with new note
-          let response = await fetch("/notes/create-note", {
-            method: "POST",
-            headers: {
-              accept: "application/json",
-              "Content-Type": "application/json",
-              "X-CSRFToken": Cookies.get("csrftoken"),
-            },
-            body: JSON.stringify({
-              assessment_id: assessment_id,
-              tag:tag,
-              data: noteText,
-            }),
-          });
-          let noteData = await response.json();
-          let notesContainer = document.querySelector(".notes-list");
-          notesContainer.classList.remove('dx-none');
-          //create a new li element with the noteText
-          let newNote = document.createElement("li");
-          newNote.setAttribute("tabindex","100");
-          newNote.classList.add("note");
-          // newNote.setAttribute("data-note-id", noteData.id);
-          newNote.innerHTML = "<p>" + noteText + "</p>";
-          newNote.dataset.noteId = noteData.id;
-          newNote.addEventListener('click',onClickNote);
-          // newNote.addEventListener('focusin',onNoteFocusIn);
-          // newNote.addEventListener('focusout',onNoteFocusOut);
-          //append the new li element to the notes-list
-          let notesList = document.querySelector(".notes-list ul");
-          notesList.classList.remove('dx-none');//if there are no notes, remove the d-none class
-          notesList.prepend(newNote);
-          //clear the note-editor
-          noteEditor.textContent = "";
-        }
+        server.send_note({assessment_id:assessment_id,tag:tag,data:noteText},onNoteCreated);
       }
 
-      async function deleteNote(event) {
-        //get the note id from the note element
-        //send delete request to server
-        //remove note from notes-list
+      function onNoteCreated(noteData){
+        console.log('Note Created Callback...',noteData);
+        let noteText = noteData.data;
+        let noteEditor = document.querySelector(".note-editor");
+        let notesContainer = document.querySelector(".notes-list");
+        notesContainer.classList.remove('dx-none');
+        //create a new li element with the noteText
+        let newNote = document.createElement("li");
+        newNote.setAttribute("tabindex","100");
+        newNote.classList.add("note");
+        // newNote.setAttribute("data-note-id", noteData.id);
+        newNote.innerHTML = "<p>" + noteText + "</p>";
+        newNote.dataset.noteId = noteData.id;
+        newNote.addEventListener('click',onClickNote);
+        // newNote.addEventListener('focusin',onNoteFocusIn);
+        // newNote.addEventListener('focusout',onNoteFocusOut);
+        //append the new li element to the notes-list
+        let notesList = document.querySelector(".notes-list ul");
+        notesList.classList.remove('dx-none');//if there are no notes, remove the d-none class
+        notesList.prepend(newNote);
+        //clear the note-editor
+        noteEditor.textContent = "";
+      }
+
+      function deleteNote(event) {
         let activeNote = document.querySelector('.notes-list .active');
-        // console.log(activeNote);
         let note_id = parseInt(activeNote.getAttribute("data-note-id"));
-        // console.log(note_id);
-        let response = await fetch(`/notes/delete-note/${note_id}`, {
-          method: "DELETE",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": Cookies.get("csrftoken"),
-          },
-        });
-        // console.log(response);
-        if (response.status == 200){
-          activeNote.remove();
-          //disable delete button
-          document.querySelector('.note-delete-btn').classList.add('disabled');
-        }
+        server.remove_note(deleteNoteCallback,noteId);
+      }
+
+      function deleteNoteCallback(data){
+        console.log('Delete Note Callback...',data);
+        let activeNote = document.querySelector('.notes-list .active');
+        activeNote.remove();
+        //disable delete button
+        document.querySelector('.note-delete-btn').classList.add('disabled');
       }
 
       function dobToAge(dob) {
@@ -680,14 +702,6 @@
         notesListUl.classList.remove('dx-none');
       }
 
-      // function onNoteFocusIn(event){
-      //   document.querySelector('.note-delete-btn').classList.remove('disabled');
-      // }
-
-      // function onNoteFocusOut(event){
-      //   document.querySelector('.note-delete-btn').classList.add('disabled');
-      // }
-
       function onClickNote(event){
         // console.log('note clicked');
         //remove active class from all notes
@@ -711,8 +725,6 @@
       //on click a note make it active and enable delete button
       for (const note of notesListUl.children){
         note.addEventListener('click',onClickNote);
-        // note.addEventListener('focusin',onNoteFocusIn);
-        // note.addEventListener('focusout',onNoteFocusOut);
       }
 
       document.querySelector('.note-editor').addEventListener('input',(event)=>{
