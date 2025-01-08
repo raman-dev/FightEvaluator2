@@ -428,6 +428,7 @@
  {% if event is None %}
   <!-- <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script> -->
    <script src="{% static 'fightEvaluator/js/polling.js' %}"></script>
+   <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
   <script>
     
     console.log('index poller included!');
@@ -687,6 +688,42 @@
       editModal.show();
     }
     
+    // class MatchUpEditor {
+    //   constructor(server) {
+    //     this.server = server;
+    //   }
+
+    // }
+    /*
+    
+      matchup editor
+        create matchup
+          take 2 names
+          weight class 1 of n options
+          rounds 3/5
+          isprelim t/f
+          
+          how to?
+          grab values from ui
+            send to server
+              success -> reflect in ui
+              failure -> give error message
+
+        edit matchup 
+          change a name
+          change weight class
+          change rounds
+          change prelim status
+          
+          grab values that have changed from ui
+            send to server
+              success -> reflect in ui
+              failure -> do nothing/give error message
+
+
+              matchup editor -> new_matchup -> matchup table
+    */
+
     function createMatchUp(event) {
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
@@ -784,7 +821,6 @@
           fighter_b_id: fighterBId,
           weight_class: weightClass,
           rounds: rounds,
-          // event_id: fightEventId,
           isprelim: isprelim,
         }),
         headers: postHeaders,
