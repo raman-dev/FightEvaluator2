@@ -42,4 +42,4 @@ class Server {
         callback(data);//
       });
     }
-  }
+}
