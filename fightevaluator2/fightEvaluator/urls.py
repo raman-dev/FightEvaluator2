@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
-    path('mf-test',views.modelformfactory_test),
+    # path('mf-test',views.modelformfactory_test),
+    path('matchup-creator-form/<int:eventId>',views.matchup_creator_test,name='mcf_test'),
 
     path('profit',views.profit_calculator,name="profit_calculator"),
     path('profit/get-odds',views.get_odds,name='odds_endpoint'),

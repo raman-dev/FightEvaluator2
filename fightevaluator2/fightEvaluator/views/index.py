@@ -375,4 +375,7 @@ def event_predictions(request,eventId):
             predictions.append(prediction)
     
     return render(request,"fightEvaluator/event_predictions.html",{'predictions':predictions,'event':event})
-    
+
+@require_GET
+def matchup_creator_test(request,eventId):
+    return render(request, "fightEvaluator/matchup_creator_form.html",{'hello':'world'})
