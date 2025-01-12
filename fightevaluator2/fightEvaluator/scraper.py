@@ -122,10 +122,10 @@ def generateMatchupFighterObjs(matchups):
             if not fighterObj:
                 #query fighter api for data
                 fighterData = getFighterData(fighter['link'])
+                fighterData['data_api_link'] = fighter['link']
                 fighterForm = FighterForm(fighterData)#validate fighter data
                 if fighterForm.is_valid():
                     #create fighter object
-                    fighterForm['data_api_link'] = fighter['link']
                     fighterObj = fighterForm.save()
                     
                     assessment = Assessment(fighter=fighterObj)
