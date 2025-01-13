@@ -343,8 +343,9 @@
 
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+ 
+ <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
  {% if event is None %}
-   <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
   <script>
     
     console.log('index poller included!');
@@ -401,6 +402,7 @@
       "Content-Type": "application/json",
       "X-CSRFToken": Cookies.get('csrftoken'),
     };
+    const server = new Server(postHeaders);
     var activeMatchup = null;
     const editModal = new bootstrap.Modal(document.querySelector('#matchupModal'));
     //show and dismiss edit modal
@@ -642,47 +644,50 @@
       let searchBox = fighterElement.querySelector(".search-box");
       searchBox.addEventListener("keyup", async (event) => {
         //check if modal is visible
-        let isModalVisible = document.querySelector(".modal.show") != null;
-        // console.log(isModalVisible);
-        if (!isModalVisible) return;
+        // let isModalVisible = document.querySelector(".modal.show") != null;
+        // // console.log(isModalVisible);
+        // if (!isModalVisible) return;
         // console.log(event);
         let input = searchBox.querySelector("input");
         let search = input.value;
-        search = search.split(" ").join("+");//
-        // console.log(search);
-        let searchSuggestion = document.querySelector(
-          `${searchBox.dataset.target} ul`
-        );
-
+        search = search.split(" ").join("+");
+        let searchSuggestion = document.querySelector(`${searchBox.dataset.target} ul`);
+        
         if (search.length > 0) {
-          fetch(`/fighters/search/?search=${search}`)
-            .then((response) => response.json())
-            .then((data) => {
-            //   console.log(data);
-              let fighters = data['fighters'];
-              searchSuggestion.innerHTML = "";
-              fighters.forEach((fighter) => {
-                console.log(fighter);
-                let li = document.createElement("li");
-                li.classList.add("list-group-item");
-                li.innerHTML = `
-                    <div class="suggestion">
-                        <p class="name">${fighter.first_name} ${fighter.last_name}, id:${fighter.id}</p>
-                    </div>`;
-                searchSuggestion.appendChild(li);
-                li.addEventListener('click', onClickSuggestion.bind({
-                  fighter: fighter,
-                  fighterElement: fighterElement,
-                  searchBoxInput: input,
-                  searchSuggestionList: searchSuggestion
-                }));
-              });
-            });
-        } else {
+          server.search_fighters(
+          onFighterSearchResult.bind(
+            this,fighterElement,searchSuggestion,input),
+            search
+          );
+        } 
+        else {
           searchSuggestion.innerHTML = "";
         }
       });
     });
+
+    function onFighterSearchResult(fighterElement,searchSuggestion,input,data){
+      console.log('calling callback!!',searchSuggestion);
+      
+      let fighters = data['fighters'];
+      searchSuggestion.innerHTML = "";
+      fighters.forEach((fighter) => {
+        console.log(fighter);
+        let li = document.createElement("li");
+        li.classList.add("list-group-item");
+        li.innerHTML = `
+            <div class="suggestion">
+                <p class="name">${fighter.first_name} ${fighter.last_name}, id:${fighter.id}</p>
+            </div>`;
+        searchSuggestion.appendChild(li);
+        li.addEventListener('click', onClickSuggestion.bind({
+          fighter: fighter,
+          fighterElement: fighterElement,
+          searchBoxInput: input,
+          searchSuggestionList: searchSuggestion
+        }));
+      });
+    }
 
     //on click weightclass dropdown item set the dropdown button text to the item clicked
     document.querySelectorAll(".weight-class .dropdown-item").forEach((dropDownItem) => {

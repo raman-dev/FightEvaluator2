@@ -3,7 +3,8 @@ class Server {
     static URLS = {
       CREATE_NOTE : '/notes/create-note',
       DELETE_NOTE : '/notes/delete-note/',
-      UPDATE_FIGHTER :'/fighters/update-fighter2/'
+      UPDATE_FIGHTER :'/fighters/update-fighter2/',
+      SEARCH_FIGHTERS : '/fighters/search/?search='
     }
 
     constructor(headers) {
@@ -40,6 +41,14 @@ class Server {
       }).then(response => response.json())
       .then((data)=>{
         callback(data);//
+      });
+    }
+
+    async search_fighters(callback,query_string){
+      fetch(Server.URLS.SEARCH_FIGHTERS + `${query_string}`)
+      .then(response => response.json())
+      .then((data) => {
+        callback(data);
       });
     }
 }
