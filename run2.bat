@@ -1,2 +1,3 @@
 cd fightevaluator2
-run.bat
+start chrome "http://localhost:8080"
+python manage.py runserver 8080
