@@ -17,9 +17,9 @@
    
      
     <div class="fighter-selector">
-      <div-- class="current-matchup p-2 border rounded">
+      <div class="current-matchup p-2 border rounded">
         <h5>Current Matchup</h5>
-        
+        <form>
         <div class="fighter fighter-a d-flex align-items-center" data-selected-id="-1">
           <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
           <!-- <h6 class="fighter-name mx-1 d-none">Fighter a</h6> -->
@@ -27,12 +27,10 @@
           <div class="search-container mx-1">
             <!--text search box-->
             <div class="search-box" data-target="#searchbox-a">
-              <form>
-                <div class="input-group">
-                  <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnA">
-                  <button class="btn btn-outline-danger" type="button" id="clearSearchBtnA" onclick="clearFighterSelection('fighter-a')" >clear</button>
-                </div>
-              </form>
+              <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnA">
+                <button class="btn btn-outline-danger" type="button" id="clearSearchBtnA" onclick="clearFighterSelection('fighter-a')" >clear</button>
+              </div>
             </div>
             <!--search box suggestion drop down-->
             <div class="search-suggestion" id="searchbox-a">
@@ -43,100 +41,104 @@
         <div class="my-1">
           <p class="m-0 text-center">versus</p>
         </div>
-        <!--div class="fighter fighter-b d-flex align-items-center" data-selected-id="-1">
-          <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
-           
-          <div class="search-container mx-1">
-            
-             <div class="search-box" data-target="#searchbox-b">
-              <form>
-                <div class="input-group">
-                  <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnB">
-                  <button class="btn btn-outline-danger" type="button" id="clearSearchBtnB" onclick="clearFighterSelection('fighter-b')" >clear</button>
-                </div>                        
-              </form>
-            </div>
-            <div class="search-suggestion" id="searchbox-b">
-              <ul class="list-group"></ul>
-            </div>
-          </div> 
-        </div-->
-        <div class="matchup-info-wrapper">
-          <div class="weight-class dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              Weight Class
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="#">Flyweight</a></li>
-              <li>
-                <a class="dropdown-item" href="#">Bantamweight</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Featherweight</a>
-              </li>
-              <li><a class="dropdown-item" href="#">Lightweight</a></li>
-              <li>
-                <a class="dropdown-item" href="#">Welterweight</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Middleweight</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Light Heavyweight</a>
-              </li>
-              <li><a class="dropdown-item" href="#">Heavyweight</a></li>
-              <li><a class="dropdown-item" href="#">Catchweight</a></li>
-            </ul>
-          </div>
-          <div class="rounds-wrapper">
-            <p class="m-0">Rounds</p>
-            <!--2 radio buttons for 3 or 5 rounds-->
-            <div class="form-check mx-2">
-              <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3" checked>
-              <label class="form-check-label" for="rounds">
-                3
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5">
-              <label class="form-check-label" for="rounds">
-                5
-              </label>
-            </div>
-          </div>
-          <div class="prelims-wrapper">
-            <!--bootstrap5 checkbox-->
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="isprelim">
-              <label class="form-check-label" for="isprelim">
-                On Prelims
-              </label>
-            </div>
-          </div>
-        </div>
         
+          <div class="matchup-info-wrapper">
+          <div class="weight-class mb-3">
+            <label class="input-group-text" for="weight-class-select">Options</label>
+            <select class="form-select" id="weight-class-select" name="weight_class">
+                <option selected disabled>Choose a weight class...</option>
+                <option value="strawweight">Strawweight</option>
+                <option value="flyweight">Flyweight</option>
+                <option value="bantamweight">Bantamweight</option>
+                <option value="featherweight">Featherweight</option>
+                <option value="lightweight">Lightweight</option>
+                <option value="welterweight">Welterweight</option>
+                <option value="middleweight">Middleweight</option>
+                <option value="light_heavyweight">Light Heavyweight</option>
+                <option value="heavyweight">Heavyweight</option>
+            </select>
+          </div>
+            <div class="rounds-wrapper">
+              <p class="m-0">Rounds</p>
+              <!--2 radio buttons for 3 or 5 rounds-->
+              <div class="form-check mx-2">
+                <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3" checked>
+                <label class="form-check-label" for="rounds">
+                  3
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5">
+                <label class="form-check-label" for="rounds">
+                  5
+                </label>
+              </div>
+            </div>
+            <div class="prelims-wrapper">
+              <!--bootstrap5 checkbox-->
+              <div class="form-check">
+                <!--CHECKBOXES DON'T SHOW UP IN FORMDATA OBJECTS IF UNCHECKED-->
+                <input class="form-check-input" type="checkbox" value="" name="isprelim" id="isprelim">
+                <label class="form-check-label" for="isprelim">
+                  On Prelims
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-  
-    
+    </div>
+
     
 
-    <form class="matchup-editor">
-      <div class="search-container mx-1">
-        <!--text search box-->
-        <div class="search-box" data-target="#searchbox-a">
-            <div class="input-group">
-              <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnA">
-              <button class="btn btn-outline-danger" type="button" id="clearSearchBtnA" onclick="clearFighterSelection('fighter-a')" >clear</button>
+    <div class="matchup-editor">
+      <form>
+          <div class="search-box2">
+            <div class="input-group">  
+              <input class="form-control" type="text" value="" name="fighter-a" placeholder="Enter fighter name..."> 
+              <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
             </div>
-        </div>
-        <!--search box suggestion drop down-->
-        <div class="search-suggestion" id="searchbox-a">
-          <ul class="list-group"></ul>
-        </div>
-      </div>
-    </form>
-  
+            <ul class="suggestion-box list-group">
+            </ul>
+          </div>
+
+          <div class="search-box2">
+            <div class="input-group">  
+              <input class="form-control" type="text" value="" name="fighter-b" placeholder="Enter fighter name..."> 
+              <button class="btn btn-outline-secondary clear-btn" type="button" id="button-addon2">Clear</button>
+            </div>
+            <ul class="suggestion-box list-group">
+            </ul>
+          </div>
+
+          <!--weight class-->
+          <div class="weight-class-selector">
+            <div class="weight-class mb-3">
+              <label class="input-group-text" for="weight-class-select">Weightclass</label>
+              <select class="form-select" id="weight-class-select" name="weight_class">
+                  <option selected disabled>Choose a weight class...</option>
+                  <option value="strawweight">Strawweight</option>
+                  <option value="flyweight">Flyweight</option>
+                  <option value="bantamweight">Bantamweight</option>
+                  <option value="featherweight">Featherweight</option>
+                  <option value="lightweight">Lightweight</option>
+                  <option value="welterweight">Welterweight</option>
+                  <option value="middleweight">Middleweight</option>
+                  <option value="light_heavyweight">Light Heavyweight</option>
+                  <option value="heavyweight">Heavyweight</option>
+              </select>
+            </div>
+          </div>
+          <!--rounds-->
+          <div class="rounds-radio-group"></div>
+          <!--prelim status-->
+          <div class="isprelim-checkbox">
+
+          </div>
+      </form>
+    </div>
+    
+
   </div>
 
 {% endblock %}
@@ -162,6 +164,73 @@
 {% include "fightEvaluator/matchup-data-script.html" %}
 
 <script>
+
+    class FighterSearchBox{
+  
+      constructor(searchBox){
+        this.searchBox = searchBox;
+        this.input = searchBox.querySelector('input');//the input element of the searchbox
+        this.suggestionList = searchBox.querySelector('ul');//the suggestion list
+        this.searchBox.addEventListener("keyup", this.onKeyUp.bind(this));
+        this.searchBox.querySelector('.clear-btn').addEventListener('click',this.onClickClearSearchBox.bind(this));
+      }
+
+      async onKeyUp() {
+        let input = this.searchBox.querySelector("input");
+        let search = this.input.value;
+        search = search.split(" ").join("+");
+        //non-empty search string
+        if (search.length > 0) {
+          server.search_fighters(this.onFighterSearchResult.bind(this),search);
+        } 
+        else {
+          this.suggestionList.innerHTML = "";//empty the list
+        }
+      }
+
+      onFighterSearchResult(data){
+        let fighters = data['fighters'];
+        this.suggestionList.innerHTML = "";//list must always be emptied before populating with new values
+        for (const fighter of fighters){
+          let item = FighterSearchBox.createSuggestionListElement(fighter);
+          item.addEventListener("click",this.onSuggestionListItemClick.bind(this,item));
+          this.suggestionList.appendChild(item);
+        }
+      }
+
+      onSuggestionListItemClick(suggestion,event){
+        //populate input with this value
+        this.input.dataset.fighterId = suggestion.dataset.fighterId;
+        this.input.value = suggestion.dataset.fighterName;//fighter name string
+        //list needs to be empty now
+        this.suggestionList.innerHTML = "";
+        this.input.toggleAttribute('disabled',true);//
+      }
+
+      onClickClearSearchBox(){
+        //clear suggestion
+        this.input.dataset.fighterId =-1;
+        this.input.value = "";
+        this.input.toggleAttribute('disabled',false);
+        //
+        this.suggestionList.innerHTML="";
+      }
+
+      static createSuggestionListElement(fighter){
+        return $(`
+          <li class="list-group-item list-group-item-action" data-fighter-id="${fighter.id}" data-fighter-name="${fighter.first_name} ${fighter.last_name}">
+            <div class="suggestion">
+              <p class="name">${fighter.first_name} ${fighter.last_name}</p>
+            </div>
+          </li>`)[0];
+      }
+    }
+
+
+    const [searchBox0,searchBox1] = document.querySelectorAll(".search-box2");
+    
+    const fsb0 = new FighterSearchBox(searchBox0);
+    const fsb1 = new FighterSearchBox(searchBox1)
 
     const fightEventIdWrapper = [0];
 
@@ -206,7 +275,22 @@
 
               matchup editor -> new_matchup -> matchup table
     */
-
+    function showFormData(){
+      let form = document.querySelector("form");
+      let fd = new FormData(form);
+      let keys = Array.from(fd.keys());
+      console.log(keys);
+      
+      if (!("isprelim" in keys)){
+        fd.set("isprelim",false);
+      }else{
+        fd.set("isprelim",true);
+      }
+      
+      for (const key of fd.keys()){
+        console.log(key,fd.get(key));
+      }
+    }
     class MatchUpEditor{
       
       static EVENTS = {
@@ -228,7 +312,7 @@
         //fighter-name <--doesn't matter
         //fighter-id <--matters 
         //matchup need 2 fighter ids 
-        //
+        
       }
 
       onMatchUpCreated(data){
