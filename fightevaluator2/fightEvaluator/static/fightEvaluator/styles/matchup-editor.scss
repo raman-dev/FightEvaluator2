@@ -1,0 +1,73 @@
+.matchup-editor{
+    
+    border: 1px solid lavender;
+    width: fit-content;
+    padding: 0.6rem;
+    margin: auto;
+
+    .title{
+        margin-bottom: 0.8rem;
+    }
+
+    form{
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+
+        select, option, button {
+            cursor: pointer !important;
+        }
+
+    }
+
+    .search-box2{
+        text-transform: capitalize;
+        input, ul{
+            width: 28ch;
+            text-transform: capitalize;
+        }
+        ul{
+            position: absolute;
+            overflow: visible;
+            z-index: 10000;
+            li p{
+                margin: 0px;
+            }
+        }
+    }
+
+    .searchbox-seperator{
+        text-align: center;
+        p{
+            margin: 0px;
+            text-transform: capitalize;
+        }
+    }
+
+    .weightclass-selector{
+        width: fit-content;
+    }
+
+    .rounds-isprelim-wrapper{
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .rounds-radio-group{
+        width: fit-content;
+        display: flex;
+        .radio-group-title{
+            margin: 0px;
+        }
+    }
+    
+    .isprelim-checkbox{
+        label{
+            text-transform: capitalize;
+        }
+    }
+
+    .editor-actions{
+        display: flex;
+        justify-content: end;
+    }
+}

@@ -1,0 +1,62 @@
+.matchup-editor {
+  border: 1px solid lavender;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.6rem;
+  margin: auto;
+}
+.matchup-editor .title {
+  margin-bottom: 0.8rem;
+}
+.matchup-editor form {
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+}
+.matchup-editor form select, .matchup-editor form option, .matchup-editor form button {
+  cursor: pointer !important;
+}
+.matchup-editor .search-box2 {
+  text-transform: capitalize;
+}
+.matchup-editor .search-box2 input, .matchup-editor .search-box2 ul {
+  width: 28ch;
+  text-transform: capitalize;
+}
+.matchup-editor .search-box2 ul {
+  position: absolute;
+  overflow: visible;
+  z-index: 10000;
+}
+.matchup-editor .search-box2 ul li p {
+  margin: 0px;
+}
+.matchup-editor .searchbox-seperator {
+  text-align: center;
+}
+.matchup-editor .searchbox-seperator p {
+  margin: 0px;
+  text-transform: capitalize;
+}
+.matchup-editor .weightclass-selector {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.matchup-editor .rounds-isprelim-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+}
+.matchup-editor .rounds-radio-group {
+  width: -moz-fit-content;
+  width: fit-content;
+  display: flex;
+}
+.matchup-editor .rounds-radio-group .radio-group-title {
+  margin: 0px;
+}
+.matchup-editor .isprelim-checkbox label {
+  text-transform: capitalize;
+}
+.matchup-editor .editor-actions {
+  display: flex;
+  justify-content: end;
+}/*# sourceMappingURL=matchup-editor.css.map */

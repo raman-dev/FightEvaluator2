@@ -5,6 +5,7 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static  'fightEvaluator/styles/index.css' %}" />
 <link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup_tables.css' %}">
+<link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup-editor.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,107 +17,49 @@
      <button class="show-button btn btn-primary" onclick="onToggleMatchupModal(false)">show</button>
    
      
-    <div class="fighter-selector">
-      <div class="current-matchup p-2 border rounded">
-        <h5>Current Matchup</h5>
-        <form>
-        <div class="fighter fighter-a d-flex align-items-center" data-selected-id="-1">
-          <img class="fighter-img" src="{% static 'fightEvaluator/media/sample_50.png' %}" alt="" />
-          <!-- <h6 class="fighter-name mx-1 d-none">Fighter a</h6> -->
-          <!--bootstrap close button-->
-          <div class="search-container mx-1">
-            <!--text search box-->
-            <div class="search-box" data-target="#searchbox-a">
-              <div class="input-group">
-                <input type="text" class="form-control" name="search" placeholder="Search fighter name..." aria-label="Search fighter name..." aria-describedby="clearSearchBtnA">
-                <button class="btn btn-outline-danger" type="button" id="clearSearchBtnA" onclick="clearFighterSelection('fighter-a')" >clear</button>
-              </div>
-            </div>
-            <!--search box suggestion drop down-->
-            <div class="search-suggestion" id="searchbox-a">
-              <ul class="list-group"></ul>
-            </div>
-          </div>
-        </div>
-        <div class="my-1">
-          <p class="m-0 text-center">versus</p>
-        </div>
-        
-          <div class="matchup-info-wrapper">
-          <div class="weight-class mb-3">
-            <label class="input-group-text" for="weight-class-select">Options</label>
-            <select class="form-select" id="weight-class-select" name="weight_class">
-                <option selected disabled>Choose a weight class...</option>
-                <option value="strawweight">Strawweight</option>
-                <option value="flyweight">Flyweight</option>
-                <option value="bantamweight">Bantamweight</option>
-                <option value="featherweight">Featherweight</option>
-                <option value="lightweight">Lightweight</option>
-                <option value="welterweight">Welterweight</option>
-                <option value="middleweight">Middleweight</option>
-                <option value="light_heavyweight">Light Heavyweight</option>
-                <option value="heavyweight">Heavyweight</option>
-            </select>
-          </div>
-            <div class="rounds-wrapper">
-              <p class="m-0">Rounds</p>
-              <!--2 radio buttons for 3 or 5 rounds-->
-              <div class="form-check mx-2">
-                <input class="form-check-input" type="radio" name="rounds" id="roundOption-3" value="3" checked>
-                <label class="form-check-label" for="rounds">
-                  3
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="rounds" id="roundOption-5" value="5">
-                <label class="form-check-label" for="rounds">
-                  5
-                </label>
-              </div>
-            </div>
-            <div class="prelims-wrapper">
-              <!--bootstrap5 checkbox-->
-              <div class="form-check">
-                <!--CHECKBOXES DON'T SHOW UP IN FORMDATA OBJECTS IF UNCHECKED-->
-                <input class="form-check-input" type="checkbox" value="" name="isprelim" id="isprelim">
-                <label class="form-check-label" for="isprelim">
-                  On Prelims
-                </label>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
 
     
 
     <div class="matchup-editor">
+      <h1 class="modal-title title fs-4">MatchUp Editor</h1>
       <form>
           <div class="search-box2">
             <div class="input-group">  
-              <input class="form-control" type="text" value="" name="fighter-a" placeholder="Enter fighter name..."> 
+              <label class="input-group-text" for="fighter-a-input">Fighter A</label>
+              
+              <div class="input-wrapper">
+                <input class="form-control rounded-0" data-fighter-id="-1" type="text" value="" name="fighter-a" id="fighter-a-input" placeholder="Enter fighter name..."> 
+                <ul class="suggestion-box list-group"></ul>
+              </div>
+              
               <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
             </div>
-            <ul class="suggestion-box list-group">
-            </ul>
+            
           </div>
-
+          
+          <div class="searchbox-seperator my-2">
+            <p>versus</p>
+          </div>
+          
           <div class="search-box2">
             <div class="input-group">  
-              <input class="form-control" type="text" value="" name="fighter-b" placeholder="Enter fighter name..."> 
-              <button class="btn btn-outline-secondary clear-btn" type="button" id="button-addon2">Clear</button>
+              
+              <label class="input-group-text" for="fighter-b-input">Fighter B</label>
+              <div class="input-wrapper">
+                <input class="form-control rounded-0" data-fighter-id="-1" type="text" value="" name="fighter-b" id="fighter-b-input" placeholder="Enter fighter name..."> 
+                <ul class="suggestion-box list-group"></ul>
+              </div>
+              
+              <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
             </div>
-            <ul class="suggestion-box list-group">
-            </ul>
           </div>
 
           <!--weight class-->
-          <div class="weight-class-selector">
-            <div class="weight-class mb-3">
+          <div class="weightclass-selector my-4">
+            <div class="weightclass input-group mb-3">
               <label class="input-group-text" for="weight-class-select">Weightclass</label>
               <select class="form-select" id="weight-class-select" name="weight_class">
-                  <option selected disabled>Choose a weight class...</option>
+                  <option selected value="">Choose a weight class...</option>
                   <option value="strawweight">Strawweight</option>
                   <option value="flyweight">Flyweight</option>
                   <option value="bantamweight">Bantamweight</option>
@@ -129,13 +72,39 @@
               </select>
             </div>
           </div>
-          <!--rounds-->
-          <div class="rounds-radio-group"></div>
-          <!--prelim status-->
-          <div class="isprelim-checkbox">
 
+          <div class="rounds-isprelim-wrapper">
+            <!--rounds-->
+            <div class="rounds-radio-group border rounded-2 p-1 px-3">
+              <p class="radio-group-title">Rounds</p>
+              <div class="form-check mx-3">
+                <input class="form-check-input" type="radio" name="rounds" value="3" id="rounds-radio-3" checked>
+                <label class="form-check-label" for="rounds-radio-3">
+                  3
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="rounds" value="5" id="rounds-radio-5" >
+                <label class="form-check-label" for="rounds-radio-5">
+                  5
+                </label>
+              </div>
+            </div>
+            <!--prelim status-->
+            <div class="isprelim-checkbox border rounded-2 p-1 px-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="isprelim" id="isprelim-checkbox" checked>
+                <label class="form-check-label" for="isprelim-checkbox">
+                  on prelims
+                </label>
+              </div>
+            </div>
           </div>
       </form>
+      <div class="editor-actions mt-3">
+          <button type="button" class="btn btn-secondary mx-2">Close</button>
+          <button type="button" class="btn btn-primary" onclick="matchupEditor.createMatchUp()">Save changes</button>
+      </div>
     </div>
     
 
@@ -216,6 +185,10 @@
         this.suggestionList.innerHTML="";
       }
 
+      get fighterId(){
+        return this.input.dataset.fighterId;
+      }
+
       static createSuggestionListElement(fighter){
         return $(`
           <li class="list-group-item list-group-item-action" data-fighter-id="${fighter.id}" data-fighter-name="${fighter.first_name} ${fighter.last_name}">
@@ -227,10 +200,100 @@
     }
 
 
-    const [searchBox0,searchBox1] = document.querySelectorAll(".search-box2");
     
-    const fsb0 = new FighterSearchBox(searchBox0);
-    const fsb1 = new FighterSearchBox(searchBox1);
+    class MatchUpEditor{
+      
+      static EVENTS = {
+        CREATE_MATCHUP : 'matchup_created',
+        SAVE_CHANGED_MATCHUP:'matchup_changed',
+      }
+
+      constructor(edtior){
+        this.editor = editor;//html element that contains all inputs
+        
+        const [searchBoxElem0,searchBoxElem1] = editor.querySelectorAll(".search-box2");
+        
+        //search box controllers
+        this.searchBoxA = new FighterSearchBox(searchBoxElem0);
+        this.searchBoxB = new FighterSearchBox(searchBoxElem1);
+        this.weightClassSelector = editor.querySelector(".weightclass-selector select");
+
+        this.listeners = {}
+        //list of elements listening for changes
+        for (const event in MatchUpEditor.EVENTS){
+          this.listeners[event] = [];
+        }
+      }
+
+      createMatchUp(){
+        //fighter ids from searchbox2
+        let fighterA = this.searchBoxA.fighterId;
+        let fighterB = this.searchBoxB.fighterId;
+        
+        console.log(fighterA,fighterB);
+        if (fighterA == -1 || fighterB == -1){
+          alert('Please select weight class.');
+          return;//nothing happens need to select 2 fighters
+        }
+
+        let formData = new FormData(this.editor.querySelector('form'));
+        if (formData.get('weight_class') == ""){
+          alert('Please select weight class.');
+          return;//need weight_class
+        }
+        //no is prelim key means main card
+        formData.set('isprelim',formData.has('isprelim'));
+        formData.set('fighterA',fighterA);
+        formData.set('fighterB',fighterB);
+        
+        const requestData = {};
+        for (const key of formData.keys()){
+          // console.log(key,formData.get(key));
+          requestData[key] = formData.get(key);
+        }
+
+        // console.log(requestData);
+      }
+
+      onMatchUpCreated(data){
+        dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP);
+      }
+
+      dispatchEventsOnListeners(eventName){
+        const event = new Event(eventName);
+        for (const listener of listeners[eventName]){
+          listener.dispatchEvent(event);
+        }
+      }
+
+      saveMatchUpChanges(){
+        dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
+        //grab changed input values
+        //send to server 
+        //process result
+      }
+
+      onMatchUpChangesSaved(){
+
+      }
+
+      registerListener(element,eventName,callback){
+        if (eventName in MatchUpEditor.EVENTS){
+          element.addEventListener(MatchUpEditor.EVENTS[eventName],callback);
+          this.listeners[eventName].push(element);
+        }
+      }
+      
+    }
+
+
+    // const [searchBox0,searchBox1] = document.querySelectorAll(".search-box2");
+    
+    // const fsb0 = new FighterSearchBox(searchBox0);
+    // const fsb1 = new FighterSearchBox(searchBox1);
+
+    const editor = document.querySelector(".matchup-editor");
+    const matchupEditor = new MatchUpEditor(editor);
 
     const fightEventIdWrapper = [0];
 
@@ -291,61 +354,7 @@
         console.log(key,fd.get(key));
       }
     }
-    class MatchUpEditor{
-      
-      static EVENTS = {
-        CREATE_MATCHUP : 'matchup_created',
-        SAVE_CHANGED_MATCHUP:'matchup_changed',
-      }
-
-      constructor(edtior){
-        this.editor = editor;//html element that contains all inputs
-        this.listeners = {}
-        //list of elements listening for changes
-        for (const event of MatchUpEditor.EVENTS){
-          this.listeners[event] = [];
-        }
-      }
-
-      createMatchUp(){
-        //fighter query returns
-        //fighter-name <--doesn't matter
-        //fighter-id <--matters 
-        //matchup need 2 fighter ids 
-        
-      }
-
-      onMatchUpCreated(data){
-        dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP);
-      }
-
-      dispatchEventsOnListeners(eventName){
-        const event = new Event(eventName);
-        for (const listener of listeners[eventName]){
-          listener.dispatchEvent(event);
-        }
-      }
-
-      saveMatchUpChanges(){
-        dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
-        //grab changed input values
-        //send to server 
-        //process result
-      }
-
-      onMatchUpChangesSaved(){
-
-      }
-
-      registerListener(element,eventName,callback){
-        if (eventName in MatchUpEditor.EVENTS){
-          element.addEventListener(MatchUpEditor.EVENTS[eventName],callback);
-          this.listeners[eventName].push(element);
-        }
-      }
-      
-    }
-
+    
     function createMatchUp(event) {
       //grab fighter-id from fighter-a and fighter-b
       let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
