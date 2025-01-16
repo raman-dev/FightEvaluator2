@@ -225,14 +225,14 @@
         }
       }
 
-      createMatchUp(){
+      async createMatchUp(){
         //fighter ids from searchbox2
         let fighterA = this.searchBoxA.fighterId;
         let fighterB = this.searchBoxB.fighterId;
         
         console.log(fighterA,fighterB);
         if (fighterA == -1 || fighterB == -1){
-          alert('Please select weight class.');
+          alert('Please select 2 fighters');
           return;//nothing happens need to select 2 fighters
         }
 
@@ -252,7 +252,8 @@
           requestData[key] = formData.get(key);
         }
 
-        // console.log(requestData);
+        console.log(requestData);
+        this.server.create_matchup(requestData,this.onMatchUpCreated.bind(this));
       }
 
       onMatchUpCreated(data){
