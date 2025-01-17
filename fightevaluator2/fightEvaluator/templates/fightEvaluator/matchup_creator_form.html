@@ -20,7 +20,7 @@
 
     
 
-    <div class="matchup-editor">
+    <div class="matchup-editor" data-event-id="87">
       <h1 class="modal-title title fs-4">MatchUp Editor</h1>
       <form>
           <div class="search-box2">
@@ -115,7 +115,7 @@
 
 
 {% block scripts %}
- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+ <script defer src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
  
  <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
  {% if event is None %}
@@ -208,8 +208,10 @@
         SAVE_CHANGED_MATCHUP:'matchup_changed',
       }
 
-      constructor(edtior){
+      constructor(edtior,server){
         this.editor = editor;//html element that contains all inputs
+        this.eventId = this.editor.dataset.eventId;
+        this.server = server;
         
         const [searchBoxElem0,searchBoxElem1] = editor.querySelectorAll(".search-box2");
         
@@ -243,9 +245,9 @@
         }
         //no is prelim key means main card
         formData.set('isprelim',formData.has('isprelim'));
-        formData.set('fighterA',fighterA);
-        formData.set('fighterB',fighterB);
-        
+        formData.set('fighter_a_id',fighterA);
+        formData.set('fighter_b_id',fighterB);
+        formData.set('event_id',this.eventId);
         const requestData = {};
         for (const key of formData.keys()){
           // console.log(key,formData.get(key));
@@ -257,7 +259,9 @@
       }
 
       onMatchUpCreated(data){
-        dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP);
+        console.log('data => ',data);
+        
+        // dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP);
       }
 
       dispatchEventsOnListeners(eventName){
@@ -293,8 +297,6 @@
     // const fsb0 = new FighterSearchBox(searchBox0);
     // const fsb1 = new FighterSearchBox(searchBox1);
 
-    const editor = document.querySelector(".matchup-editor");
-    const matchupEditor = new MatchUpEditor(editor);
 
     const fightEventIdWrapper = [0];
 
@@ -307,7 +309,9 @@
       "X-CSRFToken": Cookies.get('csrftoken'),
     };
     const server = new Server(postHeaders);
-    
+
+    const editor = document.querySelector(".matchup-editor");
+    const matchupEditor = new MatchUpEditor(editor,server);    
     // const editModal = new bootstrap.Modal(document.querySelector('#matchupModal'));
     //show and dismiss edit modal
        /*

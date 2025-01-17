@@ -66,10 +66,9 @@ def create_matchup(request):
                           fighter_b=Fighter.objects.get(id=form.cleaned_data['fighter_b_id']),#get fighter object from id
                           weight_class=form.cleaned_data['weight_class'],
                           rounds=form.cleaned_data['rounds'])
-        if form.cleaned_data['scheduled'] != None:
-            matchup.scheduled = datetime(form.cleaned_data['scheduled'])
         if form.cleaned_data['event_id'] != None:
             matchup.event = FightEvent.objects.get(id=form.cleaned_data['event_id'])
+            matchup.scheduled = matchup.event.date
         if form.cleaned_data['isprelim'] != None:
             print('isprelim',form.cleaned_data['isprelim'])
             matchup.isprelim = form.cleaned_data['isprelim']
