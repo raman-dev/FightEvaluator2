@@ -16,9 +16,7 @@
     <!-- Modal -->
      <button class="show-button btn btn-primary" onclick="onToggleMatchupModal(false)">show</button>
    
-     
-
-    
+    <div class="matchup-receiver"></div>    
 
     <div class="matchup-editor" data-event-id="87">
       <h1 class="modal-title title fs-4">MatchUp Editor</h1>
@@ -106,8 +104,6 @@
           <button type="button" class="btn btn-primary" onclick="matchupEditor.createMatchUp()">Save changes</button>
       </div>
     </div>
-    
-
   </div>
 
 {% endblock %}
@@ -141,7 +137,7 @@
         this.input = searchBox.querySelector('input');//the input element of the searchbox
         this.suggestionList = searchBox.querySelector('ul');//the suggestion list
         this.searchBox.addEventListener("keyup", this.onKeyUp.bind(this));
-        this.searchBox.querySelector('.clear-btn').addEventListener('click',this.onClickClearSearchBox.bind(this));
+        this.searchBox.querySelector('.clear-btn').addEventListener('click',this.clearSearchBox.bind(this));
       }
 
       async onKeyUp() {
@@ -176,7 +172,7 @@
         this.input.toggleAttribute('disabled',true);//
       }
 
-      onClickClearSearchBox(){
+      clearSearchBox(){
         //clear suggestion
         this.input.dataset.fighterId =-1;
         this.input.value = "";
@@ -198,14 +194,12 @@
           </li>`)[0];
       }
     }
-
-
     
     class MatchUpEditor{
       
       static EVENTS = {
-        CREATE_MATCHUP : 'matchup_created',
-        SAVE_CHANGED_MATCHUP:'matchup_changed',
+        CREATE_MATCHUP : 'CREATE_MATCHUP',
+        SAVE_CHANGED_MATCHUP:'SAVE_CHANGED_MATCHUP',
       }
 
       constructor(edtior,server){
@@ -219,11 +213,11 @@
         this.searchBoxA = new FighterSearchBox(searchBoxElem0);
         this.searchBoxB = new FighterSearchBox(searchBoxElem1);
         this.weightClassSelector = editor.querySelector(".weightclass-selector select");
-
+        
         this.listeners = {}
         //list of elements listening for changes
-        for (const event in MatchUpEditor.EVENTS){
-          this.listeners[event] = [];
+        for (const eventName in MatchUpEditor.EVENTS){
+          this.listeners[eventName] = [];
         }
       }
 
@@ -259,20 +253,18 @@
       }
 
       onMatchUpCreated(data){
-        console.log('data => ',data);
-        
-        // dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP);
+        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP,data);
       }
 
-      dispatchEventsOnListeners(eventName){
-        const event = new Event(eventName);
-        for (const listener of listeners[eventName]){
+      dispatchEventsOnListeners(eventName,data){
+        const event = new CustomEvent(eventName,{detail:{data : data}});
+        for (const listener of this.listeners[eventName]){
           listener.dispatchEvent(event);
         }
       }
 
       saveMatchUpChanges(){
-        dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
+        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
         //grab changed input values
         //send to server 
         //process result
@@ -280,6 +272,14 @@
 
       onMatchUpChangesSaved(){
 
+      }
+
+      clearEditor(){
+        //clear searchbox's
+        this.searchBoxA.clearSearchBox();
+        this.searchBoxB.clearSearchBox();
+        //change weightclass to nothing
+        this.weightClassSelector.value="";
       }
 
       registerListener(element,eventName,callback){
@@ -290,12 +290,6 @@
       }
       
     }
-
-
-    // const [searchBox0,searchBox1] = document.querySelectorAll(".search-box2");
-    
-    // const fsb0 = new FighterSearchBox(searchBox0);
-    // const fsb1 = new FighterSearchBox(searchBox1);
 
 
     const fightEventIdWrapper = [0];
@@ -343,89 +337,6 @@
 
               matchup editor -> new_matchup -> matchup table
     */
-    function showFormData(){
-      let form = document.querySelector("form");
-      let fd = new FormData(form);
-      let keys = Array.from(fd.keys());
-      console.log(keys);
-      
-      if (!("isprelim" in keys)){
-        fd.set("isprelim",false);
-      }else{
-        fd.set("isprelim",true);
-      }
-      
-      for (const key of fd.keys()){
-        console.log(key,fd.get(key));
-      }
-    }
-    
-    function createMatchUp(event) {
-      //grab fighter-id from fighter-a and fighter-b
-      let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
-      let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
-      let weightClass = document.querySelector(".weight-class .dropdown-toggle")
-                        .textContent
-                        .replace(" ","_");
-      let rounds = document.querySelector("input[name='rounds']:checked").value;
-      let isprelim = document.querySelector("#isprelim").checked;
-      //make sure both fighter id's are not -1
-      if (fighterAId == -1 || fighterBId == -1) {
-        alert("Please select two fighters");
-        return;
-      }
-      //also make sure some dropdown is selected
-      if (weightClass == "Weight Class") {
-        alert("Please select a weight class");
-        return;
-      }
-      console.log(fighterAId, fighterBId, weightClass,rounds);
-      //replace the space to an underscore
-      //send post request to /create-matchup
-      fetch("/matchup/create-matchup", {
-        method: "POST",
-        body: JSON.stringify({
-          fighter_a_id: fighterAId,
-          fighter_b_id: fighterBId,
-          weight_class: weightClass,
-          rounds: rounds,
-          event_id: fightEventId,
-          isprelim: isprelim,
-        }),
-        headers: postHeaders,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          
-          /*
-          
-              "id": 299,
-              "fighter_a": 1,
-              "fighter_b": 1,
-              "weight_class": "bantamweight",
-              "rounds": 3,
-              "scheduled": null,
-              "event": 36,
-              "isprelim": false
-          
-          */
-          console.log('Created Matchup...',data);
-          //update matchup table
-          //update on server
-          if (data.inWatchList == null){
-            data.inWatchList = false;
-          }
-          let matchup = data;
-          //reflect change in matchup table
-          let matchupTable = mainCardTable;
-          if (matchup.isprelim){
-            matchupTable = prelimTable;
-          }
-          matchupMap[matchup.id] = matchup;
-          matchupTable.addMatchup(matchupMap[data.id]);
-          bootstrap.Modal.getInstance(document.querySelector('#matchupModal')).hide();
-        });
-    }
     
     function updateMatchUp(event){
       let matchupId = activeMatchup.dataset.matchupId;//document.querySelector("#matchupModal").dataset.matchupId;
@@ -490,86 +401,14 @@
       matchupModal.querySelector(".create-matchup-btn").classList.remove("d-none");
       matchupModal.querySelector(".update-matchup-btn").classList.add("d-none");
     }
-    function onClickSuggestion() {
-      //enter this data into the search box
-      this.searchBoxInput.value = this.fighter.first_name + " " + this.fighter.last_name;
-      this.searchBoxInput.dataset.fighterId = this.fighter.id;
-      //close and clear the search suggestion box
-      this.searchSuggestionList.innerHTML = "";
-      //set the first one to the new fighter
-      // this.fighterElement.querySelector(".fighter-img").src = this.fighter.image_url;
-      // this.fighterElement.querySelector(".fighter-name").textContent = this.fighter.first_name + " " + this.fighter.last_name;
-      // this.fighterElement.querySelector(".fighter-name").classList.remove("d-none");
-      this.fighterElement.dataset.selectedId = this.fighter.id;
-      // this.searchBoxInput.setAttribute("readonly", true); 
-      this.searchBoxInput.setAttribute("disabled",true);
-      // this.fighterElement.querySelector(".search-container").classList.add("d-none");
-    }
-    function clearFighterSelection(fighter){
-      let fighterElement = document.querySelector(`.${fighter}`);
-      let searchBoxInput = fighterElement.querySelector(".search-box input");
-      fighterElement.dataset.selectedId = -1;
-      // fighterElement.querySelector(".fighter-img").src = "static/media/sample_50.png";
-      fighterElement.querySelector(".search-container").classList.remove("d-none");
-      searchBoxInput.value = "";
-      searchBoxInput.dataset.fighterId = -1;
-      searchBoxInput.removeAttribute("disabled");
-    }
-       //search box functionality
-    document.querySelectorAll(".fighter-selector .fighter").forEach((fighterElement) => {
-      let searchBox = fighterElement.querySelector(".search-box");
-      searchBox.addEventListener("keyup", async (event) => {
-        let input = searchBox.querySelector("input");
-        let search = input.value;
-        search = search.split(" ").join("+");
-        let searchSuggestion = document.querySelector(`${searchBox.dataset.target} ul`);
-        
-        if (search.length > 0) {
-          server.search_fighters(
-          onFighterSearchResult.bind(
-            this,fighterElement,searchSuggestion,input),
-            search
-          );
-        } 
-        else {
-          searchSuggestion.innerHTML = "";
-        }
-      });
-    });
-
-
-    function onFighterSearchResult(fighterElement,searchSuggestion,input,data){
-      console.log('calling callback!!',searchSuggestion);
-      
-      let fighters = data['fighters'];
-      searchSuggestion.innerHTML = "";
-      fighters.forEach((fighter) => {
-        console.log(fighter);
-        let li = document.createElement("li");
-        li.classList.add("list-group-item");
-        li.innerHTML = `
-            <div class="suggestion">
-                <p class="name">${fighter.first_name} ${fighter.last_name}, id:${fighter.id}</p>
-            </div>`;
-        searchSuggestion.appendChild(li);
-        li.addEventListener('click', onClickSuggestion.bind({
-          fighter: fighter,
-          fighterElement: fighterElement,
-          searchBoxInput: input,
-          searchSuggestionList: searchSuggestion
-        }));
-      });
-    }
-
-    //on click weightclass dropdown item set the dropdown button text to the item clicked
-    document.querySelectorAll(".weight-class .dropdown-item").forEach((dropDownItem) => {
-      dropDownItem.addEventListener('click', (event) => {
-        let weightClassButton = document.querySelector(".weight-class .dropdown-toggle");
-        weightClassButton.textContent = event.target.textContent;
-      });
-    });
-
+   
+ 
     // onToggleMatchupModal(false);
+    let matchupReceiver = document.querySelector(".matchup-receiver");
+    matchupEditor.registerListener(matchupReceiver,MatchUpEditor.EVENTS.CREATE_MATCHUP,(event)=>{
+      let element = event.currentTarget;
+      element.textContent = JSON.stringify(event.detail.data);
+    });
 
 </script>
 
