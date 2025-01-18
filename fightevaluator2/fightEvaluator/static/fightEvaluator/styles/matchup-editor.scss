@@ -4,7 +4,8 @@
     width: fit-content;
     padding: 0.6rem;
     margin: auto;
- 
+    transform: translate(0% -100%);
+
     .title{
         margin-bottom: 0.8rem;
     }
@@ -30,7 +31,7 @@
             overflow: visible;
             z-index: 10000;
             li p{
-                margin: 0px;
+                margin: 0px; 
             }
         }
     }

@@ -4,6 +4,7 @@
   width: fit-content;
   padding: 0.6rem;
   margin: auto;
+  transform: translate(0% -100%);
 }
 .matchup-editor .title {
   margin-bottom: 0.8rem;
