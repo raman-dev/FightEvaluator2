@@ -88,7 +88,7 @@
     z-index: 1000;
 
     
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     .r-modal-content{
         position: absolute;
@@ -100,7 +100,14 @@
         border: 1px solid black;
         
         opacity: 0;
-        transition: all 0.3s ease-out !important;
+        transition: all 0.25s ease-out !important;
+
+        pointer-events: none;
+        user-select: none;
+        * {     
+            pointer-events: initial;
+            user-select: initial;
+        }
     }
 
 }
@@ -111,5 +118,12 @@
     .r-modal-content{
         opacity: 1 !important;
         bottom: 50%;
+
+        pointer-events: initial;
+        user-select: initial;
+        * {    
+            pointer-events: initial;
+            user-select: initial;
+        }
     } 
 }

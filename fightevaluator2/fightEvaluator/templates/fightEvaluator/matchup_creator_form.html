@@ -191,6 +191,12 @@
         return this.input.dataset.fighterId;
       }
 
+      setSearchBoxValue(fighter){
+        this.input.value = fighter.name;
+        this.input.dataset.fighterId = fighter.id;
+        this.input.setAttribute('disabled',true);
+      }
+
       static createSuggestionListElement(fighter){
         return $(`
           <li class="list-group-item list-group-item-action" data-fighter-id="${fighter.id}" data-fighter-name="${fighter.first_name} ${fighter.last_name}">
@@ -225,6 +231,25 @@
         for (const eventName in MatchUpEditor.EVENTS){
           this.listeners[eventName] = [];
         }
+      }
+
+      loadMatchUp(matchup){
+        this.searchBoxA.setSearchBoxValue({
+          name:matchup.fighter_a_name,
+          id:matchup.fighter_a_id,
+        });
+        this.searchBoxB.setSearchBoxValue({
+          name:matchup.fighter_b_name,
+          id:matchup.fighter_b_id,
+        });
+        //how to set rounds of radio group?
+        this.editor.querySelectorAll('[name="rounds"]').forEach((element) => {
+            element.checked=false;
+        });
+        console.log();
+        this.editor.querySelector(`#rounds-radio-${matchup.rounds}`).checked = true;
+        this.editor.querySelector('[name="isprelim"]').checked=matchup.isprelim;
+        this.weightClassSelector.value= matchup.weight_class;
       }
 
       async createMatchUp(){
@@ -395,18 +420,47 @@
     function showMatchUpEditor(){
       //rmodal show
       const rmodal = document.querySelector(".r-modal");
-      rmodal.classList.toggle('r-show');
-      // rmodal.classList.remove('r-hide');
+      rmodal.addEventListener("click",(event)=>{
+        //clicked modal background not content  
+        if (event.currentTarget == event.target){
+          hideMatchUpEditor();
+        }
+      },{once:true});
+
+      const rmodalContent = rmodal.querySelector(".r-modal-content");
+      rmodalContent.style.display='block';
+      setTimeout(() => {
+        rmodal.classList.add("r-show");
+      },200);
+
+      //enable edit mode or creatino mode
+      //change attribute possible?
+      matchupEditor.loadMatchUp({
+        fighter_a_name:'Ramandeep Bhatti',
+        fighter_a_id:1,
+        fighter_b_name:'Ramandeep Bhatti',
+        fighter_b_id:1,
+        weight_class:'lightweight',
+        rounds:3,
+        isprelim:false
+      });
     }
+
     function hideMatchUpEditor(){
       const rmodal = document.querySelector(".r-modal");
-      // rmodal.classList.add('r-hide');
       rmodal.classList.remove('r-show');
     }
 
-    // document.querySelector(".r-modal").addEventListener("click",(event)=>{
-    //     hideMatchUpEditor();
-    // });
+    document.querySelector(".r-modal-content").addEventListener("transitionend",(event)=>{
+        
+      const rmodalContent = event.currentTarget;
+      const rmodal = rmodalContent.parentElement;
+      //if we are closing the modal remove display
+      if (!rmodal.classList.contains('r-show')){
+        rmodalContent.style.display='None';
+      }
+    });
+
 
 </script>
 
