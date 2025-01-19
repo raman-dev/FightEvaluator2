@@ -1,5 +1,4 @@
 .matchup-editor {
-  border: 1px solid lavender;
   width: -moz-fit-content;
   width: fit-content;
   padding: 0.6rem;
@@ -60,4 +59,37 @@
 .matchup-editor .editor-actions {
   display: flex;
   justify-content: end;
+}
+
+.r-modal {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  z-index: 1000;
+  transition: all 0.2s ease-in-out;
+}
+.r-modal .r-modal-content {
+  position: absolute;
+  background-color: #212529;
+  width: -moz-fit-content;
+  width: fit-content;
+  bottom: 0px;
+  border: 1px solid black;
+  opacity: 0;
+  transition: all 0.3s ease-out !important;
+}
+
+.r-modal.r-show {
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: initial;
+}
+.r-modal.r-show .r-modal-content {
+  opacity: 1 !important;
+  bottom: 50%;
 }/*# sourceMappingURL=matchup-editor.css.map */

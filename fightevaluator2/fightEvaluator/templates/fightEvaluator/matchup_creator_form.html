@@ -14,11 +14,15 @@
   
   <div class="container-fluid main-container" style="position: relative;">
     <!-- Modal -->
-     <button class="show-button btn btn-primary">show</button>
+  <button class="show-button btn btn-primary" onclick="showMatchUpEditor()">show</button>
    
     <div class="matchup-receiver"></div>    
 
-    <div class="matchup-editor" data-event-id="87">
+    
+
+    <div class="r-modal">
+      <div class="r-modal-content">
+        <div class="matchup-editor border rounded-2" data-event-id="87">
           <h1 class="modal-title title fs-4">MatchUp Editor</h1>
           <form>
               <div class="search-box2">
@@ -100,9 +104,11 @@
               </div>
           </form>
           <div class="editor-actions mt-3">
-              <button type="button" class="btn btn-secondary mx-2" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary mx-2" onclick="hideMatchUpEditor()">Close</button>
               <button type="button" class="btn btn-primary" onclick="matchupEditor.createMatchUp()">Save changes</button>
           </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -378,37 +384,29 @@
           location.reload();//reload page
         });
     }
-    function clearMatchupDialog(){
-      //clear form data from matchupModal
-      let matchupModal = document.querySelector("#matchupModal");
-      let searchBoxA = matchupModal.querySelector(".fighter-a .search-box input");
-      let searchBoxB = matchupModal.querySelector(".fighter-b .search-box input");
-      
-      searchBoxA.value = "";
-      searchBoxB.value = "";
-
-      searchBoxA.removeAttribute("disabled");
-      searchBoxB.removeAttribute("disabled");
-
-      matchupModal.querySelector(".fighter-a").dataset.selectedId = -1;
-      matchupModal.querySelector(".fighter-b").dataset.selectedId = -1;
-
-      matchupModal.querySelector(".weight-class .dropdown-toggle").textContent = "Weight Class";
-      matchupModal.querySelector("#roundOption-3").checked = true;
-      matchupModal.querySelector("#isprelim").checked = false;
-
-      //hide update button
-      matchupModal.querySelector(".create-matchup-btn").classList.remove("d-none");
-      matchupModal.querySelector(".update-matchup-btn").classList.add("d-none");
-    }
-   
- 
+    
     // onToggleMatchupModal(false);
     let matchupReceiver = document.querySelector(".matchup-receiver");
     matchupEditor.registerListener(matchupReceiver,MatchUpEditor.EVENTS.CREATE_MATCHUP,(event)=>{
       let element = event.currentTarget;
       element.textContent = JSON.stringify(event.detail.data);
     });
+
+    function showMatchUpEditor(){
+      //rmodal show
+      const rmodal = document.querySelector(".r-modal");
+      rmodal.classList.toggle('r-show');
+      // rmodal.classList.remove('r-hide');
+    }
+    function hideMatchUpEditor(){
+      const rmodal = document.querySelector(".r-modal");
+      // rmodal.classList.add('r-hide');
+      rmodal.classList.remove('r-show');
+    }
+
+    // document.querySelector(".r-modal").addEventListener("click",(event)=>{
+    //     hideMatchUpEditor();
+    // });
 
 </script>
 
