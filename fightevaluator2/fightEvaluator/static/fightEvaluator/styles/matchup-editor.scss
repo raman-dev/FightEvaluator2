@@ -69,6 +69,13 @@
     .editor-actions{
         display: flex;
         justify-content: end;
+
+        .submit-btn{
+            display: none;
+        }
+        .current-action{
+            display: block;
+        }
     }
 }
 
@@ -95,12 +102,13 @@
         
         background-color: #212529;
         width: fit-content;
-
-        bottom: 0px;
+ 
+        // bottom: 0px;
+        top:0px;
         border: 1px solid black;
         
         opacity: 0;
-        transition: all 0.25s ease-out !important;
+        transition: all 0.2s ease-out !important;
 
         pointer-events: none;
         user-select: none;
@@ -117,7 +125,7 @@
     pointer-events: initial;
     .r-modal-content{
         opacity: 1 !important;
-        bottom: 50%;
+        top: 15%;
 
         pointer-events: initial;
         user-select: initial;

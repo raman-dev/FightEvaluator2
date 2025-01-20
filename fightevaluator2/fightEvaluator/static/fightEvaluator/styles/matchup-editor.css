@@ -60,6 +60,12 @@
   display: flex;
   justify-content: end;
 }
+.matchup-editor .editor-actions .submit-btn {
+  display: none;
+}
+.matchup-editor .editor-actions .current-action {
+  display: block;
+}
 
 .r-modal {
   position: absolute;
@@ -79,10 +85,10 @@
   background-color: #212529;
   width: -moz-fit-content;
   width: fit-content;
-  bottom: 0px;
+  top: 0px;
   border: 1px solid black;
   opacity: 0;
-  transition: all 0.25s ease-out !important;
+  transition: all 0.2s ease-out !important;
   pointer-events: none;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -101,7 +107,7 @@
 }
 .r-modal.r-show .r-modal-content {
   opacity: 1 !important;
-  bottom: 50%;
+  top: 15%;
   pointer-events: initial;
   -webkit-user-select: initial;
      -moz-user-select: initial;

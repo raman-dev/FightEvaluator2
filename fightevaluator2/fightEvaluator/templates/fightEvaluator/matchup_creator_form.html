@@ -14,16 +14,15 @@
   
   <div class="container-fluid main-container" style="position: relative;">
     <!-- Modal -->
-  <button class="show-button btn btn-primary" onclick="showMatchUpEditor()">show</button>
-   
-    <div class="matchup-receiver"></div>    
+  <button class="show-button btn btn-primary" onclick="showEditor(false)">create</button>
+  <button class="show-button btn btn-primary" onclick="showEditor(true)">edit</button>
 
-    
+    <div class="matchup-receiver"></div>    
 
     <div class="r-modal">
       <div class="r-modal-content">
         <div class="matchup-editor border rounded-2" data-event-id="87">
-          <h1 class="modal-title title fs-4">MatchUp Editor</h1>
+          <h1 class="modal-title title fs-4">Create MatchUp</h1>
           <form>
               <div class="search-box2">
                 <div class="input-group">  
@@ -104,8 +103,9 @@
               </div>
           </form>
           <div class="editor-actions mt-3">
-              <button type="button" class="btn btn-secondary mx-2" onclick="hideMatchUpEditor()">Close</button>
-              <button type="button" class="btn btn-primary" onclick="matchupEditor.createMatchUp()">Save changes</button>
+              <button type="button" class="btn btn-secondary mx-2 close-btn" onclick="hideMatchUpEditor()">Close</button>
+              <button type="button" class="btn btn-primary create-btn current-action submit-btn" onclick="matchupEditor.createMatchUp()">Create</button>
+              <button type="button" class="btn btn-primary save-btn submit-btn" onclick="matchupEditor.saveMatchUpChanges()">Save</button>
           </div>
         </div>
       </div>
@@ -219,21 +219,33 @@
         this.eventId = this.editor.dataset.eventId;
         this.server = server;
         
-        const [searchBoxElem0,searchBoxElem1] = editor.querySelectorAll(".search-box2");
+        this.title = this.editor.querySelector(".title");
+        const [searchBoxElem0,searchBoxElem1] = this.editor.querySelectorAll(".search-box2");
         
         //search box controllers
         this.searchBoxA = new FighterSearchBox(searchBoxElem0);
         this.searchBoxB = new FighterSearchBox(searchBoxElem1);
-        this.weightClassSelector = editor.querySelector(".weightclass-selector select");
-        
+        this.weightClassSelector = this.editor.querySelector(".weightclass-selector select");
+        this.createButton = this.editor.querySelector('.create-btn');
+        this.saveButton = this.editor.querySelector('.save-btn');
+
+
         this.listeners = {}
         //list of elements listening for changes
         for (const eventName in MatchUpEditor.EVENTS){
           this.listeners[eventName] = [];
         }
+        this.inEditMode = false;
       }
 
       loadMatchUp(matchup){
+        this.inEditMode = true;
+        //change editor title
+        this.title.textContent = "Edit MatchUp";
+        this.createButton.classList.remove('current-action');
+        this.saveButton.classList.add('current-action');
+        
+        //set input values
         this.searchBoxA.setSearchBoxValue({
           name:matchup.fighter_a_name,
           id:matchup.fighter_a_id,
@@ -246,10 +258,18 @@
         this.editor.querySelectorAll('[name="rounds"]').forEach((element) => {
             element.checked=false;
         });
-        console.log();
         this.editor.querySelector(`#rounds-radio-${matchup.rounds}`).checked = true;
         this.editor.querySelector('[name="isprelim"]').checked=matchup.isprelim;
         this.weightClassSelector.value= matchup.weight_class;
+
+        
+        this.editor.querySelectorAll("input").forEach((input) => {
+            input.addEventListener("change",this.inputChanged);
+        });
+      }
+
+      inputChanged(event){
+        event.currentTarget.classList.add('changed');
       }
 
       async createMatchUp(){
@@ -294,15 +314,20 @@
         }
       }
 
-      saveMatchUpChanges(){
-        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
+      async saveMatchUpChanges(){
         //grab changed input values
+        this.editor.querySelectorAll("input.changed").forEach((changedInput) => {
+            console.log(changedInput);
+        });
         //send to server 
         //process result
       }
 
       onMatchUpChangesSaved(){
-
+        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
+        this.editor.querySelectorAll('input').forEach((input) => {
+            input.classList.remove('changed');
+        });
       }
 
       clearEditor(){
@@ -311,6 +336,14 @@
         this.searchBoxB.clearSearchBox();
         //change weightclass to nothing
         this.weightClassSelector.value="";
+        this.title.textContent= "Create MatchUp";//default title
+        
+        this.editor.querySelectorAll("input").forEach((input) => {
+            input.removeEventListener("change",this.inputChanged);
+        });
+        
+        this.createButton.classList.add('current-action');
+        this.saveButton.classList.remove('current-action');
       }
 
       registerListener(element,eventName,callback){
@@ -417,9 +450,11 @@
       element.textContent = JSON.stringify(event.detail.data);
     });
 
-    function showMatchUpEditor(){
+    function showEditor(inEditMode){
       //rmodal show
       const rmodal = document.querySelector(".r-modal");
+      const rmodalContent = rmodal.querySelector(".r-modal-content");
+
       rmodal.addEventListener("click",(event)=>{
         //clicked modal background not content  
         if (event.currentTarget == event.target){
@@ -427,28 +462,28 @@
         }
       },{once:true});
 
-      const rmodalContent = rmodal.querySelector(".r-modal-content");
-      rmodalContent.style.display='block';
-      setTimeout(() => {
-        rmodal.classList.add("r-show");
-      },200);
+      
+      rmodalContent.style.display='block';//make element part of page again
+      setTimeout(() => {rmodal.classList.add("r-show"); },200);//add class after delay 
 
-      //enable edit mode or creatino mode
-      //change attribute possible?
-      matchupEditor.loadMatchUp({
-        fighter_a_name:'Ramandeep Bhatti',
-        fighter_a_id:1,
-        fighter_b_name:'Ramandeep Bhatti',
-        fighter_b_id:1,
-        weight_class:'lightweight',
-        rounds:3,
-        isprelim:false
-      });
+      if (inEditMode){
+        //enable editor will be in edit mode
+        matchupEditor.loadMatchUp({
+          fighter_a_name:'Ramandeep Bhatti',
+          fighter_a_id:1,
+          fighter_b_name:'Ramandeep Bhatti',
+          fighter_b_id:1,
+          weight_class:'lightweight',
+          rounds:3,
+          isprelim:false
+        });
+      }
     }
 
     function hideMatchUpEditor(){
       const rmodal = document.querySelector(".r-modal");
       rmodal.classList.remove('r-show');
+      matchupEditor.clearEditor();
     }
 
     document.querySelector(".r-modal-content").addEventListener("transitionend",(event)=>{
