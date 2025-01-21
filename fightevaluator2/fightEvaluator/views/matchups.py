@@ -80,6 +80,7 @@ def create_matchup(request):
     responseDict = model_to_dict(matchup)
     responseDict['fighter_a_name'] = matchup.fighter_a.name
     responseDict['fighter_b_name'] = matchup.fighter_b.name
+    responseDict['title_full'] = matchup.title_full()
     return JsonResponse(responseDict)
 
 @require_http_methods(["DELETE"])
