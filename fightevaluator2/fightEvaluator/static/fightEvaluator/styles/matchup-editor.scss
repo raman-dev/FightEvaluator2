@@ -95,15 +95,15 @@
     z-index: 1000;
 
     
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 
     .r-modal-content{
         position: absolute;
+        display: none;
         
         background-color: #212529;
         width: fit-content;
  
-        // bottom: 0px;
         top:0px;
         border: 1px solid black;
         
@@ -111,7 +111,7 @@
         transition: all 0.2s ease-out !important;
 
         pointer-events: none;
-        user-select: none;
+        user-select: none; 
         * {     
             pointer-events: initial;
             user-select: initial;

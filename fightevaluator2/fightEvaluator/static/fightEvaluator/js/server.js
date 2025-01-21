@@ -7,8 +7,8 @@ class Server {
       UPDATE_FIGHTER :'/fighters/update-fighter2/',
       SEARCH_FIGHTERS : '/fighters/search/?search=',
 
-      CREATE_MATCHUP : '/matchup/create-matchup'
-
+      CREATE_MATCHUP : '/matchup/create-matchup',
+      UPDATE_MATCHUP:'/matchup/update-matchup/'
     }
 
     constructor(headers) {
@@ -60,6 +60,18 @@ class Server {
     async create_matchup(requestData,callback){
       fetch(Server.URLS.CREATE_MATCHUP,{
         method:"POST",
+        body: JSON.stringify(requestData),
+        headers: this.headers,
+      })
+      .then(response => response.json())
+      .then((data) => {
+        callback(data);
+      });
+    }
+
+    async update_matchup(requestData,callback,matchupId){
+      fetch(Server.URLS.UPDATE_MATCHUP + `${matchupId}`,{
+        method:"PATCH",
         body: JSON.stringify(requestData),
         headers: this.headers,
       })

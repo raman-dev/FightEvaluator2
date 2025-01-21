@@ -487,39 +487,7 @@
 {% include "fightEvaluator/matchup-data-script.html" %}
 
 <script>
-
-    function createMatchUpElement(matchup){
-      console.log('creating element => ',matchup);
-      // console.log(matchup,matchup['id']);
-      return $(`
-        <tr class="matchup" 
-            onclick="onClickMatchUp(event)" 
-            oncontextmenu="onRightClickMatchup(event)"
-            data-in-watch-list="${matchup.inWatchList}" tabindex="50" 
-            data-matchup-id="${matchup.id}" 
-            data-fighter-a-id="${matchup.fighter_a}" 
-            data-fighter-b-id="${matchup.fighter_b}">
-            <td >
-              <div class="d-flex align-items-center justify-content-center ">
-                <p>${matchup.title_full}</p>
-              </div>
-            </td>
-            <td>
-              <div class="d-flex align-items-center justify-content-center ">
-                <p class="weight-class" >
-                  ${matchup.weight_class.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}</p>
-              </div>
-            </td>
-            <td>
-              <div class="d-flex align-items-center justify-content-center ">
-                <p>${matchup.rounds}</p>
-              </div>
-            </td>
-          </tr>
-      `)[0];
-    }
   
-
     class MatchupTable{
       constructor(table,matchupMap){
         this.matchup_ids = new Set();
@@ -527,7 +495,7 @@
       }
       addMatchup(matchup){
         this.matchup_ids.add(matchup.id);
-        let element = createMatchUpElement(matchup);
+        let element = this.createMatchUpElement(matchup);
         let tbody = this.table.querySelector('tbody');
         tbody.appendChild(element);
         return element;
@@ -546,6 +514,39 @@
         }
         return null;
       }
+    
+      
+      createMatchUpElement(matchup){
+        console.log('creating element => ',matchup);
+        // console.log(matchup,matchup['id']);
+        return $(`
+          <tr class="matchup" 
+              onclick="onClickMatchUp(event)" 
+              oncontextmenu="onRightClickMatchup(event)"
+              data-in-watch-list="${matchup.inWatchList}" tabindex="50" 
+              data-matchup-id="${matchup.id}" 
+              data-fighter-a-id="${matchup.fighter_a}" 
+              data-fighter-b-id="${matchup.fighter_b}">
+              <td >
+                <div class="d-flex align-items-center justify-content-center ">
+                  <p>${matchup.title_full}</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center justify-content-center ">
+                  <p class="weight-class" >
+                    ${matchup.weight_class.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center justify-content-center ">
+                  <p>${matchup.rounds}</p>
+                </div>
+              </td>
+            </tr>
+        `)[0];
+      }
+    
     }
 
     class WatchListTable extends MatchupTable{
@@ -687,42 +688,6 @@
       clearMatchupDialog();
       editModal.show();
     }
-    
-    // class MatchUpEditor {
-    //   constructor(server) {
-    //     this.server = server;
-    //   }
-
-    // }
-    /*
-    
-      matchup editor
-        create matchup
-          take 2 names
-          weight class 1 of n options
-          rounds 3/5
-          isprelim t/f
-          
-          how to?
-          grab values from ui
-            send to server
-              success -> reflect in ui
-              failure -> give error message
-
-        edit matchup 
-          change a name
-          change weight class
-          change rounds
-          change prelim status
-          
-          grab values that have changed from ui
-            send to server
-              success -> reflect in ui
-              failure -> do nothing/give error message
-
-
-              matchup editor -> new_matchup -> matchup table
-    */
 
     function createMatchUp(event) {
       //grab fighter-id from fighter-a and fighter-b
@@ -1093,16 +1058,286 @@
 </script>
 
 <script>
-  function showFighterCreatorSection() {
-      console.log("show fighter creator section");
-      let fighterCreatorSection = document.querySelector(".fighter-creator");
-      fighterCreatorSection.classList.toggle("show");
-      if (fighterCreatorSection.classList.contains("show")) {
-        fighterCreatorSection.style.height = fighterCreatorSection.scrollHeight + "px";
-        return;
+
+    
+    class FighterSearchBox{
+      
+      constructor(searchBox){
+        this.searchBox = searchBox;
+        this.input = searchBox.querySelector('input');//the input element of the searchbox
+        this.suggestionList = searchBox.querySelector('ul');//the suggestion list
+        this.searchBox.addEventListener("keyup", this.onKeyUp.bind(this));
+        this.searchBox.querySelector('.clear-btn').addEventListener('click',this.clearSearchBox.bind(this));
       }
-      fighterCreatorSection.style.height = "0px";
+
+      async onKeyUp() {
+        let input = this.searchBox.querySelector("input");
+        let search = this.input.value;
+        search = search.split(" ").join("+");
+        //non-empty search string
+        if (search.length > 0) {
+          server.search_fighters(this.onFighterSearchResult.bind(this),search);
+        } 
+        else {
+          this.suggestionList.innerHTML = "";//empty the list
+        }
+      }
+
+      onFighterSearchResult(data){
+        let fighters = data['fighters'];
+        this.suggestionList.innerHTML = "";//list must always be emptied before populating with new values
+        for (const fighter of fighters){
+          let item = FighterSearchBox.createSuggestionListElement(fighter);
+          item.addEventListener("click",this.onSuggestionListItemClick.bind(this,item));
+          this.suggestionList.appendChild(item);
+        }
+      }
+
+      onSuggestionListItemClick(suggestion,event){
+        //populate input with this value
+        this.input.dataset.fighterId = suggestion.dataset.fighterId;
+        this.input.value = suggestion.dataset.fighterName;//fighter name string
+        //list needs to be empty now
+        this.suggestionList.innerHTML = "";
+        this.input.toggleAttribute('disabled',true);//
+      }
+
+      clearSearchBox(){
+        //clear suggestion
+        this.input.dataset.fighterId =-1;
+        this.input.value = "";
+        this.input.toggleAttribute('disabled',false);
+        //
+        this.suggestionList.innerHTML="";
+      }
+
+      get fighterId(){
+        return this.input.dataset.fighterId;
+      }
+
+      setSearchBoxValue(fighter){
+        this.input.value = fighter.name;
+        this.input.dataset.fighterId = fighter.id;
+        this.input.setAttribute('disabled',true);
+      }
+
+      static createSuggestionListElement(fighter){
+        return $(`
+          <li class="list-group-item list-group-item-action" data-fighter-id="${fighter.id}" data-fighter-name="${fighter.first_name} ${fighter.last_name}">
+            <div class="suggestion">
+              <p class="name">${fighter.first_name} ${fighter.last_name}</p>
+            </div>
+          </li>`)[0];
+      }
     }
+
+    class MatchUpEditor{
+      
+      static EVENTS = {
+        CREATE_MATCHUP : 'CREATE_MATCHUP',
+        SAVE_CHANGED_MATCHUP:'SAVE_CHANGED_MATCHUP',
+        UPDATE_MATCHUP:'UPDATE_MATCHUP',
+      }
+
+      constructor(edtior,server){
+        this.editor = editor;//html element that contains all inputs
+        this.eventId = this.editor.dataset.eventId;
+        this.server = server;
+        
+        this.title = this.editor.querySelector(".title");
+        const [searchBoxElem0,searchBoxElem1] = this.editor.querySelectorAll(".search-box2");
+        
+        //search box controllers
+        this.searchBoxA = new FighterSearchBox(searchBoxElem0);
+        this.searchBoxB = new FighterSearchBox(searchBoxElem1);
+        this.weightClassSelector = this.editor.querySelector(".weightclass-selector select");
+        this.createButton = this.editor.querySelector('.create-btn');
+        this.saveButton = this.editor.querySelector('.save-btn');
+
+
+        this.listeners = {}
+        //list of elements listening for changes
+        for (const eventName in MatchUpEditor.EVENTS){
+          this.listeners[eventName] = [];
+        }
+        this.inEditMode = false;
+      }
+
+      loadMatchUp(matchup){
+        this.inEditMode = true;
+        //change editor title
+        this.title.textContent = "Edit MatchUp";
+        this.createButton.classList.remove('current-action');
+        this.saveButton.classList.add('current-action');
+        this.matchupId = matchup.id;
+        //set input values
+        this.searchBoxA.setSearchBoxValue({
+          name:matchup.fighter_a_name,
+          id:matchup.fighter_a_id,
+        });
+        this.searchBoxB.setSearchBoxValue({
+          name:matchup.fighter_b_name,
+          id:matchup.fighter_b_id,
+        });
+        //how to set rounds of radio group?
+        this.editor.querySelectorAll('[name="rounds"]').forEach((element) => {
+            element.checked=false;
+        });
+        this.editor.querySelector(`#rounds-radio-${matchup.rounds}`).checked = true;
+        this.editor.querySelector('[name="isprelim"]').checked=matchup.isprelim;
+        this.weightClassSelector.value= matchup.weight_class;
+
+      }
+
+      onMatchUpCreated(data){
+        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP,data);
+      }
+
+      dispatchEventsOnListeners(eventName,data){
+        const event = new CustomEvent(eventName,{detail:{data : data}});
+        for (const listener of this.listeners[eventName]){
+          listener.dispatchEvent(event);
+        }
+      }
+
+      async commitChanges(createNew){
+        //grab changed input values
+        let fighterA = this.searchBoxA.fighterId;
+        let fighterB = this.searchBoxB.fighterId;
+        
+        // console.log(fighterA,fighterB);
+        if (fighterA == -1 || fighterB == -1){
+          alert('Please select 2 fighters');
+          return;//nothing happens need to select 2 fighters
+        }
+
+        let formData = new FormData(this.editor.querySelector('form'));
+        if (formData.get('weight_class') == ""){
+          alert('Please select weight class.');
+          return;//need weight_class
+        }
+        //no is prelim key means main card
+        formData.set('isprelim',formData.has('isprelim'));
+        formData.set('fighter_a_id',fighterA);
+        formData.set('fighter_b_id',fighterB);
+        // formData.set('event_id',this.eventId);
+        const requestData = {};
+        for (const key of formData.keys()){
+          // console.log(key,formData.get(key));
+          requestData[key] = formData.get(key);
+        }
+        //send to server 
+        //process result
+        console.log(requestData);
+        if (createNew){
+          this.server.create_matchup(requestData,this.onMatchUpCreated.bind(this));
+        }else{
+          this.server.update_matchup(requestData,this.onMatchUpChangesSaved.bind(this),this.matchupId);
+        }
+      }
+
+      onMatchUpChangesSaved(data){
+        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
+        console.log('server => ',data);
+      }
+
+      clearEditor(){
+        //clear searchbox's
+        this.searchBoxA.clearSearchBox();
+        this.searchBoxB.clearSearchBox();
+        //change weightclass to nothing
+        this.weightClassSelector.value="";
+        this.title.textContent= "Create MatchUp";//default title
+        
+        this.createButton.classList.add('current-action');
+        this.saveButton.classList.remove('current-action');
+      }
+
+      registerListener(element,eventName,callback){
+        if (eventName in MatchUpEditor.EVENTS){
+          element.addEventListener(MatchUpEditor.EVENTS[eventName],callback);
+          this.listeners[eventName].push(element);
+        }
+      }
+      
+    }
+    
+    const editor = document.querySelector(".matchup-editor");
+    const matchupEditor = new MatchUpEditor(editor,server);    
+
+    //reload page on matchup update
+    matchupEditor.registerListener(document,MatchUpEditor.EVENTS.UPDATE_MATCHUP,()=>{location.reload()});
+    const allTables = document.querySelector(".tables-wrapper");
+    matchupEditor.registerListener(allTables,MatchUpEditor.EVENTS.CREATE_MATCHUP,(event)=>{
+      let data = event.detail.data;
+      
+      console.log('Created Matchup...',data);
+      //update matchup table
+      //update on server
+      if (data.inWatchList == null){
+        data.inWatchList = false;
+      }
+      let matchup = data;
+      //reflect change in matchup table
+      let matchupTable = mainCardTable;
+      if (matchup.isprelim){
+        matchupTable = prelimTable;
+      }
+      matchupMap[matchup.id] = matchup;
+      matchupTable.addMatchup(matchupMap[data.id]);
+      hideMatchUpEditor();
+    });
+
+    function showEditor(inEditMode){
+      //rmodal show
+      const rmodal = document.querySelector(".r-modal");
+      const rmodalContent = rmodal.querySelector(".r-modal-content");
+
+      rmodal.addEventListener("click",(event)=>{
+        //clicked modal background not content  
+        if (event.currentTarget == event.target){
+          hideMatchUpEditor();
+        }
+      },{once:true});
+
+      
+      rmodalContent.style.display='block';//make element part of page again
+      setTimeout(() => {rmodal.classList.add("r-show"); },200);//add class after delay 
+
+      if (inEditMode){
+        //enable editor will be in edit mode
+        matchupEditor.loadMatchUp({
+          id:981,
+          fighter_a_name:'Ramandeep Bhatti',
+          fighter_a_id:1,
+          fighter_b_name:'Ramandeep Bhatti',
+          fighter_b_id:1,
+          weight_class:'lightweight',
+          rounds:3,
+          isprelim:false
+        });
+      }
+    }
+
+    function hideMatchUpEditor(){
+      const rmodal = document.querySelector(".r-modal");
+      rmodal.classList.remove('r-show');
+      matchupEditor.clearEditor();
+    }
+
+    document.querySelector(".r-modal-content").addEventListener("transitionend",(event)=>{
+        
+      const rmodalContent = event.currentTarget;
+      const rmodal = rmodalContent.parentElement;
+      //if we are closing the modal remove display
+      if (!rmodal.classList.contains('r-show')){
+        rmodalContent.style.display='None';
+      }
+    });
+</script>
+
+<script>
+  
   //onmouseenter main-card
   function onMouseEnterEventHandler(event){
     

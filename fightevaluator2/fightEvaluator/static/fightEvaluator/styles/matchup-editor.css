@@ -78,10 +78,11 @@
   background-color: rgba(0, 0, 0, 0);
   pointer-events: none;
   z-index: 1000;
-  transition: all 0.3s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
 }
 .r-modal .r-modal-content {
   position: absolute;
+  display: none;
   background-color: #212529;
   width: -moz-fit-content;
   width: fit-content;

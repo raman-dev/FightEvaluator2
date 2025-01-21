@@ -104,8 +104,8 @@
           </form>
           <div class="editor-actions mt-3">
               <button type="button" class="btn btn-secondary mx-2 close-btn" onclick="hideMatchUpEditor()">Close</button>
-              <button type="button" class="btn btn-primary create-btn current-action submit-btn" onclick="matchupEditor.createMatchUp()">Create</button>
-              <button type="button" class="btn btn-primary save-btn submit-btn" onclick="matchupEditor.saveMatchUpChanges()">Save</button>
+              <button type="button" class="btn btn-primary create-btn current-action submit-btn" onclick="matchupEditor.commitChanges(true)">Create</button>
+              <button type="button" class="btn btn-primary save-btn submit-btn" onclick="matchupEditor.commitChanges(false)">Save</button>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@
 
 
 {% block scripts %}
- <script defer src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
  
  <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
  {% if event is None %}
@@ -244,7 +244,7 @@
         this.title.textContent = "Edit MatchUp";
         this.createButton.classList.remove('current-action');
         this.saveButton.classList.add('current-action');
-        
+        this.matchupId = matchup.id;
         //set input values
         this.searchBoxA.setSearchBoxValue({
           name:matchup.fighter_a_name,
@@ -268,36 +268,7 @@
         event.currentTarget.classList.add('changed');
       }
 
-      async createMatchUp(){
-        //fighter ids from searchbox2
-        let fighterA = this.searchBoxA.fighterId;
-        let fighterB = this.searchBoxB.fighterId;
-        
-        console.log(fighterA,fighterB);
-        if (fighterA == -1 || fighterB == -1){
-          alert('Please select 2 fighters');
-          return;//nothing happens need to select 2 fighters
-        }
-
-        let formData = new FormData(this.editor.querySelector('form'));
-        if (formData.get('weight_class') == ""){
-          alert('Please select weight class.');
-          return;//need weight_class
-        }
-        //no is prelim key means main card
-        formData.set('isprelim',formData.has('isprelim'));
-        formData.set('fighter_a_id',fighterA);
-        formData.set('fighter_b_id',fighterB);
-        formData.set('event_id',this.eventId);
-        const requestData = {};
-        for (const key of formData.keys()){
-          // console.log(key,formData.get(key));
-          requestData[key] = formData.get(key);
-        }
-
-        console.log(requestData);
-        this.server.create_matchup(requestData,this.onMatchUpCreated.bind(this));
-      }
+   
 
       onMatchUpCreated(data){
         this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP,data);
@@ -310,7 +281,7 @@
         }
       }
 
-      async saveMatchUpChanges(){
+      async commitChanges(createNew){
         //grab changed input values
         let fighterA = this.searchBoxA.fighterId;
         let fighterB = this.searchBoxB.fighterId;
@@ -330,7 +301,7 @@
         formData.set('isprelim',formData.has('isprelim'));
         formData.set('fighter_a_id',fighterA);
         formData.set('fighter_b_id',fighterB);
-        formData.set('event_id',this.eventId);
+        // formData.set('event_id',this.eventId);
         const requestData = {};
         for (const key of formData.keys()){
           // console.log(key,formData.get(key));
@@ -338,10 +309,17 @@
         }
         //send to server 
         //process result
+        console.log(requestData);
+        if (createNew){
+          this.server.create_matchup(requestData,this.onMatchUpCreated.bind(this));
+        }else{
+          this.server.update_matchup(requestData,this.onMatchUpChangesSaved.bind(this),this.matchupId);
+        }
       }
 
-      onMatchUpChangesSaved(){
+      onMatchUpChangesSaved(data){
         this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
+        console.log('server => ',data);
       }
 
       clearEditor(){
@@ -380,8 +358,7 @@
 
     const editor = document.querySelector(".matchup-editor");
     const matchupEditor = new MatchUpEditor(editor,server);    
-    // const editModal = new bootstrap.Modal(document.querySelector('#matchupModal'));
-    //show and dismiss edit modal
+   
        /*
     
       matchup editor
@@ -411,48 +388,7 @@
 
               matchup editor -> new_matchup -> matchup table
     */
-    
-    function updateMatchUp(event){
-      let matchupId = activeMatchup.dataset.matchupId;//document.querySelector("#matchupModal").dataset.matchupId;
-      //grab fighter-id from fighter-a and fighter-b
-      let fighterAId = document.querySelector(".fighter-a").dataset.selectedId;
-      let fighterBId = document.querySelector(".fighter-b").dataset.selectedId;
-      let weightClass = document.querySelector(".weight-class .dropdown-toggle").textContent;
-      let rounds = document.querySelector("input[name='rounds']:checked").value;
-      let isprelim = document.querySelector("#isprelim").checked;
-      //make sure both fighter id's are not -1
-      if (fighterAId == -1 || fighterBId == -1) {
-        alert("Please select two fighters");
-        return;
-      }
-      //also make sure some dropdown is selected
-      if (weightClass == "Weight Class") {
-        alert("Please select a weight class");
-        return;
-      }
-      // console.log(fighterAId, fighterBId, weightClass,rounds);
-      // return;
-
-      //send post request to /create-matchup
-      fetch(`/matchup/update-matchup/${matchupId}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          matchupId: matchupId,
-          fighter_a_id: fighterAId,
-          fighter_b_id: fighterBId,
-          weight_class: weightClass,
-          rounds: rounds,
-          isprelim: isprelim,
-        }),
-        headers: postHeaders,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          location.reload();//reload page
-        });
-    }
-    
+   
     // onToggleMatchupModal(false);
     let matchupReceiver = document.querySelector(".matchup-receiver");
     matchupEditor.registerListener(matchupReceiver,MatchUpEditor.EVENTS.CREATE_MATCHUP,(event)=>{
@@ -479,6 +415,7 @@
       if (inEditMode){
         //enable editor will be in edit mode
         matchupEditor.loadMatchUp({
+          id:981,
           fighter_a_name:'Ramandeep Bhatti',
           fighter_a_id:1,
           fighter_b_name:'Ramandeep Bhatti',
