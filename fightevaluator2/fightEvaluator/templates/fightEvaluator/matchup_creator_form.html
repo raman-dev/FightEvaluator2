@@ -262,10 +262,6 @@
         this.editor.querySelector('[name="isprelim"]').checked=matchup.isprelim;
         this.weightClassSelector.value= matchup.weight_class;
 
-        
-        this.editor.querySelectorAll("input").forEach((input) => {
-            input.addEventListener("change",this.inputChanged);
-        });
       }
 
       inputChanged(event){
@@ -316,18 +312,36 @@
 
       async saveMatchUpChanges(){
         //grab changed input values
-        this.editor.querySelectorAll("input.changed").forEach((changedInput) => {
-            console.log(changedInput);
-        });
+        let fighterA = this.searchBoxA.fighterId;
+        let fighterB = this.searchBoxB.fighterId;
+        
+        // console.log(fighterA,fighterB);
+        if (fighterA == -1 || fighterB == -1){
+          alert('Please select 2 fighters');
+          return;//nothing happens need to select 2 fighters
+        }
+
+        let formData = new FormData(this.editor.querySelector('form'));
+        if (formData.get('weight_class') == ""){
+          alert('Please select weight class.');
+          return;//need weight_class
+        }
+        //no is prelim key means main card
+        formData.set('isprelim',formData.has('isprelim'));
+        formData.set('fighter_a_id',fighterA);
+        formData.set('fighter_b_id',fighterB);
+        formData.set('event_id',this.eventId);
+        const requestData = {};
+        for (const key of formData.keys()){
+          // console.log(key,formData.get(key));
+          requestData[key] = formData.get(key);
+        }
         //send to server 
         //process result
       }
 
       onMatchUpChangesSaved(){
         this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.SAVE_CHANGED_MATCHUP);
-        this.editor.querySelectorAll('input').forEach((input) => {
-            input.classList.remove('changed');
-        });
       }
 
       clearEditor(){
@@ -337,10 +351,6 @@
         //change weightclass to nothing
         this.weightClassSelector.value="";
         this.title.textContent= "Create MatchUp";//default title
-        
-        this.editor.querySelectorAll("input").forEach((input) => {
-            input.removeEventListener("change",this.inputChanged);
-        });
         
         this.createButton.classList.add('current-action');
         this.saveButton.classList.remove('current-action');
