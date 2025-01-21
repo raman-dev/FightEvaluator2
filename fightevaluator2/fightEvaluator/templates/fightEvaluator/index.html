@@ -307,6 +307,9 @@
 {% block scripts %}
  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
  <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
+ <script src="{% static 'fightEvaluator/js/fighter-searchbox.js' %}"></script>
+ <script src="{% static 'fightEvaluator/js/matchup-editor.js' %}"></script>
+
 
  {% if event is None %}
   <!-- <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script> -->
@@ -683,211 +686,7 @@
     }
 </script>
 
-<script>
-
-    
-    class FighterSearchBox{
-      
-      constructor(searchBox){
-        this.searchBox = searchBox;
-        this.input = searchBox.querySelector('input');//the input element of the searchbox
-        this.suggestionList = searchBox.querySelector('ul');//the suggestion list
-        this.searchBox.addEventListener("keyup", this.onKeyUp.bind(this));
-        this.searchBox.querySelector('.clear-btn').addEventListener('click',this.clearSearchBox.bind(this));
-      }
-
-      async onKeyUp() {
-        let input = this.searchBox.querySelector("input");
-        let search = this.input.value;
-        search = search.split(" ").join("+");
-        //non-empty search string
-        if (search.length > 0) {
-          server.search_fighters(this.onFighterSearchResult.bind(this),search);
-        } 
-        else {
-          this.suggestionList.innerHTML = "";//empty the list
-        }
-      }
-
-      onFighterSearchResult(data){
-        let fighters = data['fighters'];
-        this.suggestionList.innerHTML = "";//list must always be emptied before populating with new values
-        for (const fighter of fighters){
-          let item = FighterSearchBox.createSuggestionListElement(fighter);
-          item.addEventListener("click",this.onSuggestionListItemClick.bind(this,item));
-          this.suggestionList.appendChild(item);
-        }
-      }
-
-      onSuggestionListItemClick(suggestion,event){
-        //populate input with this value
-        this.input.dataset.fighterId = suggestion.dataset.fighterId;
-        this.input.value = suggestion.dataset.fighterName;//fighter name string
-        //list needs to be empty now
-        this.suggestionList.innerHTML = "";
-        this.input.toggleAttribute('disabled',true);//
-      }
-
-      clearSearchBox(){
-        //clear suggestion
-        this.input.dataset.fighterId =-1;
-        this.input.value = "";
-        this.input.toggleAttribute('disabled',false);
-        //
-        this.suggestionList.innerHTML="";
-      }
-
-      get fighterId(){
-        return this.input.dataset.fighterId;
-      }
-
-      setSearchBoxValue(fighter){
-        console.log('searchBoxValue.set=>',fighter);
-        this.input.value = fighter.name;
-        this.input.dataset.fighterId = fighter.id;
-        this.input.setAttribute('disabled',true);
-      }
-
-      static createSuggestionListElement(fighter){
-        return $(`
-          <li class="list-group-item list-group-item-action" data-fighter-id="${fighter.id}" data-fighter-name="${fighter.first_name} ${fighter.last_name}">
-            <div class="suggestion">
-              <p class="name">${fighter.first_name} ${fighter.last_name}</p>
-            </div>
-          </li>`)[0];
-      }
-    }
-
-    class MatchUpEditor{
-      
-      static EVENTS = {
-        CREATE_MATCHUP : 'CREATE_MATCHUP',
-        UPDATE_MATCHUP:'UPDATE_MATCHUP',
-      }
-
-      constructor(edtior,server){
-        this.editor = editor;//html element that contains all inputs
-        this.eventId = this.editor.dataset.eventId;
-        this.server = server;
-        
-        this.title = this.editor.querySelector(".title");
-        const [searchBoxElem0,searchBoxElem1] = this.editor.querySelectorAll(".search-box2");
-        
-        //search box controllers
-        this.searchBoxA = new FighterSearchBox(searchBoxElem0);
-        this.searchBoxB = new FighterSearchBox(searchBoxElem1);
-        this.weightClassSelector = this.editor.querySelector(".weightclass-selector select");
-        this.createButton = this.editor.querySelector('.create-btn');
-        this.saveButton = this.editor.querySelector('.save-btn');
-
-
-        this.listeners = {}
-        //list of elements listening for changes
-        for (const eventName in MatchUpEditor.EVENTS){
-          this.listeners[eventName] = [];
-        }
-        this.inEditMode = false;
-      }
-
-      loadMatchUp(matchup){
-        this.inEditMode = true;
-        //change editor title
-        this.title.textContent = "Edit MatchUp";
-        this.createButton.classList.remove('current-action');
-        this.saveButton.classList.add('current-action');
-        this.matchupId = matchup.id;
-        //set input values
-        this.searchBoxA.setSearchBoxValue({
-          name:matchup.fighter_a_name,
-          id:matchup.fighter_a,
-        });
-        this.searchBoxB.setSearchBoxValue({
-          name:matchup.fighter_b_name,
-          id:matchup.fighter_b,
-        });
-        //how to set rounds of radio group?
-        this.editor.querySelectorAll('[name="rounds"]').forEach((element) => {
-            element.checked=false;
-        });
-        this.editor.querySelector(`#rounds-radio-${matchup.rounds}`).checked = true;
-        this.editor.querySelector('[name="isprelim"]').checked=matchup.isprelim;
-        this.weightClassSelector.value= matchup.weight_class;
-      }
-
-      onMatchUpCreated(data){
-        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.CREATE_MATCHUP,data);
-      }
-
-      dispatchEventsOnListeners(eventName,data){
-        const event = new CustomEvent(eventName,{detail:{data : data}});
-        for (const listener of this.listeners[eventName]){
-          listener.dispatchEvent(event);
-        }
-      }
-
-      async commitChanges(createNew){
-        //grab changed input values
-        let fighterA = this.searchBoxA.fighterId;
-        let fighterB = this.searchBoxB.fighterId;
-        
-        // console.log(fighterA,fighterB);
-        if (fighterA == -1 || fighterB == -1){
-          alert('Please select 2 fighters');
-          return;//nothing happens need to select 2 fighters
-        }
-
-        let formData = new FormData(this.editor.querySelector('form'));
-        if (formData.get('weight_class') == ""){
-          alert('Please select weight class.');
-          return;//need weight_class
-        }
-        //no is prelim key means main card
-        formData.set('isprelim',formData.has('isprelim'));
-        formData.set('fighter_a_id',fighterA);
-        formData.set('fighter_b_id',fighterB);
-        // formData.set('event_id',this.eventId);
-        const requestData = {};
-        for (const key of formData.keys()){
-          // console.log(key,formData.get(key));
-          requestData[key] = formData.get(key);
-        }
-        //send to server 
-        requestData['event_id']=this.eventId;
-        //process result
-        console.log(requestData);
-        if (createNew){
-          this.server.create_matchup(requestData,this.onMatchUpCreated.bind(this));
-        }else{
-          this.server.update_matchup(requestData,this.onMatchUpChangesSaved.bind(this),this.matchupId);
-        }
-      }
-
-      onMatchUpChangesSaved(data){
-        this.dispatchEventsOnListeners(MatchUpEditor.EVENTS.UPDATE_MATCHUP);
-        console.log('server => ',data);
-      }
-
-      clearEditor(){
-        //clear searchbox's
-        this.searchBoxA.clearSearchBox();
-        this.searchBoxB.clearSearchBox();
-        //change weightclass to nothing
-        this.weightClassSelector.value="";
-        this.title.textContent= "Create MatchUp";//default title
-        
-        this.createButton.classList.add('current-action');
-        this.saveButton.classList.remove('current-action');
-      }
-
-      registerListener(element,eventName,callback){
-        if (eventName in MatchUpEditor.EVENTS){
-          element.addEventListener(MatchUpEditor.EVENTS[eventName],callback);
-          this.listeners[eventName].push(element);
-        }
-      }
-      
-    }
-    
+<script>    
     const editor = document.querySelector(".matchup-editor");
     const matchupEditor = new MatchUpEditor(editor,server);    
 
@@ -956,7 +755,7 @@
     });
 </script>
 
-<script>
+<!-- <script>
   
   //onmouseenter main-card
   function onMouseEnterEventHandler(event){
@@ -977,7 +776,7 @@
   }
   // document.querySelector('#main-card').addEventListener('mousemove',onMouseEnterEventHandler);
   // document.querySelector('#prelims').addEventListener('mousemove',onMouseEnterEventHandler);
-</script>
+</script> -->
 
 {% endblock %} 
   
