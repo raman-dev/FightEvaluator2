@@ -374,6 +374,13 @@
 
 <script>
   
+    const postHeaders = {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      "X-CSRFToken": Cookies.get('csrftoken'),
+    };
+    const server = new Server(postHeaders);
+  
     class MatchupTable{
       constructor(table,matchupMap){
         this.matchup_ids = new Set();
@@ -517,12 +524,6 @@
     {% if event %}
       fightEventIdWrapper[0] = {{  event.id }};
     {% endif %}
-    const postHeaders = {
-      accept: "application/json",
-      "Content-Type": "application/json",
-      "X-CSRFToken": Cookies.get('csrftoken'),
-    };
-    const server = new Server(postHeaders);
 
     var activeMatchup = null;
 
