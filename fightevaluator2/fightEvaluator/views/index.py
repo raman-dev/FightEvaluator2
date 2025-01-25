@@ -15,6 +15,7 @@ from datetime import datetime
 # from ..scraper import getUpcomingFightEvent
 
 WorkerThread = None
+globalCounter = 0
 
 @require_GET
 def indexById(request,eventId):
@@ -276,6 +277,14 @@ def event_predictions(request,eventId):
     
     return render(request,"fightEvaluator/event_predictions.html",{'predictions':predictions,'event':event})
 
-@require_GET
-def matchup_creator_test(request,eventId):
-    return render(request, "fightEvaluator/matchup_creator_form.html",{'hello':'world'})
+def polling_index(request):
+    return render(request,"fightEvaluator/polling-index.html",{})
+
+def polling_end(request):
+    global globalCounter
+    if globalCounter < 5:
+        globalCounter += 1
+        return render(request,"fightEvaluator/polling-wait.html",{})
+
+    globalCounter = 0
+    return render(request,"fightEvaluator/polling-result.html",{},status=286)

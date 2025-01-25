@@ -690,17 +690,6 @@
 <script>    
     const editor = document.querySelector(".matchup-editor");
     const matchupEditor = new MatchUpEditor(editor,server);   
-    
-    // class MatchUpStates{
-    //   static STATES =  {
-    //     CREATE:'CREATE',
-    //     UPDATE:'UPDATE',
-    //     DELETE:'DELETE'
-    //   }
-    // }
-    
-    //state receiver
-    //state producer
 
     const allTables = document.querySelector(".tables-wrapper");
     //reload page on matchup update
@@ -766,29 +755,6 @@
       }
     });
 </script>
-
-<!-- <script>
-  
-  //onmouseenter main-card
-  function onMouseEnterEventHandler(event){
-    
-    // event.stopPropagation();
-    let div = event.currentTarget;
-    let rect = div.getBoundingClientRect(); // Get element's position and size
-    let x = event.clientX - rect.left;
-    let y = event.clientY - rect.top;
-    let posLabel = div.querySelector('.position-label');
-    posLabel.textContent = `${x},${y}`;
-    //move horizontal guide
-    let guideHorizontal = div.querySelector('.guide-horizontal');
-    let guideVertical = div.querySelector('.guide-vertical');
-    //move vertical guide 
-    guideHorizontal.style.top = `${y}px`;
-    guideVertical.style.left = `${x}px`;
-  }
-  // document.querySelector('#main-card').addEventListener('mousemove',onMouseEnterEventHandler);
-  // document.querySelector('#prelims').addEventListener('mousemove',onMouseEnterEventHandler);
-</script> -->
 
 {% endblock %} 
   
