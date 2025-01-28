@@ -4,7 +4,8 @@ from django.shortcuts import render, get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.db.models import Count, Q
-from .draft_kings_scraper import draftkings_scraper
+# from .draft_kings_scraper import draftkings_scraper
+from . import odds_scraper
 
 from ..models import OddsDataState
 from rich import print as rprint
@@ -28,7 +29,7 @@ def get_odds(request):
     oddsDataState = OddsDataState.objects.select_for_update().first()
     if oddsDataState.staleOrEmpty == False and oddsDataState.updating == False:
         oddsListMap = []
-        oddsList = draftkings_scraper.getOddsFromFile()  # query from file
+        oddsList = odds_scraper.getOddsFromFile()  # query from file
         for fa, fb, oa, ob in oddsList:
             oddsListMap.append(
                 {
@@ -48,7 +49,7 @@ def get_odds(request):
 
 def OddsWorkerThreadControlFunction():
     print('WorkerThread Fetching from Site....')
-    draftkings_scraper.fetchFromSite()
+    odds_scraper.fetchFromSite()
     # no longer stale or empty
     oddsDataState = OddsDataState.objects.select_for_update().first()
     oddsDataState.updating = False
@@ -93,7 +94,7 @@ def profit_calculator(request):
             WorkerThread.join()
         # query from file
         rprint("Available in file")
-        oddsList = draftkings_scraper.getOddsFromFile()  # query from file
+        oddsList = odds_scraper.getOddsFromFile()  # query from file
         for fa, fb, oa, ob in oddsList:
             oddsListMap.append(
                 {
