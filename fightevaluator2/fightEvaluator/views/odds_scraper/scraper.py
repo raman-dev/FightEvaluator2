@@ -1,5 +1,5 @@
 from .fetcher import Fetcher
-from . import DraftKingsParser
+from . import DraftKingsParser,BestFightOddsParser
 from rich import print as rprint
 from rich.table import Table
 from rich.console import Console
@@ -15,22 +15,26 @@ bestfightodds_url = 'https://www.bestfightodds.com'
 def getOddsFromFile():
     oddsJson = None
     oddsList = []
-    
-    with open("fightEvaluator/views/odds_scraper/odds.json","r+",encoding="ascii") as oddsFile:
+    url= None
+    with open("fightEvaluator/views/odds_scraper/odds.json","r",encoding="ascii") as oddsFile:
         oddsJson = json.load(oddsFile)
         rprint('Reading from file...')
         oddsList = oddsJson['odds']
+        url = oddsJson['url']
+    
+    # rprint('site',url)
     n = len(oddsList)
-    for i in range(0,n):
-        _,_,a,b = oddsList[i]
-        if a[0] == '\u2212':
-            oddsList[i][2] = -int(a[1:])
-        else:
-            oddsList[i][2] = int(a)
-        if b[0] == '\u2212':
-            oddsList[i][3] = -int(b[1:])
-        else:
-            oddsList[i][3] = int(b)
+    if url == dk_url:
+        for i in range(0,n):
+            _,_,a,b = oddsList[i]
+            if a[0] == '\u2212':
+                oddsList[i][2] = -int(a[1:])
+            else:
+                oddsList[i][2] = int(a)
+            if b[0] == '\u2212':
+                oddsList[i][3] = -int(b[1:])
+            else:
+                oddsList[i][3] = int(b)
         # print(oddsList[i][2],type(oddsList[i][2]))
     table = Table(title="Odds",show_lines=True)
     
@@ -60,35 +64,61 @@ def fetchFromSite():
     """
     oddsJson = None
     oddsList = []
+    
+    url = bestfightodds_url
+    # url = dk_url
     with open("fightEvaluator/views/odds_scraper/odds.json","r+",encoding="ascii") as oddsFile:
         oddsJson = json.load(oddsFile)
         rprint('Fetching from site...')
         source = ""
         with Fetcher() as fetcher:
-            source = fetcher.fetch(dk_url,8)
-        oddsRaw = DraftKingsParser.parseOdds(source)
-        #save to odds.jsonat
+            source = fetcher.fetch(url=url,wait_time=8)
         
-        for a,b in oddsRaw:
-            data = [a[0],b[0],a[1],b[1]]
-            oddsList.append(data)
+        oddsRaw = []
+        if url == dk_url:
+            oddsRaw = DraftKingsParser.parseOdds(source)
+        elif url == bestfightodds_url:
+            oddsRaw = BestFightOddsParser.parseOdds(source)
+
+        
+        if url == dk_url:
+            for a,b in oddsRaw:
+                data = [a[0],b[0],a[1],b[1]]
+                oddsList.append(data)
+        else:#url == bestfightodds_url
+            """
+                result -> [
+                    [ name0:odds,name1:odds ],
+                    [ name0:odds,name1:odds],
+                ]
+            """
+            for matchup in oddsRaw:
+                # rprint(matchup)
+                oa,ob = matchup
+                name0,odds0 = oa
+                name1,odds1 = ob
+                data = [name0,name1,int(odds0[0]),int(odds1[0])]
+                oddsList.append(data)
+        
+        oddsJson['url'] = url
         oddsJson['odds'] = oddsList
-        
+
         oddsFile.seek(0)
         json.dump(oddsJson,oddsFile)
         oddsFile.truncate()
     n = len(oddsList)
-    for i in range(0,n):
-        _,_,a,b = oddsList[i]
-        if a[0] == '\u2212':
-            oddsList[i][2] = -int(a[1:])
-        else:
-            oddsList[i][2] = int(a)
-        if b[0] == '\u2212':
-            oddsList[i][3] = -int(b[1:])
-        else:
-            oddsList[i][3] = int(b)
-        # print(oddsList[i][2],type(oddsList[i][2]))
+    if url == dk_url:
+        for i in range(0,n):
+            _,_,a,b = oddsList[i]
+            if a[0] == '\u2212':
+                oddsList[i][2] = -int(a[1:])
+            else:
+                oddsList[i][2] = int(a)
+            if b[0] == '\u2212':
+                oddsList[i][3] = -int(b[1:])
+            else:
+                oddsList[i][3] = int(b)
+            # print(oddsList[i][2],type(oddsList[i][2]))
     table = Table(title="Odds",show_lines=True)
     
 
