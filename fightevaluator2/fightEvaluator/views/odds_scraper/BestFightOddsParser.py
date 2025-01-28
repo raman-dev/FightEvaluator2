@@ -2,17 +2,8 @@ from pyquery import PyQuery as pq
 from typing import *
     
 
-def parseOdds(source) -> List:
-    page = pq(source)
-    table = None
-    for _,tableContainer in enumerate(pq(page('.table-div'))):
-        title = pq(tableContainer)('.table-header h1').text()
-        if "UFC" in title:
-            table = pq(tableContainer)('.odds-table')
-            break
-    
-    #assume always a table to parse
-    """
+#assume always a table to parse
+"""
         result structure is what?
         {
             fname_0: odd0
@@ -23,7 +14,15 @@ def parseOdds(source) -> List:
             tr
               th
               td
-    """ 
+""" 
+def parseOdds(source) -> List:
+    page = pq(source)
+    table = None
+    for _,tableContainer in enumerate(pq(page('.table-div'))):
+        title = pq(tableContainer)('.table-header h1').text()
+        if "UFC" in title:
+            table = pq(tableContainer)('.odds-table')
+            break
     result = []
     curr = []
     prev = None
