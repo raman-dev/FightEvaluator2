@@ -34,14 +34,16 @@ def parseOdds(source) -> List:
             fname_1: odd1 
         }
     """ 
-    print(table)
-    # result = []
-    # curr = {}
-    # prev = None
-    # for i,tr in enumerate(pq(table)('tbody tr')):
-    #     #if tr has class pr skip over
-    #     if tr.hasClass('pr'):
-    #         continue
+    # print(table)
+    result = []
+    curr = {}
+    prev = None
+    for i,tr in enumerate(pq(table)('tbody tr')):
+        #if tr has class pr skip over
+        tr_pq = pq(tr)
+        if tr_pq.hasClass('pr'):
+            continue
+        print(tr)
         
-    return []
+    return result
         
