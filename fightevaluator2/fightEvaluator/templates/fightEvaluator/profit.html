@@ -37,8 +37,8 @@
                         <tr>
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
-                            <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
-                            <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
+                            <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds" data-odds="{{odds.mult_a}}"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
+                            <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)" data-odds="{{odds.mult_b}}"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
                             <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                         </tr>
                     {% endfor %}
@@ -48,6 +48,7 @@
         <div class="odds-result d-flex justify-content-center">
             <span>Multiplier :&nbsp;</span>
             <p class="odds-result-label">1</p>
+            <div class="line"></div>
         </div>
         <div class="graph-container">
             <ul class="lines">
@@ -179,8 +180,7 @@
             let selectedName = tr.dataset.selected;
             if (selectedName.length > 0){
                 let selected = tr.querySelector('.selected');
-                let text = selected.querySelector('p strong').innerHTML;
-                let multiplier = parseFloat(text.split('(')[0]);
+                let multiplier = parseFloat(selected.dataset.odds);
                 multis.push(multiplier);
                 product *= multiplier;
             }
@@ -218,6 +218,7 @@
         if (prevSelected != null){
             prevSelected.classList.remove('selected');//remove previous selected
         }
+
         tr.dataset.selected = oddsName;
         currentElement.classList.add('selected');
         updateMultiFunction();
