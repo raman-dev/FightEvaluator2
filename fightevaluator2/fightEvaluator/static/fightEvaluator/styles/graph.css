@@ -1,5 +1,18 @@
-#mGraph {
+.graph-container {
   margin: auto;
-  width: 400px;
+  width: 80%;
+}
+.graph-container ul.lines li.line {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.graph-container ul.lines li.line .line-text {
+  margin: 0.6rem;
+}
+.graph-container ul.lines li.line .line-text p {
+  margin: 0px;
+}
+.graph-container .graph {
+  width: 100%;
   height: 400px;
 }/*# sourceMappingURL=graph.css.map */

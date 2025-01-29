@@ -18,6 +18,7 @@ console = Console()
 dk_url = 'https://sportsbook.draftkings.com/leagues/mma/ufc'
 bestfightodds_url = 'https://www.bestfightodds.com'
 
+
 """
 
 SHOULD IMPLEMENT IN SUCH A WAY WITH A FACTORY METHOD THAT 

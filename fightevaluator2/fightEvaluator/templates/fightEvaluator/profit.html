@@ -34,7 +34,7 @@
                         <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td>
                     </tr> -->
                     {% for odds in oddsList %}
-                        <tr data-selected="">
+                        <tr>
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
                             <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
@@ -49,7 +49,17 @@
             <span>Multiplier :&nbsp;</span>
             <p class="odds-result-label">1</p>
         </div>
-        <div class="border" id="mGraph"></div>
+        <div class="graph-container">
+            <ul class="lines">
+                <li class="border line d-flex justify-content-between">
+                    <div class="line-text d-flex align-items-center">
+                        <p>fa->fb->fc</p>
+                    </div>
+                    <button class="btn btn-danger">delete</button>
+                </li>
+            </ul>
+            <div class="border graph" id="mGraph"></div>
+        </div>
     </div>
 
 {% endblock %}
@@ -126,7 +136,8 @@
     ]);
      // create an array with edges
      const edges = new vis.DataSet([
-        {from: 1, to: 3},
+        {from: 1, to: 3,id:0},
+        {from: 1, to: 3,id:1},
         {from: 1, to: 2},
         {from: 2, to: 4},
         {from: 2, to: 5}
@@ -139,7 +150,7 @@
         edges: edges
     };
     const options = {
-        autoResize: false,
+        // autoResize: false,
         layout:{
             hierarchical:true
         },
@@ -162,6 +173,9 @@
         document.querySelectorAll('.odds-table tbody tr').forEach((tr)=>{
             // console.log(tr);
             
+            if (!tr.hasAttribute('data-selected')){
+                return;
+            }
             let selectedName = tr.dataset.selected;
             if (selectedName.length > 0){
                 let selected = tr.querySelector('.selected');
@@ -191,10 +205,12 @@
         let currentElement = event.currentTarget;
         let oddsName = currentElement.dataset.name
         let tr = currentElement.parentElement;
+
         let selected = tr.dataset.selected;
         if (selected == oddsName){
             currentElement.classList.remove('selected');
             tr.dataset.selected="";//remove name from selected
+            tr.removeAttribute('data-selected');
             updateMultiFunction();
             return;
         }
@@ -205,6 +221,13 @@
         tr.dataset.selected = oddsName;
         currentElement.classList.add('selected');
         updateMultiFunction();
+    }
+
+    function createLine(){
+        document.querySelectorAll("[data-selected]").forEach((element) => {
+            //grab fighter name
+            //grab odds
+        });;
     }
 </script>
 {% endblock %}
