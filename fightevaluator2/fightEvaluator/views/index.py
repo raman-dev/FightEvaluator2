@@ -184,10 +184,10 @@ def verifyPrediction(matchups):
                         #time is str
                         #int:int
                         seconds = 30#
-                        _,actual_seconds = outcome.time.split(":")
+                        minutes,actual_seconds = outcome.time.split(":")
                         #if at least 30 seconds into the second minute for this event 
                         #then true else False
-                        prediction.isCorrect = seconds >= actual_seconds
+                        prediction.isCorrect = seconds >= int(actual_seconds) and int(minutes) == 2
                 case Event.WIN:
                     if outcome.winner != None and prediction.prediction.fighter == outcome.winner:
                         prediction.isCorrect = True
