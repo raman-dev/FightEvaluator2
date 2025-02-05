@@ -50,4 +50,14 @@
   .table-wrapper {
     max-width: 100% !important;
   }
+}
+.line-list .xline .node {
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.line-list .xline .node .name {
+  border-bottom: 1px solid slategray;
+}
+.line-list .xline .node .odd {
+  text-align: center;
 }/*# sourceMappingURL=profit_styles.css.map */

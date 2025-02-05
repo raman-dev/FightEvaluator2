@@ -122,8 +122,8 @@ def fetchFromSite():
     oddsJson = None
     oddsList = []
     
-    url = bestfightodds_url
-    # url = dk_url
+    # url = bestfightodds_url
+    url = dk_url
     with open("fightEvaluator/views/odds_scraper/odds.json","r+",encoding="ascii") as oddsFile:
         oddsJson = json.load(oddsFile)
         rprint('Fetching from site...')

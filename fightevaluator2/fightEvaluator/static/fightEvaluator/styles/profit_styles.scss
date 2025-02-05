@@ -52,3 +52,19 @@
     max-width: 100% !important;
   }
 }
+
+
+.line-list{
+  .xline{
+    .node { 
+      padding-left: 0.4rem;
+      padding-right: 0.4rem;
+     .name {
+      border-bottom: 1px solid slategray;
+     }  
+     .odd{
+      text-align: center;
+     }
+    }
+  }
+}

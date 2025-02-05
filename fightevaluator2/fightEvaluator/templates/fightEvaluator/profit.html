@@ -26,19 +26,12 @@
                     <!-- <th>Rounds > 1.5</th> -->
                 </thead>
                 <tbody>
-                    <!-- <tr data-selected="">
-                        <td><p>Fighter A Name</p></td>
-                        <td><p>Fighter B Name</p></td>
-                        <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>-100</strong></p></td>
-                        <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>+100</strong></p></td>
-                        <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td>
-                    </tr> -->
                     {% for odds in oddsList %}
                         <tr>
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
-                            <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds" data-odds="{{odds.mult_a}}"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
-                            <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)" data-odds="{{odds.mult_b}}"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
+                            <td data-name="{{ odds.fighter_a }}" onclick="onClickOdds(event)" class="odds" data-odds="{{odds.mult_a}}"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
+                            <td data-name="{{ odds.fighter_b }}" class="odds" onclick="onClickOdds(event)" data-odds="{{odds.mult_b}}"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
                             <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                         </tr>
                     {% endfor %}
@@ -46,30 +39,28 @@
             </table>
         </div>
         <div class="odds-result d-flex justify-content-center">
-            <span>Multiplier :&nbsp;</span>
-            <p class="odds-result-label">1</p>
+            <div class="border d-flex p-1 ">            
+                <span class="p-0 m-0">Multiplier :&nbsp;</span>
+                <p class="odds-result-label m-0 p-0">1</p>
+            </div>
+
             <div class="line"></div>
-            <button>line +</button>
+            <button class="btn btn-outline-primary" onclick="createLine(event)">line +</button>
         </div>
         <div class="graph-container">
-            <ul class="lines">
-                <li class="border line d-flex justify-content-between">
-                    <div class="line-text d-flex align-items-center">
-                        <p>fa->fb->fc</p>
-                    </div>
-                    <button class="btn btn-danger">delete</button>
-                </li>
+            <ul class="line-list list-group">
             </ul>
-            <div class="border graph" id="mGraph"></div>
+            <!-- <div class="border graph" id="mGraph"></div> -->
         </div>
     </div>
 
 {% endblock %}
 
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
 {% if not oddsList %}
     {% csrf_token %}
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="{% static 'fightEvaluator/js/polling.js' %}"></script>
     <script>
         const pollingInterval = 3000;//500ms
@@ -127,7 +118,7 @@
 {% endif %}
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
-<script type="text/javascript">
+<!--script type="text/javascript">
      // create an array with nodes
      const nodes = new vis.DataSet([
         {id: 1, label: 'Node 1'},
@@ -167,7 +158,7 @@
     // initialize your network!
     const network = new vis.Network(container, data, options);
 
-</script>
+</script-->
 <script>
     function updateMultiFunction(){
         const multis = [1];
@@ -225,12 +216,77 @@
         updateMultiFunction();
     }
 
-    function createLine(){
-        document.querySelectorAll("[data-selected]").forEach((element) => {
-            //grab fighter name
-            //grab odds
-        });;
+    function createLineElement(){
+        //<button class="btn btn-danger">delete</button>
+        return $(
+            `<li class="xline d-flex flex-wrap gap-1 list-group-item">
+                 
+            </li>`)[0];
     }
+
+    function createLineNode(data){
+        console.log(data);
+        return  $(`
+            <div class="node d-flex flex-column border">
+                <span class="name">${data.name}</span>
+                <span class="odd">${data.odds}</span>
+            </div>
+        `)[0];
+    }
+
+    function createNodeSeperator(){
+        return $(`
+            <div class="d-flex align-items-center">
+                <span>&nbsp;->&nbsp;</span>
+            </div>
+        `)[0];
+    }
+
+    function createLine(){
+        const nodeList = [];
+        let product = 1;
+        document.querySelectorAll("[data-selected]").forEach((tr) => {
+            let oddSelector = tr.dataset.selected;
+            let td_odds = tr.querySelector(`[data-name="${oddSelector}"]`);
+            let odds = parseFloat(td_odds.dataset.odds);
+            let name = td_odds.dataset.name;
+            nodeList.push({
+                name:name,
+                odds:odds
+            });
+
+            product *= odds;
+
+            //clear selection
+            tr.removeAttribute('data-selected');
+            
+            td_odds.classList.remove('selected');
+            console.log(td_odds);
+        });
+        if (nodeList.length == 0) return;
+
+        
+        const lineUl = document.querySelector('.line-list');
+        const lineElement = createLineElement();
+
+        for (let index = 0; index < nodeList.length; index++) {
+            const data = nodeList[index];
+            const nodeElement = createLineNode(data);
+            lineElement.appendChild(nodeElement);
+            // if (index != nodeList.length - 1){
+                //add an arrow into the line
+            lineElement.appendChild(createNodeSeperator());
+        }
+        lineElement.appendChild(
+            createLineNode({
+                name:'Total',
+                odds:product.toFixed(2),
+            })
+        );
+        lineUl.appendChild(lineElement);
+    }
+
+
 </script>
 {% endblock %}
 
