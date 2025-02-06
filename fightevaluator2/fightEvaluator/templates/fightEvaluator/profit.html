@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     {% for odds in oddsList %}
-                        <tr>
+                        <tr order="{{ forloop.counter0 }}" >
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
                             <td data-name="{{ odds.fighter_a }}" onclick="onClickOdds(event)" class="odds" data-odds="{{odds.mult_a}}"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
@@ -45,11 +45,12 @@
             </div>
 
             <div class="line"></div>
-            <button class="btn btn-outline-primary" onclick="createLine(event)">line +</button>
+            <button class="btn btn-outline-primary mx-2" onclick="createLine(event)">line +</button>
+        </div>
+        <div class="line-list d-flex">
         </div>
         <div class="graph-container">
-            <ul class="line-list list-group">
-            </ul>
+            
             <!-- <div class="border graph" id="mGraph"></div> -->
         </div>
     </div>
@@ -219,17 +220,22 @@
     function createLineElement(){
         //<button class="btn btn-danger">delete</button>
         return $(
-            `<li class="xline d-flex flex-wrap gap-1 list-group-item">
+            `<div class="xline col col-4 d-flex flex-column">
                  
-            </li>`)[0];
+            </div>`)[0];
     }
+
 
     function createLineNode(data){
         console.log(data);
         return  $(`
-            <div class="node d-flex flex-column border">
-                <span class="name">${data.name}</span>
-                <span class="odd">${data.odds}</span>
+            <div class="node border d-flex row">
+                <div class="name col col-8">
+                    <span>${data.name}</span>
+                </div>
+                <div class="odd col">
+                    <span>${data.odds}</span>
+                </div>
             </div>
         `)[0];
     }
@@ -274,9 +280,11 @@
             const nodeElement = createLineNode(data);
             lineElement.appendChild(nodeElement);
             // if (index != nodeList.length - 1){
-                //add an arrow into the line
-            lineElement.appendChild(createNodeSeperator());
+            //     //add an arrow into the line
+            //     lineElement.appendChild(createNodeSeperator());
+            // }
         }
+        // lineElement.prepend(createNodeSeperator());
         lineElement.appendChild(
             createLineNode({
                 name:'Total',

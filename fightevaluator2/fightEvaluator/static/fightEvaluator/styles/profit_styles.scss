@@ -56,12 +56,14 @@
 
 .line-list{
   .xline{
+    // width: fit-content;
     .node { 
-      padding-left: 0.4rem;
-      padding-right: 0.4rem;
-     .name {
-      border-bottom: 1px solid slategray;
-     }  
+      // padding-left: 0.4rem;
+      // padding-right: 0.4rem;
+      // width: fit-content; 
+    //  .name {
+    //   // border-bottom: 1px solid slategray;
+    //  }  
      .odd{
       text-align: center;
      }
