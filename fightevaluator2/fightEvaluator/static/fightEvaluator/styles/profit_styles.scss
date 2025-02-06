@@ -64,9 +64,28 @@
   gap: 1rem;
   .xline{
     .node {       
+      border-bottom: 1px solid slategray;
      .odd{
-      text-align: center;
+        text-align: center;
      }
     }
+
+    .node.line-total{
+      margin-top: auto;
+      font-style: italic;
+      border-bottom: none;
+      .name {
+        padding: 0.2rem;
+        span{
+          padding-right: 0.4rem;
+          background-color: gold;
+          color: black;
+        }
+      }
+      .odd{
+        border-bottom: none;
+      }
+    }
+
   }
 }

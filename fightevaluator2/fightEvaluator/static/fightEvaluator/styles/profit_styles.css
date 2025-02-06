@@ -58,6 +58,25 @@
   margin: auto;
   gap: 1rem;
 }
+.line-list .xline .node {
+  border-bottom: 1px solid slategray;
+}
 .line-list .xline .node .odd {
   text-align: center;
+}
+.line-list .xline .node.line-total {
+  margin-top: auto;
+  font-style: italic;
+  border-bottom: none;
+}
+.line-list .xline .node.line-total .name {
+  padding: 0.2rem;
+}
+.line-list .xline .node.line-total .name span {
+  padding-right: 0.4rem;
+  background-color: gold;
+  color: black;
+}
+.line-list .xline .node.line-total .odd {
+  border-bottom: none;
 }/*# sourceMappingURL=profit_styles.css.map */

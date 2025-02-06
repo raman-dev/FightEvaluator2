@@ -79,8 +79,8 @@
                 <tr data-selected="">
                     <td><p>${odds.fighter_a}</p></td>
                     <td><p>${odds.fighter_b}</p></td>
-                    <td data-name="fighter-a-odds" onclick="onClickOdds(event)" class="odds"><p ><strong>${odds.mult_a} (${ odds.odds_a })</strong></p></td>
-                    <td data-name="fighter-b-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>${odds.mult_b} (${ odds.odds_b })</strong></p></td>
+                    <td data-name="{{ odds.fighter_a }}" data-odds="{{odds.mult_a}}" onclick="onClickOdds(event)" class="odds"><p ><strong>${odds.mult_a} (${ odds.odds_a })</strong></p></td>
+                    <td data-name="{{ odds.fighter_b }}" data-odds="{{odds.mult_b}}" class="odds" onclick="onClickOdds(event)"><p ><strong>${odds.mult_b} (${ odds.odds_b })</strong></p></td>
                     <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                 </tr>
                 `)[0];
@@ -219,12 +219,16 @@
 
     function createLineElement(){
         //<button class="btn btn-danger">delete</button>
-        return $(`<div class="xline"></div>`)[0];
+        return $(`<div class="xline border d-flex flex-column p-1"></div>`)[0];
     }
 
 
     function createLineNode(data){
-        return  $(`<div class="node border d-flex">
+        let classList = "";
+        if ('classList' in data){
+            classList = data.classList.join(' ');
+        }
+        return  $(`<div class="node d-flex ${classList}">
                         <div class="name col col-9">
                             <span>${data.name}</span>
                         </div>
@@ -269,6 +273,7 @@
 
         for (let index = 0; index < nodeList.length; index++) {
             const data = nodeList[index];
+            // data['classList'] = ['list-group-item'];
             const nodeElement = createLineNode(data);
             lineElement.appendChild(nodeElement);
             // if (index != nodeList.length - 1){
@@ -281,6 +286,7 @@
             createLineNode({
                 name:'Total',
                 odds:product.toFixed(2),
+                classList:['line-total']
             })
         );
         lineUl.appendChild(lineElement);
