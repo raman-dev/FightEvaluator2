@@ -37,19 +37,26 @@
 }
 
 @media (max-width: 1280px) {
-  .table-wrapper {
+  .table-wrapper, .line-list {
     max-width: 70%;
   }
 }
 @media (max-width: 1024px) {
-  .table-wrapper {
+  .table-wrapper, .line-list {
     max-width: 75%;
   }
 }
 @media (max-width: 740px) {
-  .table-wrapper {
+  .table-wrapper, .line-list {
     max-width: 100% !important;
   }
+}
+.line-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  max-width: 60%;
+  margin: auto;
+  gap: 1rem;
 }
 .line-list .xline .node .odd {
   text-align: center;
