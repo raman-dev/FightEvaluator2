@@ -37,15 +37,16 @@
 
 @media (max-width: 1280px) {
   .table-wrapper,.line-list {
-    max-width: 70%;
+    max-width: 72.5% !important;
   }
 }
 
 @media (max-width: 1024px) {
   .table-wrapper,.line-list {
-    max-width: 75%;
+    max-width: 80% !important;
   }
 }
+
 
 @media (max-width: 740px) {
   .table-wrapper,.line-list {
