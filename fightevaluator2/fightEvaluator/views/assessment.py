@@ -1,8 +1,9 @@
 from django.shortcuts import render,get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse,Http404
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_GET,require_http_methods
+from django.views.generic import TemplateView
 
 from ..models import MatchUp,Fighter,Assessment,Note,WeightClass,Stance
 from ..forms import *
@@ -30,6 +31,36 @@ def assessment_index(request,fighterId):
     }
 
     return render(request,"fightEvaluator/assessment2.html",context)
+
+"""
+
+    class MyView(View):
+        override methods for http get,patch,post,put,delete
+    
+    class MyDetailView(DetailView):
+        override methods 
+        specify model to circumvent having to specifiy template names explicitly
+
+        model = MyModel
+        #template name will be inferred by django
+            # templates/app/modelnamelowercase_detail.html
+            # 
+    
+
+    Assessment (model):
+        fighter
+        listOf(Attribute)    
+
+    Attribute(model):
+        listOf(AttributeValue)
+    
+    AttributeValue(model):
+        value   #higher is better
+        value_label
+        description
+
+        #ordering_by_value
+"""
 
 @require_http_methods(["PATCH"])
 def update_assessment(request):

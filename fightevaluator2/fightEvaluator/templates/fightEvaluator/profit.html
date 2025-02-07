@@ -247,7 +247,7 @@
     function createLine(){
         const nodeList = [];
         let product = 1;
-        document.querySelectorAll("[data-selected]").forEach((tr) => {
+        document.querySelectorAll("[data-selected] .selected").forEach((tr) => {
             let oddSelector = tr.dataset.selected;
             let td_odds = tr.querySelector(`[data-name="${oddSelector}"]`);
             let odds = parseFloat(td_odds.dataset.odds);

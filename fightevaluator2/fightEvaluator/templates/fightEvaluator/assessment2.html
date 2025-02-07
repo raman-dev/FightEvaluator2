@@ -535,7 +535,11 @@
         createNote(){
           let noteText = this.noteEditor.textContent.trim();
           let tag = this.noteEditor.dataset.tag;
-          this.server.send_note({assessment_id:assessment_id,tag:tag,data:noteText},this.onNoteCreated.bind(this));
+          this.server.send_note({
+            assessment_id:assessment_id,
+            tag:tag,
+            data:noteText},
+            this.onNoteCreated.bind(this));
         }
 
         deleteNote(){

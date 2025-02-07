@@ -76,6 +76,7 @@ def matchupDictWithName(matchup: MatchUp):
     result['title_full'] = matchup.title_full()
 
     return result
+
 @require_GET
 def index_endpoint(request):
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
