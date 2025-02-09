@@ -1,0 +1,38 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% block title %}
+    Fight Events
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'fightEvaluator/styles/events.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'fightEvaluator/navbar.html' %}
+
+<div class="main-container container-fluid">
+    <div class="mx-auto content-container col-xxl-6 col-xl-9 col-lg-10 col-md-12 col-12">
+        <h1>Events</h1>
+
+    {% for month_year,events in events_by_month.items %}
+        <div class="month-container m-2 my-4">
+            <h4 class="date-title">{{ month_year }}</h4>
+            <div class="events-container p-2">
+                {% for event in events %}
+                    <div class="rounded-3 event-item">
+                        <a href="/{{event.id}}">
+                            <h6 class="py-3 p-1 m-0 text-center">
+                                {{ event.title }}
+                            </h6>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+    {% endfor %}
+    
+    </div>
+</div>
+{% endblock %}

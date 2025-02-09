@@ -1,0 +1,761 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Fight Evaluator {% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static  'fightEvaluator/styles/index.css' %}" />
+<link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup_tables.css' %}">
+<link rel="stylesheet" href="{% static 'fightEvaluator/styles/matchup-editor.css' %}">
+
+{% endblock %}
+
+{% block content %}
+  {% include 'fightEvaluator/navbar.html' %}
+  <!--container-->
+  
+  <div class="container-fluid main-container" style="position: relative;">
+
+    
+    <div class="r-modal">
+      <div class="r-modal-content">
+        <div class="matchup-editor border rounded-2" data-event-id="{% if fightevent %} {{fightevent.id}} {% endif %}">
+          <h1 class="modal-title title fs-4">Create MatchUp</h1>
+          <form>
+              <div class="search-box2">
+                <div class="input-group">  
+                  <label class="input-group-text" for="fighter-a-input">Fighter A</label>
+                  
+                  <div class="input-wrapper">
+                    <input class="form-control rounded-0" data-fighter-id="-1" type="text" value="" name="fighter-a" id="fighter-a-input" placeholder="Enter fighter name..."> 
+                    <ul class="suggestion-box list-group"></ul>
+                  </div>
+                  
+                  <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
+                </div>
+                
+              </div>
+              
+              <div class="searchbox-seperator my-2">
+                <p>versus</p>
+              </div>
+              
+              <div class="search-box2">
+                <div class="input-group">  
+                  
+                  <label class="input-group-text" for="fighter-b-input">Fighter B</label>
+                  <div class="input-wrapper">
+                    <input class="form-control rounded-0" data-fighter-id="-1" type="text" value="" name="fighter-b" id="fighter-b-input" placeholder="Enter fighter name..."> 
+                    <ul class="suggestion-box list-group"></ul>
+                  </div>
+                  
+                  <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
+                </div>
+              </div>
+
+              <!--weight class-->
+              <div class="weightclass-selector my-4">
+                <div class="weightclass input-group mb-3">
+                  <label class="input-group-text" for="weight-class-select">Weightclass</label>
+                  <select class="form-select" id="weight-class-select" name="weight_class">
+                      <option selected value="">Choose a weight class...</option>
+                      <option value="strawweight">Strawweight</option>
+                      <option value="flyweight">Flyweight</option>
+                      <option value="bantamweight">Bantamweight</option>
+                      <option value="featherweight">Featherweight</option>
+                      <option value="lightweight">Lightweight</option>
+                      <option value="welterweight">Welterweight</option>
+                      <option value="middleweight">Middleweight</option>
+                      <option value="light_heavyweight">Light Heavyweight</option>
+                      <option value="heavyweight">Heavyweight</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="rounds-isprelim-wrapper">
+                <!--rounds-->
+                <div class="rounds-radio-group border rounded-2 p-1 px-3">
+                  <p class="radio-group-title">Rounds</p>
+                  <div class="form-check mx-3">
+                    <input class="form-check-input" type="radio" name="rounds" value="3" id="rounds-radio-3" checked>
+                    <label class="form-check-label" for="rounds-radio-3">
+                      3
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rounds" value="5" id="rounds-radio-5" >
+                    <label class="form-check-label" for="rounds-radio-5">
+                      5
+                    </label>
+                  </div>
+                </div>
+                <!--prelim status-->
+                <div class="isprelim-checkbox border rounded-2 p-1 px-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" name="isprelim" id="isprelim-checkbox" checked>
+                    <label class="form-check-label" for="isprelim-checkbox">
+                      on prelims
+                    </label>
+                  </div>
+                </div>
+              </div>
+          </form>
+          <div class="editor-actions mt-3">
+              <button type="button" class="btn btn-secondary mx-2 close-btn" onclick="hideMatchUpEditor()">Close</button>
+              <button type="button" class="btn btn-primary create-btn current-action submit-btn" onclick="matchupEditor.commitChanges(true)">Create</button>
+              <button type="button" class="btn btn-primary save-btn submit-btn" onclick="matchupEditor.commitChanges(false)">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container-fluid title-container d-flex flex-column">
+      <div class="title-wrapper results-toggle-wrapper w-100 d-flex justify-content-between align-items-center">
+        <h3 class="event-title">{{fightevent.title}}</h3>
+        
+        <button class="event-link-btn btn btn-outline-info" data-url="{{fightevent.link}}" style="width: 140px;">
+          <svg id="tapology-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 748 117">
+            <g stroke="none" stroke-width="1" fill="none">
+              <g transform="translate(373.500000, 58.500000) scale(1, -1) translate(-373.500000, -58.500000) translate(-1.000000, -1.000000)" fill="rgb(222, 226, 230)">
+                <g transform="translate(0.000000, 0.150000)">
+                  <g transform="translate(64.657000, 1.170000)">
+                    <path d="M0,8.75 C0,4.18 3.70625,0.475 8.275,0.475 L66.73125,0.475 C71.30125,0.475 75.005,4.18 75.005,8.75 L75.005,23.085 C75.005,27.65625 71.30125,31.36 66.73125,31.36 L8.275,31.36 C3.70625,31.36 0,27.65625 0,23.085 L0,8.75 Z"></path>
+                  </g>
+                  <g transform="translate(106.999500, 35.854500)">
+                    <path d="M8.75,80 C3.91625,80 0,76.0825 0,71.24875 L0,9.42625 C0,4.5925 3.91625,0.675 8.75,0.675 L23.91125,0.675 C28.74375,0.675 32.6625,4.5925 32.6625,9.42625 L32.6625,71.24875 C32.6625,76.0825 28.74375,80 23.91125,80 L8.75,80 Z"></path>
+                  </g>
+                  <g transform="translate(69.086875, 35.854500)">
+                    <path d="M10,80 C5.16625,80 1.24875,76.0825 1.24875,71.24875 L1.24875,9.42625 C1.24875,4.5925 5.16625,0.675 10,0.675 L25.16125,0.675 C29.995,0.675 33.9125,4.5925 33.9125,9.42625 L33.9125,71.24875 C33.9125,76.0825 29.995,80 25.16125,80 L10,80 Z"></path>
+                  </g>
+                  <g transform="translate(32.424375, 35.854500)">
+                    <path d="M10,80 C5.16625,80 1.2475,76.0825 1.2475,71.24875 L1.2475,9.42625 C1.2475,4.5925 5.16625,0.675 10,0.675 L25.16,0.675 C29.99375,0.675 33.91125,4.5925 33.91125,9.42625 L33.91125,71.24875 C33.91125,76.0825 29.99375,80 25.16,80 L10,80 Z"></path>
+                  </g>
+                  <g transform="translate(0.406500, 45.979625)">
+                    <path d="M8.75,68.75 C4.60125,68.75 1.24125,65.38875 1.24125,61.2425 L1.24125,8.1975 C1.24125,4.05 4.60125,0.69 8.75,0.69 L21.7575,0.69 C25.90375,0.69 29.26625,4.05 29.26625,8.1975 L29.26625,61.2425 C29.26625,65.38875 25.90375,68.75 21.75625,68.75 L8.75,68.75 Z"></path>
+                  </g>
+                </g>
+                <g transform="translate(150.000000, 31.986626)">
+                  <g transform="translate(0.780000, 2.769750)">
+                    <polygon points="82.5 81.25 0.39 81.25 0.39 56.4 26.13375 56.4 26.13375 0.71 56.8575 0.71 56.8575 56.4 82.5 56.4"></polygon>
+                  </g>
+                  <g transform="translate(58.238500, 2.448125)">
+                    <path d="M42.5,31.25 L48.76625,51.27 L55.1,31.25 L42.5,31.25 Z M95.195,4.1075 L64.6625,81.57125 L32.94625,81.57125 L1.20375,1.03375 L32.76375,1.03375 L36.51,12.3725 L61.21625,12.3725 L65.0625,1.03375 L96.40625,1.03375 L95.195,4.1075 L95.195,4.1075 Z"></path>
+                  </g>
+                  <g transform="translate(148.197000, 2.592750)">
+                    <path d="M41.25,48.75 C40.085,47.715 38.04,47.00125 34.83375,47.00375 L31.21125,47.00375 L31.21125,60.82875 L34.93375,60.82875 C38.10625,60.82875 40.13,60.12375 41.27625,59.105 C42.415,58.095 43.09375,56.60625 43.1125,53.96625 C43.09375,51.29125 42.40625,49.775 41.25,48.75 M64.41,74.84 C58.90625,79.30375 51.61375,81.4325 42.83375,81.42625 L0.3875,81.42625 L0.3875,0.8875 L31.21125,0.8875 L31.21125,26.3125 C43.83375,26.43125 52.62125,27.39125 58.03625,29.49625 C68.07375,33.3 73.3475,42.13625 73.23125,54.1675 C73.26125,62.86625 70.3175,70.0125 64.41,74.84"></path>
+                  </g>
+                  <g transform="translate(218.532750, 1.073000)">
+                    <path d="M52.5,32.5 C50.4775,30.07375 47.63375,28.80875 43.215,28.7775 C39.10875,28.81625 36.46875,30.0525 34.455,32.5725 C32.53625,34.94875 31.49625,38.14875 31.49,42.52625 C31.49625,47.04875 32.5475,50.32125 34.4325,52.6525 C36.52625,55.26125 39.275,56.53875 43.5175,56.5775 C47.61625,56.54375 50.36125,55.29375 52.51625,52.73625 C54.39625,50.4075 55.4375,47.2025 55.4425,42.83 C55.44125,38.1625 54.375,34.81375 52.5,32.5 M74.41875,73.22625 C66.42125,80.6725 56.06875,84.3825 43.82125,84.365 C31.0625,84.38 20.47625,80.72875 12.525,73.33375 C4.265,65.67875 0.135,55.20375 0.16,42.52625 C0.135,29.97875 4.23375,19.60375 12.42125,12.0225 C20.37875,4.695 30.89125,1.0775 43.5175,1.0925 L43.61125,1.0925 C56.33875,1.0925 66.895,4.84 74.7875,12.39625 C82.74375,19.9675 86.695,30.41125 86.6725,43.1325 C86.6975,55.35875 82.5875,65.59 74.41875,73.22625"></path>
+                  </g>
+                  <g transform="translate(303.415500, 2.769750)">
+                    <polygon points="31.25 81.25 0.53 81.25 0.53 0.71 57.88 0.71 57.88 25.4625 31.25 25.4625"></polygon>
+                  </g>
+                  <g transform="translate(354.207750, 1.073625)">
+                    <path d="M52.5,32.5 C50.4725,30.0725 47.62875,28.8075 43.21125,28.7775 C39.105,28.815 36.46625,30.0525 34.4525,32.57125 C32.5325,34.9475 31.49625,38.1475 31.49,42.525 C31.49375,47.0475 32.545,50.32125 34.43,52.6525 C36.5225,55.2625 39.2725,56.53875 43.515,56.57625 C47.61375,56.54125 50.36,55.295 52.51375,52.735 C54.3925,50.40625 55.435,47.2025 55.44125,42.82875 L55.4425,42.82875 C55.4375,38.16125 54.37375,34.81375 52.5,32.5 M74.4175,73.225 C66.42,80.67125 56.06625,84.38125 43.82,84.3625 C31.06,84.37875 20.4725,80.72875 12.52375,73.335 C4.26125,65.67875 0.1325,55.20375 0.1575,42.525 C0.1325,29.97875 4.23,19.60375 12.42125,12.02125 C20.375,4.6925 30.89,1.07625 43.515,1.09 L43.5975,1.09 C56.32875,1.09 66.89125,4.8375 74.78625,12.39625 C82.74,19.9675 86.6925,30.40875 86.67,43.1325 C86.695,55.36 82.58375,65.59 74.4175,73.225"></path>
+                  </g>
+                  <g transform="translate(438.653625, 1.021125)">
+                    <path d="M42.5,30 L52.42125,30 L52.42125,26.945 C51.7175,26.44375 51.06125,25.83125 50.41625,25.12 C50.15,25.02875 49.25625,24.86625 47.99,24.88 C42.56,24.90875 38.81,26.48875 36.05875,29.585 C33.27125,32.76625 31.82375,36.92625 31.81125,42.47625 C31.82375,47.88375 33.2525,52.02375 36.0275,55.29 C39.01625,58.76625 42.76,60.4425 47.99,60.475 C53.175,60.46875 58.18,58.64625 63.2175,54.7675 L64.63,53.67625 L79.23625,65.635 L78.29125,67.28625 C75.11125,72.85625 70.49125,77.2125 64.6075,80.22125 C59.07625,83.02375 52.995,84.41875 46.47125,84.41625 C33.45375,84.4275 22.51375,80.86625 14.03,73.65375 C5.00875,65.96 0.44625,55.335 0.48,42.47625 C0.44625,29.82625 4.90125,19.37125 13.715,11.815 C22.04125,4.6125 32.77,1.04125 45.495,1.04125 L45.55625,1.04125 C57.685,1.03875 68.80125,3.615 78.79,8.7875 L80.0075,9.41625 L80.0075,50.19375 L42.5,50.19375 L42.5,30 Z"></path>
+                  </g>
+                  <g transform="translate(505.861875, 2.769750)">
+                    <polygon points="58.75 81.25 48.04125 60.815 37.0575 81.25 0.3 81.25 30.8275 35.88875 30.8275 0.7125 61.6575 0.7125 61.6575 35.485 92.49 81.25"></polygon>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </button>
+        <script>
+          document.querySelector(".event-link-btn").addEventListener("click",(event)=>{
+              window.open(fightevent.currentTarget.dataset.url,"_blank");
+          });
+        </script>
+      </div>
+     
+    </div>
+  
+    <div class="tables-wrapper">
+      <div class="watchlist-matchups matchups-container mb-3 "  id="watchlist">
+        <div class="watchlist-table">
+          <table>
+            <caption style="caption-side:top">
+              <h4>Watchlist</h4>
+            </caption>
+            <thead>
+              <tr>
+                <th>MatchUp</th>
+                <th>weight class</th>
+                <th>rounds</th>
+                <th>analysis complete</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              {% for matchups in matchupsList %}
+              {% for matchup in matchups %}
+                {% if matchup.inWatchList %}
+                  <tr class="watchlist-matchup matchup" onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                    <td >
+                      <div class="d-flex align-items-center justify-content-center p-1">
+                        <p>{{matchup.title_full}}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center p-1">
+                        <p class="weight-class">{{matchup.weight_class|rmscores|title}}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center p-1">
+                        <p>{{matchup.rounds}}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center p-1">
+                        
+                        <svg class="incomplete-icon {% if matchup.analysisComplete %} d-none {% endif %}" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path d="M680-80q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80Zm67-105 28-28-75-75v-112h-40v128l87 87Zm-547 65q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v250q-18-13-38-22t-42-16v-212h-80v120H280v-120h-80v560h212q7 22 16 42t22 38H200Zm280-640q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z"/></svg>                                              
+                        <svg class="complete-icon {% if not matchup.analysisComplete %}d-none{% endif %}" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#75FB4C"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+          </table>
+          {% include "fightEvaluator/index-right-click-menu.html" %}
+
+        </div>
+        <div class="watchlist-empty-message d-none">
+          <h6>No matchups in watch list.</h6>
+        </div>
+      </div>
+      <!--main card fighter table-->
+      <div class="table-grid">
+        {% for matchups in matchupsList %}
+        <div class="matchups-container" id={% if forloop.counter == 1%}"main-card"{% else %}"prelims"{% endif %}>            
+            
+            <table>
+              <caption style="caption-side:top">
+                <div class="d-flex justify-content-between">
+                  <h4 style="text-transform: capitalize;">{% if forloop.counter == 1%}main card{% else %}prelims{% endif %}</h4>
+                  <div class="action-wrapper">
+                    <button type="button" class="btn btn-primary active-independent" onclick="showEditor(false)">
+                      add
+                    </button>
+                  </div>
+                </div>
+              </caption>
+              <thead>
+                <tr>
+                  <th>MatchUp</th>
+                  <th>Weight Class</th>
+                  <th>Rounds</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for matchup in matchups %}
+                <tr class="matchup {% if matchup.inWatchList %} watching {% endif %} " onclick="onClickMatchUp(event)" oncontextmenu="onRightClickMatchup(event)" data-in-watch-list="{{matchup.inWatchList|default_if_none:"false"|lower}}" tabindex="50" data-matchup-id="{{matchup.id}}" data-fighter-a-id="{{matchup.fighter_a.id}}" data-fighter-b-id="{{matchup.fighter_b.id}}">
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center p-1">
+                      <p>{{matchup.title_full}}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center p-1">
+                      <p class="weight-class">{{matchup.weight_class|rmscores|title}}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center p-1">
+                      <p>{{matchup.rounds}}</p>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% include "fightEvaluator/index-right-click-menu.html" %}
+            
+            <!-- <div class="guide guide-horizontal"></div> 
+            <div class="guide guide-vertical"></div>
+            <div class="position-label">
+              0,0
+            </div> -->
+        </div>
+        {% endfor %}  
+      </div>
+    </div>
+  </div>
+
+  <div class="confirmation-dialog d-none" data-matchup-id="-1">
+    <div class="dialog-container bg-dark rounded-3">
+      <div class="dialog-title">
+        <h4>Delete following MatchUp.</h4>
+      </div>
+      <div class="dialog-body border p-1 my-3">
+        <p class="m-0">Matchup name.</p>
+      </div>
+      <div class="dialog-actions">
+        <button class="cancel btn btn-secondary" onclick="onClickCancelDelete(event)">cancel</button>
+        <button class="confirm btn btn-primary" onclick="deleteMatchup()">confirm</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+
+{% block scripts %}
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+ <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
+ <script src="{% static 'fightEvaluator/js/fighter-searchbox.js' %}"></script>
+ <script src="{% static 'fightEvaluator/js/matchup-editor.js' %}"></script>
+
+
+ {% if fightevent is None %}
+  <!-- <script src="{% static 'fightEvaluator/js/index-polling.js' %}"></script> -->
+   <script src="{% static 'fightEvaluator/js/polling.js' %}"></script>
+  
+  <script>
+    
+    console.log('index poller included!');
+    const timeDelay = 3000;
+    const headers = {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+    }
+    const indexEndpoint = '/index-endpoint';
+    
+    function pollResult(data) {
+        // console.log(data);
+        if (!data.available) {
+            console.log(`Server is.... ${data.message}`);
+        } else {
+            console.log('Received data...');//, data);
+            //populate the tables with the data
+            const eventData = data['event'];
+            const mainCard = data['mainCard'];
+            const prelims = data['prelims'];
+            fightEventIdWrapper[0] = eventData.id;
+            
+            //set title
+            document.querySelector('.event-title').textContent = eventData.title;
+            //mainCardTable -> object
+            for (const matchup of mainCard){
+                matchupMap[matchup.id] = matchup;
+                mainCardTable.addMatchup(matchup);
+            }
+            for (const matchup of prelims){
+                matchupMap[matchup.id] = matchup;
+                prelimTable.addMatchup(matchup);
+            }
+        }
+        /*
+            
+        event_structure {
+            "id": 77, "title": "UFC 310: Pantoja vs. Asakura",
+            "date": "2024-12-07", "location": null,
+            "link": "https://www.tapology.com/fightcenter/events/116766-ufc-310", "hasResults": false
+        }
+        
+        matchup structure {
+            "id": 780, "fighter_a": 2453, "fighter_b": 3799, "weight_class": "flyweight", "rounds": 5,
+            "scheduled": "2024-12-07","event": 77, "isprelim": false, "outcome": null, "inWatchList": null,
+            "analysisComplete": false, "fighter_a_references": 0, "fighter_b_references": 0, "fighter_a_name": "alexandre pantoja", "fighter_b_name": "kai asakura"
+        }
+        */
+    }
+
+    const indexPoller = new Poller(indexEndpoint, headers, pollResult);
+    indexPoller.startPolling();
+  </script>
+{% endif %}
+{% include "fightEvaluator/matchup-data-script.html" %}
+
+<script>
+  
+    const postHeaders = {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      "X-CSRFToken": Cookies.get('csrftoken'),
+    };
+    const server = new Server(postHeaders);
+  
+    class MatchupTable{
+      constructor(table,matchupMap){
+        this.matchup_ids = new Set();
+        this.table = table;
+      }
+      addMatchup(matchup){
+        this.matchup_ids.add(matchup.id);
+        let element = this.createMatchUpElement(matchup);
+        let tbody = this.table.querySelector('tbody');
+        tbody.appendChild(element);
+        return element;
+      }
+
+      removeMatchup(matchup){
+        console.log(this.matchup_ids,matchup.id);
+        if (this.matchup_ids.has(matchup.id)){
+          this.matchup_ids.delete(matchup.id);
+          //remove from html aswell
+          console.log('Removing matchup...',matchup);
+          let element = this.table.querySelector(`[data-matchup-id="${matchup['id']}"]`);
+          
+          element.remove();
+          return element;//return removed element
+        }
+        return null;
+      }
+    
+      
+      createMatchUpElement(matchup){
+        console.log('creating element => ',matchup);
+        // console.log(matchup,matchup['id']);
+        return $(`
+          <tr class="matchup" 
+              onclick="onClickMatchUp(event)" 
+              oncontextmenu="onRightClickMatchup(event)"
+              data-in-watch-list="${matchup.inWatchList}" tabindex="50" 
+              data-matchup-id="${matchup.id}" 
+              data-fighter-a-id="${matchup.fighter_a}" 
+              data-fighter-b-id="${matchup.fighter_b}">
+              <td >
+                <div class="d-flex align-items-center justify-content-center ">
+                  <p>${matchup.title_full}</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center justify-content-center ">
+                  <p class="weight-class" >
+                    ${matchup.weight_class.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center justify-content-center ">
+                  <p>${matchup.rounds}</p>
+                </div>
+              </td>
+            </tr>
+        `)[0];
+      }
+    
+    }
+
+    class WatchListTable extends MatchupTable{
+      constructor(table,matchupMap){
+        super(table,matchupMap);
+        //initialize watchlist with matchup ids of matchups already with inWatchList = true
+        for (const key in matchupMap){
+          let matchup = matchupMap[key];
+          if (matchup.inWatchList == true){
+            this.matchup_ids.add(matchup.id);
+          }
+        }
+        // console.log(this.matchup_ids);
+        if (this.matchup_ids.size == 0){
+          //hide table and show empty watchlist message
+          this.hideWatchlist();
+        }else{
+          this.showWatchlist();
+        }
+      }
+
+      addMatchup(matchup){
+        //create a list element in the watchlist-matchupTable
+        let original = document.querySelector(`[data-matchup-id="${matchup.id}"]`);
+        let element = super.addMatchup(matchup);
+        if (this.matchup_ids.size == 1){
+          this.showWatchlist();
+        }
+        element.classList.add('watchlist-matchup');
+        let analysisElement = this.createAnalysisElement();
+        //add watching class to original matchup
+        element.appendChild(analysisElement);
+        original.classList.add('watching');
+        return element;
+      }
+
+      createAnalysisElement(){
+        return $(`<td>
+            <div class="d-flex align-items-center justify-content-center p-1">
+              <svg class="incomplete-icon " xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path d="M680-80q-83 0-141.5-58.5T480-280q0-83 58.5-141.5T680-480q83 0 141.5 58.5T880-280q0 83-58.5 141.5T680-80Zm67-105 28-28-75-75v-112h-40v128l87 87Zm-547 65q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v250q-18-13-38-22t-42-16v-212h-80v120H280v-120h-80v560h212q7 22 16 42t22 38H200Zm280-640q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z"/></svg>                                              
+              <svg class="complete-icon d-none" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#75FB4C"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>
+            </div>
+          </td>`)[0];
+      }
+
+      removeMatchup(matchup){
+        let element = super.removeMatchup(matchup);
+        if (this.matchup_ids.size == 0){
+          this.hideWatchlist();
+        }
+        let original = document.querySelector(`[data-matchup-id="${matchup.id}"]`);
+        original.classList.remove('watching');
+        return element;
+      }
+
+      showWatchlist(){
+        document.querySelector('.watchlist-table').classList.remove('d-none');
+        document.querySelector('.watchlist-empty-message').classList.add('d-none');
+      }
+      hideWatchlist(){
+        document.querySelector('.watchlist-table').classList.add('d-none');
+        document.querySelector('.watchlist-empty-message').classList.remove('d-none');
+      }
+    }
+    
+    const mainCardTable = new MatchupTable(document.querySelector('#main-card table'),matchupMap);
+    const prelimTable = new MatchupTable(document.querySelector('#prelims table'),matchupMap);
+    const watchlistTable = new WatchListTable(document.querySelector('#watchlist table'),matchupMap);
+
+    for (const key in matchupMap){
+      let matchup =  matchupMap[key];
+
+      if (matchup.isprelim){
+        prelimTable.matchup_ids.add(parseInt(key));
+      }else{
+        mainCardTable.matchup_ids.add(parseInt(key));
+      }
+    }
+    
+    const fightEventIdWrapper = [0];
+
+    {% if fightevent %}
+      fightEventIdWrapper[0] = {{  fightevent.id }};
+    {% endif %}
+
+    var activeMatchup = null;
+
+    function onClickAnalyze(event){
+      if (activeMatchup != null){
+        //navigate to that path
+        window.location.href = `matchup/${activeMatchup.dataset.matchupId}`;
+      }
+    }
+
+    function onClickMatchUp(event) {
+        let matchup = event.currentTarget;
+        // let matchup = matchupLi.childNodes[0];//matchupLi.querySelector('.matchup');
+        let isActive = matchup.classList.contains('active');
+        //deactivate previous active element
+        if (activeMatchup != null){
+            activeMatchup.classList.remove('active');
+        }
+        
+        let menu = document.querySelector('.matchup-actions-menu-container[data-open="true"]');
+        if (menu != null){
+          hideActionMenu(menu);
+        }
+        activeMatchup = null;
+        //if prevactive element is not current element
+        if (!isActive){//now active
+          matchup.classList.add('active');
+          activeMatchup = matchup;
+        }
+    }
+
+    function onRightClickMatchup(event){
+      event.preventDefault();
+      if (activeMatchup == null) return;
+      // console.log('Right Clicked Matchup!',event.currentTarget);
+      let tableId = '#main-card';
+      if (matchupMap[activeMatchup.dataset.matchupId].isprelim){
+        tableId = '#prelims';
+      }
+      if (event.currentTarget.classList.contains('watchlist-matchup')){
+        tableId = '#watchlist';
+      }
+
+      let inWatchList = matchupMap[activeMatchup.dataset.matchupId].inWatchList;
+      let menuContainer = document.querySelector(`${tableId}`);
+      let menu = menuContainer.querySelector('.matchup-actions-menu-container');
+      showActionMenu(menuContainer,menu,event,inWatchList);
+    }
+
+    document.querySelectorAll('.menu-item').forEach((menu_item) => {
+      menu_item.addEventListener('click',(event)=>{
+        // hideActionMenu();
+        hideActionMenu(document.querySelector('.matchup-actions-menu-container[data-open="true"]'));
+      });
+    });
+
+    function showActionMenu(menuContainer,menu,event,matchupInWatchList){
+      console.log('Showing Action Menu....');//,menu);
+      let rect = menuContainer.getBoundingClientRect(); // Get element's position and size
+      let x = event.clientX - rect.left;
+      let y = event.clientY - rect.top;
+      menu.dataset.open = true;
+      
+      let watchIcon = menu.querySelector('#watch-icon');
+      let unwatchIcon = menu.querySelector('#unwatch-icon');
+      let watchMenuLabel = menu.querySelector('.watch-menu-item span');
+      if (matchupInWatchList){
+        watchIcon.classList.add('d-none');//hide watch icon
+        unwatchIcon.classList.remove('d-none');
+        watchMenuLabel.textContent = 'unwatch';
+      }else{
+        watchIcon.classList.remove('d-none');//show watch icon
+        unwatchIcon.classList.add('d-none');
+        watchMenuLabel.textContent = 'watch';
+      }
+      
+      menu.classList.remove('d-none');
+      let height = 0;//menu.offsetHeight;
+      menu.style.left = `${x}px`;
+      menu.style.top = `${y - height}px`;
+    }
+
+    function hideActionMenu(menu){
+      console.log('Hiding action menu...');//,menu);
+      
+      menu.classList.add('d-none');
+      menu.dataset.open = false;
+    }
+
+    function onClickWatch(event){
+      if (activeMatchup != null){
+        //continue
+        //add to watchlist
+        let matchupDataContainer = activeMatchup.dataset;
+        let matchupId = matchupDataContainer.matchupId;
+        fetch(`/matchup/toggle-watchlist/${matchupId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          toggle:true,
+        }),
+        headers: postHeaders,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          //update matchup table
+          matchupMap[data.id]['inWatchList'] = data.inWatchList;
+          if (data.inWatchList){
+            watchlistTable.addMatchup(matchupMap[data.id]);
+          }else{
+            // console.log('removing !!!!',data,data.id,matchupMap[data.id]);
+            watchlistTable.removeMatchup(matchupMap[data.id]);
+          }
+        });
+      }
+    }
+
+    function onClickDelete(event){
+      //check if matchup selected
+      if (activeMatchup == null) return;
+      //no longer need this since it is not clickable if no matchup is selected
+      //send delete request to /matchup/delete-matchup
+      let matchupId = activeMatchup.dataset.matchupId;
+      //show confirmation dialog
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      // confirmationDialog.dataset.matchupId = matchupId;
+      //set the matchup name
+      let matchupData = matchupMap[matchupId];
+      confirmationDialog.querySelector(".dialog-body p").textContent = `\"${matchupData['fighter_a_name']} vs ${matchupData['fighter_b_name']}\"`;
+      confirmationDialog.classList.remove("d-none");
+    }
+    function deleteMatchup(){
+      if (activeMatchup == null) return;
+      let matchupId = activeMatchup.dataset.matchupId;
+      fetch(`/matchup/delete-matchup/${matchupId}`, {
+        method: "DELETE",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get('csrftoken'),
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          //remove matchup from table
+          //hide confirmation dialog
+          document.querySelector(".confirmation-dialog").dataset.matchupId = "-1";
+          document.querySelector(".confirmation-dialog").classList.add("d-none");
+         
+          watchlistTable.removeMatchup(matchupMap[matchupId]);
+          mainCardTable.removeMatchup(matchupMap[matchupId]);
+          prelimTable.removeMatchup(matchupMap[matchupId]);
+          delete matchupMap[matchupId];
+        });
+    }
+
+    function onClickCancelDelete(){
+      let confirmationDialog = document.querySelector(".confirmation-dialog");
+      document.querySelector(".confirmation-dialog").classList.add("d-none");
+    }
+</script>
+
+<script>    
+    const editor = document.querySelector(".matchup-editor");
+    const matchupEditor = new MatchUpEditor(editor,server);   
+
+    const allTables = document.querySelector(".tables-wrapper");
+    //reload page on matchup update
+    matchupEditor.registerListener(allTables,MatchUpEditor.EVENTS.UPDATE_MATCHUP,(event)=>{
+      console.log('Updated matchup...',event.detail.data);
+      location.reload()
+    });
+    matchupEditor.registerListener(allTables,MatchUpEditor.EVENTS.CREATE_MATCHUP,(event)=>{
+      let data = event.detail.data;
+      console.log('Created Matchup...',data);
+      //update matchup table
+      //update on server
+      if (data.inWatchList == null){
+        data.inWatchList = false;
+      }
+      let matchup = data;
+      //reflect change in matchup table
+      let matchupTable = mainCardTable;
+      if (matchup.isprelim){
+        matchupTable = prelimTable;
+      }
+      matchupMap[matchup.id] = matchup;
+      matchupTable.addMatchup(matchupMap[data.id]);
+      hideMatchUpEditor();
+    });
+
+    function showEditor(inEditMode){
+      //rmodal show
+      const rmodal = document.querySelector(".r-modal");
+      const rmodalContent = rmodal.querySelector(".r-modal-content");
+
+      rmodal.addEventListener("click",(event)=>{
+        //clicked modal background not content  
+        if (event.currentTarget == event.target){
+          hideMatchUpEditor();
+        }
+      },{once:true});
+
+      
+      rmodalContent.style.display='block';//make element part of page again
+      setTimeout(() => {rmodal.classList.add("r-show"); },200);//add class after delay 
+
+      if (inEditMode){
+        // //enable editor will be in edit mode
+        let matchupData = matchupMap[activeMatchup.dataset.matchupId];
+        matchupEditor.loadMatchUp(matchupData);
+      }
+    }
+
+    function hideMatchUpEditor(){
+      const rmodal = document.querySelector(".r-modal");
+      rmodal.classList.remove('r-show');
+      matchupEditor.clearEditor();
+    }
+
+    document.querySelector(".r-modal-content").addEventListener("transitionend",(event)=>{
+        
+      const rmodalContent = event.currentTarget;
+      const rmodal = rmodalContent.parentElement;
+      //if we are closing the modal remove display
+      if (!rmodal.classList.contains('r-show')){
+        rmodalContent.style.display='None';
+      }
+    });
+</script>
+
+{% endblock %} 
+  
+ 

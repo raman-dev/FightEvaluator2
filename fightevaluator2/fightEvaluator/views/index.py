@@ -4,6 +4,8 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
+from django.views.generic import ListView,DetailView
+
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState
 from ..forms import FightEventForm,MatchUpFormMF
 import json
@@ -16,30 +18,6 @@ from datetime import datetime
 
 WorkerThread = None
 globalCounter = 0
-
-@require_GET
-def indexById(request,eventId):
-    eventQuerySet = FightEvent.objects.filter(id=eventId)
-    if not eventQuerySet:
-        return JsonResponse({'error':'No such event with id: '+str(eventId)})
-    event = eventQuerySet[0]
-    matchups = MatchUp.objects.filter(event=event)
-    mainCard = []
-    prelims = []
-    for matchup in matchups:
-        # print(matchup.isprelim,matchup)
-        if matchup.isprelim:
-            prelims.append(matchup)
-        else:
-            mainCard.append(matchup)
-    # if not FightOutcome.objects.filter(matchup=mainCard[0]):
-        #results not generated but may be available for query
-    context = {
-        'event': event,
-        'matchupsList': [mainCard,prelims],
-    }
-
-    return render(request, "fightEvaluator/index.html",context)
 
 def WorkerThreadControlFunction():
     
@@ -153,18 +131,33 @@ def index(request):
 
     return render(request, "fightEvaluator/index.html",context)
 
-@require_GET
-def events(request):
-    #return a list of all events sorted by date
-    events = FightEvent.objects.all().order_by('date').reverse()
-    events_by_month = {}
-    for event in events:
-        month_year = event.date.strftime("%B %Y")
-        if month_year not in events_by_month:
-            events_by_month[month_year] = []
-        events_by_month[month_year].append(event)
-    return render(request,"fightEvaluator/events.html",{'events':events,'events_by_month':events_by_month})
+class FightEventListView(ListView):
+    model = FightEvent
+    #we need to return a map that has grouped the events by month 
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        events = context['fightevent_list']
+        events_by_month = {}
+        for event in events:
+            month_year = event.date.strftime("%B %Y")
+            if month_year not in events_by_month:
+                events_by_month[month_year] = []
+            events_by_month[month_year].append(event)
+        context['events_by_month'] = events_by_month
+        context.pop('fightevent_list')
+        return context
 
+class FightEventDetailView(DetailView):
+    model = FightEvent
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = self.object
+        mainCard = MatchUp.objects.filter(event=event,isprelim=False)
+        prelims = MatchUp.objects.filter(event=event,isprelim=True)
+        context['matchupsList'] = [mainCard,prelims] #collected into 1 list to reduce
+        #html repetition in template
+        return context
 
 def verifyPrediction(matchups):
     for matchup in matchups:
@@ -289,3 +282,41 @@ def polling_end(request):
 
     globalCounter = 0
     return render(request,"fightEvaluator/polling-result.html",{},status=286)
+
+"""@require_GET
+NOTE replaced with class based view
+def indexById(request,eventId):
+    eventQuerySet = FightEvent.objects.filter(id=eventId)
+    if not eventQuerySet:
+        return JsonResponse({'error':'No such event with id: '+str(eventId)})
+    event = eventQuerySet[0]
+    matchups = MatchUp.objects.filter(event=event)
+    mainCard = []
+    prelims = []
+    for matchup in matchups:
+        # print(matchup.isprelim,matchup)
+        if matchup.isprelim:
+            prelims.append(matchup)
+        else:
+            mainCard.append(matchup)
+    # if not FightOutcome.objects.filter(matchup=mainCard[0]):
+        #results not generated but may be available for query
+    context = {
+        'event': event,
+        'matchupsList': [mainCard,prelims],
+    }
+
+    return render(request, "fightEvaluator/index.html",context)
+
+@require_GET
+def events(request):
+    #return a list of all events sorted by date
+    events = FightEvent.objects.all()#.order_by('date').reverse()
+    events_by_month = {}
+    for event in events:
+        month_year = event.date.strftime("%B %Y")
+        if month_year not in events_by_month:
+            events_by_month[month_year] = []
+        events_by_month[month_year].append(event)
+    return render(request,"fightEvaluator/events.html",{'events_by_month':events_by_month})
+"""

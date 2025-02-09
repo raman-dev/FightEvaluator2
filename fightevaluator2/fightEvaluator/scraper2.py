@@ -200,11 +200,13 @@ def scrapeResults(source):
             result['method'] = 'ko'
         elif 'submission' in method:
             result['method'] = 'submission'
+        elif 'draw' in method:
+            result['method'] = 'draw'
         else:
             result['method'] = 'no contest'
         
-        # print(roundTimes)
-        if method == 'decision':
+        # print(roundTimes,result['method'],method)
+        if result['method'] == 'decision' or result['method'] == 'draw':
             #rounds = 3 or 5
             #time  = 15:00 or 25:00
             if "15:00" in roundTimes:

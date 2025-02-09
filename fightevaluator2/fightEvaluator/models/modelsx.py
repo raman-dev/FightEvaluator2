@@ -11,6 +11,9 @@ class FightEvent(models.Model):
     
      def __str__(self) -> str:
           return self.title + " | " + str(self.date)
+     
+     class Meta:
+          ordering = ['-date']
 
 class FightOutcome(models.Model):    
     class Outcomes(models.TextChoices):

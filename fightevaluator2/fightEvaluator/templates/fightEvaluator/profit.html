@@ -247,9 +247,10 @@
     function createLine(){
         const nodeList = [];
         let product = 1;
-        document.querySelectorAll("[data-selected] .selected").forEach((tr) => {
-            let oddSelector = tr.dataset.selected;
-            let td_odds = tr.querySelector(`[data-name="${oddSelector}"]`);
+        document.querySelectorAll("[data-selected] .selected").forEach((td_odds) => {
+            // let oddSelector = tr.dataset.selected;
+            // let td_odds = tr.querySelector(`[data-name="${oddSelector}"]`);
+            let tr = td_odds.parentElement;
             let odds = parseFloat(td_odds.dataset.odds);
             let name = td_odds.dataset.name;
             nodeList.push({

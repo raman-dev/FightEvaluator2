@@ -20,8 +20,11 @@ urlpatterns = [
     # path('events/results/<int:eventId>',views.getFightEventResults, name='results'),
     path('events/results/<int:eventId>',views.getFightEventResults2, name='results'),
 
-    path('<int:eventId>',views.indexById,name='indexById'),
-    path('events/',views.events),
+    # path('<int:eventId>',views.indexById,name='indexById'),
+    path('<int:pk>',views.FightEventDetailView.as_view(),name='indexById_2'),
+    path('events/',views.FightEventListView.as_view()),
+    # path('events/',views.events),#FightEventListView.as_view()),
+
     path('events/<int:eventId>/predictions',views.event_predictions, name='event_predictions'),#not working
 
     path('fighters/search/',views.fighter_search, name='fighter_search'),#working
