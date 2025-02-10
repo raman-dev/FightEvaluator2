@@ -14,7 +14,7 @@
         <div class="fighter-info-container">
           <div class="fighter-card">
             <div class="img-wrapper">
-              <img class="fighter-image" src={% if fighter.img_link %}"{{fighter.img_link}}"{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}  alt="">
+              <img class="fighter-image" src={% if fighter.img_link %}"{{ fighter.img_link }}"{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}  alt="">
               <div class="next-matchup d-flex">
                     {% if nextMatchup %}
                     <a class="text-center" href="/matchup/{{ nextMatchup.id }}">
@@ -46,7 +46,7 @@
                   </div>
                   <div class="info-wrapper">
                     <h6>age:&nbsp;</h6>
-                    <p class="fighter-age">age</p>
+                    <p class="fighter-age">{{ fighter.date_of_birth|toage }}</p>
                   </div>
                   <div class="info-wrapper">
                     <h6>record:&nbsp;</h6>
@@ -131,58 +131,12 @@
         <div class="fighter-grid-container">
             <!--list of 8 fighter attributes-->
           <div class="fighter-attrib-list" data-edit-mode-enabled="false">
-            <!-- <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
-              <div class="card-header">
-                <div class="state-container">
-                  <h4>Attribute-X</h4>
-                   <svg
-                    class="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="24"
-                      viewBox="0 -960 960 960"
-                      width="24">
-                      <path
-                        fill="white"
-                        d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
-                    </svg>
-                <div class="card-state">State X</div>
-                </div>
-                <div class="button-container">
-                  <button class="attrib-edit-button">edit</button>
-                  <button class="attrib-commit-button">commit</button>
-                </div>
-              </div>
-              <div class="card-body d-flex flex-column">
-                  <div class="attrib-option d-flex" data-option-state="positive">
-                    <h5 class="mx-0">Option-0</h5>
-                    <p class="attrib-description">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit eos unde, qui numquam reiciendis voluptate sint accusamus tempora ullam pariatur, quod distinctio neque veritatis, perferendis quidem. Totam expedita ad accusamus!
-                    </p>
-                  </div>
-                  <div class="attrib-option" data-option-state="neutral">
-                    Option 1
-                  </div>
-                  <div class="attrib-option" data-option-state="negative">
-                    Option 2
-                  </div>
-              </div>
-              <div class="card-footer">
-                <div class="attrib-option-description" data-option-state="positive">
-                  <p>Option 0 description</p>
-                </div>
-                <div class="attrib-option-description" data-option-state="neutral">
-                  <p>Option 1 description</p>
-                </div>
-                <div class="attrib-option-description" data-option-state="negative">
-                  <p>Option 2 description</p>
-                </div>
-              </div>
-            </div> -->
-            {% for attribVal in assessment2.attributes %}
-                <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value }}" data-attrib-name="{{ attrib_name }}">
+            {% for attrVal in attributes %}
+            {% with attrName=attrVal.attribute.name attrState=attrVal.get_value_display|lower %}
+                <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrState }}" data-attrib-name="{{ attrName|put_scores }}">
                   <div class="card-header">
                     <div class="state-container">
-                      <h4>{{ attrib_name|rmscores }}</h4>
+                      <h4>{{ attrName }}</h4>
                        <svg
                         class="arrow"
                           xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +147,7 @@
                             fill="white"
                             d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
                         </svg>
-                    <div class="card-state">{{ attrib_value }}</div>
+                    <div class="card-state">{{ attrVal.value_label }}</div>
                     </div>
                     <div class="button-container">
                       <button class="attrib-edit-button">edit</button>
@@ -202,31 +156,26 @@
                   </div>
                   <div class="card-body">
                     <!--attribute state options container-->
-                      <div class="attrib-option" data-option-state="positive" {% if attrib_value == "positive" %} selected {% endif %}>
-                          <h5 class="option">Option 0</h5>
-                          <p class="description"></p>
-                      </div>
-                      {% if attrib_name != 'grappling_offense' and attrib_name != 'grappling_defense' %}
-                      <div class="attrib-option" data-option-state="neutral" {% if attrib_value == "neutral" %}selected{% endif %}>
-                        <h5 class="option">Option 0</h5>
-                        <p class="description"></p>
+                    {% for attrVal0 in attrMap|lookup:attrName  %}
+                      {% if attrVal0.attribute.name == 'grappling offense' and attrVal0.value == 2 or  attrVal0.attribute.name == 'grappling defense' and attrVal0.value == 2  %}
+                        <!--ignore-->
+                      {% else %}
+                      <div class="attrib-option" data-option-state="{{attrVal0.get_value_display|lower}}" {% if attrVal0.value == attrVal.value %} selected {% endif %}>
+                          <h5 class="option">{{ attrVal0.value_label }}</h5>
+                          <p class="description">{{ attrVal0.description }}</p>
                       </div>
                       {% endif %}
-                      <div class="attrib-option" data-option-state="negative" {% if attrib_value == "negative" %}selected{% endif %} >
-                        <h5 class="option">Option 0</h5>
-                        <p class="description"></p>
-                      </div>
-                      <div class="attrib-option" data-option-state="untested" {% if attrib_value == "untested" %}selected{% endif %} >
-                        <h5 class="option">Option 0</h5>
-                        <p class="description"></p> 
-                      </div>
+                     {% endfor %}
+                      
                   </div>
                   <div class="card-footer">
-                    <div class="card-state-description" data-option-state="{{ attrib_value }}">
-                      <p>Option 0 description</p>
+                    <div class="card-state-description" data-option-state="{{ attrState }}">
+                      <p>{{ attrVal.description }}</p>
                     </div>
                   </div>
                 </div>
+            
+            {% endwith %}
             {% endfor %}
             
           </div>
@@ -405,7 +354,7 @@
               case "weight_class":
                 //fighter-weight
                 document.querySelector('.fighter-weight').textContent = data.weight_class.replace("_"," ");
-                break;
+                break; 
               case "img_link":
                 //fighter-image
                 if (data.img_link != null && data.img_link != ""){
@@ -600,59 +549,10 @@
       const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
       const fighter_data = {{ fighterjson|safe }};//contains fighter bio info
       const assessment_id = {{ assessment.id }};
-      const assessment_data = {
-        id: {{ assessment.id }},
-        head_movement: '{{ assessment.get_head_movement_display }}',
-        gas_tank: '{{ assessment.get_gas_tank_display }}',
-        aggression: '{{ assessment.get_aggression_display }}',
-        striking: '{{ assessment.get_striking_display }}',
-        desire_to_win: '{{ assessment.get_desire_to_win_display }}',
-        chinny: '{{ assessment.get_chinny_display }}',
-        grappling_offense: '{{ assessment.get_grappling_offense_display }}',
-        grappling_defense: '{{ assessment.get_grappling_defense_display }}',
-      };
+      const assessment_data = {};
       // console.log(Cookies.get('csrftoken'));
       //set a cookie for the assessment_id so that i know which assessment was viewed last
       document.cookie = `assessment_id=${assessment_id};SameSite=strict;path=/;max-age=31536000`;
-      //print all cookies
-      
-      for (key in attribInfoMap){
-        //grab attrib-card
-        let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
-        // console.log(key);
-        let cardState = attribCard.querySelector('.card-state');
-        cardState.textContent = attribInfoMap[key][assessment_data[key]].state;
-        attribCard.querySelectorAll('.attrib-option').forEach((attribOption)=>{
-          //grab option state
-          let optionState = attribOption.getAttribute('data-option-state');
-          attribOption.querySelector('.option').textContent = attribInfoMap[key][optionState].state;
-          // console.log(key,optionState,attribInfoMap[key][optionState].description);
-          attribOption.querySelector('.description').textContent = attribInfoMap[key][optionState].description;
-        });
-      }
-
-      //for every key in assessment data
-      for (key in assessment_data){
-        if (key == 'id'){
-          continue;
-        }
-        if (assessment_data[key] == null){
-          assessment_data[key] = 'untested';
-        }
-        //grab attrib-card
-        let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
-        //grab card description
-        // console.log(key,assessment_data[key]);
-        let cardDescription = attribCard.querySelector('.card-state-description p');
-        cardDescription.textContent = attribInfoMap[key][assessment_data[key]].description;
-      }
-
-      //reorder attrib-cards to match attribCardOrder
-      let attribList = document.querySelector('.fighter-attrib-list');
-      attribCardOrder.forEach((attribName)=>{
-        let attribCard = document.querySelector(`[data-attrib-name="${attribName}"]`);
-        attribList.appendChild(attribCard);
-      });
 
       //grab content from note-editor and send it to the server
       //update the notes-list with the new note

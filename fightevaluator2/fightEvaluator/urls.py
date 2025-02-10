@@ -33,6 +33,7 @@ urlpatterns = [
 
 
     path('assessment/<int:fighterId>',views.assessment_index, name='assessment'),#working
+    path('assessment2/<int:pk>',views.Assessment2DetailView.as_view(), name='assessment'),#working
     path('assessment/update',views.update_assessment, name='update_assessment'),#working
 
     path('notes/create-note',views.create_note, name='create_note'),#working

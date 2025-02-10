@@ -11,9 +11,13 @@ class Assessment2(models.Model):
 
 class Attribute(models.Model):
     name = models.CharField(max_length=128)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ["-order"]
 
 class AttributeValue(models.Model):
     class ValueChoices(models.IntegerChoices):
@@ -26,7 +30,8 @@ class AttributeValue(models.Model):
     value = models.IntegerField(default=ValueChoices.UNTESTED,choices=ValueChoices.choices)
     value_label = models.CharField(max_length=128)
     description = models.CharField(max_length=1024)
+    
 
     def __str__(self):
-        return self.attribute.__str__() +"|"+ self.value_label
+        return self.attribute.name +"|"+ self.value_label
 

@@ -12,7 +12,7 @@ class AssessmentAdmin(admin.ModelAdmin):
             result.append(attribM.__str__())
         return result
     filter_horizontal = ["attributes"]
-    list_display = ["fighter",mAttributes]
+    list_display = ["id","fighter",mAttributes]
     autocomplete_fields = ["fighter"]
 
 @admin.register(Attribute)

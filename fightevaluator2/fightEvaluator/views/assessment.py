@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 from django.views.decorators.http import require_GET,require_http_methods
 from django.views.generic import TemplateView,DetailView
 
-from ..models import MatchUp,Fighter,Assessment,Note,WeightClass,Stance,Assessment2
+from ..models import MatchUp,Fighter,Assessment,Note,Assessment2, Attribute, AttributeValue
 from ..forms import *
 import json
 from .fighter import getFighterJSON
@@ -37,11 +37,24 @@ class Assessment2DetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        fighter = self.object
-        context['notes'] = Note.objects.filter(assessment2=self.object).order_by('-createdAt')
-        context['next_matchup'] = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)
-                                    ).order_by('event_date'
-                                               ).last()
+        fighter = self.object.fighter
+        oldAssessment = Assessment.objects.get(fighter=fighter)
+        context['fighter'] = fighter
+        context['notes'] = Note.objects.filter(assessment=oldAssessment).order_by('-createdAt')
+        context['nextMatchup'] = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('event__date').last()
+        context['attributes'] = self.object.attributes.all().order_by('-attribute__order')
+        
+        attrMap = {}
+        allAttributes = AttributeValue.objects.all().order_by("-value")
+        
+        for attr in allAttributes:
+            name = attr.attribute.name
+            # print(name)
+            if name not in attrMap:
+                attrMap[name] = []
+            attrMap[name].append(attr) 
+
+        context['attrMap'] = attrMap
         return context
     
 """

@@ -7,6 +7,10 @@ def rmscores(value: str):
     return value.replace('_',' ')
 
 @register.filter
+def put_scores(value:str):
+    return value.replace(' ','_')
+
+@register.filter
 def toage(value: datetime.date):
     if not value:
         return ""
@@ -21,6 +25,9 @@ def height_str(value: int):
         return None
     return f'{value // 12}\'{value % 12}'
 
+@register.filter
+def lookup(dict,key):
+    return dict[key]
 
 @register.filter
 def month_num_to_name(monthNumber):
