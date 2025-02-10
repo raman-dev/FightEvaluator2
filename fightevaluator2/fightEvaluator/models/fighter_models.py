@@ -3,6 +3,7 @@ from .qualifiers_and_choices import *
 
 class Note(models.Model):
     assessment = models.ForeignKey('Assessment',on_delete=models.CASCADE)
+    assessment2 = models.ForeignKey('Assessment2',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
     data = models.CharField(null=True,blank=True,max_length=256)
     tag = models.IntegerField(default=AttributeQualifier.NEUTRAL,choices=AttributeQualifier)
     createdAt = models.DateTimeField(auto_now_add=True)

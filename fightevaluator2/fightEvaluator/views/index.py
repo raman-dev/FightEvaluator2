@@ -150,6 +150,14 @@ class FightEventListView(ListView):
 class FightEventDetailView(DetailView):
     model = FightEvent
 
+    def get_object(self, queryset = None):
+        # print('PK_URL_KWARG',self.pk_url_kwarg)
+        # print(type(self.kwargs))
+        if self.pk_url_kwarg not in self.kwargs: 
+            pk = FightEvent.objects.all().first().pk
+            self.kwargs[self.pk_url_kwarg] = pk
+        return super().get_object(queryset)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = self.object

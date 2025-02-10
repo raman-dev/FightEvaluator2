@@ -3,9 +3,9 @@ from django.http import JsonResponse,Http404
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_GET,require_http_methods
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,DetailView
 
-from ..models import MatchUp,Fighter,Assessment,Note,WeightClass,Stance
+from ..models import MatchUp,Fighter,Assessment,Note,WeightClass,Stance,Assessment2
 from ..forms import *
 import json
 from .fighter import getFighterJSON
@@ -32,6 +32,18 @@ def assessment_index(request,fighterId):
 
     return render(request,"fightEvaluator/assessment2.html",context)
 
+class Assessment2DetailView(DetailView):
+    model = Assessment2
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fighter = self.object
+        context['notes'] = Note.objects.filter(assessment2=self.object).order_by('-createdAt')
+        context['next_matchup'] = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)
+                                    ).order_by('event_date'
+                                               ).last()
+        return context
+    
 """
 
     class MyView(View):

@@ -2,6 +2,33 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
+
+@admin.register(Assessment2)
+class AssessmentAdmin(admin.ModelAdmin):
+    @admin.display
+    def mAttributes(self):
+        result = []
+        for attribM in self.attributes.all():
+            result.append(attribM.__str__())
+        return result
+    filter_horizontal = ["attributes"]
+    list_display = ["fighter",mAttributes]
+    autocomplete_fields = ["fighter"]
+
+@admin.register(Attribute)
+class AttributeAdmin(admin.ModelAdmin):
+
+    @admin.display(description="Attribute possible values")
+    def attrib_values(self):
+        # result = []
+        return list(AttributeValue.objects.filter(attribute=self).order_by("-value"))
+        # return result
+    list_display = ["name",attrib_values]
+
+@admin.register(AttributeValue)
+class AttributeValueAdmin(admin.ModelAdmin):
+    list_display = ["attribute","value_label","description","value"]
+
 @admin.register(FightEvent)
 class FightEventAdmin(admin.ModelAdmin):
     list_display = ["title","date","location","link","id"]

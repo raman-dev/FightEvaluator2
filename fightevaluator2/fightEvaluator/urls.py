@@ -3,8 +3,8 @@ from . import views
 from django.http import JsonResponse,HttpResponse
 
 
-
 urlpatterns = [
+    # path('', views.FightEventDetailView.as_view(), name='index'),
     path('', views.index, name='index'),
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
     # path('mf-test',views.modelformfactory_test)

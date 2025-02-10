@@ -1,0 +1,739 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static  'fightEvaluator/styles/assessment_styles.css' %}" />
+{% endblock %}
+{% block title %}Fighter Assessment: {{ fighter.name }}{% endblock %}
+
+{% block content %}
+    {% include 'fightEvaluator/navbar.html' %}
+    <div class="main-container">
+      <div class="content-container">
+        <div class="fighter-info-container">
+          <div class="fighter-card">
+            <div class="img-wrapper">
+              <img class="fighter-image" src={% if fighter.img_link %}"{{fighter.img_link}}"{% else %}"{% static 'fightEvaluator/media/sample_150.png' %}"{% endif %}  alt="">
+              <div class="next-matchup d-flex">
+                    {% if nextMatchup %}
+                    <a class="text-center" href="/matchup/{{ nextMatchup.id }}">
+                      <p class="m-0">{{ nextMatchup.fighter_a.last_name }} vs {{ nextMatchup.fighter_b.last_name }}</p>
+                    </a>
+                    {% else %}
+                    <a href="#">
+                      no upcoming matchup
+                    {% endif %}
+                    </a>
+              </div>
+            </div>
+            <div class="content-wrapper">
+              <div class="card-content">
+                <div class="card-header">
+                  <h2 class="fighter-name">
+                    <!-- {{ fighter.first_name }} {{ fighter.last_name }} -->
+                    <span id="first_name">{{ fighter.first_name }}</span>&nbsp; 
+                    <span id="last_name">{{ fighter.last_name }}</span>
+                  </h2>
+                  <div class="info-wrapper">
+                    <p class="fighter-weight" id="weight_class">{{ fighter.weight_class|rmscores }}</p>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="info-wrapper">
+                    <h6>height:&nbsp;</h6>
+                    <p class="fighter-height">{{ fighter.height|height_str }}</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>age:&nbsp;</h6>
+                    <p class="fighter-age">age</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>record:&nbsp;</h6>
+                    <p class="fighter-record">
+                      <span id="wins">{{ fighter.wins }}</span>&#45;<span id="losses">{{ fighter.losses }}</span id="draws">&#45;<span id="draws">{{ fighter.draws }}</span>
+                    </p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>reach:&nbsp;</h6>
+                    <p class="fighter-reach" id="reach">{{ fighter.reach }}</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <h6>stance:&nbsp;</h6>
+                    <p class="fighter-stance" id="stance">{{ fighter.stance }}</p>
+                  </div>
+                  <div class="info-wrapper">
+                    <button class="event-link-btn btn btn-outline-info" id="data_api_link" data-url="{{ fighter.data_api_link|default_if_none:""}}" style="width: 140px;">
+                      <svg id="tapology-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 748 117">
+                        <g stroke="none" stroke-width="1" fill="none">
+                          <g transform="translate(373.500000, 58.500000) scale(1, -1) translate(-373.500000, -58.500000) translate(-1.000000, -1.000000)" fill="rgb(222, 226, 230)">
+                            <g transform="translate(0.000000, 0.150000)">
+                              <g transform="translate(64.657000, 1.170000)">
+                                <path d="M0,8.75 C0,4.18 3.70625,0.475 8.275,0.475 L66.73125,0.475 C71.30125,0.475 75.005,4.18 75.005,8.75 L75.005,23.085 C75.005,27.65625 71.30125,31.36 66.73125,31.36 L8.275,31.36 C3.70625,31.36 0,27.65625 0,23.085 L0,8.75 Z"></path>
+                              </g>
+                              <g transform="translate(106.999500, 35.854500)">
+                                <path d="M8.75,80 C3.91625,80 0,76.0825 0,71.24875 L0,9.42625 C0,4.5925 3.91625,0.675 8.75,0.675 L23.91125,0.675 C28.74375,0.675 32.6625,4.5925 32.6625,9.42625 L32.6625,71.24875 C32.6625,76.0825 28.74375,80 23.91125,80 L8.75,80 Z"></path>
+                              </g>
+                              <g transform="translate(69.086875, 35.854500)">
+                                <path d="M10,80 C5.16625,80 1.24875,76.0825 1.24875,71.24875 L1.24875,9.42625 C1.24875,4.5925 5.16625,0.675 10,0.675 L25.16125,0.675 C29.995,0.675 33.9125,4.5925 33.9125,9.42625 L33.9125,71.24875 C33.9125,76.0825 29.995,80 25.16125,80 L10,80 Z"></path>
+                              </g>
+                              <g transform="translate(32.424375, 35.854500)">
+                                <path d="M10,80 C5.16625,80 1.2475,76.0825 1.2475,71.24875 L1.2475,9.42625 C1.2475,4.5925 5.16625,0.675 10,0.675 L25.16,0.675 C29.99375,0.675 33.91125,4.5925 33.91125,9.42625 L33.91125,71.24875 C33.91125,76.0825 29.99375,80 25.16,80 L10,80 Z"></path>
+                              </g>
+                              <g transform="translate(0.406500, 45.979625)">
+                                <path d="M8.75,68.75 C4.60125,68.75 1.24125,65.38875 1.24125,61.2425 L1.24125,8.1975 C1.24125,4.05 4.60125,0.69 8.75,0.69 L21.7575,0.69 C25.90375,0.69 29.26625,4.05 29.26625,8.1975 L29.26625,61.2425 C29.26625,65.38875 25.90375,68.75 21.75625,68.75 L8.75,68.75 Z"></path>
+                              </g>
+                            </g>
+                            <g transform="translate(150.000000, 31.986626)">
+                              <g transform="translate(0.780000, 2.769750)">
+                                <polygon points="82.5 81.25 0.39 81.25 0.39 56.4 26.13375 56.4 26.13375 0.71 56.8575 0.71 56.8575 56.4 82.5 56.4"></polygon>
+                              </g>
+                              <g transform="translate(58.238500, 2.448125)">
+                                <path d="M42.5,31.25 L48.76625,51.27 L55.1,31.25 L42.5,31.25 Z M95.195,4.1075 L64.6625,81.57125 L32.94625,81.57125 L1.20375,1.03375 L32.76375,1.03375 L36.51,12.3725 L61.21625,12.3725 L65.0625,1.03375 L96.40625,1.03375 L95.195,4.1075 L95.195,4.1075 Z"></path>
+                              </g>
+                              <g transform="translate(148.197000, 2.592750)">
+                                <path d="M41.25,48.75 C40.085,47.715 38.04,47.00125 34.83375,47.00375 L31.21125,47.00375 L31.21125,60.82875 L34.93375,60.82875 C38.10625,60.82875 40.13,60.12375 41.27625,59.105 C42.415,58.095 43.09375,56.60625 43.1125,53.96625 C43.09375,51.29125 42.40625,49.775 41.25,48.75 M64.41,74.84 C58.90625,79.30375 51.61375,81.4325 42.83375,81.42625 L0.3875,81.42625 L0.3875,0.8875 L31.21125,0.8875 L31.21125,26.3125 C43.83375,26.43125 52.62125,27.39125 58.03625,29.49625 C68.07375,33.3 73.3475,42.13625 73.23125,54.1675 C73.26125,62.86625 70.3175,70.0125 64.41,74.84"></path>
+                              </g>
+                              <g transform="translate(218.532750, 1.073000)">
+                                <path d="M52.5,32.5 C50.4775,30.07375 47.63375,28.80875 43.215,28.7775 C39.10875,28.81625 36.46875,30.0525 34.455,32.5725 C32.53625,34.94875 31.49625,38.14875 31.49,42.52625 C31.49625,47.04875 32.5475,50.32125 34.4325,52.6525 C36.52625,55.26125 39.275,56.53875 43.5175,56.5775 C47.61625,56.54375 50.36125,55.29375 52.51625,52.73625 C54.39625,50.4075 55.4375,47.2025 55.4425,42.83 C55.44125,38.1625 54.375,34.81375 52.5,32.5 M74.41875,73.22625 C66.42125,80.6725 56.06875,84.3825 43.82125,84.365 C31.0625,84.38 20.47625,80.72875 12.525,73.33375 C4.265,65.67875 0.135,55.20375 0.16,42.52625 C0.135,29.97875 4.23375,19.60375 12.42125,12.0225 C20.37875,4.695 30.89125,1.0775 43.5175,1.0925 L43.61125,1.0925 C56.33875,1.0925 66.895,4.84 74.7875,12.39625 C82.74375,19.9675 86.695,30.41125 86.6725,43.1325 C86.6975,55.35875 82.5875,65.59 74.41875,73.22625"></path>
+                              </g>
+                              <g transform="translate(303.415500, 2.769750)">
+                                <polygon points="31.25 81.25 0.53 81.25 0.53 0.71 57.88 0.71 57.88 25.4625 31.25 25.4625"></polygon>
+                              </g>
+                              <g transform="translate(354.207750, 1.073625)">
+                                <path d="M52.5,32.5 C50.4725,30.0725 47.62875,28.8075 43.21125,28.7775 C39.105,28.815 36.46625,30.0525 34.4525,32.57125 C32.5325,34.9475 31.49625,38.1475 31.49,42.525 C31.49375,47.0475 32.545,50.32125 34.43,52.6525 C36.5225,55.2625 39.2725,56.53875 43.515,56.57625 C47.61375,56.54125 50.36,55.295 52.51375,52.735 C54.3925,50.40625 55.435,47.2025 55.44125,42.82875 L55.4425,42.82875 C55.4375,38.16125 54.37375,34.81375 52.5,32.5 M74.4175,73.225 C66.42,80.67125 56.06625,84.38125 43.82,84.3625 C31.06,84.37875 20.4725,80.72875 12.52375,73.335 C4.26125,65.67875 0.1325,55.20375 0.1575,42.525 C0.1325,29.97875 4.23,19.60375 12.42125,12.02125 C20.375,4.6925 30.89,1.07625 43.515,1.09 L43.5975,1.09 C56.32875,1.09 66.89125,4.8375 74.78625,12.39625 C82.74,19.9675 86.6925,30.40875 86.67,43.1325 C86.695,55.36 82.58375,65.59 74.4175,73.225"></path>
+                              </g>
+                              <g transform="translate(438.653625, 1.021125)">
+                                <path d="M42.5,30 L52.42125,30 L52.42125,26.945 C51.7175,26.44375 51.06125,25.83125 50.41625,25.12 C50.15,25.02875 49.25625,24.86625 47.99,24.88 C42.56,24.90875 38.81,26.48875 36.05875,29.585 C33.27125,32.76625 31.82375,36.92625 31.81125,42.47625 C31.82375,47.88375 33.2525,52.02375 36.0275,55.29 C39.01625,58.76625 42.76,60.4425 47.99,60.475 C53.175,60.46875 58.18,58.64625 63.2175,54.7675 L64.63,53.67625 L79.23625,65.635 L78.29125,67.28625 C75.11125,72.85625 70.49125,77.2125 64.6075,80.22125 C59.07625,83.02375 52.995,84.41875 46.47125,84.41625 C33.45375,84.4275 22.51375,80.86625 14.03,73.65375 C5.00875,65.96 0.44625,55.335 0.48,42.47625 C0.44625,29.82625 4.90125,19.37125 13.715,11.815 C22.04125,4.6125 32.77,1.04125 45.495,1.04125 L45.55625,1.04125 C57.685,1.03875 68.80125,3.615 78.79,8.7875 L80.0075,9.41625 L80.0075,50.19375 L42.5,50.19375 L42.5,30 Z"></path>
+                              </g>
+                              <g transform="translate(505.861875, 2.769750)">
+                                <polygon points="58.75 81.25 48.04125 60.815 37.0575 81.25 0.3 81.25 30.8275 35.88875 30.8275 0.7125 61.6575 0.7125 61.6575 35.485 92.49 81.25"></polygon>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </button>
+                    <script>
+                      document.querySelector(".event-link-btn").addEventListener("click",(event)=>{
+                          window.open(event.currentTarget.dataset.url,"_blank");
+                      });
+                    </script>
+                  </div>
+                </div> 
+              </div>
+              <div class="button-container">
+                <button class="bio-edit-button" onclick="onEditFighter(event)">edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fighter-grid-container">
+            <!--list of 8 fighter attributes-->
+          <div class="fighter-attrib-list" data-edit-mode-enabled="false">
+            <!-- <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="null">
+              <div class="card-header">
+                <div class="state-container">
+                  <h4>Attribute-X</h4>
+                   <svg
+                    class="arrow"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24"
+                      viewBox="0 -960 960 960"
+                      width="24">
+                      <path
+                        fill="white"
+                        d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                    </svg>
+                <div class="card-state">State X</div>
+                </div>
+                <div class="button-container">
+                  <button class="attrib-edit-button">edit</button>
+                  <button class="attrib-commit-button">commit</button>
+                </div>
+              </div>
+              <div class="card-body d-flex flex-column">
+                  <div class="attrib-option d-flex" data-option-state="positive">
+                    <h5 class="mx-0">Option-0</h5>
+                    <p class="attrib-description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit eos unde, qui numquam reiciendis voluptate sint accusamus tempora ullam pariatur, quod distinctio neque veritatis, perferendis quidem. Totam expedita ad accusamus!
+                    </p>
+                  </div>
+                  <div class="attrib-option" data-option-state="neutral">
+                    Option 1
+                  </div>
+                  <div class="attrib-option" data-option-state="negative">
+                    Option 2
+                  </div>
+              </div>
+              <div class="card-footer">
+                <div class="attrib-option-description" data-option-state="positive">
+                  <p>Option 0 description</p>
+                </div>
+                <div class="attrib-option-description" data-option-state="neutral">
+                  <p>Option 1 description</p>
+                </div>
+                <div class="attrib-option-description" data-option-state="negative">
+                  <p>Option 2 description</p>
+                </div>
+              </div>
+            </div> -->
+            {% for attribVal in assessment2.attributes %}
+                <div class="attrib-card" data-edit-mode-enabled="false" data-attrib-state="{{ attrib_value }}" data-attrib-name="{{ attrib_name }}">
+                  <div class="card-header">
+                    <div class="state-container">
+                      <h4>{{ attrib_name|rmscores }}</h4>
+                       <svg
+                        class="arrow"
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="24"
+                          viewBox="0 -960 960 960"
+                          width="24">
+                          <path
+                            fill="white"
+                            d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
+                        </svg>
+                    <div class="card-state">{{ attrib_value }}</div>
+                    </div>
+                    <div class="button-container">
+                      <button class="attrib-edit-button">edit</button>
+                      <button class="attrib-commit-button">commit</button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <!--attribute state options container-->
+                      <div class="attrib-option" data-option-state="positive" {% if attrib_value == "positive" %} selected {% endif %}>
+                          <h5 class="option">Option 0</h5>
+                          <p class="description"></p>
+                      </div>
+                      {% if attrib_name != 'grappling_offense' and attrib_name != 'grappling_defense' %}
+                      <div class="attrib-option" data-option-state="neutral" {% if attrib_value == "neutral" %}selected{% endif %}>
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p>
+                      </div>
+                      {% endif %}
+                      <div class="attrib-option" data-option-state="negative" {% if attrib_value == "negative" %}selected{% endif %} >
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p>
+                      </div>
+                      <div class="attrib-option" data-option-state="untested" {% if attrib_value == "untested" %}selected{% endif %} >
+                        <h5 class="option">Option 0</h5>
+                        <p class="description"></p> 
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                    <div class="card-state-description" data-option-state="{{ attrib_value }}">
+                      <p>Option 0 description</p>
+                    </div>
+                  </div>
+                </div>
+            {% endfor %}
+            
+          </div>
+          <!--additional notes and context info to consider about a particular fighter-->
+          <div class="fighter-notes list-group-item d-flex flex-column">
+            <!--list of text notes about a the fighter in jot note style-->
+            <div class="notes-title">
+              <h4>Notes - Things to consider about this fighter...</h4>
+            </div>
+            <!--unordered scrollable list of p tags wrapped in li-->
+            <!--textarea made with div and contenteditable -->
+            <div class="note-editor-container d-flex flex-column">
+              <div class="note-editor-actions">
+                <div class="action-wrapper">
+                  <button
+                  class="btn btn-success note-submit-btn"
+                  onclick="addNote(event)">
+                  submit
+                </button>
+                </div>
+                <div class="action-wrapper">
+                  <button class="btn btn-danger note-delete-btn disabled" onclick="deleteNote(event)">
+                    delete
+                  </button>
+                </div>
+
+              </div>
+              <div
+                class="note-editor align-self-center"
+                data-tag="NEUTRAL"
+                contenteditable="plaintext-only"></div>
+            </div>
+            <div class="notes-list align-self-center mt-4">
+              <ul class="dx-none">
+                {% for note in notes %}
+                <li class="note" data-note-id="{{ note.id }}" tabindex="100" data-tag="{{note.get_tag_display}}">
+                  <p>{{ note.data }}</p>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <!--modal containing matchup edit options-->
+    <div class="xmodal hide" >
+      <div class="xmodal-container bg-dark flex-column">
+        <div class="fighter-creator">
+          <!--form to create a fighter
+                  first name
+                  last name
+                  weight class
+                  height
+                  reach
+                  stance
+                  date_of_birth
+                  wins
+                  losses
+                  draws
+            -->
+          <h3 class="text-start mb-2">Edit Fighter</h3>
+          <form class="border rounded p-2">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col">
+                <label for="first_name" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name"
+                  placeholder="First Name" />
+              </div>
+              <div class="col">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" />
+              </div>
+              <div class="col">
+                <label for="date_of_birth" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
+                  placeholder="Date of Birth" />
+              </div>
+            </div>
+            <div class="row">    
+              <div class="col">
+                <label for="height" class="form-label">Height</label>
+                <input type="number" class="form-control" name="height" id="height" max="99" maxlength="2"
+                  placeholder="Height" />
+              </div>
+              <div class="col">
+                <label for="reach" class="form-label">Reach</label>
+                <input type="number" class="form-control" id="reach" name="reach" max="99" maxlength="2"
+                  placeholder="Reach" />
+              </div>
+            </div>
+            <div class="row record-edit justify-content-around">
+               <div class="col col-3">
+                <label for="wins" class="form-label ">Wins</label>
+                <input type="number" class="form-control" id="wins" name="wins" placeholder="Wins"/>  
+               </div>
+              <div class="col col-3">
+                <label for="losses" class="form-label ">Losses</label>
+                <input type="number" class="form-control" id="losses" name="losses" placeholder="Losses"/>
+              </div>
+              <div class="col col-3">
+                <label for="draws" class="form-label ">Draws</label>
+                <input type="number" class="form-control" id="draws" name="draws" placeholder="Draws"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="weight_class" class="form-label">Weight Class</label>
+                <select class="form-select" id="weight_class" name="weight_class">
+                  <option value="" selected>Choose...</option>
+                  <option value="flyweight">Flyweight</option>
+                  <option value="bantamweight">Bantamweight</option>
+                  <option value="featherweight">Featherweight</option>
+                  <option value="lightweight">Lightweight</option>
+                  <option value="welterweight">Welterweight</option>
+                  <option value="middleweight">Middleweight</option>
+                  <option value="light_heavyweight">Light Heavyweight</option>
+                  <option value="heavyweight">Heavyweight</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="stance" class="form-label">Stance</label>
+                <select class="form-select" id="stance" name="stance">
+                  <option value="" selected>Choose...</option>
+                  <option value="orthodox">Orthodox</option>
+                  <option value="southpaw">Southpaw</option>
+                  <option value="switch">Switch</option>
+                  <option value="open_stance">Open Stance</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <!--img-link-->
+                <label for="img_link" class="form-label">Image Link</label>
+                <input type="text" class="form-control img-link" id="img_link" name="img_link" placeholder="Image Link" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <!--img-link-->
+                <label for="data_api_link" class="form-label">Data Api Link</label>
+                <input type="text" class="form-control data-api-link" id="data_api_link" name="data_api_link" placeholder="Data Api Link" />
+              </div>
+            </div>
+            <div class="row">
+              <!--close button-->
+              <button class="btn btn-secondary my-2 w-auto" style="margin-left: auto;margin-right: 1rem;" onclick="mFighterEditor.hide()" type="button">Close</button>
+              <button class="btn btn-primary my-2 w-auto" style="margin-right: 1rem;" onclick="mFighterEditor.save()" type="button">Save Changes</button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{% static 'fightEvaluator/js/attribute-interaction.js' %}"></script>
+    <script src="{% static 'fightEvaluator/js/server.js' %}"></script>
+
+    <script>
+      const server = new Server({
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      });
+      function updateFighterBio(data){
+        for (key in data){
+          if (key == 'id' || key =='middle_name' || key=='nick_name') continue;
+          
+          switch (key){
+              case "weight_class":
+                //fighter-weight
+                document.querySelector('.fighter-weight').textContent = data.weight_class.replace("_"," ");
+                break;
+              case "img_link":
+                //fighter-image
+                if (data.img_link != null && data.img_link != ""){
+                  document.querySelector('.fighter-image').setAttribute('src',data.img_link);
+                }
+                break;
+              case "data_api_link":
+                document.querySelector(`.fighter-card button#${key}`).dataset.url=`${data.data_api_link}`;
+                break;
+              case "date_of_birth":
+                //fighter-age
+                document.querySelector('.fighter-age').textContent = dobToAge(data.date_of_birth);
+                break;
+              case "height":
+                //fighter-height height id is already taken
+                document.querySelector(`.fighter-card .fighter-${key}`).textContent = `${Math.floor(data.height / 12)}'${data.height % 12}`;
+                break;
+              default:
+                document.querySelector(`.fighter-card #${key}`).textContent = `${data[key]}`;
+            }
+          }
+      }
+
+      class FighterEditor{
+        constructor(editorElement,server){
+          this.editor = editorElement;
+          this.visible = false;
+          this.editor.querySelectorAll("[name]").forEach((inputElement) => {
+              //  console.log('editor.element',inputElement);
+              inputElement.addEventListener("input",(event)=>{
+                  let element = event.currentTarget;
+                  // console.log('changed added => ',element);
+                  element.classList.add('changed');//classList.add only adds non present classes into the classlist
+              });
+          });
+          this.server = server
+        }
+
+        save(){
+          let data = {}
+          let changed = this.editor.querySelectorAll("form .changed");
+          changed.forEach((element) => {
+              data[element.name] = element.value;
+          });
+          console.log('Changed data...',data);
+          this.server.update_fighter(data,this.onFighterUpdate,fighter_id);
+        }
+
+        onFighterUpdate(latestFighterData){
+          for (let key in latestFighterData){
+              fighter_data[key] = latestFighterData[key];
+          }
+          updateFighterBio(latestFighterData);
+        }
+
+        hide(){
+          //hide editor ui element
+          this.editor.classList.remove('show');
+          this.editor.classList.add('hide');
+          
+          document.querySelector('.bio-edit-button').classList.remove('active');
+          this.visible = false;
+          //reset input element changed states
+          this.editor.querySelectorAll("[name]").forEach((inputElement) => {
+            //  console.log('editor.element',inputElement);
+            inputElement.classList.remove('changed');
+         });
+        }
+
+        show(){
+          //show editor ui element
+          this.editor.classList.remove('hide');
+          this.editor.classList.add('show');
+          this.visible = true;
+
+          this.updateEditorForm();
+          let form = this.editor.querySelector("form");
+          let input_data = {};
+          let formData = new FormData(form);
+          for (let key of formData.keys()){
+            let data = formData.get(key).trim();
+            if (data == ""){
+              continue;
+            }
+            input_data[key] = formData.get(key).trim();
+            if (key == "first_name" || key == "last_name"){
+              input_data[key] = input_data[key].toLowerCase();
+            }
+          }
+          input_data['id'] = fighter_id;
+          //send fighter link update to server
+          // console.log(input_data);
+        }
+        updateEditorForm(){
+          //write values from fighter_data to the form
+          let form = this.editor.querySelector("form");
+          for (let key in fighter_data) {
+            if (key == "id" || fighter_data[key] == null || key=="nick_name" || key =="middle_name") {
+              continue;
+            }
+            let input = form.querySelector(`[name="${key}"]`);
+            input.value = fighter_data[key];
+          }
+        }
+      
+      }
+      
+      const editorElement = document.querySelector(".xmodal");
+      const mFighterEditor = new FighterEditor(editorElement,server);
+     
+    </script>
+    <script>
+      class NoteEditor {
+        constructor(noteEditorElement,noteListContainer,server) {
+          this.noteEditor = noteEditorElement;
+          this.noteListContainer = noteListContainer;
+          this.noteList = noteListContainer.querySelector("ul");
+          this.server = server;
+        }
+
+        showIfNonEmpty(){
+          if (this.noteList.children.length > 0){
+            this.noteList.classList.remove('dx-none');
+          }
+        }
+        
+        createNote(){
+          let noteText = this.noteEditor.textContent.trim();
+          let tag = this.noteEditor.dataset.tag;
+          this.server.send_note({
+            assessment_id:assessment_id,
+            tag:tag,
+            data:noteText},
+            this.onNoteCreated.bind(this));
+        }
+
+        deleteNote(){
+          let activeNote = this.noteList.querySelector('.active');
+          let noteId = parseInt(activeNote.getAttribute("data-note-id"));
+          this.server.remove_note(this.onNoteDeleted.bind(this),noteId);
+        }
+
+        onNoteCreated(noteData){
+          console.log('Note Created Callback...',noteData);
+          this.noteListContainer.classList.remove('dx-none');
+          //create a new li element with the noteText
+          let newNote = NoteEditor.createNoteElement(noteData.id,noteData.data);
+          newNote.addEventListener('click',onClickNote);
+          //append the new li element to the notes-list
+          this.noteList.classList.remove('dx-none');//if there are no notes, remove the d-none class
+          this.noteList.prepend(newNote);
+          this.clearEditor();
+        }
+
+        onNoteDeleted(data){
+          console.log('Delete Note Callback...',data);
+          this.noteList.querySelector('.active').remove();
+          //disable delete button
+          document.querySelector('.note-delete-btn').classList.add('disabled');
+        }
+
+        clearEditor(){
+          this.noteEditor.textContent = "";//remove all text from the noteEditor element
+        }
+
+        onNoteClick(currentNote){
+          let activeNote = this.noteList.querySelector('.active');
+          if (currentNote === activeNote){
+            activeNote.classList.remove('active');
+            document.querySelector('.note-delete-btn').classList.add('disabled');
+            return;
+          }
+          if (activeNote != null){
+            activeNote.classList.remove('active');
+          }
+          currentNote.classList.add('active');
+          document.querySelector('.note-delete-btn').classList.remove('disabled');
+        }
+
+        static createNoteElement(noteId,noteText){
+          return $(`<li class="note" data-note-id="${noteId}" tabindex="100" data-tag="neutral">
+                        <p>${noteText}</p>
+                    </li>`)[0];}
+      }
+      let noteEditor = document.querySelector(".note-editor");
+      let noteContainer = document.querySelector(".notes-list");
+      const mNoteEditor = new NoteEditor(noteEditor,noteContainer,server);
+
+    </script>
+    <script>
+      var editModeEnabled = false;
+      const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
+      const fighter_data = {{ fighterjson|safe }};//contains fighter bio info
+      const assessment_id = {{ assessment.id }};
+      const assessment_data = {
+        id: {{ assessment.id }},
+        head_movement: '{{ assessment.get_head_movement_display }}',
+        gas_tank: '{{ assessment.get_gas_tank_display }}',
+        aggression: '{{ assessment.get_aggression_display }}',
+        striking: '{{ assessment.get_striking_display }}',
+        desire_to_win: '{{ assessment.get_desire_to_win_display }}',
+        chinny: '{{ assessment.get_chinny_display }}',
+        grappling_offense: '{{ assessment.get_grappling_offense_display }}',
+        grappling_defense: '{{ assessment.get_grappling_defense_display }}',
+      };
+      // console.log(Cookies.get('csrftoken'));
+      //set a cookie for the assessment_id so that i know which assessment was viewed last
+      document.cookie = `assessment_id=${assessment_id};SameSite=strict;path=/;max-age=31536000`;
+      //print all cookies
+      
+      for (key in attribInfoMap){
+        //grab attrib-card
+        let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
+        // console.log(key);
+        let cardState = attribCard.querySelector('.card-state');
+        cardState.textContent = attribInfoMap[key][assessment_data[key]].state;
+        attribCard.querySelectorAll('.attrib-option').forEach((attribOption)=>{
+          //grab option state
+          let optionState = attribOption.getAttribute('data-option-state');
+          attribOption.querySelector('.option').textContent = attribInfoMap[key][optionState].state;
+          // console.log(key,optionState,attribInfoMap[key][optionState].description);
+          attribOption.querySelector('.description').textContent = attribInfoMap[key][optionState].description;
+        });
+      }
+
+      //for every key in assessment data
+      for (key in assessment_data){
+        if (key == 'id'){
+          continue;
+        }
+        if (assessment_data[key] == null){
+          assessment_data[key] = 'untested';
+        }
+        //grab attrib-card
+        let attribCard = document.querySelector(`[data-attrib-name="${key}"]`);
+        //grab card description
+        // console.log(key,assessment_data[key]);
+        let cardDescription = attribCard.querySelector('.card-state-description p');
+        cardDescription.textContent = attribInfoMap[key][assessment_data[key]].description;
+      }
+
+      //reorder attrib-cards to match attribCardOrder
+      let attribList = document.querySelector('.fighter-attrib-list');
+      attribCardOrder.forEach((attribName)=>{
+        let attribCard = document.querySelector(`[data-attrib-name="${attribName}"]`);
+        attribList.appendChild(attribCard);
+      });
+
+      //grab content from note-editor and send it to the server
+      //update the notes-list with the new note
+      function addNote(event){
+        mNoteEditor.createNote();
+      }
+      function deleteNote(event) {
+        mNoteEditor.deleteNote();
+      }
+
+      function dobToAge(dob) {
+        let today = new Date();
+        let birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age;
+      }
+
+     
+      let fighterAge = document.querySelector(".fighter-age");
+      fighterAge.textContent = dobToAge('{{ fighter.date_of_birth }}');
+      
+      let notesList = document.querySelector('.notes-list');
+      let notesListUl = document.querySelector(".notes-list ul");
+
+      mNoteEditor.showIfNonEmpty();
+
+      function onClickNote(event){
+        // console.log('note clicked');
+        let note = event.currentTarget;
+        mNoteEditor.onNoteClick(note);
+      }
+      
+      //on click a note make it active and enable delete button
+      for (const note of notesListUl.children){
+        note.addEventListener('click',onClickNote);
+      }
+
+      document.querySelector('.note-editor').addEventListener('input',(event)=>{
+        let editor = event.currentTarget;
+        let text = editor.innerHTML;
+        // console.log(text);
+        //search text for flag !positive,!negative
+        if (text.includes('!positive')){
+          editor.dataset.tag='POSITIVE';
+          text = text.replace("!positive","");
+          editor.innerHTML = text;
+        }
+        else if (text.includes('!negative')){
+          editor.dataset.tag='NEGATIVE';
+          text = text.replace("!negative","");
+          editor.innerHTML = text;
+        }else if (text.includes('!neutral')){
+          editor.dataset.tag='NEUTRAL';
+          text = text.replace("!neutral","");
+          editor.innerHTML = text;
+        }
+
+      });
+      
+    </script>
+    <script>
+      function onEditFighter(event){
+        event.currentTarget.classList.toggle('active');
+        mFighterEditor.show();
+      }
+      
+      let xmodal = document.querySelector(".xmodal");
+      //xmodal on click hide
+      xmodal.addEventListener("click", (event) => {
+        if (event.target == event.currentTarget){
+          // toggleXModal();
+          mFighterEditor.hide();
+        }
+      });
+      mFighterEditor.updateEditorForm();
+    
+    </script>
+   
+{% endblock %}
+
