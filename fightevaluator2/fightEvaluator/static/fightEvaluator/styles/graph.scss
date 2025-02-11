@@ -1,24 +1,65 @@
 .graph-container{
+    position: absolute;
     margin: auto;
-    width: 80%;
-    
 
-    ul.lines{
-        li.line{
-            width: fit-content;
-            
-            .line-text{
-                margin: 0.6rem;
-                p{
-                    margin: 0px;
-                }
-            }
-            
-        }
+    //position relative to parent
+    left: 50%;
+    top: 50%;
+    //move relative to element dimensions
+    transform: translate(-50%,-50%);
+    
+    width: 80%;
+    height: 80%;
+
+    opacity: 0;
+    pointer-events: none;
+    // background-color: blueviolet;
+
+    // .close-btn-wrapper{
+    //     // .close-btn{
+    //     // }
+    // }
+    &.enter {
+        animation: fadeInShrink 0.5s forwards;
+      }
+    
+    &.exit {
+        animation: fadeOutExpand 0.5s forwards;
     }
 
     .graph{
         width: 100%;
-        height: 400px;
+        height: 100%;
+
+        background-color: lavender;
     } 
+}
+
+.odds-result{
+    margin: auto;
+    max-width: 60%;
+}
+
+@keyframes fadeInShrink {
+    from {
+      opacity: 0;
+      transform: scale(1.2) translate(-50%,-50%);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translate(-50%,-50%);
+      pointer-events: all;
+    }
+  }
+  
+  @keyframes fadeOutExpand {
+    from {
+      opacity: 1;
+      transform: scale(1) translate(-50%,-50%);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.2) translate(-50%,-50%);
+      pointer-events: none;
+    }
 }

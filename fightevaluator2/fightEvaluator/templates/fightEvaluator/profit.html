@@ -38,20 +38,25 @@
                 </tbody>
             </table>
         </div>
-        <div class="odds-result d-flex justify-content-center my-1">
-            <div class="border d-flex p-1 ">            
-                <span class="p-0 m-0">Multiplier :&nbsp;</span>
-                <p class="odds-result-label m-0 p-0">1</p>
+        <div class="odds-result d-flex justify-content-between my-1">
+            <div class="line-wrapper d-flex">
+                <div class="border d-flex p-1 ">            
+                    <span class="p-0 m-0">Multiplier :&nbsp;</span>
+                    <p class="odds-result-label m-0 p-0">1</p>
+                </div>
+                <button class="btn btn-outline-primary mx-2" onclick="createLine(event)">line +</button>
             </div>
-
-            <div class="line"></div>
-            <button class="btn btn-outline-primary mx-2" onclick="createLine(event)">line +</button>
+            <button class="btn btn-info" onclick="showGraph(event)">show graph</button>
         </div>
         <div class="line-list">
         </div>
-        <div class="graph-container">
-            <div class="border graph" id="mGraph"></div>
+        
+    </div>
+    <div class="graph-container">
+        <div class="close-btn-wrapper d-flex justify-content-end">
+            <button class="close-btn btn btn-danger" onclick="hideGraph(event)">close</button>
         </div>
+        <div class="border graph" id="mGraph"></div>
     </div>
 
 {% endblock %}
@@ -119,6 +124,17 @@
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
 <script type="text/javascript">
+
+     function showGraph(event){
+        const graphContainer = document.querySelector(".graph-container");
+        graphContainer.classList.remove('exit');
+        graphContainer.classList.add('enter');
+     }
+     function hideGraph(event){
+        const graphContainer = document.querySelector(".graph-container");
+        graphContainer.classList.remove('enter');
+        graphContainer.classList.add('exit');
+     }
      // create an array with nodes
      const nodes = new vis.DataSet([
         // {id: 1, label: 'Node 1'},
@@ -144,13 +160,16 @@
     };
     const options = {
         // autoResize: false,
-        layout:{
-            hierarchical:true,
-            direction:"LR",
+        // layout:{
+            // hierarchical:{
+                // enabled:true,
+                // direction:"LR"
+            // },
+            // direction:"LR",
             // sortMethod: "directed" // Ensures hierarchical ordering
-        },
+        // },
         interaction:{
-            // dragNodes:false,
+            dragNodes:false,
         },
         edges:{
             arrows:'to'
@@ -167,6 +186,7 @@
         */
        nodeList.sort((a,b) => {return a.order - b.order});
        let prev = null;
+       let prevOdds = 1;
        for (let i = 0;i < nodeList.length;i++){
             const { order,name,odds } =  nodeList[i]; //destructure the object literal
             
@@ -182,10 +202,13 @@
             if (prev != null){
                 //create an edge between current and prev
                 edges.add({
-                    from: prev.id,to: node.id
+                    from: prev.id,
+                    to: node.id,
+                    label: `${odds}` 
                 });
             }
             prev = node;
+            prevOdds = odds;
        }
     }
 </script>
