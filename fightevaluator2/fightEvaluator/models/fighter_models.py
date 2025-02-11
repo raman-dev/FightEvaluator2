@@ -73,3 +73,27 @@ class Fighter(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
+
+
+class Stat(models.Model):
+    class StatTypes (models.TextChoices):
+        fight_outcome = "fight_outcome"
+        probability = "probability"
+        general = "general"
+
+    name = models.CharField(max_length=128)
+    label = models.CharField(default="",max_length=256)
+    type = models.CharField(choices=StatTypes.choices,default=None,blank=True,null=True,max_length=128)
+
+    # ratio = models.FloatField(default=0.0)
+    count = models.IntegerField(default=0)
+    total = models.IntegerField(default=-1)
+
+    @property
+    def ratio(self):
+        return self.count/self.total
+
+    def __str__(self):
+        if self.total == -1:
+            return "no quantities"
+        return self.name + "| Ratio : " + str(self.count) + "/" + str(self.total)# +" | Percentage: " + str(self.ratio)

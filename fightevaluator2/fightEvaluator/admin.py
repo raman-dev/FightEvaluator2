@@ -2,6 +2,9 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
+@admin.register(Stat)
+class StatAdmin(admin.ModelAdmin):
+    list_display = ["name","total","count","ratio","type"]
 
 @admin.register(Assessment2)
 class AssessmentAdmin(admin.ModelAdmin):

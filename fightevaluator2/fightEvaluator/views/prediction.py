@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.db.models import Avg,Count,Q
 
-from ..models import FightEvent,FightOutcome,Prediction,Event,Likelihood
+from ..models import FightEvent,FightOutcome,Prediction,Event,Likelihood,Stat
 
 from rich import print as rprint
 
@@ -119,6 +119,14 @@ def getStats():
         very_likely=Count('isCorrect',filter=Q(prediction__likelihood=Likelihood.VERY_LIKELY)),
         very_likely_correct=Count('isCorrect',filter=Q(isCorrect=True,prediction__likelihood=Likelihood.VERY_LIKELY)),
     )
+    """
+        name: fighter_wins
+        type = outcome
+        count: num
+        total: num + rest
+
+
+    """
     stats = {}
     stats['general']={}
     stats['general']['total_predictions']= data['correct'] + data['incorrect']
@@ -153,6 +161,7 @@ def getStats():
     """
         for every prediction_type get the corresponding ratio and accuracy
     """
+    
     for predictionEventType in Event:
         result = Prediction.objects.aggregate(
             total=Count('isCorrect',filter=Q(prediction__event=predictionEventType)),
@@ -179,6 +188,7 @@ def getStats():
             'ratio': f"{result['count']}/{result['total']}", 
             'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
         }
+    rprint(stats)
     return stats
 
 def stats(request):
