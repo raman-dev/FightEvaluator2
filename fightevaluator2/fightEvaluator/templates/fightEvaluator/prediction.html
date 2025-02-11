@@ -22,27 +22,32 @@
         <div class="prediction-table-container container-fluid py-2">
             
             <div class="stat-container container-fluid col col-md-12 col-lg-10 col-xl-8 col-xxl-6 my-4">
-                {% for k,v in stats.general.items %}
+                {% for stat in stats.general %}
                 <div class="general-stat-row row my-2" style="max-width: 42ch;">
                     <div class="row">
-                        <div class="col stat-label">{{k|rmscores}}</div>
-                        <div class="col"><strong>{{v}}</strong></div>
+                        <div class="col stat-label">Total Ratio</div>
+                        <div class="col"><strong>{{stat.count}}/{{stat.total}}</strong></div>
+                    </div>
+                    <div class="row">
+                        <div class="col stat-label">Accuracy</div>
+                        <div class="col"><strong>{{stat.ratio_percent}}</strong></div>
                     </div>
                 </div>
                 {% endfor %}
-                <div class="prediction-type-stats stats-row my-1">    
-                    {% for predictionType,typeStats in stats.predictionTypeStats.items %}
+                <div class="prediction-type-stats stats-row my-1">
+                    
+                    {% for stat in stats.fight_outcome %}
                     <div class="prediction-type-stat-container">
                         <div class="prediction-type-stat-label">
-                            <p>{{ predictionType|title }}</p>
+                            <p>{{ stat.label|title }}</p>
                         </div>
                         <div class="prediction-type-stat d-flex justify-content-between mt-auto">
-                            <span class="stat-label">ratio</span> <span class="stat-val"><strong>{{ typeStats.ratio }}</strong></span>
+                            <span class="stat-label">ratio</span> <span class="stat-val"><strong>{{ stat.count }}/{{ stat.total }}</strong></span>
                         </div>
                         <div class="prediction-type-stat d-flex justify-content-between">
-                            <span class="stat-label">accuracy</span><span class="stat-val"><strong>{{ typeStats.accuracy }}</strong></span>
+                            <span class="stat-label">accuracy</span><span class="stat-val"><strong>{{ stat.ratio_percent }}</strong></span>
                         </div>
-                    </div>
+                    </div>    
                     {% endfor %}
                 </div>
             </div>
@@ -85,10 +90,11 @@
                         </div>
                     </li>
                     {% for data in predictions %}
-                        <li tabindex="{{ forloop.counter0 }}" class="data-row my-2" data-prediction="{{data.prediction.predictionDisplay}}" data-result="{{data.isCorrect}}" data-likelihood="{{data.prediction.likelihood}}" data-event="{{ data.matchup.event.title }}" >
+                        {% with predictionDisplay=data.prediction.predictionDisplay  %}
+                        <li tabindex="{{ forloop.counter0 }}" class="data-row my-2" data-prediction="{{ predictionDisplay }}" data-result="{{data.isCorrect}}" data-likelihood="{{data.prediction.likelihood}}" data-event="{{ data.matchup.event.title }}" >
                             <div class="row">
                                 <div class="col col-4 d-flex align-items-center">{{data.matchup.title}}</div>
-                                <div class="col col-4 d-flex align-items-center">{{data.prediction.predictionDisplay}}</div>   
+                                <div class="col col-4 d-flex align-items-center">{{predictionDisplay}}</div>   
                                 <div class="col col-1 data-result d-flex align-items-center">
                                     <p  class="mx-auto {% if data.isCorrect %} data-correct {% elif data.isCorrect == False %} data-incorrect {% else %} data-tbd {% endif %}">
                                         {% if data.isCorrect == None %}
@@ -104,6 +110,7 @@
                                 </div>
                             </div>
                         </li>
+                        {% endwith %}
                     {% endfor %}
                 </ul>
                 

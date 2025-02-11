@@ -80,25 +80,22 @@ class MatchUp(models.Model):
             POSTPONED = "Postponed"
             UPCOMING = "Upcoming"
             NA = "N/A"
-
-    #  created_at = models.DateField(auto_now_add=True)
+     
+     #optional event 
+     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.CASCADE)#don't delete matchup if event is deleted
+     # created_at = models.DateField(auto_now_add=True)
      fighter_a = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighter_a",null=True)
      fighter_b = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighter_b",null=True)
      weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
      #optional number of rounds
      rounds = models.IntegerField(default=3, null=True,blank=True)
-     #optional date of bout
-     scheduled = models.DateField(default=None, null=True,blank=True)
-     #optional event 
-     event = models.ForeignKey('FightEvent',default=None, null=True,blank=True,on_delete=models.CASCADE)#don't delete matchup if event is deleted
+     
      #optional result
      #optional boolean isprelim
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
      outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
      inWatchList = models.BooleanField(null=True,blank=True)
      analysisComplete = models.BooleanField(null=True,blank=True,default=False)
-     fighter_a_references = models.IntegerField(default=0,null=True,blank=True)
-     fighter_b_references = models.IntegerField(default=0,null=True,blank=True)
 
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
@@ -108,6 +105,21 @@ class MatchUp(models.Model):
     
      def title_full(self) -> str:
           return self.fighter_a.name + " vs " + self.fighter_b.name
+
+
+# class MatchUpAnalysis(models.Model):
+#      class AnalysisStep(models.TextChoices):
+#           evaluate_fighterA = "Evaluate Fighter A"
+#           evaluate_fighterB = "Evaluate Fighter B"
+#           determine_outcomes = "Determine Outcomes"
+
+#      matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE)
+#      complete = models.BooleanField(default=False)
+     
+#      #how many steps are there 3 steps
+#      fighter_a_reference_count = models.IntegerField(default=0)
+#      fighter_b_reference_count = models.IntegerField(default=0)
+#      currentStep = models.CharField(choices=AnalysisStep.choices,default=AnalysisStep.evaluate_fighterA)
 
 
 class EventLikelihood(models.Model):

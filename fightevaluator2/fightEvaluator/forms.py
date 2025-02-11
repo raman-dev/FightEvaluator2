@@ -55,7 +55,7 @@ class FighterForm(ModelForm):
 class MatchUpFormMF(ModelForm):
     class Meta:
         model = MatchUp
-        fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','scheduled','inWatchList']
+        fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','inWatchList']
 
 class MatchUpUpdateForm(forms.Form):
     fighter_a_id = forms.IntegerField(label='Fighter A Id',required=False)
@@ -63,7 +63,7 @@ class MatchUpUpdateForm(forms.Form):
     weight_class = forms.CharField(label='Weight Class',max_length=100,required=False)
     rounds = forms.IntegerField(label='Rounds',initial=3,required=False)
 
-    scheduled = forms.DateField(label='Scheduled',initial=None,required=False)
+    # scheduled = forms.DateField(label='Scheduled',initial=None,required=False)
     event_id = forms.IntegerField(label='Event Id',initial=None,required=False)
     isprelim = forms.BooleanField(label='Is Prelim',initial=True,required=False)
     inWatchList = forms.BooleanField(label='In Watch List',required=False)
@@ -88,7 +88,7 @@ class MatchUpForm(forms.Form):
     weight_class = forms.CharField(label='Weight Class',max_length=100)
     rounds = forms.IntegerField(label='Rounds',initial=3)
 
-    scheduled = forms.DateField(label='Scheduled',initial=None,required=False)
+    # scheduled = forms.DateField(label='Scheduled',initial=None,required=False)
     event_id = forms.IntegerField(label='Event Id',initial=None,required=False)
     isprelim = forms.BooleanField(label='Is Prelim',initial=True,required=False)
 

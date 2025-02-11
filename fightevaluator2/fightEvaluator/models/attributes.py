@@ -1,14 +1,5 @@
 from django.db import models
 
-class Assessment2(models.Model):
-    #when the fighter is deleted the corresponding assessment is also deleted
-    fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
-    attributes = models.ManyToManyField('AttributeValue',default=None,blank=True)
-
-    def __str__(self):
-        return self.fighter.name
-
-
 class Attribute(models.Model):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)

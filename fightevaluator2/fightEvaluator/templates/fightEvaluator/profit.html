@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     {% for odds in oddsList %}
-                        <tr order="{{ forloop.counter0 }}" >
+                        <tr data-order="{{ forloop.counter0 }}" >
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
                             <td data-name="{{ odds.fighter_a }}" onclick="onClickOdds(event)" class="odds" data-odds="{{odds.mult_a}}"><p ><strong>{{odds.mult_a}} ({{ odds.odds_a }})</strong></p></td>
@@ -50,8 +50,7 @@
         <div class="line-list">
         </div>
         <div class="graph-container">
-            
-            <!-- <div class="border graph" id="mGraph"></div> -->
+            <div class="border graph" id="mGraph"></div>
         </div>
     </div>
 
@@ -119,22 +118,22 @@
 {% endif %}
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
-<!--script type="text/javascript">
+<script type="text/javascript">
      // create an array with nodes
      const nodes = new vis.DataSet([
-        {id: 1, label: 'Node 1'},
-        {id: 2, label: 'Node 2'},
-        {id: 3, label: 'Node 3'},
-        {id: 4, label: 'Node 4'},
-        {id: 5, label: 'Node 5'}
+        // {id: 1, label: 'Node 1'},
+        // {id: 2, label: 'Node 2'},
+        // {id: 3, label: 'Node 3'},
+        // {id: 4, label: 'Node 4'},
+        // {id: 5, label: 'Node 5'}
     ]);
      // create an array with edges
      const edges = new vis.DataSet([
-        {from: 1, to: 3,id:0},
-        {from: 1, to: 3,id:1},
-        {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5}
+        // {from: 1, to: 3,id:0},
+        // {from: 1, to: 3,id:1},
+        // {from: 1, to: 2},
+        // {from: 2, to: 4},
+        // {from: 2, to: 5}
     ]);
      // create a network
     const container = document.getElementById('mGraph');
@@ -146,10 +145,12 @@
     const options = {
         // autoResize: false,
         layout:{
-            hierarchical:true
+            hierarchical:true,
+            direction:"LR",
+            // sortMethod: "directed" // Ensures hierarchical ordering
         },
         interaction:{
-            dragNodes:false,
+            // dragNodes:false,
         },
         edges:{
             arrows:'to'
@@ -159,7 +160,36 @@
     // initialize your network!
     const network = new vis.Network(container, data, options);
 
-</script-->
+    function updateGraph(nodeList){
+        /*
+            graph can be changed by adding nodes to nodes list
+            and connected by adding edges to edges list
+        */
+       nodeList.sort((a,b) => {return a.order - b.order});
+       let prev = null;
+       for (let i = 0;i < nodeList.length;i++){
+            const { order,name,odds } =  nodeList[i]; //destructure the object literal
+            
+            let node = nodes.get(order);
+            if (node == undefined || node == null){
+                node = {
+                    id:order,
+                    label:name,
+                    value:odds,
+                };
+                nodes.add(node);
+            }
+            if (prev != null){
+                //create an edge between current and prev
+                edges.add({
+                    from: prev.id,to: node.id
+                });
+            }
+            prev = node;
+       }
+    }
+</script>
+
 <script>
     function updateMultiFunction(){
         const multis = [1];
@@ -251,9 +281,11 @@
             // let oddSelector = tr.dataset.selected;
             // let td_odds = tr.querySelector(`[data-name="${oddSelector}"]`);
             let tr = td_odds.parentElement;
+            let order = tr.dataset.order;
             let odds = parseFloat(td_odds.dataset.odds);
             let name = td_odds.dataset.name;
             nodeList.push({
+                order:order,
                 name:name,
                 odds:odds
             });
@@ -291,6 +323,7 @@
             })
         );
         lineUl.appendChild(lineElement);
+        updateGraph(nodeList);
     }
 
 

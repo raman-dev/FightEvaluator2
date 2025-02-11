@@ -4,7 +4,7 @@ from .models import *
 
 @admin.register(Stat)
 class StatAdmin(admin.ModelAdmin):
-    list_display = ["name","total","count","ratio","type"]
+    list_display = ["name","total","count","ratio_percent","type"]
 
 @admin.register(Assessment2)
 class AssessmentAdmin(admin.ModelAdmin):

@@ -11,6 +11,14 @@ class Note(models.Model):
     def __str__(self) -> str:
          return self.data + " | " + str(self.createdAt)
 
+class Assessment2(models.Model):
+    #when the fighter is deleted the corresponding assessment is also deleted
+    fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
+    attributes = models.ManyToManyField('AttributeValue',default=None,blank=True)
+
+    def __str__(self):
+        return self.fighter.name
+
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
@@ -85,13 +93,13 @@ class Stat(models.Model):
     label = models.CharField(default="",max_length=256)
     type = models.CharField(choices=StatTypes.choices,default=None,blank=True,null=True,max_length=128)
 
-    # ratio = models.FloatField(default=0.0)
+    ratio = models.FloatField(default=0.0)
     count = models.IntegerField(default=0)
     total = models.IntegerField(default=-1)
 
     @property
-    def ratio(self):
-        return self.count/self.total
+    def ratio_percent(self):
+        return str(round(100 * (self.ratio),2)) + "%"
 
     def __str__(self):
         if self.total == -1:
