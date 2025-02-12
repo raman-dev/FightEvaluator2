@@ -8,7 +8,8 @@ from django.views.generic import TemplateView,DetailView
 from ..models import MatchUp,Fighter,Assessment,Note,Assessment2, Attribute, AttributeValue
 from ..forms import *
 import json
-from .fighter import getFighterJSON
+
+from django.core.serializers import serialize
 
 @require_GET
 def assessment_index(request,fighterId): 
@@ -17,9 +18,7 @@ def assessment_index(request,fighterId):
     #order in latest note first
     notes = Note.objects.filter(assessment=assessment).order_by('-createdAt')
     nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('event__date').last()
-    fighterjson = getFighterJSON(fighter)
-    fighterjson = str(fighterjson)#need string for template writing
-    fighterjson = fighterjson.replace('None','null')
+    fighterjson = serialize("json",[fighter])
 
     context = {
         'fighter':fighter,

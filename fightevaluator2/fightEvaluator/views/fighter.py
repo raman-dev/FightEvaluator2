@@ -76,12 +76,3 @@ def update_fighter2(request,fighterId):
         print(form.errors)
         return JsonResponse({'success':False,'errors':form.errors},status=400)
 
-
-def getFighterJSON(fighter: Fighter):
-    fighterjson = model_to_dict(fighter)
-    if 'stance' in fighterjson and fighterjson['stance'] != None:
-        fighterjson['stance'] = fighterjson['stance'].replace(' ','_').lower()
-    fighterjson['weight_class'] = fighterjson['weight_class'].replace(' ','_').lower()
-    if fighterjson['date_of_birth'] != None:
-        fighterjson['date_of_birth'] = fighterjson['date_of_birth'].strftime('%Y-%m-%d')
-    return fighterjson

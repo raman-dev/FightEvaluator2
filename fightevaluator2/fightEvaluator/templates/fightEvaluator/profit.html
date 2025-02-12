@@ -164,17 +164,17 @@
     };
     const options = {
         // autoResize: false,
-        // layout:{
-            // hierarchical:{
-                // enabled:true,
-                // direction:"LR"
-            // },
-            // direction:"LR",
-            // sortMethod: "directed" // Ensures hierarchical ordering
-        // },
-        interaction:{
-            dragNodes:false,
+        layout:{
+            hierarchical:{
+                enabled:true,
+                // direction:"LR",
+                levelSeparation: 150,
+                nodeSpacing: 50,
+            },
         },
+        // interaction:{
+            // dragNodes:false,
+        // },
         edges:{
             arrows:'to'
         }
@@ -192,9 +192,9 @@
        let prev = null;
        let prevOdds = 1;
        for (let i = 0;i < nodeList.length;i++){
-            const { order,name,odds } =  nodeList[i]; //destructure the object literal
-            
-            let node = nodes.get(order);
+            let { order,name,odds } =  nodeList[i]; //destructure the object literal
+            odds = parseFloat(odds);
+            let node = nodes.get(order);    
             if (node == undefined || node == null){
                 node = {
                     id:order,
@@ -208,11 +208,11 @@
                 edges.add({
                     from: prev.id,
                     to: node.id,
-                    label: `${odds}` 
+                    label: `${(prevOdds * odds).toFixed(2)}` 
                 });
             }
             prev = node;
-            prevOdds = odds;
+            prevOdds *= odds;
        }
     }
 </script>

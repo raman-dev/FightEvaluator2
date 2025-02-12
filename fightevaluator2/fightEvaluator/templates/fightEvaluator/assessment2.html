@@ -551,8 +551,12 @@
     </script>
     <script>
       var editModeEnabled = false;
-      const fighter_id = {{ fighter.id }};//parseInt(window.location.href.split("/").pop());
-      const fighter_data = {{ fighterjson|safe }};//contains fighter bio info
+
+      //destructure serialized model
+      const { model, pk, fields} = {{ fighterjson|safe }}[0];
+      const fighter_id = pk;
+      const fighter_data = fields;
+
       const assessment_id = {{ assessment.id }};
       const assessment_data = {
         id: {{ assessment.id }},

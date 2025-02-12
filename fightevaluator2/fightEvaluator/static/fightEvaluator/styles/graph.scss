@@ -1,4 +1,4 @@
-$graph-in-duration: 0.3s;
+$graph-anim-duration: 0.3s;
 
 .graph-overlay{
   position: absolute;
@@ -16,6 +16,7 @@ $graph-in-duration: 0.3s;
 }
 
 .graph-container{
+    border: 1px solid black;
     margin: auto;
     
     width: 80%;
@@ -25,11 +26,11 @@ $graph-in-duration: 0.3s;
     pointer-events: none;
     //&.selector is equivalent to parent_selector.selector
     &.enter {
-        animation: fadeInShrink $graph-in-duration forwards;
+        animation: fadeInShrink $graph-anim-duration forwards;
       }
     
     &.exit {
-        animation: fadeOutExpand $graph-in-duration forwards;
+        animation: fadeOutExpand $graph-anim-duration forwards;
     }
 
     .graph{
