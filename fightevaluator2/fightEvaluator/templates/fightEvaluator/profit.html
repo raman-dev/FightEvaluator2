@@ -52,11 +52,15 @@
         </div>
         
     </div>
-    <div class="graph-container">
-        <div class="close-btn-wrapper d-flex justify-content-end">
-            <button class="close-btn btn btn-danger" onclick="hideGraph(event)">close</button>
+    
+
+    <div class="graph-overlay">
+        <div class="graph-container">
+            <div class="close-btn-wrapper d-flex justify-content-end">
+                <button class="close-btn btn btn-danger" onclick="hideGraph(event)">close</button>
+            </div>
+            <div class="border graph" id="mGraph"></div>
         </div>
-        <div class="border graph" id="mGraph"></div>
     </div>
 
 {% endblock %}
@@ -329,15 +333,9 @@
 
         for (let index = 0; index < nodeList.length; index++) {
             const data = nodeList[index];
-            // data['classList'] = ['list-group-item'];
             const nodeElement = createLineNode(data);
             lineElement.appendChild(nodeElement);
-            // if (index != nodeList.length - 1){
-            //     //add an arrow into the line
-            //     lineElement.appendChild(createNodeSeperator());
-            // }
         }
-        // lineElement.prepend(createNodeSeperator());
         lineElement.appendChild(
             createLineNode({
                 name:'Total',

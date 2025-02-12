@@ -1,19 +1,26 @@
-.graph-container {
+.graph-overlay {
   position: absolute;
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.graph-container {
   margin: auto;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: 80%;
   height: 80%;
   opacity: 0;
   pointer-events: none;
 }
 .graph-container.enter {
-  animation: fadeInShrink 0.5s forwards;
+  animation: fadeInShrink 0.3s forwards;
 }
 .graph-container.exit {
-  animation: fadeOutExpand 0.5s forwards;
+  animation: fadeOutExpand 0.3s forwards;
 }
 .graph-container .graph {
   width: 100%;
@@ -29,22 +36,22 @@
 @keyframes fadeInShrink {
   from {
     opacity: 0;
-    transform: scale(1.2) translate(-50%, -50%);
+    transform: scale(1.2);
   }
   to {
     opacity: 1;
-    transform: scale(1) translate(-50%, -50%);
+    transform: scale(1);
     pointer-events: all;
   }
 }
 @keyframes fadeOutExpand {
   from {
     opacity: 1;
-    transform: scale(1) translate(-50%, -50%);
+    transform: scale(1);
   }
   to {
     opacity: 0;
-    transform: scale(1.2) translate(-50%, -50%);
+    transform: scale(1.2);
     pointer-events: none;
   }
 }/*# sourceMappingURL=graph.css.map */
