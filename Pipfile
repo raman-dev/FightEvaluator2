@@ -13,9 +13,9 @@ pony = "*"
 sqlmodel = "*"
 jinja2 = "*"
 selenium = "*"
-django = "*"
 pyquery = "*"
 rich = "*"
+django = "*"
 
 [dev-packages]
 
