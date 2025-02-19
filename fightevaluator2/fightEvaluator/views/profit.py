@@ -39,6 +39,12 @@ def get_odds(request):
                     "mult_b": toMultiplier(ob),
                     "odds_a": oa,
                     "odds_b": ob,
+                    "xodds":{
+                        "odds_a": oa,
+                        "odds_b": ob,
+                        "odds_rounds_ge_one_half": -1,
+                        "odds_fight_does_not_go_the_distance": -1,
+                    }
                 }
             )
         return JsonResponse({"available":True,'oddsList':oddsListMap})
@@ -104,6 +110,12 @@ def profit_calculator(request):
                     "mult_b": toMultiplier(ob),
                     "odds_a": oa,
                     "odds_b": ob,
+                    "xodds":{
+                        "odds_a": oa,
+                        "odds_b": ob,
+                        "odds_rounds_ge_one_half": -1,
+                        "odds_fight_does_not_go_the_distance": -1,
+                    }
                 }
             )
-    return render(request, "fightEvaluator/profit.html", {"oddsList": oddsListMap})
+    return render(request, "fightEvaluator/profit.html", {"matchupOddsList": oddsListMap})

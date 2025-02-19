@@ -5,11 +5,13 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'fightEvaluator/styles/profit_styles.css' %}">
 <link rel="stylesheet" href="{% static 'fightEvaluator/styles/graph.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'fightEvaluator/vue_dist/profit.css' %}"> -->
 {% endblock %}
 {% block title %}Profit Calculator{% endblock %}
 
 {% block content %}
     {% include 'fightEvaluator/navbar.html' %}
+    <!-- <div id="app"></div> -->
     <div class="main-container">
         
         <div class="table-wrapper">
@@ -23,10 +25,11 @@
                     <th>fighter b</th>
                     <th>odds a</th>
                     <th>odds b</th>
-                    <!-- <th>Rounds > 1.5</th> -->
+                    <th>Rounds >= 1.5</th>
+                    <th>Fight Does Not Go The Distance</th>
                 </thead>
                 <tbody>
-                    {% for odds in oddsList %}
+                    {% for odds in matchUpOddsList %}
                         <tr data-order="{{ forloop.counter0 }}" >
                             <td><p>{{ odds.fighter_a}}</p></td>
                             <td><p>{{ odds.fighter_b }}</p></td>
@@ -34,9 +37,30 @@
                             <td data-name="{{ odds.fighter_b }}" class="odds" onclick="onClickOdds(event)" data-odds="{{odds.mult_b}}"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
                             <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                         </tr>
+                        <!-- <tr data-order="{{ forloop.counter0 }}" >
+                            <td><p>{{ odds.fighter_a}}</p></td>
+                            <td><p>{{ odds.fighter_b }}</p></td>
+                            {% for k,v in odds.xodds.items %}
+                                {% if k == "odds_a" or k == "odds_b" %}
+                                    <td data-name="{{ k }}" class="odds" onclick="onClickOdds(event)" data-odds=""><p ><strong>{{ v|odds_multi_str }}</strong></p></td>
+                                {% else %}
+                                    <td data-name="{{ k }}" class="odds" onclick="onClickOdds(event)" data-odds=""><p ><strong>{{ v }}</strong></p></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr> -->
                     {% endfor %}
                 </tbody>
             </table>
+
+            <!--
+                create vuejs sfc profit table
+                requirements
+                    - click on an outcome
+                    - select more than 1 outcome iff 
+                         not (fighter_a and fighter_b) or (1.5 or fight does not go the distance)
+
+                    output data on click line +
+            -->
         </div>
         <div class="odds-result d-flex justify-content-between my-1">
             <div class="line-wrapper d-flex">
@@ -66,6 +90,8 @@
 {% endblock %}
 
 {% block scripts %}
+
+<!-- <script type="module" src="{% static 'fightEvaluator/vue_dist/profit.bundle.js' %}" ></script> -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 {% if not oddsList %}

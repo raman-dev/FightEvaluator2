@@ -2,6 +2,22 @@ from django import template
 register = template.Library()
 from datetime import datetime
 
+
+
+def toMultiplier(odd):
+    if odd > 0:
+        return round(1 + odd / 100, 2)
+    return round(1 + 100 / abs(odd), 2)
+
+@register.filter
+def to_multi_str(odd:int) -> str:
+    return str(toMultiplier(odd))
+
+@register.filter
+def odds_multi_str(odd:int) -> str:
+    multi = str(toMultiplier(odd))
+    return multi + f'({odd})'
+
 @register.filter
 def rmscores(value: str):
     return value.replace('_',' ')
