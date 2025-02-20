@@ -106,20 +106,35 @@ class MatchUp(models.Model):
      def title_full(self) -> str:
           return self.fighter_a.name + " vs " + self.fighter_b.name
 
+"""
+class MatchUpAnalysis(models.Model):
+     class AnalysisStep(models.TextChoices):
+          evaluate_fighterA = "Evaluate Fighter A"
+          evaluate_fighterB = "Evaluate Fighter B"
+          determine_outcomes = "Determine Outcomes"
 
-# class MatchUpAnalysis(models.Model):
-#      class AnalysisStep(models.TextChoices):
-#           evaluate_fighterA = "Evaluate Fighter A"
-#           evaluate_fighterB = "Evaluate Fighter B"
-#           determine_outcomes = "Determine Outcomes"
-
-#      matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE)
-#      complete = models.BooleanField(default=False)
+     matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE)
+     complete = models.BooleanField(default=False)
      
-#      #how many steps are there 3 steps
-#      fighter_a_reference_count = models.IntegerField(default=0)
-#      fighter_b_reference_count = models.IntegerField(default=0)
-#      currentStep = models.CharField(choices=AnalysisStep.choices,default=AnalysisStep.evaluate_fighterA)
+     #how many steps are there 3 steps
+     fighter_a_reference_count = models.IntegerField(default=0)
+     fighter_b_reference_count = models.IntegerField(default=0)
+     currentStep = models.CharField(choices=AnalysisStep.choices,default=AnalysisStep.evaluate_fighterA)
+     
+
+"""
+class Prediction2(models.Model):
+     matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE) 
+     event = models.CharField(choices=Event.choices,max_length=128)
+     likelihood = models.IntegerField(default=Likelihood.NEUTRAL,choices=Likelihood.choices)
+     justification = models.CharField(max_length=1024)
+
+     correct = models.BooleanField(default=False)
+     
+class WinPrediction(Prediction2):
+     fighter = models.ForeignKey("Fighter",on_delete=models.CASCADE)
+     def __init__(self,*args,**kwargs):
+          self.kwargs['event'] = Event.WIN
 
 
 class EventLikelihood(models.Model):

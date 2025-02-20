@@ -35,7 +35,7 @@ class Server {
       .then((data)=>{
         callback(data);//
       });
-      post(Server.URLS.CREATE_NOTE,requestData,callback);
+      // post(Server.URLS.CREATE_NOTE,requestData,callback);
     }
 
     async remove_note(callback,noteId){

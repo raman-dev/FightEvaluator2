@@ -1,1 +1,16 @@
-{"url": "https://sportsbook.draftkings.com/leagues/mma/ufc", "odds": [["Modestas Bukauskas", "Raffael Cerqueira", "\u2212298", "+240"], ["Mansur Abdul-Malik", "Nick Klein", "\u2212950", "+575"], ["Ricky Simon", "Javid Basharat", "+240", "\u2212298"], ["Adam Fugitt", "Billy Ray Goff", "+225", "\u2212278"], ["Andre Fili", "Melquizael Costa", "+100", "\u2212120"], ["Nursulton Ruziboev", "Eric McConico", "\u2212270", "+220"], ["Alonzo Menifield", "Julius Walker", "\u2212218", "+180"], ["Ion Cutelaba", "Ibo Aslan", "+145", "\u2212175"], ["Jean Silva", "Melsik Baghdasaryan", "\u2212575", "+425"], ["Brendan Allen", "Anthony Hernandez", "+225", "\u2212278"], ["Henry Cejudo", "Song Yadong", "+230", "\u2212285"]]}
+{
+  "url": "https://sportsbook.draftkings.com/leagues/mma/ufc",
+  "odds": [
+    ["Modestas Bukauskas", "Raffael Cerqueira", "\u2212278", "+225"],
+    ["Nursulton Ruziboev", "Eric McConico", "\u2212290", "+235"],
+    ["Ricky Simon", "Javid Basharat", "+210", "\u2212258"],
+    ["Mansur Abdul-Malik", "Nick Klein", "\u22121050", "+600"],
+    ["Andre Fili", "Melquizael Costa", "\u2212105", "\u2212115"],
+    ["Ion Cutelaba", "Ibo Aslan", "+145", "\u2212175"],
+    ["Alonzo Menifield", "Julius Walker", "\u2212238", "+195"],
+    ["Jean Silva", "Melsik Baghdasaryan", "\u2212535", "+400"],
+    ["Rob Font", "Jean Matsumoto", "+136", "\u2212162"],
+    ["Brendan Allen", "Anthony Hernandez", "+240", "\u2212298"],
+    ["Henry Cejudo", "Song Yadong", "+225", "\u2212278"]
+  ]
+}

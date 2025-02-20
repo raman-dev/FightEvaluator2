@@ -25,8 +25,8 @@
                     <th>fighter b</th>
                     <th>odds a</th>
                     <th>odds b</th>
-                    <th>Rounds >= 1.5</th>
-                    <th>Fight Does Not Go The Distance</th>
+                    <!-- <th>Rounds >= 1.5</th>
+                    <th>Fight Does Not Go The Distance</th> -->
                 </thead>
                 <tbody>
                     {% for odds in matchUpOddsList %}
@@ -37,17 +37,6 @@
                             <td data-name="{{ odds.fighter_b }}" class="odds" onclick="onClickOdds(event)" data-odds="{{odds.mult_b}}"><p ><strong>{{odds.mult_b}} ({{ odds.odds_b }})</strong></p></td>
                             <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                         </tr>
-                        <!-- <tr data-order="{{ forloop.counter0 }}" >
-                            <td><p>{{ odds.fighter_a}}</p></td>
-                            <td><p>{{ odds.fighter_b }}</p></td>
-                            {% for k,v in odds.xodds.items %}
-                                {% if k == "odds_a" or k == "odds_b" %}
-                                    <td data-name="{{ k }}" class="odds" onclick="onClickOdds(event)" data-odds=""><p ><strong>{{ v|odds_multi_str }}</strong></p></td>
-                                {% else %}
-                                    <td data-name="{{ k }}" class="odds" onclick="onClickOdds(event)" data-odds=""><p ><strong>{{ v }}</strong></p></td>
-                                {% endif %}
-                            {% endfor %}
-                        </tr> -->
                     {% endfor %}
                 </tbody>
             </table>
@@ -87,6 +76,15 @@
         </div>
     </div>
 
+    <template id="odds-row-template">
+        <tr data-order="" >
+            <td class="fighter-label"><p></p></td>
+            <td class="fighter-label"><p></p></td>
+            <td data-name="" class="odds" onclick="onClickOdds(event)"  data-odds=""><p><strong></strong></p></td>
+            <td data-name="" class="odds" onclick="onClickOdds(event)"  data-odds=""><p><strong><strong></p></td>
+        </tr>
+    </template>
+
 {% endblock %}
 
 {% block scripts %}
@@ -113,8 +111,8 @@
                 <tr>
                     <td><p>${odds.fighter_a}</p></td>
                     <td><p>${odds.fighter_b}</p></td>
-                    <td data-name="{{ odds.fighter_a }}" data-odds="{{odds.mult_a}}" onclick="onClickOdds(event)" class="odds"><p ><strong>${odds.mult_a} (${ odds.odds_a })</strong></p></td>
-                    <td data-name="{{ odds.fighter_b }}" data-odds="{{odds.mult_b}}" class="odds" onclick="onClickOdds(event)"><p ><strong>${odds.mult_b} (${ odds.odds_b })</strong></p></td>
+                    <td data-name="${ odds.fighter_a }" data-odds="${odds.mult_a}" class="odds" onclick="onClickOdds(event)" ><p ><strong>${odds.mult_a} (${ odds.odds_a })</strong></p></td>
+                    <td data-name="${ odds.fighter_b }" data-odds="${odds.mult_b}" class="odds" onclick="onClickOdds(event)"><p ><strong>${odds.mult_b} (${ odds.odds_b })</strong></p></td>
                     <!-- <td data-name="round-ge-one-half-odds" class="odds" onclick="onClickOdds(event)"><p ><strong>-200</strong></p></td> -->
                 </tr>
                 `)[0];
@@ -195,7 +193,7 @@
                 enabled:true,
                 // direction:"LR",
                 levelSeparation: 150,
-                nodeSpacing: 50,
+                nodeSpacing: 150,
             },
         },
         // interaction:{
