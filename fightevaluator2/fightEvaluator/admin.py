@@ -96,6 +96,18 @@ class NoteAdmin(admin.ModelAdmin):
         return obj.assessment.fighter.first_name.capitalize() + " " + obj.assessment.fighter.last_name.capitalize()
     list_display = [fighterName,"data","createdAt"]
 
+
+@admin.register(Prediction2)
+class Prediction2Admin(admin.ModelAdmin):
+    @admin.display(description="Fighter Name")
+    def fighterName(obj):
+        if not obj.fighter:
+            return "--"
+        return obj.fighter.first_name.capitalize() + " " + obj.fighter.last_name.capitalize()
+    
+    list_display = ["event","likelihood",fighterName,"matchup"]
+
+
 @admin.register(EventLikelihood)
 class EventLikelihoodAdmin(admin.ModelAdmin):
     @admin.display(description="Fighter Name")
@@ -142,3 +154,12 @@ class OddsDataStateAdmin(admin.ModelAdmin):
 @admin.register(FightEventDataState)
 class FightDataStateAdmin(admin.ModelAdmin):
     list_display = ["date","updating","staleOrEmpty"]
+
+
+# @admin.register(Prediction2)
+# class Prediction2Admin(admin.ModelAdmin):
+#     @admin.display
+#     def matchup_title(self):
+#         return self.matchup.title()
+#     list_display = [matchup_title,"event","likelihood","correct"]
+

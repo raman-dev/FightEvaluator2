@@ -95,6 +95,7 @@ class MatchUp(models.Model):
      isprelim = models.BooleanField(default=True,null=True,blank=True) 
      outcome = models.ForeignKey('FightOutcome',on_delete=models.DO_NOTHING,default=None,blank=True,null=True)
      inWatchList = models.BooleanField(null=True,blank=True)
+
      analysisComplete = models.BooleanField(null=True,blank=True,default=False)
 
      def __str__(self) -> str:
@@ -123,18 +124,18 @@ class MatchUpAnalysis(models.Model):
      
 
 """
-class Prediction2(models.Model):
-     matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE) 
-     event = models.CharField(choices=Event.choices,max_length=128)
-     likelihood = models.IntegerField(default=Likelihood.NEUTRAL,choices=Likelihood.choices)
-     justification = models.CharField(max_length=1024)
+# class Prediction2(models.Model):
+#      matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE) 
+#      event = models.CharField(choices=Event.choices,max_length=128)
+#      likelihood = models.IntegerField(default=Likelihood.NEUTRAL,choices=Likelihood.choices)
+#      justification = models.CharField(max_length=1024)
 
-     correct = models.BooleanField(default=False)
+#      correct = models.BooleanField(default=False)
      
-class WinPrediction(Prediction2):
-     fighter = models.ForeignKey("Fighter",on_delete=models.CASCADE)
-     def __init__(self,*args,**kwargs):
-          self.kwargs['event'] = Event.WIN
+# class WinPrediction(Prediction2):
+#      fighter = models.ForeignKey("Fighter",on_delete=models.CASCADE)
+#      def __init__(self,*args,**kwargs):
+#           self.kwargs['event'] = Event.WIN
 
 
 class EventLikelihood(models.Model):
@@ -157,6 +158,39 @@ class EventLikelihood(models.Model):
               return self.fighter.name + " " + str(self.event)
          return self.get_event_display()
 
+class Prediction2(models.Model):
+     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+
+     event = models.CharField(choices=Event.choices,max_length=256)
+     eventType = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
+     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
+     justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
+     
+     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
+
+     def __str__(self):
+          if self.fighter != None:
+               return self.fighter.name +" " + str(self.event) + " => " + self.get_likelihood_display()
+          return str(self.event) + "|" + self.get_likelihood_display()
+     
+     def predictionDisplay(self):
+          if self.fighter != None:
+               return self.fighter.name + " " + str(self.event)
+          return self.get_event_display()
+
+class Pick(models.Model):
+    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    prediction = models.ForeignKey('Prediction2',on_delete=models.CASCADE)
+    isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis
+    isCorrect = models.BooleanField(default=None,null=True,blank=True)
+
+    
+    def __str__(self):
+        #return what event is predicted and the likelihood
+        if self.prediction.fighter != None:
+             return self.prediction.fighter.name +", " + str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
+        return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
+
 #only 1 prediction per matchup
 class Prediction(models.Model):
 
@@ -164,7 +198,6 @@ class Prediction(models.Model):
     prediction = models.ForeignKey('EventLikelihood',on_delete=models.CASCADE)
     isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis
     isCorrect = models.BooleanField(default=None,null=True,blank=True)
-
 
     def __str__(self):
         #return what event is predicted and the likelihood
