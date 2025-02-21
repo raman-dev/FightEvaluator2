@@ -180,7 +180,7 @@ class Prediction2(models.Model):
 
 class Pick(models.Model):
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
-    prediction = models.ForeignKey('Prediction2',on_delete=models.CASCADE)
+    prediction = models.ForeignKey('Prediction2',on_delete=models.SET_NULL,default=None,null=True,blank=True)
     isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis
     isCorrect = models.BooleanField(default=None,null=True,blank=True)
 

@@ -179,6 +179,17 @@ def updateMatchUpEventLikelihood(request):
         })
     return JsonResponse({"success":"false","errors":eventLikelihoodForm.errors})
 
+# @require_http_methods(["PUT"])
+# def pickEvent(request,matchupId):
+#     inputBody = json.loads(request.body)
+#     matchup = get_object_or_404(MatchUp,id=matchupId)
+    
+#     #pick requires a matchup
+#     #and an event 
+#     
+#     return JsonResponse({'ok':True})
+
+
 @require_http_methods(["PUT"])
 def updateMatchUpEventPrediction(request):
     inputBody = json.loads(request.body)
@@ -204,13 +215,20 @@ def updateMatchUpEventPrediction(request):
             fighter = Fighter.objects.get(id=fighterId)
             eventLikelihood = eventLikelihood.filter(fighter=fighter).first()
             if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType, likelihood = Likelihood.NEUTRAL)
+                eventLikelihood = EventLikelihood(matchup=matchup,
+                                                  fighter=fighter,
+                                                  event=Event[eventType],
+                                                  eventType=eventType, 
+                                                  likelihood = Likelihood.NEUTRAL)
                 eventLikelihood.save()
         else:
             #general event
             eventLikelihood = eventLikelihood.first()
             if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType,likelihood=Likelihood.NEUTRAL)
+                eventLikelihood = EventLikelihood(matchup=matchup,
+                                                  event=Event[eventType],
+                                                  eventType=eventType,
+                                                  likelihood=Likelihood.NEUTRAL)
                 eventLikelihood.save()
         if currentPrediction == None:
             currentPrediction = Prediction(matchup=matchup,prediction=eventLikelihood)
