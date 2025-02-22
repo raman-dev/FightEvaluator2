@@ -179,15 +179,20 @@ def updateMatchUpEventLikelihood(request):
         })
     return JsonResponse({"success":"false","errors":eventLikelihoodForm.errors})
 
-# @require_http_methods(["PUT"])
-# def pickEvent(request,matchupId):
-#     inputBody = json.loads(request.body)
-#     matchup = get_object_or_404(MatchUp,id=matchupId)
-    
-#     #pick requires a matchup
-#     #and an event 
-#     
-#     return JsonResponse({'ok':True})
+@require_http_methods(["PUT"])
+def makePrediction(request,matchupId):
+    pass
+
+@require_http_methods(["PUT"])
+def makePick(request,matchupId):
+    """
+        get matchup object
+        input -> model field
+
+        key,value -> model field 
+    """
+    matchup = get_object_or_404(id=matchupId)
+    pass
 
 
 @require_http_methods(["PUT"])
