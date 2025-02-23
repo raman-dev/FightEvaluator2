@@ -74,6 +74,8 @@ def verifyPrediction(matchups):
                         prediction.isCorrect = True
 
             prediction.save()
+    
+    calculate_stats()
 
 def publishResults(request):
     #using matchup results determine if predictions are correct
@@ -105,31 +107,13 @@ def publishResults(request):
     return JsonResponse({"hello":"world"})
 
 def getStats():
-
-    #for all predictions get per event rate
-    #get overall rate
-    # data = Prediction.objects.aggregate(
-    #     avg_correct=Avg('isCorrect'),
-    #     correct=Count('isCorrect',filter=Q(isCorrect=True)),
-    #     incorrect=Count('isCorrect',filter=Q(isCorrect=False)),
-    #     very_likely=Count('isCorrect',filter=Q(prediction__likelihood=Likelihood.VERY_LIKELY)),
-    #     very_likely_correct=Count('isCorrect',filter=Q(isCorrect=True,prediction__likelihood=Likelihood.VERY_LIKELY)),
-    # )
-    # """
-    #     name: fighter_wins
-    #     type = outcome
-    #     count: num
-    #     total: num + rest
-
-
-    # """
     stats = {}
-    # stats['general']={}
-    # stats['general']['total_predictions']= data['correct'] + data['incorrect']
-    # stats['general']['ratio'] = f"{data['correct']}/{stats['general']['total_predictions']}"
-    # #data['correct']/stats['general']['total_predictions']
-    # stats['general']['accuracy_overall'] = f"{(100 * (data['avg_correct'])):.2f}%"
+    stats['general'] = Stat.objects.filter(type=Stat.StatTypes.general)
+    stats['fight_outcome'] = Stat.objects.filter(type=Stat.StatTypes.fight_outcome).order_by("-ratio")
+    
+    return stats
 
+def calculate_stats():
     """
         
         stats <---changes when a prediction object then has a corresponding outcome object
@@ -151,43 +135,32 @@ def getStats():
             correct_predictions/total_predictions
         
     """
-    stats['general'] = Stat.objects.filter(type=Stat.StatTypes.general)
-    stats['fight_outcome'] = Stat.objects.filter(type=Stat.StatTypes.fight_outcome).order_by("-ratio")
-    # stats['probability'] = Stat.objects.filter(type=Stat.StatTypes.probability)
-    # stats['predictionTypeStats'] = {}
-    # stats['predictionLikelihoodStats'] = {}
-    # """
-    #     for every prediction_type get the corresponding ratio and accuracy
-    # """
+    #fight outcome events
+    outcomeStatObjs = Stat.objects.filter(type=Stat.StatTypes.fight_outcome)
+    for event_name in Event.names:
+        #if we have
+        stat = outcomeStatObjs.filter(name=event_name).first()
+        if stat:
+            #how many predictions of this type
+            result = Prediction.objects.aggregate(
+                total=Count('isCorrect',filter=Q(prediction__event=Event[event_name])),
+                correct=Count('isCorrect',filter=Q(prediction__event=Event[event_name],isCorrect=True))
+            )
+            stat.total = result['total']
+            stat.count = result['correct']
+            stat.ratio = stat.count/stat.total
+            stat.save()
+            # print(stat)
     
-    # for predictionEventType in Event:
-    #     result = Prediction.objects.aggregate(
-    #         total=Count('isCorrect',filter=Q(prediction__event=predictionEventType)),
-    #         count=Count('isCorrect',filter=Q(isCorrect=True,prediction__event=predictionEventType))
-    #     )
-    #     if result['total'] == 0:
-    #         continue
-    #     stats['predictionTypeStats'][predictionEventType.label] = {
-    #         'ratio': f"{result['count']}/{result['total']}", 
-    #         'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
-    #     }
-
-    # for likelihood in Likelihood.choices:
-    #     rprint(likelihood)
-    #     result = Prediction.objects.aggregate(
-    #         total=Count('isCorrect',filter=Q(prediction__likelihood=likelihood[0])),
-    #         count=Count('isCorrect',filter=Q(isCorrect=True,prediction__likelihood=likelihood[0]))
-    #     )
-    #     if result['total'] == 0:
-    #         continue
-        
-    #     rprint(result['total'],result['count'])
-    #     stats['predictionTypeStats'][likelihood[1]] = {
-    #         'ratio': f"{result['count']}/{result['total']}", 
-    #         'accuracy':f"{(100 * (result['count']/result['total'])):.2f}%"
-    #     }
-    # rprint(stats)
-    return stats
-
-def stats(request):
+    all = Stat.objects.get(type='general')
+    aggr = Prediction.objects.aggregate(
+        total=Count('isCorrect'),
+        count = Count('isCorrect',filter=Q(isCorrect=True))
+        )
+    all.total = aggr['total']
+    all.count = aggr['count']
+    all.ratio = all.count/all.total
+    all.save()
+    # print(all)
+def stats(request): 
     return JsonResponse(getStats(),safe=False)
