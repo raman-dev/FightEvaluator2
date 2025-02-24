@@ -107,7 +107,7 @@ def getOddsFromFile():
 
     return oddsList
 
-def fetchFromSite():
+def fetchFromSite(event_date):
     # print('OS.GETCWD => ',os.getcwd())
     # print('Path.CWD() => ',Path.cwd())
     """
@@ -119,11 +119,13 @@ def fetchFromSite():
         
         odds: [[fighter_a,fighter_b,odds_a,odds_b],...]
     """
+    
     oddsJson = None
     oddsList = []
     
-    # url = bestfightodds_url
-    url = dk_url
+
+    url = bestfightodds_url
+    # url = dk_url
     with open("fightEvaluator/views/odds_scraper/odds.json","r+",encoding="ascii") as oddsFile:
         oddsJson = json.load(oddsFile)
         rprint('Fetching from site...')
@@ -135,7 +137,7 @@ def fetchFromSite():
         if url == dk_url:
             oddsRaw = DraftKingsParser.parseOdds(source)
         elif url == bestfightodds_url:
-            oddsRaw = BestFightOddsParser.parseOdds(source)
+            oddsRaw = BestFightOddsParser.parseOdds(source,event_date)
 
         
         if url == dk_url:

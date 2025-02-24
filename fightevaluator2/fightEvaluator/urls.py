@@ -9,8 +9,9 @@ urlpatterns = [
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
     # path('mf-test',views.modelformfactory_test)
 
-    path('profit/',views.profit_index,name="profit-index"),
+    # path('profit/',views.profit_calculator,name="profit-x"),
     path('profit/get-odds',views.get_odds,name='odds_endpoint'),
+    path('profit/',views.profit_index,name='profit-index-0'),
     path('profit/<int:eventId>',views.profit_index,name='profit-index'),
 
     path('predictions',views.predictions,name="predictions"),

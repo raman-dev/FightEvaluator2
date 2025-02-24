@@ -53,9 +53,11 @@ def get_odds(request):
     return JsonResponse({"available": False,'message':'updating odds.'})
 
 
-def OddsWorkerThreadControlFunction():
+def OddsWorkerThreadControlFunction(**kwargs):
+    print(kwargs)
+    event = kwargs['event']
     print('WorkerThread Fetching from Site....')
-    odds_scraper.fetchFromSite()
+    odds_scraper.fetchFromSite(event.date)
     # no longer stale or empty
     oddsDataState = OddsDataState.objects.select_for_update().first()
     oddsDataState.updating = False
@@ -132,6 +134,7 @@ def profit_calculator(request):
     oddsListMap = []
     oddsDataState = OddsDataState.objects.select_for_update().first()
     today = datetime.today().date()
+    event = FightEvent.objects.first()
     global WorkerThread
 
     # check if oddsDataState is stale or not
@@ -147,7 +150,7 @@ def profit_calculator(request):
 
             # inside template include polling script
             # if WorkerThread == None or not WorkerThread.is_alive():#worker not running or
-            WorkerThread = Thread(target=OddsWorkerThreadControlFunction)
+            WorkerThread = Thread(target=OddsWorkerThreadControlFunction,kwargs={'event':event})
             WorkerThread.start()
     else:
         if WorkerThread != None and WorkerThread.is_alive():
