@@ -1,5 +1,7 @@
 from django.db import models
 from .qualifiers_and_choices import *
+from django.db.models import Index, Func,Value
+from django.db.models.functions import Concat
 
 class Note(models.Model):
     assessment = models.ForeignKey('Assessment',on_delete=models.CASCADE)
@@ -82,6 +84,13 @@ class Fighter(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
 
+    class Meta:
+        indexes = [Index(
+            Concat('first_name', 
+                   Value('-'), 
+                   'last_name', 
+                   output_field=models.CharField()),
+            name='name_index')]
 
 class Stat(models.Model):
     class StatTypes (models.TextChoices):

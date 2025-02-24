@@ -1,0 +1,64 @@
+{% extends "fightEvaluator/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'fightEvaluator/styles/profit_styles.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'fightEvaluator/vue_dist/profit.css' %}"> -->
+ <link rel="stylesheet" href="{% static 'fightEvaluator/styles/profit-index.css' %}">
+{% endblock %}
+{% block title %}Profit Calculator{% endblock %}
+
+{% block content %}
+    {% include 'fightEvaluator/navbar.html' %}
+    <!-- <div id="app"></div> -->
+    <div class="main-container">
+        <table class="table">
+            <thead>
+                <th>matchup</th>
+                {% for col_head in theads %}
+                <th>
+                    {{col_head}}
+                </th>
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for matchup,preds in matchup_preds_list %}
+                <tr>
+                    <td>
+                        {{ matchup.title }}
+                    </td>
+                    {% for p in preds %}
+                        {% if p %}
+                        <td>
+                            <div class="likelihood likely-{{p.likelihood}}">
+                                {{ p.get_likelihood_display }}
+                            </div>
+                        </td>
+                        {% else %}
+                        <td>
+                            <div class="likelihood likely-0">
+                                Not Predicted
+                            </div>
+                        </td>
+                        {% endif %}
+                        
+                    {% endfor %}
+                </tr>    
+                {% endfor %}
+            </tbody>
+            
+            
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<!-- <script type="module" src="{% static 'fightEvaluator/vue_dist/profit.bundle.js' %}" ></script> -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+{% endblock %}
+

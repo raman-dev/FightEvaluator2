@@ -111,8 +111,11 @@ def generateMatchupFighterObjs(matchups):
         for i,fighter in enumerate(matchup['fighters_raw']):
             #check if fighter is in database
             name = fighter['name']
+            name_index = "-".join(name)#search using this
             first_name = name.split(' ')[0]#try only first name
             last_name = name.split(' ')[-1]#last name may include middle name
+            if len(name) > 1:
+                last_name = "".join(name[1:])
             
             print(first_name,last_name)
             first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
@@ -249,8 +252,10 @@ def getFighterData(link):
     losses = int(record[1])
     draws = int(record[2])
     
-    first_name = full_name.split(' ')[0]
-    last_name = full_name.split(' ')[-1]
+    names = full_name.split(' ')
+    name_index = "-".join(names)
+    first_name = names[0]
+    last_name = " ".join(names[1:])#full_name.split(' ')[-1]
 
     fighterData = {
         'first_name':first_name,
