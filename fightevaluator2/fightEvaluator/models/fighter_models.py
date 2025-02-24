@@ -69,6 +69,18 @@ class Fighter(models.Model):
     data_api_link = models.CharField(default="",max_length=256,null=True,blank=True)
     img_link = models.CharField(max_length=256,null=True,blank=True)
 
+    name_index = models.CharField(default="",max_length=256)
+
+    class Meta:
+        indexes = [
+            Index(fields=["name_index"],name="full_name_index")
+        ]
+    
+    def __save__(self,**kwargs):
+        self.name_index = self.first_name + '-'+self.last_name
+        super.save(**kwargs)
+        
+
     @property
     def record(self):
         return str(self.wins) + "-" + str(self.losses) + "-" + str(self.draws)
@@ -83,14 +95,6 @@ class Fighter(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " (" + str(self.wins) + "," +str(self.losses) + "," + str(self.draws) + ")" + " " + self.weight_class + " " + str(self.height) + " " + str(self.reach) + " " + str(self.stance) + " " + str(self.date_of_birth)
-
-    class Meta:
-        indexes = [Index(
-            Concat('first_name', 
-                   Value('-'), 
-                   'last_name', 
-                   output_field=models.CharField()),
-            name='name_index')]
 
 class Stat(models.Model):
     class StatTypes (models.TextChoices):

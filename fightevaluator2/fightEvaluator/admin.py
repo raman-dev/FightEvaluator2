@@ -67,7 +67,7 @@ class MatchUpAdmin2(admin.ModelAdmin):
 @admin.register(Fighter)
 class FighterAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Name",{"fields":["first_name","middle_name","last_name","nick_name"]}),
+        ("Name",{"fields":["first_name","middle_name","last_name","nick_name","name_index"]}),
         ("Bio",{"fields":["weight_class","height","reach","date_of_birth"]}),
         ("Fight Info",{"fields":["wins","losses","draws","stance"]}),
         ("Links",{"fields":["data_api_link"]})
@@ -76,8 +76,8 @@ class FighterAdmin(admin.ModelAdmin):
     @admin.display(description="Fighter Name")
     def fighterName(fighter):
         return fighter.first_name.capitalize() + " " + fighter.last_name.capitalize()
-    list_display = ["first_name","last_name","weight_class","wins","losses","draws","stance","date_of_birth"]
-    search_fields = ["first_name","last_name"]
+    list_display = ["first_name","last_name","weight_class","wins","losses","draws","stance","date_of_birth","name_index"]
+    search_fields = ["first_name","last_name","name_index"]
 
 
 @admin.register(Assessment)

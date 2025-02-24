@@ -111,45 +111,48 @@ def generateMatchupFighterObjs(matchups):
         for i,fighter in enumerate(matchup['fighters_raw']):
             #check if fighter is in database
             name = fighter['name']
-            name_index = "-".join(name)#search using this
-            first_name = name.split(' ')[0]#try only first name
-            last_name = name.split(' ')[-1]#last name may include middle name
+            names = list(map(lambda x: x.lower(), name.split(' ')))
+            name_index = "-".join(names)#search using this
+            first_name = names[0]#try only first name
+            last_name = names[-1]#last name may include middle name
             if len(name) > 1:
-                last_name = "".join(name[1:])
-            
-            print(first_name,last_name)
+                last_name = " ".join(names[1:])
+
+            print(first_name,last_name,name_index)
+
             first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
             query_a = first_name_and_last_name_contains
-            
-            fighterObj = Fighter.objects.filter(query_a).first()
+
+            #first try 
+            fighterObj = Fighter.objects.filter(name_index=name_index).first()
+            if not fighterObj:            
+                fighterObj = Fighter.objects.filter(query_a).first()
+
             if not fighterObj:
                 #query fighter api for data
-                fighterData = getFighterData(fighter['link'])
-                fighterData['data_api_link'] = fighter['link']
-                fighterForm = FighterForm(fighterData)#validate fighter data
-                if fighterForm.is_valid():
-                    #create fighter object
-                    fighterObj = fighterForm.save()
-                    
-                    assessment = Assessment(fighter=fighterObj)
-                    assessment.save()
+                fighterData = {}
+                fighterObj = getFighterData(fighter['link'],fighterData)
+                if fighterObj == None:
+                    fighterData['data_api_link'] = fighter['link']
+                    fighterForm = FighterForm(fighterData)#validate fighter data
+                    if fighterForm.is_valid():
+                        #create fighter object
+                        fighterObj = fighterForm.save()
+                        
+                        assessment = Assessment(fighter=fighterObj)
+                        assessment.save()
 
-                    fighterObj.assessment = assessment
-                    print(fighterObj)
-                else:
-                    print(fighterForm.errors)
-                    return
+                        fighterObj.assessment = assessment
+                        print(fighterObj)
+                    else:
+                        print(fighterForm.errors)
+                        return
             if i == 0:
                 matchup['fighter_a'] = fighterObj
             else:   
                 matchup['fighter_b'] = fighterObj
     matchup.pop('fighters_raw')#no longer need this data
     # print(matchup)
-
-
-def getUpcomingFightEventData():
-    fightEventData = {}
-    return fightEventData
 
 def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight event
     fightEventData = {'eventData':{}}
@@ -194,52 +197,8 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     return fightEventData
 
 
-
-def getFighterDetails(fighterDetailsSoup: BeautifulSoup,fighterData: dict) -> dict:
-    for li in fighterDetailsSoup.findAll('li'):
-        li_text = li.text.strip()
-        if re.search(r'Height',li_text):
-            #li item contains height
-            #first span element contains height string
-            height_string = li.span.text.strip()
-            #3 height values if both feet'inch" and cm are present
-            #1 height value if only cm is present
-            height_match = re.findall(r'[0-9]+',height_string)#try feet'inch"
-            height_inches = 0
-            if len(height_match) == 1:
-                height_inches = math.floor(int(height_match[0]) / 2.54)
-            if len(height_match) > 1:
-                height_inches = int(height_match[0])*12 + int(height_match[1])
-            fighterData['height'] = height_inches
-
-        if re.search(r'Weight Class',li_text):
-            #first span contains weight class
-            weight_class = li.span.text.strip().replace(" ","_").upper()
-            fighterData['weight_class'] = WeightClass[weight_class]
-
-        if re.search(r'Reach',li_text):
-            reach_string = li.find_all('span')[1].text.strip()
-            reach_match = re.findall(r'[0-9]+',reach_string)
-            reach_inches = 0
-            if len(reach_match) == 2:
-                reach_inches = int(reach_match[0])
-            else:
-                #if cm it is always gonna be the last match
-                if reach_match != []:
-                    reach_inches = math.floor(int(reach_match[-1]) / 2.54)
-            fighterData['reach'] = reach_inches
-
-        if re.search(r'Date of Birth',li_text):
-            dob_string = li.find_all('span')[-1].text.strip()#last span element
-            if dob_string != 'N/A':
-                print('dob_string',dob_string)
-                dob = datetime.strptime(dob_string,"%Y.%m.%d").date()
-                fighterData['date_of_birth'] = dob
-            else:
-                fighterData['date_of_birth'] = 'N/A'
-
 #fetch and parse fighter detail page
-def getFighterData(link):
+def getFighterData(link,fighterData):
     source = getPageSource(link)
     soup = BeautifulSoup(source,'html.parser')
     
@@ -252,23 +211,28 @@ def getFighterData(link):
     losses = int(record[1])
     draws = int(record[2])
     
-    names = full_name.split(' ')
+    names = list(map(lambda x: x.lower(),full_name.split(' ')))
     name_index = "-".join(names)
+    print(full_name,name_index)
+    
+    potentialFighter = Fighter.objects.filter(name_index=name_index).first()
+    if potentialFighter:
+        return potentialFighter
+
     first_name = names[0]
     last_name = " ".join(names[1:])#full_name.split(' ')[-1]
 
-    fighterData = {
-        'first_name':first_name,
-        'last_name':last_name,
-        'wins': wins,
-        'losses':losses,
-        'draws':draws,
-    }
+
+    fighterData['first_name'] = first_name
+    fighterData['last_name'] = last_name,
+    fighterData['wins'] = wins,
+    fighterData['losses'] = losses,
+    fighterData['draws'] = draws
+    
     fighterDetails = soup.find('div',id='standardDetails')
     scrapeFighterDetails(str(fighterDetails),fighterData)
-    # getFighterDetails(fighterDetails,fighterData)
 
-    return fighterData
+    return None
 
 TEST_LINK = "https://www.tapology.com/fightcenter/events/105840-ufc-297"
 def getFightEventResults(link):

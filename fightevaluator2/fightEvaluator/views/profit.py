@@ -65,10 +65,14 @@ def OddsWorkerThreadControlFunction():
 
 
 @require_GET
-def profit_index(request,eventId):
+def profit_index(request,eventId=-1):
     #for every matchup grab all predictions for 
     #3 events
-    event = get_object_or_404(FightEvent,id=eventId)
+    event = None
+    if eventId == -1:
+        event = FightEvent.objects.first()
+    else:
+        event = get_object_or_404(FightEvent,id=eventId)
     matchups = MatchUp.objects.filter(event=event)
     events = [Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]
     

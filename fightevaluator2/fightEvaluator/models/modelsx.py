@@ -137,6 +137,32 @@ class MatchUpAnalysis(models.Model):
 #      def __init__(self,*args,**kwargs):
 #           self.kwargs['event'] = Event.WIN
 
+class Odd(models.Model):
+     event = models.CharField(choices=Event.choices,max_length=256)
+     odd = models.IntegerField(default=-1)
+     multi = models.FloatField(default=-1)
+
+     def __save__(self,**kwargs):
+          if self.odd > 0:
+               """
+                    +100 -> 2
+
+                    total/initial
+
+                    (100 + gain)/100 -> rate
+
+                    214/100 -> 2.14
+               """
+               self.multi = 1 + self.odd/100
+          else:
+               """
+                    -100 -> 50
+
+                     1 + 100/135
+               """
+               self.multi = 1 + 100/self.odd
+          super.save(**kwargs)
+
 
 class EventLikelihood(models.Model):
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
