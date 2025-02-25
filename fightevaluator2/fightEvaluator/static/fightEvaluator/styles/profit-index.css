@@ -1,3 +1,4 @@
+@import url(fonts.css);
 .likely-5 {
   background-color: #dc3545;
 }
@@ -22,6 +23,31 @@
   background-color: #52565a;
 }
 
+.matchup-cell a {
+  color: white;
+  text-decoration: none;
+}
+.matchup-cell a:hover {
+  text-decoration: underline;
+}
+
 .likelihood {
+  border-radius: 0.2rem;
+  font-family: PoppinsSemiBold;
   width: 16ch;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.likelihood span {
+  color: black;
+  padding: 1rem;
+  padding-left: 0.6rem;
+}
+.likelihood.selected {
+  outline: 2px solid whitesmoke;
+  outline-offset: 1px;
+}
+.likelihood:hover {
+  cursor: pointer;
 }/*# sourceMappingURL=profit-index.css.map */

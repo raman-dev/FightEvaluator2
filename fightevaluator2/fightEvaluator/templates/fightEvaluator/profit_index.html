@@ -24,21 +24,27 @@
             </thead>
             <tbody>
                 {% for matchup,preds in matchup_preds_list %}
-                <tr>
+                <tr class="matchup"  id="matchup-{{matchup.id}}">
                     <td>
-                        {{ matchup.title }}
+                        <div class="matchup-cell">
+                            <a href="/matchup/{{ matchup.id }}">
+                                {{ matchup.title }}
+                            </a>
+                        </div>
                     </td>
                     {% for p in preds %}
                         {% if p %}
-                        <td>
+                        <td class="likelihood-cell">
                             <div class="likelihood likely-{{p.likelihood}}">
-                                {{ p.get_likelihood_display }}
+                                <span>
+                                    {{ p.get_likelihood_display }}
+                                </span>
                             </div>
                         </td>
                         {% else %}
-                        <td>
+                        <td class="likelihood-cell">
                             <div class="likelihood likely-0">
-                                Not Predicted
+                                <span>Not Predicted</span>
                             </div>
                         </td>
                         {% endif %}
@@ -47,18 +53,27 @@
                 </tr>    
                 {% endfor %}
             </tbody>
-            
-            
         </table>
     </div>
 
 {% endblock %}
 
 {% block scripts %}
-
-<!-- <script type="module" src="{% static 'fightEvaluator/vue_dist/profit.bundle.js' %}" ></script> -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<!-- <script type="module" src="{% static 'fightEvaluator/vue_dist/profit.bundle.js' %}" ></script> -->
+
+<script>
+    //handle clicks for prediction element
+    document.querySelectorAll(".likelihood").forEach((predictionElement) => {
+        predictionElement.addEventListener("click",onPredictionClick);
+    });;
+
+    function onPredictionClick(event){
+        let predictionElement = event.currentTarget;
+        predictionElement.classList.toggle("selected");
+    }
+</script>
 
 {% endblock %}
 
