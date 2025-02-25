@@ -13,26 +13,68 @@
     {% include 'fightEvaluator/navbar.html' %}
     <!-- <div id="app"></div> -->
     <div class="main-container">
-        <table class="table">
+        <table class="prediction-table table table-bordered table-hover">
             <thead>
                 <th>matchup</th>
                 {% for col_head in theads %}
+                {% if col_head == "Win" %}
+                <th>
+                    <div class="d-flex justify-content-evenly align-items-center">
+                        <span>win a</span>
+                        <span class="seperator-vert"></span>
+                        <span>win b</span> 
+                    </div>
+                </th>
+                {% else %}
                 <th>
                     {{col_head}}
                 </th>
+                {% endif %}
+                
                 {% endfor %}
             </thead>
             <tbody>
                 {% for matchup,preds in matchup_preds_list %}
                 <tr class="matchup"  id="matchup-{{matchup.id}}">
                     <td>
-                        <div class="matchup-cell">
+                        <div class="matchup-wrapper">
                             <a href="/matchup/{{ matchup.id }}">
                                 {{ matchup.title }}
                             </a>
                         </div>
                     </td>
+                    {% with win_a=preds.0 win_b=preds.1 %}
+                    <td>
+                        <div class="d-flex justify-content-evenly align-items-center win">
+                            {% if win_a %}
+                            <div class="likelihood likely-{{win_a.likelihood}}">
+                                <span>
+                                    {{ win_a.get_likelihood_display }}
+                                </span>                            
+                            </div>
+                            {% else %}
+                            <div class="likelihood likely-0 win">
+                                <span>Not Predicted</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if win_b %}
+                            <div class="likelihood likely-{{win_b.likelihood}}">
+                                <span>
+                                    {{ win_b.get_likelihood_display }}
+                                </span>                            
+                            </div>
+                            {% else %}
+                            <div class="likelihood likely-0">
+                                <span>Not Predicted</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                    {% endwith %}
+
                     {% for p in preds %}
+                    {% if forloop.counter0 > 1 %}
                         {% if p %}
                         <td class="likelihood-cell">
                             <div class="likelihood likely-{{p.likelihood}}">
@@ -48,12 +90,17 @@
                             </div>
                         </td>
                         {% endif %}
-                        
+                    {% endif %}
                     {% endfor %}
+
                 </tr>    
                 {% endfor %}
             </tbody>
         </table>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-secondary" onclick="deselectAll(event)">deselect all</button>
+            <button class="btn btn-outline-info">line +</button>
+        </div>
     </div>
 
 {% endblock %}
@@ -71,7 +118,22 @@
 
     function onPredictionClick(event){
         let predictionElement = event.currentTarget;
+        let parent = predictionElement.parentElement;
+        if (parent.classList.contains("win")){
+            //win type selected
+            //unselect previous win selected within this matchup
+            let prevSelectedWin = parent.querySelector(".selected");
+            if (prevSelectedWin != null && prevSelectedWin != predictionElement){
+                prevSelectedWin.classList.toggle("selected");
+            }
+        }
         predictionElement.classList.toggle("selected");
+    }
+
+    function deselectAll(event){
+        document.querySelectorAll(".prediction-table .selected").forEach((element) => {            
+            element.classList.remove("selected");
+        });
     }
 </script>
 

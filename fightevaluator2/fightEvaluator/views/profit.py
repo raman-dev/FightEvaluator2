@@ -110,13 +110,13 @@ def profit_index(request,eventId=-1):
                         
             else:
                 preds.append(result.first())
-        # if empty_count < len(events):
-        matchup_preds.append((m,preds))
+        if empty_count < len(events):
+            matchup_preds.append((m,preds))
     return render(request, 
                   template_name="fightEvaluator/profit_index.html", 
                   context={
                       "matchup_preds_list": matchup_preds,
-                      "theads":["Win A","Win B","Rounds >= 1.5","Does Not Go The Distance"]
+                      "theads":["Win","Rounds >= 1.5","Does Not Go The Distance"]
                       })
 
 
