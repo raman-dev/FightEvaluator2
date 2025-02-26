@@ -50,7 +50,7 @@
 .likelihood {
   border-radius: 0.2rem;
   font-family: PoppinsSemiBold;
-  width: 16ch;
+  width: 18ch;
   user-select: none;
   margin: 0.2rem;
 
@@ -79,6 +79,11 @@
 table.prediction-table{
   th{
      text-transform: capitalize; 
+  }
+  tbody {
+    span{
+      text-align: center; 
+    }
   }
 }
 
