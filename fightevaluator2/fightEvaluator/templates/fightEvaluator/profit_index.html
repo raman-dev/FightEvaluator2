@@ -35,7 +35,7 @@
             </thead>
             <tbody>
                 {% for matchup,preds in matchup_preds_list %}
-                <tr class="matchup"  id="matchup-{{matchup.id}}">
+                <tr class="matchup"  data-matchup-id="{{matchup.id}}">
                     <td>
                         <div class="matchup-wrapper">
                             <a href="/matchup/{{ matchup.id }}">
@@ -46,50 +46,29 @@
                     {% with win_a=preds.0 win_b=preds.1 %}
                     <td>
                         <div class="d-flex justify-content-evenly align-items-center win">
-                            {% if win_a %}
-                            <div class="likelihood likely-{{win_a.likelihood}}">
+                            <div class="likelihood likely-{{win_a.likelihood}}" data-type="WIN" data-fighter-name="{{ win_a.fighter.name_index }}" data-likelihood="{{win_a.get_likelihood_display}}" data-likelihood-val="{{win_a.likelihood}}">
                                 <span>
                                     {{ win_a.get_likelihood_display }}
                                 </span>                            
                             </div>
-                            {% else %}
-                            <div class="likelihood likely-0 win">
-                                <span>Not Predicted</span>
-                            </div>
-                            {% endif %}
-                            
-                            {% if win_b %}
-                            <div class="likelihood likely-{{win_b.likelihood}}">
+                            <div class="likelihood likely-{{win_b.likelihood}}" data-type="WIN" data-fighter-name="{{ win_b.fighter.name_index }}" data-likelihood="{{win_b.get_likelihood_display}}" data-likelihood-val="{{win_b.likelihood}}">
                                 <span>
                                     {{ win_b.get_likelihood_display }}
                                 </span>                            
                             </div>
-                            {% else %}
-                            <div class="likelihood likely-0">
-                                <span>Not Predicted</span>
-                            </div>
-                            {% endif %}
                         </div>
                     </td>
                     {% endwith %}
 
                     {% for p in preds %}
                     {% if forloop.counter0 > 1 %}
-                        {% if p %}
                         <td class="likelihood-cell">
-                            <div class="likelihood likely-{{p.likelihood}}">
+                            <div class="likelihood likely-{{p.likelihood}}" data-type="{{ p.event }}" data-likelihood="{{p.get_likelihood_display}}" data-likelihood-val="{{p.likelihood}}">
                                 <span>
                                     {{ p.get_likelihood_display }}
                                 </span>
                             </div>
                         </td>
-                        {% else %}
-                        <td class="likelihood-cell">
-                            <div class="likelihood likely-0">
-                                <span>Not Predicted</span>
-                            </div>
-                        </td>
-                        {% endif %}
                     {% endif %}
                     {% endfor %}
 
@@ -99,10 +78,18 @@
         </table>
         <div class="d-flex justify-content-between">
             <button class="btn btn-outline-secondary" onclick="deselectAll(event)">deselect all</button>
-            <button class="btn btn-outline-info">line +</button>
+            <button class="btn btn-outline-info" onclick="createLine(event)">line +</button>
         </div>
     </div>
 
+    <div class="container line-container">
+
+    </div>
+    <template>
+        <div class="line">
+
+        </div>
+    </template>
 {% endblock %}
 
 {% block scripts %}
@@ -134,7 +121,59 @@
         document.querySelectorAll(".prediction-table .selected").forEach((element) => {            
             element.classList.remove("selected");
         });
-     }
+    }
+
+    function collectSelections(matchupEventMap){
+
+       document.querySelectorAll(".prediction-table .selected").forEach((selectedEventElement) => {
+            const eventType = selectedEventElement.dataset.type;
+            const fighterName = selectedEventElement.dataset.fighterName;
+            const likelihood = selectedEventElement.dataset.likelihood;
+            const likelihoodVal = selectedEventElement.dataset.likelihoodVal;
+           
+            let parentElement = selectedEventElement.parentElement;
+            //find tr matchup element
+            while (parentElement.nodeName != 'TR'){
+                parentElement = parentElement.parentElement;
+            }
+            let matchupId = parentElement.dataset.matchupId;
+            if (!(matchupId in matchupEventMap)){
+                matchupEventMap[matchupId] = [];
+            }
+            matchupEventMap[matchupId].push({
+                'type':eventType,
+                'fighter':fighterName,
+                'likelihood':likelihood,
+                'likelihoodVal':likelihoodVal
+            });
+       });
+    }
+
+    function createLine(event){
+        /*
+            what is a line
+            line consists of events of matchups
+
+            1 matchup has
+                events selected 1 or more of 
+                    win,
+                    rounds_geq_one_half,
+                    does_not_go_the_distance
+            
+            line consists of 1 or more of these matchup-event-lists
+
+        */
+       //aggregate into matchup:[e0,e1,e2,e3,...] map
+       console.log("Creating Line...");
+       const matchupEventMap = {};
+       collectSelections(matchupEventMap);
+
+       for (const key in matchupEventMap){
+            console.log(key,matchupEventMap[key]);
+       }
+
+       deselectAll();
+    }
 </script>
 
 {% endblock %}

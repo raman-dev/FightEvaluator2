@@ -184,6 +184,12 @@ class EventLikelihood(models.Model):
               return self.fighter.name + " " + str(self.event)
          return self.get_event_display()
 
+    @classmethod
+    def get_placeholder(cls,matchup,event,fighter=None):
+         if fighter != None:
+              return EventLikelihood(matchup=matchup,event=Event.WIN,fighter=fighter)
+         return EventLikelihood(matchup=matchup,event=event)
+    
 class Prediction2(models.Model):
      matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
 

@@ -7,7 +7,7 @@ from django.db.models import Count, Q
 # from .draft_kings_scraper import draftkings_scraper
 from . import odds_scraper
 
-from ..models import OddsDataState,Event,FightEvent,MatchUp,Prediction,EventLikelihood
+from ..models import OddsDataState,Event,FightEvent,MatchUp,Prediction,EventLikelihood,Likelihood
 from rich import print as rprint
 from threading import Thread
 from datetime import datetime
@@ -77,7 +77,6 @@ def profit_index(request,eventId=-1):
         event = get_object_or_404(FightEvent,id=eventId)
     matchups = MatchUp.objects.filter(event=event)
     events = [Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]
-    
     matchup_preds = []
     for m in matchups:
         #grab all predictions 
@@ -92,8 +91,9 @@ def profit_index(request,eventId=-1):
                 #we want to first get fighter_a
                 #then fighter_b
                 if result.count() == 0:
-                    preds.append(None)
-                    preds.append(None)
+                    #an unsaved model instance
+                    preds.append(EventLikelihood.get_placeholder(m,e,m.fighter_a))
+                    preds.append(EventLikelihood.get_placeholder(m,e,m.fighter_b))
                 elif result.count() == 2:
                     preds.append(result.get(fighter=m.fighter_a))
                     preds.append(result.get(fighter=m.fighter_b))
@@ -103,20 +103,23 @@ def profit_index(request,eventId=-1):
                     single_win_pred = result.first()
                     if single_win_pred.fighter == m.fighter_a:
                         preds.append(single_win_pred)
-                        preds.append(None)
+                        preds.append(EventLikelihood.get_placeholder(m,e,m.fighter_b))
                     else:
-                        preds.append(None)
+                        preds.append(EventLikelihood.get_placeholder(m,e,m.fighter_a))
                         preds.append(single_win_pred)
                         
             else:
-                preds.append(result.first())
+                p = result.first()
+                if p == None:
+                    p = EventLikelihood.get_placeholder(m,e)
+                preds.append(p)
         if empty_count < len(events):
             matchup_preds.append((m,preds))
     return render(request, 
                   template_name="fightEvaluator/profit_index.html", 
                   context={
                       "matchup_preds_list": matchup_preds,
-                      "theads":["Win","Rounds >= 1.5","Does Not Go The Distance"]
+                      "theads":["Win","Rounds >= 1.5","Does Not Go The Distance"],
                       })
 
 
