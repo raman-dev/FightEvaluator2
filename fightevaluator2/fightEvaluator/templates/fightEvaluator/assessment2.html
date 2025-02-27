@@ -457,7 +457,7 @@
           //write values from fighter_data to the form
           let form = this.editor.querySelector("form");
           for (let key in fighter_data) {
-            if (key == "id" || fighter_data[key] == null || key=="nick_name" || key =="middle_name") {
+            if (key == "id" || fighter_data[key] == null || key=="nick_name" || key =="middle_name" || key=="name_index") {
               continue;
             }
             let input = form.querySelector(`[name="${key}"]`);
