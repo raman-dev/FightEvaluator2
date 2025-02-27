@@ -159,7 +159,11 @@
       <div class="outcome-card event-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
         <div class="outcome event" data-event-type="{{event.name}}" data-fighter-id="{% if fighter_id %}{{fighter_id}}{% else %}0{% endif %}" data-id="0" data-likelihood="3">
           <div class="wrapper">
-              <h6>{{ event.value }}</h6>
+            {% if fighter_id %}
+              <h6>win</h6>
+            {% else %}
+              <h6> Yes </h6>
+            {% endif %}
           </div>
           <button class="save-outcome-btn save-event-likelihood-btn btn btn-primary disabled">save</button>
           <p>
