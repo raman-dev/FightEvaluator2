@@ -85,10 +85,18 @@
     <div class="container line-container">
 
     </div>
-    <template>
+    <template id="line-template">
         <div class="line">
 
         </div>
+    </template>
+    <template id="line-matchup-template">
+        <div class="matchup">
+            
+        </div>
+    </template>
+    <template id="">
+       <div></div> 
     </template>
 {% endblock %}
 
@@ -196,8 +204,21 @@
                     odd
                             ]
 
-            
        */
+       const template = document.querySelector("#line-template");
+       const lineContainer = document.querySelector(".line-container");
+       const line = template.content.cloneNode(true);
+
+       for (const matchupId in matchupEventMap){
+            const events = matchupEventMap[matchupId];
+            //create matchup line item
+            //add event item to matchup line item
+            events.forEach((event) => {
+                
+            });
+       }
+       console.log(line);
+       
        deselectAll();
     }
 </script>
