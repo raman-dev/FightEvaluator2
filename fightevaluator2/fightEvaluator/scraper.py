@@ -134,7 +134,9 @@ def generateMatchupFighterObjs(matchups):
                 fighterObj = getFighterData(fighter['link'],fighterData)
                 if fighterObj == None:
                     fighterData['data_api_link'] = fighter['link']
+
                     fighterForm = FighterForm(fighterData)#validate fighter data
+                    # print(fighterForm.data,fighterForm)
                     if fighterForm.is_valid():
                         #create fighter object
                         fighterObj = fighterForm.save()
@@ -207,13 +209,14 @@ def getFighterData(link,fighterData):
     full_name = normalizeString(nameElement.text.strip())
 
     record = recordElement.text.strip().split('-')
+    # print(record)
     wins = int(record[0])
     losses = int(record[1])
     draws = int(record[2])
     
     names = list(map(lambda x: x.lower(),full_name.split(' ')))
     name_index = "-".join(names)
-    print(full_name,name_index)
+    print('parsing => ',full_name,name_index)
     
     potentialFighter = Fighter.objects.filter(name_index=name_index).first()
     if potentialFighter:
@@ -224,10 +227,11 @@ def getFighterData(link,fighterData):
 
 
     fighterData['first_name'] = first_name
-    fighterData['last_name'] = last_name,
-    fighterData['wins'] = wins,
-    fighterData['losses'] = losses,
+    fighterData['last_name'] = last_name
+    fighterData['wins'] = wins
+    fighterData['losses'] = losses
     fighterData['draws'] = draws
+    fighterData['name_index'] = name_index
     
     fighterDetails = soup.find('div',id='standardDetails')
     scrapeFighterDetails(str(fighterDetails),fighterData)

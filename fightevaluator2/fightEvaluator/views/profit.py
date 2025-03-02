@@ -118,6 +118,7 @@ def profit_index(request,eventId=-1):
     return render(request, 
                   template_name="fightEvaluator/profit_index.html", 
                   context={
+                      "fight_event_title":event.title,
                       "matchup_preds_list": matchup_preds,
                       "theads":["Win","Rounds >= 1.5","Does Not Go The Distance"],
                       })

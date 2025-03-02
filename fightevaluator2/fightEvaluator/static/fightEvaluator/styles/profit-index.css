@@ -45,6 +45,8 @@
      -moz-user-select: none;
           user-select: none;
   margin: 0.2rem;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 .likelihood span {
   color: black;
@@ -70,6 +72,22 @@ table.prediction-table th {
 }
 table.prediction-table tbody span {
   text-align: center;
+}
+
+.line-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.line-container .line {
+  height: -moz-fit-content;
+  height: fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: flex;
+}
+.line-container .line .matchup .event-node {
+  padding-left: 0.6rem;
 }
 
 @media (min-width: 640px) {
