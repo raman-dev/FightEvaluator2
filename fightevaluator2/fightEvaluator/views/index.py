@@ -8,6 +8,7 @@ from django.views.generic import ListView,DetailView
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState
 from ..forms import FightEventForm,MatchUpFormMF
+from .prediction import calculate_stats
 import json
 import datetime
 import re
@@ -195,6 +196,11 @@ def verifyPrediction(matchups):
                         prediction.isCorrect = True
 
             prediction.save()
+    calculate_stats()
+
+def update_stats(request):
+    calculate_stats()
+    return JsonResponse({"ok":"true"})
 
 @require_GET
 def getFightEventResults2(request,eventId):
