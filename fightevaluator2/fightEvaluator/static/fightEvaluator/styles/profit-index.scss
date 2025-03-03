@@ -1,5 +1,9 @@
 @import url(fonts.css);
 
+body{
+  overflow: auto;
+}
+
 .likely-5 {
   background-color: #dc3545;
 }
@@ -77,6 +81,11 @@
     padding-top: 2.4rem;
 }
 
+.table-container{
+  overflow: hidden;
+  transition: height 0.3s ease-out;
+}
+
 table.prediction-table{
   th{
      text-transform: capitalize; 
@@ -97,12 +106,24 @@ table.prediction-table{
     width: fit-content;
     
     display: flex;
+    padding: 0.8rem !important;
+
+    border-color: #151616 !important;
+    border-width: 2px !important;
     .matchup{
+      margin: 0.4rem;
+      border-radius: 0.4rem !important;
+      background-color: #151616;
       .event-node{
-        padding-left: 0.6rem; 
+        padding: 0.4rem;
+        margin: 0.2rem;
       }
     }
   }
+}
+
+.main-container{
+  overflow: visible;
 }
 
 

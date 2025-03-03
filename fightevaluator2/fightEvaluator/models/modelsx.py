@@ -99,6 +99,9 @@ class MatchUp(models.Model):
      analysisComplete = models.BooleanField(null=True,blank=True,default=False)
 
      def __str__(self) -> str:
+          if self.fighter_a == None or self.fighter_b == None:
+               print('FIGHTER IS NONE WTF')
+               return  "Error None Fighter"
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
     
      def title(self) -> str:

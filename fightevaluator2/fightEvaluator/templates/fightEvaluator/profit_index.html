@@ -13,78 +13,80 @@
     {% include 'fightEvaluator/navbar.html' %}
     <!-- <div id="app"></div> -->
     <div class="main-container">
-        <table class="prediction-table table table-bordered table-hover">
-            <caption style="caption-side: top;">
-                <h3>{{ fight_event_title }}</h3>
-            </caption>
-            <thead>
-                <th>matchup</th>
-                {% for col_head in theads %}
-                {% if col_head == "Win" %}
-                <th>
-                    <div class="d-flex justify-content-evenly align-items-center">
-                        <span>win a</span>
-                        <span class="seperator-vert"></span>
-                        <span>win b</span> 
-                    </div>
-                </th>
-                {% else %}
-                <th>
-                    {{col_head}}
-                </th>
-                {% endif %}
-                
-                {% endfor %}
-            </thead>
-            <tbody>
-                {% for matchup,preds in matchup_preds_list %}
-                <tr class="matchup"  data-matchup-id="{{matchup.id}}" data-matchup-title="{{matchup.title}}">
-                    <td>
-                        <div class="matchup-wrapper">
-                            <a href="/matchup/{{ matchup.id }}">
-                                {{ matchup.title }}
-                            </a>
+        <h3>{{ fight_event_title }}</h3>
+        <div class="table-container show">
+            <table class="prediction-table table table-bordered table-hover">
+                <thead>
+                    <th>matchup</th>
+                    {% for col_head in theads %}
+                    {% if col_head == "Win" %}
+                    <th>
+                        <div class="d-flex justify-content-evenly align-items-center">
+                            <span>win a</span>
+                            <span class="seperator-vert"></span>
+                            <span>win b</span> 
                         </div>
-                    </td>
-                    {% with win_a=preds.0 win_b=preds.1 %}
-                    <td>
-                        <div class="d-flex justify-content-evenly align-items-center win">
-                            <div class="likelihood likely-{{win_a.likelihood}}" data-type="WIN" data-fighter-name="{{ win_a.fighter.name_index }}" data-likelihood="{{win_a.get_likelihood_display}}" data-likelihood-val="{{win_a.likelihood}}">
-                                <span>
-                                    {{ win_a.get_likelihood_display }}
-                                </span>                            
-                            </div>
-                            <div class="likelihood likely-{{win_b.likelihood}}" data-type="WIN" data-fighter-name="{{ win_b.fighter.name_index }}" data-likelihood="{{win_b.get_likelihood_display}}" data-likelihood-val="{{win_b.likelihood}}">
-                                <span>
-                                    {{ win_b.get_likelihood_display }}
-                                </span>                            
-                            </div>
-                        </div>
-                    </td>
-                    {% endwith %}
-
-                    {% for p in preds %}
-                    {% if forloop.counter0 > 1 %}
-                        <td class="likelihood-cell">
-                            <div class="likelihood likely-{{p.likelihood}}" data-type="{{ p.event }}" data-likelihood="{{p.get_likelihood_display}}" data-likelihood-val="{{p.likelihood}}">
-                                <span>
-                                    {{ p.get_likelihood_display }}
-                                </span>
+                    </th>
+                    {% else %}
+                    <th>
+                        {{col_head}}
+                    </th>
+                    {% endif %}
+                    
+                    {% endfor %}
+                </thead>
+                <tbody>
+                    {% for matchup,preds in matchup_preds_list %}
+                    <tr class="matchup"  data-matchup-id="{{matchup.id}}" data-matchup-title="{{matchup.title}}">
+                        <td>
+                            <div class="matchup-wrapper">
+                                <a href="/matchup/{{ matchup.id }}">
+                                    {{ matchup.title }}
+                                </a>
                             </div>
                         </td>
-                    {% endif %}
+                        {% with win_a=preds.0 win_b=preds.1 %}
+                        <td>
+                            <div class="d-flex justify-content-evenly align-items-center win">
+                                <div class="likelihood likely-{{win_a.likelihood}}" data-type="WIN" data-fighter-name="{{ win_a.fighter.name_index }}" data-likelihood="{{win_a.get_likelihood_display}}" data-likelihood-val="{{win_a.likelihood}}">
+                                    <span>
+                                        {{ win_a.get_likelihood_display }}
+                                    </span>                            
+                                </div>
+                                <div class="likelihood likely-{{win_b.likelihood}}" data-type="WIN" data-fighter-name="{{ win_b.fighter.name_index }}" data-likelihood="{{win_b.get_likelihood_display}}" data-likelihood-val="{{win_b.likelihood}}">
+                                    <span>
+                                        {{ win_b.get_likelihood_display }}
+                                    </span>                            
+                                </div>
+                            </div>
+                        </td>
+                        {% endwith %}
+    
+                        {% for p in preds %}
+                        {% if forloop.counter0 > 1 %}
+                            <td class="likelihood-cell">
+                                <div class="likelihood likely-{{p.likelihood}}" data-type="{{ p.event }}" data-likelihood="{{p.get_likelihood_display}}" data-likelihood-val="{{p.likelihood}}">
+                                    <span>
+                                        {{ p.get_likelihood_display }}
+                                    </span>
+                                </div>
+                            </td>
+                        {% endif %}
+                        {% endfor %}
+    
+                    </tr>    
                     {% endfor %}
-
-                </tr>    
-                {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+        
         <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-secondary table-toggle-btn" onclick="toggleTable(event)">hide table</button>
             <button class="btn btn-outline-secondary" onclick="deselectAll(event)">deselect all</button>
             <button class="btn btn-outline-info" onclick="createLine(event)">line +</button>
         </div>
 
-        <div class="container line-container d-flex flex-wrap" >
+        <div class="container-fluid line-container d-flex flex-wrap mt-1" >
             <!-- <div class="line border p-1" style="width: fit-content;">
                 <div class="matchup p-1 border">
                     <p class="m-0">Kape vs Almabayev</p>
@@ -189,8 +191,8 @@
 
         // return matchup;
         return $(`
-            <div class="matchup p-1 border">
-                <p class="title m-0">${matchupTitle}</p>
+            <div class="matchup p-2">
+                <h6 class="title m-0">${matchupTitle}</h6>
             </div>
         `)[0];
     }
@@ -236,7 +238,11 @@
         return $(`<div class="line p-1 border"></div>`)[0];
     }
 
-    function createLine(event){
+    function createEventWrapper(){
+        return $(`<div class="event-wrapper d-flex"></div>`)[0];
+    }
+
+    function createLine(event,testMap,testTitleMap){
         /*
             what is a line
             line consists of events of matchups
@@ -252,9 +258,15 @@
         */
        //aggregate into matchup:[e0,e1,e2,e3,...] map
        console.log("Creating Line...");
-       const matchupEventMap = {};
-       const titleMap = {};
-       collectSelections(matchupEventMap,titleMap);
+       let matchupEventMap = {};
+       let titleMap = {};
+       if (testMap == undefined){
+            collectSelections(matchupEventMap,titleMap);
+       }else{
+            matchupEventMap = testMap;
+            titleMap = testTitleMap;
+       }
+
 
        for (const key in matchupEventMap){
             console.log(key,matchupEventMap[key]);
@@ -293,10 +305,12 @@
             //create matchup line item
             //add event item to matchup line item
             const matchupContainer = createMatchUpContainer(titleMap[matchupId]);
+            const eventWrapper = createEventWrapper();
+            matchupContainer.appendChild(eventWrapper);
             events.forEach((event) => {
                 //create eventNode
                 const eventNode = createEventNode(event);
-                matchupContainer.appendChild(eventNode)
+                eventWrapper.appendChild(eventNode)
             });
             line.appendChild(matchupContainer);
        }
@@ -305,6 +319,61 @@
        lineContainer.appendChild(line);
        deselectAll();
     }
+
+    const testEventMap = {
+        1066:[
+            {type: 'WIN', fighter: 'esteban-ribovics', likelihood: 'Likely', likelihoodVal: '2'},
+            {type: 'ROUNDS_GEQ_ONE_AND_HALF', fighter: undefined, likelihood: 'Likely', likelihoodVal: '2'}
+        ],
+        1064 : [
+            {type: 'WIN', fighter: 'asu-almabayev', likelihood: 'Neutral', likelihoodVal: '3'}
+        ]
+    }
+
+    const testTitleMap = {
+        1066:'Kape vs Almabayev',
+        1064:'Haqparast vs Ribovics'
+    }
+
+    createLine(null,testEventMap,testTitleMap);
+    createLine(null,testEventMap,testTitleMap);
+
+</script>
+
+<script>
+    /*  
+        Show hide table
+    */
+   //initially set table height so it doesn't jump on first hide
+   let table_container = document.querySelector('.table-container');
+   table_container.style.height=`${table_container.scrollHeight}px`;
+
+   function toggleTable(event){
+     const tableContainer = document.querySelector('.table-container');
+     let isVisible = tableContainer.classList.contains("show");
+     if (!isVisible){
+        showTable(tableContainer);
+     }else{
+        hideTable(tableContainer);
+     }
+   }
+   function hideTable(tableContainer){
+    //store table height
+    tableContainer.style.height="0px";
+    tableContainer.classList.remove("show");
+    tableContainer.classList.add("hide");
+
+    document.querySelector('.table-toggle-btn').textContent="show table";
+   }
+   function showTable(tableContainer){
+    tableContainer.classList.add("show");
+    tableContainer.classList.remove("hide");
+
+    const height = tableContainer.scrollHeight;
+    tableContainer.style.height=`${height}px`;
+    
+    document.querySelector('.table-toggle-btn').textContent="hide table";
+   }
 </script>
 
 {% endblock %}
