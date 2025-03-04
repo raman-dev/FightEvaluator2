@@ -70,30 +70,30 @@ $flickerDuration: 400ms;
 }
 
 .attrib-card button, .bio-edit-button{
-  background-color: $btnBackgroundColor;  
+  // background-color: $btnBackgroundColor;  
 }
 
 .main-container button {
-
+  cursor: pointer;
   // outline: 2px solid lavender;
-  outline-offset: 2px;
+  // outline-offset: 2px;
 
-  border: 2px solid $btnBorderColor;
-  border-radius: $btnBorderRadius;
+  // border: 2px solid $btnBorderColor;
+  // border-radius: $btnBorderRadius;
 
   margin-left: 0.4rem;
-  padding: 0.3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  // padding: 0.3rem;
+  // padding-left: 1rem;
+  // padding-right: 1rem;
 
-  font-family: PoppinsSemiBold;
+  // font-family: PoppinsSemiBold;
 
-  transition: all 0.1s ease-out;
+  // transition: all 0.1s ease-out; 
 }
 
 @mixin button-active{
   box-shadow: black 2px 2px 0 0;
-  background-color: $btnClickBackground;
+  // background-color: $btnClickBackground;
 }
 
 .bio-edit-button.active{
@@ -276,7 +276,8 @@ $flickerDuration: 400ms;
         align-items: center;
 
         border-radius: 0.4rem;
-        border: 2px solid lavender;
+        // border: 2px solid lavender;
+        border: 1px solid transparent;
         padding: $cardStatePadding;
 
         font-family: PoppinsSemiBold;
