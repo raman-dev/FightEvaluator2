@@ -152,7 +152,7 @@ body {
 
 .attrib-card[data-attrib-state=neutral] .card-state {
   background-color: #ffc107;
-  color: whitesmoke;
+  color: #12161A;
 }
 
 .attrib-card[data-attrib-state=negative] .card-state {

@@ -225,7 +225,8 @@ $flickerDuration: 400ms;
 .attrib-card[data-attrib-state="neutral"]{
   .card-state{
     background-color: $neutralBg;
-    color: whitesmoke;
+    // color: whitesmoke;
+    color:#12161A; 
   }
 }
 
