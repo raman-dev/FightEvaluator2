@@ -27,6 +27,10 @@ body {
   background-color: #52565a;
 }
 
+.matchup-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
 .matchup-wrapper a {
   color: white;
   text-decoration: none;
@@ -64,6 +68,10 @@ body {
 .likelihood:hover {
   cursor: pointer;
 }
+.likelihood .justification {
+  overflow: hidden;
+  height: 0px;
+}
 
 .main-container {
   width: 100%;
@@ -81,6 +89,9 @@ table.prediction-table th {
 }
 table.prediction-table tbody span {
   text-align: center;
+}
+table.prediction-table tbody tr {
+  transition: height 0.3s ease-out;
 }
 
 .line-container {

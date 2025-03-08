@@ -29,6 +29,8 @@ body{
 }
 
 .matchup-wrapper {
+  display: flex;
+  justify-content: space-between;
   a {
     color: white;
     text-decoration: none;
@@ -73,6 +75,12 @@ body{
   &:hover {
     cursor: pointer;
   }
+
+  .justification{
+    overflow: hidden;
+    height: 0px;
+  }
+
 }
 
 .main-container{
@@ -93,6 +101,10 @@ table.prediction-table{
   tbody {
     span{
       text-align: center; 
+    }
+
+    tr{
+      transition: height 0.3s ease-out;
     }
   }
 }

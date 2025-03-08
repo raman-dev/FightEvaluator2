@@ -43,20 +43,31 @@
                                 <a href="/matchup/{{ matchup.id }}">
                                     {{ matchup.title }}
                                 </a>
+                                <button class="expand-toggle btn btn-outline-info">expand</button>
                             </div>
                         </td>
                         {% with win_a=preds.0 win_b=preds.1 %}
                         <td>
-                            <div class="d-flex justify-content-evenly align-items-center win">
+                            <div class="d-flex justify-content-evenly align-items-start win">
                                 <div class="likelihood likely-{{win_a.likelihood}}" data-type="WIN" data-fighter-name="{{ win_a.fighter.name_index }}" data-likelihood="{{win_a.get_likelihood_display}}" data-likelihood-val="{{win_a.likelihood}}">
                                     <span>
                                         {{ win_a.get_likelihood_display }}
-                                    </span>                            
+                                    </span>
+                                    <div class="justification bg-dark">
+                                        <p class="m-0">
+                                            {{ win_a.justification }}
+                                        </p>
+                                    </div>                            
                                 </div>
                                 <div class="likelihood likely-{{win_b.likelihood}}" data-type="WIN" data-fighter-name="{{ win_b.fighter.name_index }}" data-likelihood="{{win_b.get_likelihood_display}}" data-likelihood-val="{{win_b.likelihood}}">
                                     <span>
                                         {{ win_b.get_likelihood_display }}
-                                    </span>                            
+                                    </span>
+                                    <div class="justification bg-dark" >
+                                        <p class="m-0">
+                                            {{ win_b.justification }}
+                                        </p>
+                                    </div>                            
                                 </div>
                             </div>
                         </td>
@@ -69,6 +80,11 @@
                                     <span>
                                         {{ p.get_likelihood_display }}
                                     </span>
+                                    <div class="justification bg-dark">
+                                        <p class="m-0">
+                                            {{ p.justification }}
+                                        </p>
+                                    </div>
                                 </div>
                             </td>
                         {% endif %}
@@ -235,7 +251,7 @@
     }
 
     function createLineNode(){
-        return $(`<div class="line p-1 border"></div>`)[0];
+        return $(`<div class="line p-1 border flex-wrap"></div>`)[0];
     }
 
     function createEventWrapper(){
@@ -335,8 +351,8 @@
         1064:'Haqparast vs Ribovics'
     }
 
-    createLine(null,testEventMap,testTitleMap);
-    createLine(null,testEventMap,testTitleMap);
+    // createLine(null,testEventMap,testTitleMap);
+    // createLine(null,testEventMap,testTitleMap);
 
 </script>
 
@@ -345,7 +361,7 @@
         Show hide table
     */
    //initially set table height so it doesn't jump on first hide
-   let table_container = document.querySelector('.table-container');
+   const table_container = document.querySelector('.table-container');
    table_container.style.height=`${table_container.scrollHeight}px`;
 
    function toggleTable(event){
@@ -374,6 +390,50 @@
     
     document.querySelector('.table-toggle-btn').textContent="hide table";
    }
+
+   //initially set height so can be collapsible
+//    document.querySelectorAll("tbody tr").forEach((tr) => {
+//        let scrollHeight = tr.scrollHeight;
+//        tr.style.height=`${scrollHeight}px`;
+//    });
+
+   document.querySelectorAll(".expand-toggle").forEach((expandButton) => {
+       expandButton.addEventListener("click",(event)=>{
+        //show justification
+        let button = event.currentTarget;
+        let tr = button.parentElement;
+        while (tr.nodeName != "TR"){
+                tr = tr.parentElement;
+        }
+        const oldTableContainerHeight = table_container.scrollHeight;
+        let show = !tr.classList.contains("show");
+        
+        tr.querySelectorAll(".justification").forEach((justificationElement) => {
+            if (show){
+                const scrollHeight = justificationElement.scrollHeight;
+                justificationElement.style.height=`${scrollHeight}px`;
+            }else{
+                justificationElement.style.height = `0px`;
+            }
+        });
+        tr.classList.toggle("show");
+        resizeTableHeight(oldTableContainerHeight);//show == grow
+    });
+   });
+
+   function resizeTableHeight(oldTableContainerHeight){
+    //
+    const currentTableContainerHeight= table_container.scrollHeight;
+    if (oldTableContainerHeight < currentTableContainerHeight){
+        //expand
+        table_container.style.height = `${currentTableContainerHeight}px`;
+    }else{
+        //shrink
+        const table = table_container.querySelector("table");
+        table_container.style.height = `${$(table).outerHeight()}px`;//shrink to size of table plus its margins
+    }
+   }
+
 </script>
 
 {% endblock %}
