@@ -1,87 +1,101 @@
 <script setup>
+
 import { ref } from 'vue';
-import OddsTD from './OddsTD.vue';
+import EventLikelihood from './EventLikelihood.vue';
 
-const x = {
-        fighter_a: 'Fighter A',
-        fighter_b: 'Fighter B',
-        odds: [{
-            event:'win',
-            odd:[1,2]
-        },{
-            event:'rounds_geq_one_half',
-            odd: 3,
-        },{
-            event:'does_not_go_the_distance',
-            odd: 4,
-        }]
-}
-
-const matchupOddsList = [
-    {
-        fighter_a: 'Fighter A',
-        fighter_b: 'Fighter B',
-        odds: [
-            { event: 'win', odd: [1, 2] },
-            { event: 'rounds_geq_one_half', odd: 3 },
-            { event: 'does_not_go_the_distance', odd: 4 }
-        ]
-    },
-    {
-        fighter_a: 'Fighter C',
-        fighter_b: 'Fighter D',
-        odds: [
-            { event: 'win', odd: [2, 3] },
-            { event: 'rounds_geq_one_half', odd: 2.5 },
-            { event: 'does_not_go_the_distance', odd: 3.8 }
-        ]
-    },
-    {
-        fighter_a: 'Fighter E',
-        fighter_b: 'Fighter F',
-        odds: [
-            { event: 'win', odd: [1.5, 2.5] },
-            { event: 'rounds_geq_one_half', odd: 4.2 },
-            { event: 'does_not_go_the_distance', odd: 3.1 }
-        ]
-    },
-    {
-        fighter_a: 'Fighter G',
-        fighter_b: 'Fighter H',
-        odds: [
-            { event: 'win', odd: [2.1, 1.9] },
-            { event: 'rounds_geq_one_half', odd: 3.3 },
-            { event: 'does_not_go_the_distance', odd: 2.7 }
-        ]
-    },
-    {
-        fighter_a: 'Fighter I',
-        fighter_b: 'Fighter J',
-        odds: [
-            { event: 'win', odd: [1.8, 2.2] },
-            { event: 'rounds_geq_one_half', odd: 3.6 },
-            { event: 'does_not_go_the_distance', odd: 2.9 }
-        ]
-    },
-    {
-        fighter_a: 'Fighter K',
-        fighter_b: 'Fighter L',
-        odds: [
-            { event: 'win', odd: [1.7, 2.3] },
-            { event: 'rounds_geq_one_half', odd: 2.8 },
-            { event: 'does_not_go_the_distance', odd: 3.5 }
-        ]
-    },
-    {
-        fighter_a: 'Fighter M',
-        fighter_b: 'Fighter N',
-        odds: [
-            { event: 'win', odd: [2.5, 1.5] },
-            { event: 'rounds_geq_one_half', odd: 3.1 },
-            { event: 'does_not_go_the_distance', odd: 2.6 }
-        ]
+const matchupData = [
+  {
+    matchup_id: 1,
+    title: "Fighter A vs Fighter B",
+    events: {
+      win: [
+        {
+          likelihood: "somewhat likely",
+          likelihood_val: 2,
+          justification: "Fighter A has a strong takedown defense and striking advantage.",
+          fighter: "Fighter A"
+        },
+        {
+          likelihood: "somewhat unlikely",
+          likelihood_val: 4,
+          justification: "Fighter B has shown weakness against similar opponents.",
+          fighter: "Fighter B"
+        }
+      ],
+      rounds_geq_one_half: {
+        likelihood: "very likely",
+        likelihood_val: 1,
+        justification: "Both fighters are known for cautious first rounds."
+      },
+      does_not_go_the_distance: {
+        likelihood: "somewhat likely",
+        likelihood_val: 2,
+        justification: "High knockout rates on both sides indicate early finish potential."
+      }
     }
+  },
+  {
+    matchup_id: 2,
+    title: "Fighter C vs Fighter D",
+    events: {
+      win: [
+        {
+          likelihood: "neutral",
+          likelihood_val: 3,
+          justification: "Both fighters have similar skill levels and fight records.",
+          fighter: "Fighter C"
+        },
+        {
+          likelihood: "neutral",
+          likelihood_val: 3,
+          justification: "Both fighters have similar skill levels and fight records.",
+          fighter: "Fighter D"
+        }
+      ],
+      rounds_geq_one_half: {
+        likelihood: "somewhat likely",
+        likelihood_val: 2,
+        justification: "Both tend to pace themselves in earlier rounds."
+      },
+      does_not_go_the_distance: {
+        likelihood: "somewhat unlikely",
+        likelihood_val: 4,
+        justification: "Neither fighter has a high finish rate in recent fights."
+      }
+    }
+  },
+  {
+    matchup_id: 3,
+    title: "Fighter E vs Fighter F",
+    events: {
+      win: [
+        {
+          likelihood: "very likely",
+          likelihood_val: 1,
+          justification: "Fighter E's grappling dominance is expected to control the match.",
+          fighter: "Fighter E"
+        },
+        {
+          likelihood: "very unlikely",
+          likelihood_val: 5,
+          justification: "Fighter F lacks tools to counter Fighter E's ground game.",
+          fighter: "Fighter F"
+        }
+      ],
+      rounds_geq_one_half: {
+        likelihood: "neutral",
+        likelihood_val: 3,
+        justification: "If Fighter E gets an early takedown, a quick finish is possible."
+      },
+      does_not_go_the_distance: {
+        likelihood: "very likely",
+        likelihood_val: 1,
+        justification: "Fighter E typically finishes fights within the first round."
+      }
+    }
+  }
 ];
+
 
 /*
         matchup_id
@@ -92,115 +106,77 @@ const matchupOddsList = [
                     likelihood_val
                     justification
                     fighter_x_name | None 
+        
+        
+        
+        matchup_id
+        title
+        events:
+          win:[
+              [likelihood,likelihood_val,justification,fighter_a],
+              [likelihood,likelihood_val,justification,fighter_b]
+            ]
+          rounds_geq_one_half:
+            likelihood,likelihood_val,justification 
+          does_not_go_the_distance:
+            likelihood,likelihood_val,justification 
+
                
 */
-const matchups = [
-  {
-    matchup_id: 1,
-    title: "Fighter A vs Fighter B",
-    events: {
-      win: {
-        likelihood: "very likely",
-        likelihood_val: 1,
-        justification: "Fighter A has a strong grappling advantage and recent win streak.",
-        fighter: "Fighter A"
-      },
-      rounds_geq_one_half: {
-        likelihood: "neutral",
-        likelihood_val: 3,
-        justification: "Both fighters tend to finish early, but may test each other in round 1.",
-        fighter: null
-      },
-      does_not_go_the_distance: {
-        likelihood: "very likely",
-        likelihood_val: 1,
-        justification: "Both fighters have high KO rates and rarely go to decision.",
-        fighter: null
-      }
-    }
-  },
-  {
-    matchup_id: 2,
-    title: "Fighter C vs Fighter D",
-    events: {
-      win: {
-        likelihood: "very unlikely",
-        likelihood_val: 5,
-        justification: "Fighter C is returning from injury and hasn't fought top competition.",
-        fighter: "Fighter C"
-      },
-      rounds_geq_one_half: {
-        likelihood: "somewhat likely",
-        likelihood_val: 2,
-        justification: "Both fighters have good cardio and tend to engage in technical fights.",
-        fighter: null
-      },
-      does_not_go_the_distance: {
-        likelihood: "neutral",
-        likelihood_val: 3,
-        justification: "Fighter D has some submission potential, but both are durable.",
-        fighter: null
-      }
-    }
-  },
-  {
-    matchup_id: 3,
-    title: "Fighter E vs Fighter F",
-    events: {
-      win: {
-        likelihood: "somewhat likely",
-        likelihood_val: 2,
-        justification: "Fighter F has powerful striking but Fighter E has better defense.",
-        fighter: "Fighter F"
-      },
-      rounds_geq_one_half: {
-        likelihood: "somewhat likely",
-        likelihood_val: 2,
-        justification: "Possible early exchanges, but both may respect each other's power.",
-        fighter: null
-      },
-      does_not_go_the_distance: {
-        likelihood: "somewhat unlikely",
-        likelihood_val: 4,
-        justification: "Both fighters have gone to decision in recent bouts.",
-        fighter: null
-      }
-    }
-  }
-];
+
 
 </script>
 
 <template>
-    <table class="table table-bordered">
-        <thead>
-            <th>Matchup</th>
-            <th>
-                <div class="d-flex justify-content-between">
-                    <span>Win A</span>
-                    <span>Win B</span>
-                </div>
-            </th>
-            <th>Rounds >= 1.5</th>
-            <th>Does Not Go The Distance</th>
-        </thead>
-        <tbody>
-            <tr v-for="data in matchupOddsList">
-                <td>
-                    <span>{{ data.fighter_a }} vs {{ data.fighter_b }}</span>
-                </td>
-                <td>
-                    <div class="d-flex justify-content-between">
-                        <span>{{ data.fighter_a }}</span>
-                        <span>{{ data.fighter_b }}</span>
-                    </div>
-                </td>
-                
-                <template v-for="odd in data.odds">
-                    <OddsTD v-bind="odd" />
-                    
-                </template>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Matchup</th>
+        <th>
+          <div class="d-flex justify-content-between">
+            <span>Win A</span>
+            <span>Win B</span>
+          </div>
+        </th>
+        <th>Rounds >= 1.5</th>
+        <th>Does Not Go The Distance</th>
+      </tr>
+
+    </thead>
+    <tbody>
+      <tr v-for="(data, m_index) in matchupData" :key="m_index">
+        <td>
+          {{ data.title }}
+        </td>
+
+        <template v-for="(event, type) in data.events" :key="type">
+          <td>
+            <div class="d-flex justify-content-between" v-if="type == 'win'">
+              <EventLikelihood v-bind="event[0]" :type="type" />
+              <EventLikelihood v-bind="event[1]" :type="type" />
+            </div>
+            <div v-else>
+              <EventLikelihood v-bind="event" />
+            </div>
+          </td>
+        </template>
+      </tr>
+    </tbody>
+  </table>
 </template>
+
+<style lang="scss" scoped>
+th {
+  text-transform: capitalize;
+}
+
+tbody {
+  span {
+    text-align: center;
+  }
+
+  tr {
+    transition: height 0.3s ease-out;
+  }
+}
+</style>

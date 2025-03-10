@@ -1,10 +1,10 @@
 <script setup>
-import OddsTable from './components/OddsTable.vue';
+import Main from './components/Main.vue';
 
 </script>
 
 <template>
-  <OddsTable/>
+  <Main></Main>
 </template>
 
 <style scoped>

@@ -1,17 +1,28 @@
 <script setup>
-const props = ['likelihood','likelihood_val','justification','fighter'];
+
+const props = defineProps(['likelihood', 'likelihood_val', 'justification', 'fighter','type']);
+
 </script>
 
 <template>
-    <td>
-        <div>
-            <div class="likelihood likelihood-{{ props.likelihood_val }}">
-                <span>
-                    {{ props.likelihood }}</span>
-            </div>
-            <p class="justification">
-                {{ props.justification }}
-            </p>
+    <div class="border">
+        <div :class="['likelihood','likely-' + props.likelihood_val]">
+        <span>{{ props.likelihood }}</span>
         </div>
-    </td>
+        <p class="justification bg-dark">
+            {{ props.justification }}
+        </p>
+    </div>
+    
 </template>
+
+<style lang="scss" scoped>
+    .likelihood span{
+        text-transform: capitalize;
+    }
+    .justification {
+        overflow: hidden;
+        height: 0px;
+    }
+    
+</style>
