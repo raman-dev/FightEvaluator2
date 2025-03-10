@@ -1,0 +1,288 @@
+<script>
+    //handle clicks for prediction element
+    document.querySelectorAll(".prediction-table .likelihood").forEach((predictionElement) => {
+        predictionElement.addEventListener("click",onPredictionClick);
+    });;
+
+    function onPredictionClick(event){
+        let predictionElement = event.currentTarget;
+        let parent = predictionElement.parentElement;
+        if (parent.classList.contains("win")){
+            //win type selected
+            //unselect previous win selected within this matchup
+            let prevSelectedWin = parent.querySelector(".selected");
+            if (prevSelectedWin != null && prevSelectedWin != predictionElement){
+                prevSelectedWin.classList.toggle("selected");
+            }
+        }
+        predictionElement.classList.toggle("selected");
+    }
+
+    function deselectAll(event){
+        document.querySelectorAll(".prediction-table .selected").forEach((element) => {            
+            element.classList.remove("selected");
+        });
+    }
+
+    function collectSelections(matchupEventMap,titleMap){
+
+       document.querySelectorAll(".prediction-table .selected").forEach((selectedEventElement) => {
+            const eventType = selectedEventElement.dataset.type;
+            const fighterName = selectedEventElement.dataset.fighterName;
+            const likelihood = selectedEventElement.dataset.likelihood;
+            const likelihoodVal = selectedEventElement.dataset.likelihoodVal;
+           
+            let parentElement = selectedEventElement.parentElement;
+            //find tr matchup element
+            while (parentElement.nodeName != 'TR'){
+                parentElement = parentElement.parentElement;
+            }
+            let matchupId = parentElement.dataset.matchupId;
+            let matchupTitle = parentElement.dataset.matchupTitle;
+            if (!(matchupId in matchupEventMap)){
+                matchupEventMap[matchupId] = [];
+            }
+            titleMap[matchupId] = matchupTitle;
+            matchupEventMap[matchupId].push({
+                'type':eventType,
+                'fighter':fighterName,
+                'likelihood':likelihood,
+                'likelihoodVal':likelihoodVal
+            });
+       });
+    }
+
+    function createMatchUpContainer(matchupTitle){
+        // const template = document.querySelector("#line-matchup-template");
+        // const matchup = template.content.cloneNode(true);
+
+        // return matchup;
+        return $(`
+            <div class="matchup p-2">
+                <h6 class="title m-0">${matchupTitle}</h6>
+            </div>
+        `)[0];
+    }
+
+    function slugToTitle(slug){
+        return slug
+        .replace(/-/g, ' ')    // Replace hyphens with spaces
+        .replace(/\b\w/g, c => c.toUpperCase()); // Capitalize first letter of each word
+    }
+
+    function createEventNode(event){
+        /* 
+            ----event structure------
+            fighter : "chepe-mariscal"
+            likelihood :"Likely"
+            likelihoodVal : "2"
+            type : "WIN"
+
+        */
+    //    const template = document.querySelector("#line-event-template");
+    //    const eventNode = template.content.cloneNode(true);
+    //    eventNode.textContent = JSON.stringify(event);
+    //    return eventNode;
+        let event_string = "";
+        if (event.type == 'WIN'){
+            event_string = slugToTitle(event.fighter) + " WINS";
+        }else if (event.type=="ROUNDS_GEQ_ONE_AND_HALF"){
+            event_string = "Rounds >= 1.5";
+        }else{
+            event_string = "Fight Does Not Go The Distance";
+        }
+        return $(`
+             <div class="event-node border d-flex flex-column" data-type="${event.type}" >
+                <div class="likelihood likely-${event.likelihoodVal}">
+                    <span>${event.likelihood}</span>
+                </div>
+                <span>${event_string}</span>
+            </div>
+        `)[0];
+    }
+
+    function createLineNode(){
+        return $(`<div class="line p-1 border flex-wrap"></div>`)[0];
+    }
+
+    function createEventWrapper(){
+        return $(`<div class="event-wrapper d-flex"></div>`)[0];
+    }
+
+    function createLine(event,testMap,testTitleMap){
+        /*
+            what is a line
+            line consists of events of matchups
+
+            1 matchup has
+                events selected 1 or more of 
+                    win,
+                    rounds_geq_one_half,
+                    does_not_go_the_distance
+            
+            line consists of 1 or more of these matchup-event-lists
+
+        */
+       //aggregate into matchup:[e0,e1,e2,e3,...] map
+       console.log("Creating Line...");
+       let matchupEventMap = {};
+       let titleMap = {};
+       if (testMap == undefined){
+            collectSelections(matchupEventMap,titleMap);
+       }else{
+            matchupEventMap = testMap;
+            titleMap = testTitleMap;
+       }
+
+
+       for (const key in matchupEventMap){
+            console.log(key,matchupEventMap[key]);
+       }
+       /*
+            what does line element look like
+            matchup_0
+                [   
+                    likelihood
+                    event_0
+                    odd
+                            ]
+                [
+                    likelihood
+                    event_1
+                    odd
+                            ]
+            matchup_1
+                [   
+                    likelihood
+                    event_0
+                    odd
+                            ]
+                [
+                    likelihood
+                    event_1
+                    odd
+                            ]
+
+       */
+       const lineContainer = document.querySelector(".line-container");
+       const line = createLineNode();
+
+       for (const matchupId in matchupEventMap){
+            const events = matchupEventMap[matchupId];
+            //create matchup line item
+            //add event item to matchup line item
+            const matchupContainer = createMatchUpContainer(titleMap[matchupId]);
+            const eventWrapper = createEventWrapper();
+            matchupContainer.appendChild(eventWrapper);
+            events.forEach((event) => {
+                //create eventNode
+                const eventNode = createEventNode(event);
+                eventWrapper.appendChild(eventNode)
+            });
+            line.appendChild(matchupContainer);
+       }
+    //    console.log(line);
+
+       lineContainer.appendChild(line);
+       deselectAll();
+    }
+
+    const testEventMap = {
+        1066:[
+            {type: 'WIN', fighter: 'esteban-ribovics', likelihood: 'Likely', likelihoodVal: '2'},
+            {type: 'ROUNDS_GEQ_ONE_AND_HALF', fighter: undefined, likelihood: 'Likely', likelihoodVal: '2'}
+        ],
+        1064 : [
+            {type: 'WIN', fighter: 'asu-almabayev', likelihood: 'Neutral', likelihoodVal: '3'}
+        ]
+    }
+
+    const testTitleMap = {
+        1066:'Kape vs Almabayev',
+        1064:'Haqparast vs Ribovics'
+    }
+
+    // createLine(null,testEventMap,testTitleMap);
+    // createLine(null,testEventMap,testTitleMap);
+
+</script>
+
+<script>
+    /*  
+        Show hide table
+    */
+   //initially set table height so it doesn't jump on first hide
+   const table_container = document.querySelector('.table-container');
+   table_container.style.height=`${table_container.scrollHeight}px`;
+
+   function toggleTable(event){
+     const tableContainer = document.querySelector('.table-container');
+     let isVisible = tableContainer.classList.contains("show");
+     if (!isVisible){
+        showTable(tableContainer);
+     }else{
+        hideTable(tableContainer);
+     }
+   }
+   function hideTable(tableContainer){
+    //store table height
+    tableContainer.style.height="0px";
+    tableContainer.classList.remove("show");
+    tableContainer.classList.add("hide");
+
+    document.querySelector('.table-toggle-btn').textContent="show table";
+   }
+   function showTable(tableContainer){
+    tableContainer.classList.add("show");
+    tableContainer.classList.remove("hide");
+
+    const height = tableContainer.scrollHeight;
+    tableContainer.style.height=`${height}px`;
+    
+    document.querySelector('.table-toggle-btn').textContent="hide table";
+   }
+
+   //initially set height so can be collapsible
+//    document.querySelectorAll("tbody tr").forEach((tr) => {
+//        let scrollHeight = tr.scrollHeight;
+//        tr.style.height=`${scrollHeight}px`;
+//    });
+
+   document.querySelectorAll(".expand-toggle").forEach((expandButton) => {
+       expandButton.addEventListener("click",(event)=>{
+        //show justification
+        let button = event.currentTarget;
+        let tr = button.parentElement;
+        while (tr.nodeName != "TR"){
+                tr = tr.parentElement;
+        }
+        const oldTableContainerHeight = table_container.scrollHeight;
+        let show = !tr.classList.contains("show");
+        
+        tr.querySelectorAll(".justification").forEach((justificationElement) => {
+            if (show){
+                const scrollHeight = justificationElement.scrollHeight;
+                justificationElement.style.height=`${scrollHeight}px`;
+            }else{
+                justificationElement.style.height = `0px`;
+            }
+        });
+        tr.classList.toggle("show");
+        resizeTableHeight(oldTableContainerHeight);//show == grow
+    });
+   });
+
+   function resizeTableHeight(oldTableContainerHeight){
+    //
+    const currentTableContainerHeight= table_container.scrollHeight;
+    if (oldTableContainerHeight < currentTableContainerHeight){
+        //expand
+        table_container.style.height = `${currentTableContainerHeight}px`;
+    }else{
+        //shrink
+        const table = table_container.querySelector("table");
+        table_container.style.height = `${$(table).outerHeight()}px`;//shrink to size of table plus its margins
+    }
+   }
+
+</script>

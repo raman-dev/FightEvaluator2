@@ -1,0 +1,127 @@
+<div class="main-container">
+    <h3>{{ fight_event_title }}</h3>
+    <div class="table-container show">
+        <table class="prediction-table table table-bordered table-hover">
+            <thead>
+                <th>matchup</th>
+                {% for col_head in theads %}
+                {% if col_head == "Win" %}
+                <th>
+                    <div class="d-flex justify-content-evenly align-items-center">
+                        <span>win a</span>
+                        <span class="seperator-vert"></span>
+                        <span>win b</span> 
+                    </div>
+                </th>
+                {% else %}
+                <th>
+                    {{col_head}}
+                </th>
+                {% endif %}
+                
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for matchup,preds in matchup_preds_list %}
+                <tr class="matchup"  data-matchup-id="{{matchup.id}}" data-matchup-title="{{matchup.title}}">
+                    <td>
+                        <div class="matchup-wrapper">
+                            <a href="/matchup/{{ matchup.id }}">
+                                {{ matchup.title }}
+                            </a>
+                            <button class="expand-toggle btn btn-outline-info">expand</button>
+                        </div>
+                    </td>
+                    {% with win_a=preds.0 win_b=preds.1 %}
+                    <td>
+                        <div class="d-flex justify-content-evenly align-items-start win">
+                            <div class="likelihood likely-{{win_a.likelihood}}" data-type="WIN" data-fighter-name="{{ win_a.fighter.name_index }}" data-likelihood="{{win_a.get_likelihood_display}}" data-likelihood-val="{{win_a.likelihood}}">
+                                <span>
+                                    {{ win_a.get_likelihood_display }}
+                                </span>
+                                <div class="justification bg-dark">
+                                    <p class="m-0">
+                                        {{ win_a.justification }}
+                                    </p>
+                                </div>                            
+                            </div>
+                            <div class="likelihood likely-{{win_b.likelihood}}" data-type="WIN" data-fighter-name="{{ win_b.fighter.name_index }}" data-likelihood="{{win_b.get_likelihood_display}}" data-likelihood-val="{{win_b.likelihood}}">
+                                <span>
+                                    {{ win_b.get_likelihood_display }}
+                                </span>
+                                <div class="justification bg-dark" >
+                                    <p class="m-0">
+                                        {{ win_b.justification }}
+                                    </p>
+                                </div>                            
+                            </div>
+                        </div>
+                    </td>
+                    {% endwith %}
+
+                    {% for p in preds %}
+                    {% if forloop.counter0 > 1 %}
+                        <td class="likelihood-cell">
+                            <div class="likelihood likely-{{p.likelihood}}" data-type="{{ p.event }}" data-likelihood="{{p.get_likelihood_display}}" data-likelihood-val="{{p.likelihood}}">
+                                <span>
+                                    {{ p.get_likelihood_display }}
+                                </span>
+                                <div class="justification bg-dark">
+                                    <p class="m-0">
+                                        {{ p.justification }}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                    {% endfor %}
+
+                </tr>    
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-secondary table-toggle-btn" onclick="toggleTable(event)">hide table</button>
+        <button class="btn btn-outline-secondary" onclick="deselectAll(event)">deselect all</button>
+        <button class="btn btn-outline-info" onclick="createLine(event)">line +</button>
+    </div>
+
+    <div class="container-fluid line-container d-flex flex-wrap mt-1" >
+        <!-- <div class="line border p-1" style="width: fit-content;">
+            <div class="matchup p-1 border">
+                <p class="m-0">Kape vs Almabayev</p>
+                <div class="event-node border d-flex" data-type="ROUNDS_GEQ_ONE_AND_HALF">
+                    <div class="likelihood likely-2">
+                        <span>somewhat likely</span>
+                    </div>
+                    <span>rounds >= 1.5</span>
+                </div>
+                <div class="event-node border d-flex" data-type="WIN" >
+                    <div class="likelihood likely-3">
+                        <span>neutral</span>
+                    </div>
+                    <span>Kape Wins</span>
+                </div>
+            </div>
+        </div>
+        <div class="line border p-1" style="width: fit-content;">
+            <div class="matchup p-1 border">
+                <p class="m-0">Kape vs Almabayev</p>
+                <div class="event-node border d-flex" data-type="ROUNDS_GEQ_ONE_AND_HALF">
+                    <div class="likelihood likely-2">
+                        <span>somewhat likely</span>
+                    </div>
+                    <span>rounds >= 1.5</span>
+                </div>
+                <div class="event-node border d-flex" data-type="WIN" >
+                    <div class="likelihood likely-3">
+                        <span>neutral</span>
+                    </div>
+                    <span>Kape Wins</span>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
