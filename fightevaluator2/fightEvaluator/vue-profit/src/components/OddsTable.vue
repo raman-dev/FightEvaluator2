@@ -146,7 +146,13 @@ const matchupData = [
     <tbody>
       <tr v-for="(data, m_index) in matchupData" :key="m_index">
         <td>
-          {{ data.title }}
+          <div class="d-flex">
+            <span>
+              
+                {{ data.title }}
+            </span>
+            <button class="btn btn-outline-info">expand</button>
+          </div>
         </td>
 
         <template v-for="(event, type) in data.events" :key="type">

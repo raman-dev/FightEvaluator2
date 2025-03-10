@@ -3,10 +3,14 @@ import OddsTable from './OddsTable.vue';
 
 </script>
 <template>
-    <OddsTable />
+    <div class="main-container container-fluid">
+      <OddsTable />
+    </div>
+    
 </template>
 
 <style lang="scss">
+
 .likely-5 {
     background-color: #dc3545;
 }
@@ -32,35 +36,41 @@ import OddsTable from './OddsTable.vue';
 }
 
 .likelihood {
-    color: black;
-}
+    border-radius: 0.2rem;
+    width: 18ch;
+    user-select: none;
+    margin: 0.2rem;
+    height: fit-content;
 
-.likelihood {
-  border-radius: 0.2rem;
-  width: 18ch;
-  user-select: none;
-  margin: 0.2rem;
-  height: fit-content;
+    span {
+        color: black;
+        padding: 1rem;
+        padding-left: 0.6rem;
+        text-transform: capitalize;
 
-  span {
-    color: black;
-    padding: 1rem;
-    padding-left: 0.6rem;
-  }
+    }
 
-  &.selected {
-    outline: 2px solid whitesmoke;
-    outline-offset: 1px;
-  }
+    &.selected {
+        outline: 2px solid whitesmoke;
+        outline-offset: 1px;
+    }
 
-  &:hover {
-    cursor: pointer;
-  }
+    &:hover {
+        cursor: pointer;
+    }
 
-  .justification{
-    overflow: hidden;
-    height: 0px;
-  }
+    .justification {
+        overflow: hidden;
+        height: 0px;
+    }
 
 }
+
+
+.main-container{
+  display: flex;
+  max-width: 70%;
+  align-items: center;
+}
+
 </style>

@@ -7,6 +7,34 @@ import Main from './components/Main.vue';
   <Main></Main>
 </template>
 
-<style scoped>
-
+<style lang="scss">
+@import url('@/assets/css/fonts.scss');
+  
+  html, body {
+      height: 100%;
+      min-height: 800px;
+      font-family: PoppinsLight !important;
+      font-size: 16px; 
+      overflow: hidden;
+  }
+  
+  body{
+      display: flex;
+      flex-direction: column;
+  }
+  
+  h1,
+  h2,
+  h3 {
+      font-family: PoppinsBold;
+  }
+  
+  h4{
+      font-family: PoppinsSemiBold;
+  }
+   
+  h5,
+  h6 {
+      font-family: PoppinsMedium;
+  }
 </style>
