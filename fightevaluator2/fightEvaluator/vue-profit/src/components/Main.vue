@@ -1,10 +1,12 @@
 <script setup>
 import OddsTable from './OddsTable.vue';
+import TableActions from './TableActions.vue'
 
 </script>
 <template>
-    <div class="main-container container-fluid">
+    <div class="main-container">
       <OddsTable />
+      <TableActions/>
     </div>
     
 </template>
@@ -36,6 +38,8 @@ import OddsTable from './OddsTable.vue';
 }
 
 .likelihood {
+    
+    font-family: PoppinsSemiBold;
     border-radius: 0.2rem;
     width: 18ch;
     user-select: none;
@@ -59,18 +63,46 @@ import OddsTable from './OddsTable.vue';
         cursor: pointer;
     }
 
-    .justification {
-        overflow: hidden;
-        height: 0px;
-    }
-
 }
 
 
 .main-container{
-  display: flex;
-  max-width: 70%;
-  align-items: center;
+  height: 100%; 
+  width: 70%;  
+  
+  margin: auto;
 }
+
+@media (max-width: 1400px) {
+    .main-container{
+        width: 75%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-container{
+        width: 82.5%;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-container{
+        width: 87%;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container{
+        width: 92%;
+    }
+}
+
+//no larger than
+@media (max-width: 576px) {
+    .main-container{
+        width: 100%;
+    }
+}
+    
 
 </style>

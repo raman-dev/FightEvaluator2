@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref } from 'vue';
-import EventLikelihood from './EventLikelihood.vue';
+import EventLikelihoodRow from './EventLikelihoodRow.vue';
 
 const matchupData = [
   {
@@ -125,10 +125,14 @@ const matchupData = [
 */
 
 
+
+
 </script>
 
 <template>
-  <table class="table table-bordered">
+  <div class="table-container">
+    <h2 class="event-title">event title</h2>
+    <table class="prediction-table table table-bordered table-hover">
     <thead>
       <tr>
         <th>Matchup</th>
@@ -144,34 +148,25 @@ const matchupData = [
 
     </thead>
     <tbody>
-      <tr v-for="(data, m_index) in matchupData" :key="m_index">
-        <td>
-          <div class="d-flex">
-            <span>
-              
-                {{ data.title }}
-            </span>
-            <button class="btn btn-outline-info">expand</button>
-          </div>
-        </td>
-
-        <template v-for="(event, type) in data.events" :key="type">
-          <td>
-            <div class="d-flex justify-content-between" v-if="type == 'win'">
-              <EventLikelihood v-bind="event[0]" :type="type" />
-              <EventLikelihood v-bind="event[1]" :type="type" />
-            </div>
-            <div v-else>
-              <EventLikelihood v-bind="event" />
-            </div>
-          </td>
-        </template>
-      </tr>
+      
+      <template v-for="data in matchupData">
+          <EventLikelihoodRow v-bind="data"/>
+      </template>
+    
     </tbody>
-  </table>
+    </table>
+  </div>
+  
 </template>
 
 <style lang="scss" scoped>
+.event-title{
+  text-transform: capitalize;
+}
+.table-container{
+    overflow-x: auto;
+}
+
 th {
   text-transform: capitalize;
 }

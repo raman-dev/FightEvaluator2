@@ -11,7 +11,7 @@ import Main from './components/Main.vue';
 @import url('@/assets/css/fonts.scss');
   
   html, body {
-      height: 100%;
+      height: 100% !important;
       min-height: 800px;
       font-family: PoppinsLight !important;
       font-size: 16px; 
@@ -36,5 +36,9 @@ import Main from './components/Main.vue';
   h5,
   h6 {
       font-family: PoppinsMedium;
+  }
+
+  #app{
+    height: 100%;
   }
 </style>
