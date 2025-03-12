@@ -131,18 +131,30 @@ const matchupData = [
 function hideTable() {
   //hide the table
   tableExpanded.value = !tableExpanded.value;
+  const table = tableContainer.value.querySelector('table');
+  const tableHeight = table.offsetHeight;
   if (tableExpanded.value == true) {
     //show table
-    const scrollHeight = tableContainer.value.scrollHeight;
-    tableContainer.value.style.height = `${scrollHeight}px`;
+    tableContainer.value.style.height = `${tableHeight}px`;
+    // tableContainer.value.style.height ='auto';
   } else {
-    const scrollHeight = tableContainer.value.scrollHeight;
+    // heightPreHide.value = tableContainer.value.offsetHeight;
     tableContainer.value.style.height = `0px`;
   }
 }
 
-function resizeTableHeight() {
-  console.log(tableContainer.value.scrollHeight);
+
+function resizeTableHeight(heightChange) {
+  //function executes before children change scroll height of container
+  const table = tableContainer.value.querySelector("table");
+  const style = window.getComputedStyle(table);
+  const tableHeight = table.scrollHeight;
+  const tableMargin = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+
+  let newScrollHeight = parseFloat(tableContainer.value.style.height) + heightChange;
+  console.log(tableHeight,heightChange,tableMargin);
+
+  tableContainer.value.style.height = `${newScrollHeight}px`
 }
 
 onMounted(() => {
@@ -178,7 +190,7 @@ onMounted(() => {
       <tbody>
 
         <template v-for="(data,index) in matchupData" :key="index">
-          <EventLikelihoodRow v-bind="data" @row-height-change="resizeTableHeight" />
+          <EventLikelihoodRow v-bind="data" @height-change="resizeTableHeight" />
         </template>
 
       </tbody>
@@ -194,9 +206,14 @@ onMounted(() => {
 }
 
 .table-container {
-
+  min-height: fit-content;
   transition: height 0.3s ease-out;
-  overflow:hidden
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+table {
+  margin: 0px;
 }
 
 th {

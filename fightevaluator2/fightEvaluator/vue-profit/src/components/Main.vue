@@ -1,11 +1,13 @@
 <script setup>
 import OddsTable from './OddsTable.vue';
 import TableActions from './TableActions.vue'
+import LinesTable from './LinesTable.vue';
 
 </script>
 <template>
     <div class="main-container">
       <OddsTable/>
+      <LinesTable/>
     </div>
     
 </template>

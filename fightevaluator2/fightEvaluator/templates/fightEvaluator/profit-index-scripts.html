@@ -260,11 +260,13 @@
         let show = !tr.classList.contains("show");
         
         tr.querySelectorAll(".justification").forEach((justificationElement) => {
+            // const style = window.getComputedStyle(justificationElement);
+            // const marginY = style.marginTop + style.marginBottom;
             if (show){
                 const scrollHeight = justificationElement.scrollHeight;
                 justificationElement.style.height=`${scrollHeight}px`;
             }else{
-                justificationElement.style.height = `0px`;
+                justificationElement.style.height = `${0}px`;
             }
         });
         tr.classList.toggle("show");

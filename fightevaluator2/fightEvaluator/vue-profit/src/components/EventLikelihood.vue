@@ -4,18 +4,25 @@ import { ref, useTemplateRef, watch } from 'vue';
 
 const props = defineProps(['likelihood', 'likelihood_val', 'justification', 'fighter', 'type']);
 const expanded = defineModel();
+const emits = defineEmits(['height-change']);
 
 const container = useTemplateRef('container');
 
+
 watch(expanded, async (newExpandedVal,oldExpandedVal) => {
+    // console.log(marginY);
+    const oldHeight = container.value.style.height;
     if (newExpandedVal == true){
         //expand the container the scrollHeight
-        const scrollHeight = container.value.scrollHeight;
-        container.value.style.height=`${scrollHeight}px`;
+        const newHeight = container.value.scrollHeight;
+        container.value.style.height=`${newHeight}px`;
         // container.value.style.opacity=1;
+        emits('height-change',newHeight);//the new height to add
     }else{
-        container.value.style.height=`0px`;
+        const oldScrollHeight = container.value.scrollHeight;
+        container.value.style.height=`${0}px`;
         // container.value.style.opacity=0;
+        emits('height-change',-oldScrollHeight);
     }
 });
 
