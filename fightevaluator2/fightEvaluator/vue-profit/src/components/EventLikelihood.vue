@@ -12,10 +12,10 @@ watch(expanded, async (newExpandedVal,oldExpandedVal) => {
         //expand the container the scrollHeight
         const scrollHeight = container.value.scrollHeight;
         container.value.style.height=`${scrollHeight}px`;
-        container.value.style.opacity=1;
+        // container.value.style.opacity=1;
     }else{
         container.value.style.height=`0px`;
-        container.value.style.opacity=0;
+        // container.value.style.opacity=0;
     }
 });
 
@@ -38,7 +38,7 @@ watch(expanded, async (newExpandedVal,oldExpandedVal) => {
 .justification {
     overflow: hidden;
     height: 0px;
-    opacity: 0;
+    // opacity: 0;
     transition: height 0.3s, opacity 0.3s ease-out;
 }
 

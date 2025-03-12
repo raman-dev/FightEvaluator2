@@ -1,20 +1,25 @@
 <script setup>
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import EventLikelihood from './EventLikelihood.vue';
 
 const props = defineProps(['matchup_id', 'events', 'title']);
+const emit = defineEmits(['row-height-change']);
 const expanded = ref(false);
+const tr = useTemplateRef('matchup-tr');
 
 function expandClick() {
     expanded.value = !expanded.value;
+    const tr_scrollHeight= tr.value.scrollHeight;
+    console.log('row height => ',tr_scrollHeight);
+    emit('row-height-change',tr_scrollHeight);
 }
 
 </script>
 
 <template>
 
-    <tr>
+    <tr ref="matchup-tr">
         <td>
             <div class="matchup-wrapper">
                 <a href="/matchup/1091">

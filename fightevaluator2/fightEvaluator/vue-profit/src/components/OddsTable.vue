@@ -1,7 +1,11 @@
 <script setup>
 
-import { ref } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 import EventLikelihoodRow from './EventLikelihoodRow.vue';
+import TableActions from './TableActions.vue';
+
+const tableExpanded = ref(true);
+const tableContainer = useTemplateRef('table-container');
 
 const matchupData = [
   {
@@ -124,47 +128,75 @@ const matchupData = [
                
 */
 
+function hideTable() {
+  //hide the table
+  tableExpanded.value = !tableExpanded.value;
+  if (tableExpanded.value == true) {
+    //show table
+    const scrollHeight = tableContainer.value.scrollHeight;
+    tableContainer.value.style.height = `${scrollHeight}px`;
+  } else {
+    const scrollHeight = tableContainer.value.scrollHeight;
+    tableContainer.value.style.height = `0px`;
+  }
+}
 
+function resizeTableHeight() {
+  console.log(tableContainer.value.scrollHeight);
+}
 
+onMounted(() => {
+  //set table height
+  const scrollHeight = tableContainer.value.scrollHeight;
+  tableContainer.value.style.height = `${scrollHeight}px`;
+});
 
 </script>
 
 <template>
-  <div class="table-container">
+  <div class="d-flex justify-content-between my-3">
     <h2 class="event-title">event title</h2>
-    <table class="prediction-table table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Matchup</th>
-        <th>
-          <div class="d-flex justify-content-between">
-            <span>Win A</span>
-            <span>Win B</span>
-          </div>
-        </th>
-        <th>Rounds >= 1.5</th>
-        <th>Does Not Go The Distance</th>
-      </tr>
+    <button class="btn btn-outline-secondary table-toggle-btn" @click="hideTable()">hide table</button>
+  </div>
 
-    </thead>
-    <tbody>
-      
-      <template v-for="data in matchupData">
-          <EventLikelihoodRow v-bind="data"/>
-      </template>
-    
-    </tbody>
+  <div class="table-container" ref="table-container">
+    <table class="prediction-table table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Matchup</th>
+          <th>
+            <div class="d-flex justify-content-between">
+              <span>Win A</span>
+              <span>Win B</span>
+            </div>
+          </th>
+          <th>Rounds >= 1.5</th>
+          <th>Does Not Go The Distance</th>
+        </tr>
+
+      </thead>
+      <tbody>
+
+        <template v-for="(data,index) in matchupData" :key="index">
+          <EventLikelihoodRow v-bind="data" @row-height-change="resizeTableHeight" />
+        </template>
+
+      </tbody>
     </table>
   </div>
-  
+  <TableActions  />
+
 </template>
 
 <style lang="scss" scoped>
-.event-title{
+.event-title {
   text-transform: capitalize;
 }
-.table-container{
-    overflow-x: auto;
+
+.table-container {
+
+  transition: height 0.3s ease-out;
+  overflow:hidden
 }
 
 th {

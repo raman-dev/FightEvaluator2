@@ -5,8 +5,7 @@ import TableActions from './TableActions.vue'
 </script>
 <template>
     <div class="main-container">
-      <OddsTable />
-      <TableActions/>
+      <OddsTable/>
     </div>
     
 </template>
