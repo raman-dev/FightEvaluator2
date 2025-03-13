@@ -132,10 +132,13 @@ function hideTable() {
   //hide the table
   tableExpanded.value = !tableExpanded.value;
   const table = tableContainer.value.querySelector('table');
+  const style = window.getComputedStyle(table);
   const tableHeight = table.offsetHeight;
+  const tableMargin = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+
   if (tableExpanded.value == true) {
     //show table
-    tableContainer.value.style.height = `${tableHeight}px`;
+    tableContainer.value.style.height = `${tableHeight + tableMargin+ 16}px`;
     // tableContainer.value.style.height ='auto';
   } else {
     // heightPreHide.value = tableContainer.value.offsetHeight;
@@ -206,15 +209,14 @@ onMounted(() => {
 }
 
 .table-container {
-  min-height: fit-content;
   transition: height 0.3s ease-out;
   overflow-x: auto;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
-table {
-  margin: 0px;
-}
+// table {
+//   margin: 0px;
+// }
 
 th {
   text-transform: capitalize;
