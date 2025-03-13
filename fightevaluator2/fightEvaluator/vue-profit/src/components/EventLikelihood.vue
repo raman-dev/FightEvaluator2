@@ -4,8 +4,9 @@ import { ref, useTemplateRef, watch } from 'vue';
 
 const props = defineProps(['likelihood', 'likelihood_val', 'justification', 'fighter', 'type']);
 const expanded = defineModel();
-const emits = defineEmits(['height-change']);
+const emits = defineEmits(['height-change','selected']);
 
+const isSelected = ref(false);
 const container = useTemplateRef('container');
 
 
@@ -26,11 +27,19 @@ watch(expanded, async (newExpandedVal,oldExpandedVal) => {
     }
 });
 
+function selectEvent(){
+    //do what add style here
+    isSelected.value = !isSelected.value;
+    if (isSelected.value){
+        emits('selected',props.type,props.fighter);
+    }
+}
+
 
 </script>
 
 <template>
-    <div class="likelihood" :class="['likely-' + props.likelihood_val]">
+    <div class="likelihood" :class="['likely-' + props.likelihood_val,{selected:isSelected}]" @click="selectEvent">
         <span>{{ props.likelihood }}</span>
         <p class="bg-dark m-0 justification" ref="container">
             {{ props.justification }}
@@ -39,6 +48,12 @@ watch(expanded, async (newExpandedVal,oldExpandedVal) => {
 </template>
 
 <style lang="scss" scoped>
+
+.likelihood.selected {
+    outline: 2px solid whitesmoke;
+    outline-offset: 1px;
+}
+
 :hover{
     cursor: pointer;
 }

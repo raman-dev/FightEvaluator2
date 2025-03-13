@@ -6,6 +6,7 @@ import EventLikelihood from './EventLikelihood.vue';
 const props = defineProps(['matchup_id', 'events', 'title']);
 const emits = defineEmits(['height-change']);
 const expanded = ref(false);
+const selectedEvents = ref({});
 const tr = useTemplateRef('matchup-tr');
 
 function expandClick() {
@@ -36,6 +37,15 @@ onMounted(()=>{
     maxUpdates.value = tr.value.children.length;
 });
 
+
+function onEventSelect(type,fighter){
+    console.log(type,fighter);
+    if (type in selectedEvents.value){
+        //deselect the event
+        delete selectedEvents.value[type];
+    }
+}
+
 </script>
 
 <template>
@@ -53,11 +63,11 @@ onMounted(()=>{
         <template v-for="(event, type) in props.events" :key="type">
             <td>
                 <div class="d-flex justify-content-evenly align-items-start" v-if="type == 'win'">
-                    <EventLikelihood v-bind="event[0]" :type="type" v-model="expanded" @height-change="resizeRow"/>
-                    <EventLikelihood v-bind="event[1]" :type="type" v-model="expanded" @height-change="resizeRow"/>
+                    <EventLikelihood v-bind="event[0]" :type="type" v-model="expanded" @height-change="resizeRow" @selected="onEventSelect"/>
+                    <EventLikelihood v-bind="event[1]" :type="type" v-model="expanded" @height-change="resizeRow" @selected="onEventSelect"/>
                 </div>
                 <div v-else>
-                    <EventLikelihood v-bind="event" v-model="expanded" @height-change="resizeRow"/>
+                    <EventLikelihood v-bind="event" :type="type" v-model="expanded" @height-change="resizeRow" @selected="onEventSelect"/>
                 </div>
             </td>
         </template>
