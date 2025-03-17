@@ -1,6 +1,12 @@
 <script setup>
 
+import { useLinesStore } from '@/stores/lines';
 
+const linesStore = useLinesStore();
+
+function createLine(){
+    linesStore.createLine();
+}
 
 </script>
 

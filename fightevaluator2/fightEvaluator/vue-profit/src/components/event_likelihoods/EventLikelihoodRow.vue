@@ -2,6 +2,7 @@
 
 import { onMounted, ref, useTemplateRef } from 'vue';
 import EventLikelihood from './EventLikelihood.vue';
+import { useSelectedEventsStore } from '@/stores/lines';
 
 const props = defineProps(['matchup_id', 'events', 'title']);
 const emits = defineEmits(['height-change']);
@@ -13,17 +14,15 @@ const selectedEvents = ref({
     'does_not_go_the_distance':false
 });
 
+const selectedEventsStore = useSelectedEventsStore();
+
 const currentWinner = ref();
 
 const tr = useTemplateRef('matchup-tr');
-
-function expandClick() {
-    expanded.value = !expanded.value;
-}
-
 const maxUpdates = ref(0);
 const updates = ref(0);
 const heightChange = ref(0);
+
 function resizeRow(height_delta){
     //take max delta
     if (height_delta < 0){
@@ -66,16 +65,26 @@ function onClickEvent(event,type){
         if (selectedEvents.value[type][event.fighter] == true){
             selectedEvents.value[type][event.fighter] = false;
             currentWinner.value = null;
+            
+            selectedEventsStore.removeEvent(props.matchup_id,type);
         }else{
             //deselect previous
             if (currentWinner.value != null){
                 selectedEvents.value[type][currentWinner.value] = false;
+                selectedEventsStore.removeEvent(props.matchup_id,type);
             }
             selectedEvents.value[type][event.fighter] = true; 
+            selectedEventsStore.addEvent(props.matchup_id,event,type,props.title);
             currentWinner.value = event.fighter;
         }
     }else{
-        selectedEvents.value[type] = !selectedEvents.value[type];
+        if (selectedEvents.value[type] == true){
+            selectedEvents.value[type] = false;
+            selectedEventsStore.removeEvent(props.matchup_id,type);
+        }else{
+            selectedEvents.value[type] = true;
+            selectedEventsStore.addEvent(props.matchup_id,event,type,props.title);
+        }
     }
 }
 
@@ -89,7 +98,7 @@ function onClickEvent(event,type){
                 <a href="/matchup/1091">
                     {{ props.title }}
                 </a>
-                <button class="expand-toggle btn btn-outline-info" @click="expandClick()">expand</button>
+                <button class="expand-toggle btn btn-outline-info" @click="expanded = !expanded">expand</button>
             </div>
         </td>
 

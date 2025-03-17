@@ -155,7 +155,7 @@ function resizeTableHeight(heightChange) {
   const tableMargin = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
 
   let newScrollHeight = tableHeight + heightChange + tableMargin;
-  console.log(tableHeight,heightChange,tableMargin,newScrollHeight);
+  // console.log(tableHeight,heightChange,tableMargin,newScrollHeight);
 
   tableContainer.value.style.height = `${newScrollHeight + 16}px`//16 for horizontal scrollbar
 }
@@ -170,7 +170,7 @@ onMounted(() => {
 
 <template>
   <div class="d-flex justify-content-between my-3">
-    <h1 class="event-title">Event Title</h1>
+    <h2 class="event-title">Event Title</h2>
     <button class="btn btn-outline-secondary table-toggle-btn" @click="hideTable()">hide table</button>
   </div>
 

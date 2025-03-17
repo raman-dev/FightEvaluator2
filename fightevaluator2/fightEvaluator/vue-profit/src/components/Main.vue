@@ -1,7 +1,7 @@
 <script setup>
-import OddsTable from './OddsTable.vue';
-import TableActions from './TableActions.vue'
-import LinesTable from './LinesTable.vue';
+import OddsTable from './event_likelihoods/OddsTable.vue';
+import TableActions from './event_likelihoods/TableActions.vue'
+import LinesTable from './lines/LinesTable.vue';
 
 </script>
 <template>
@@ -40,8 +40,8 @@ import LinesTable from './LinesTable.vue';
 
 .likelihood {
     
-    font-family: PoppinsSemiBold;
     border-radius: 0.2rem;
+    font-family: PoppinsSemiBold;
     width: 18ch;
     user-select: none;
     margin: 0.2rem;
@@ -52,7 +52,6 @@ import LinesTable from './LinesTable.vue';
         padding: 1rem;
         padding-left: 0.6rem;
         text-transform: capitalize;
-
     }
 
     &.selected {
