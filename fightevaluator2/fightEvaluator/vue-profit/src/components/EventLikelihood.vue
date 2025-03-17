@@ -6,7 +6,7 @@ const props = defineProps(['likelihood', 'likelihood_val', 'justification', 'fig
 const expanded = defineModel();
 const emits = defineEmits(['height-change','selected']);
 
-const isSelected = ref(false);
+const isSelected = defineModel('isSelected');
 const container = useTemplateRef('container');
 
 
@@ -27,19 +27,11 @@ watch(expanded, async (newExpandedVal,oldExpandedVal) => {
     }
 });
 
-function selectEvent(){
-    //do what add style here
-    isSelected.value = !isSelected.value;
-    if (isSelected.value){
-        emits('selected',props.type,props.fighter);
-    }
-}
-
 
 </script>
 
 <template>
-    <div class="likelihood" :class="['likely-' + props.likelihood_val,{selected:isSelected}]" @click="selectEvent">
+    <div class="likelihood" :class="['likely-' + props.likelihood_val,{selected:isSelected}]">
         <span>{{ props.likelihood }}</span>
         <p class="bg-dark m-0 justification" ref="container">
             {{ props.justification }}

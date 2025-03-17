@@ -6,7 +6,15 @@ import EventLikelihood from './EventLikelihood.vue';
 const props = defineProps(['matchup_id', 'events', 'title']);
 const emits = defineEmits(['height-change']);
 const expanded = ref(false);
-const selectedEvents = ref({});
+
+const selectedEvents = ref({
+    'win':{},
+    'rounds_geq_one_half':false,
+    'does_not_go_the_distance':false
+});
+
+const currentWinner = ref();
+
 const tr = useTemplateRef('matchup-tr');
 
 function expandClick() {
@@ -35,14 +43,39 @@ function resizeRow(height_delta){
 
 onMounted(()=>{
     maxUpdates.value = tr.value.children.length;
+    const eventsMap = props.events; //
+    const winEventData = eventsMap['win'];
+    
+    for (const eventType in eventsMap){
+        if (eventType == 'win'){
+            const [fighter_a,fighter_b] = winEventData;
+            selectedEvents.value['win'][fighter_a.fighter] = false;
+            selectedEvents.value['win'][fighter_b.fighter] = false;
+        }else{
+            selectedEvents.value[eventType] = false;
+        }
+    }
+    currentWinner.value = null;
 });
 
 
-function onEventSelect(type,fighter){
-    console.log(type,fighter);
-    if (type in selectedEvents.value){
-        //deselect the event
-        delete selectedEvents.value[type];
+function onClickEvent(event,type){
+    //flip state of type,event
+    if (type == 'win'){
+        //selected same fighter -> deselec`t
+        if (selectedEvents.value[type][event.fighter] == true){
+            selectedEvents.value[type][event.fighter] = false;
+            currentWinner.value = null;
+        }else{
+            //deselect previous
+            if (currentWinner.value != null){
+                selectedEvents.value[type][currentWinner.value] = false;
+            }
+            selectedEvents.value[type][event.fighter] = true; 
+            currentWinner.value = event.fighter;
+        }
+    }else{
+        selectedEvents.value[type] = !selectedEvents.value[type];
     }
 }
 
@@ -63,11 +96,29 @@ function onEventSelect(type,fighter){
         <template v-for="(event, type) in props.events" :key="type">
             <td>
                 <div class="d-flex justify-content-evenly align-items-start" v-if="type == 'win'">
-                    <EventLikelihood v-bind="event[0]" :type="type" v-model="expanded" @height-change="resizeRow" @selected="onEventSelect"/>
-                    <EventLikelihood v-bind="event[1]" :type="type" v-model="expanded" @height-change="resizeRow" @selected="onEventSelect"/>
+                    <EventLikelihood 
+                        v-bind="event[0]" 
+                        :type="type" 
+                        v-model="expanded"
+                        v-model:isSelected="selectedEvents[type][event[0].fighter]"
+                        @height-change="resizeRow"
+                        @click="onClickEvent(event[0],type)"/> 
+                    <EventLikelihood 
+                        v-bind="event[1]" 
+                        :type="type" 
+                        v-model="expanded" 
+                        v-model:isSelected="selectedEvents[type][event[1].fighter]"
+                        @height-change="resizeRow" 
+                        @click="onClickEvent(event[1],type)"/>
                 </div>
                 <div v-else>
-                    <EventLikelihood v-bind="event" :type="type" v-model="expanded" @height-change="resizeRow" @selected="onEventSelect"/>
+                    <EventLikelihood 
+                        v-bind="event" 
+                        :type="type" 
+                        v-model="expanded" 
+                        v-model:isSelected="selectedEvents[type]"
+                        @height-change="resizeRow" 
+                        @click="onClickEvent(event,type)"/>
                 </div>
             </td>
         </template>
