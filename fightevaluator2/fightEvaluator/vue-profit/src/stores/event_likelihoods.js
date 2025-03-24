@@ -29,8 +29,61 @@ export const useEventLikelihoodsStore = defineStore('eventLikelihoods',()=>{
     return matchupLikelihoodData.value;
    }
 
+   function getSelectedEventsFromMap(eventMap,resultMap){
+        for (const type in eventMap) {
+            const event = eventMap[type];
+            if (type == 'win'){
+                for (const fighterEvent of event) {
+                    if (fighterEvent.selected){
+                        resultMap[type] = fighterEvent;
+                        resultMap.count++;
+                    }
+                }
+            }else{
+                if (event.selected){
+                    resultMap[type]= event;
+                    resultMap.count++;
+                }
+            }
+        }
+   }
+
+   function getSelectedEvents(){
+        const result = {};
+        for (const matchupId in matchupLikelihoodData.value) {
+            const data = matchupLikelihoodData.value[matchupId];
+            const eventMap = data.events;
+            const selectedEventMap = {count:0};
+            getSelectedEventsFromMap(eventMap,selectedEventMap);
+            if (selectedEventMap.count > 0){
+                result[matchupId] = {
+                    matchupId : matchupId,
+                    eventMap:selectedEventMap,
+                    title:data.title
+                };
+            }
+        }
+        return result;
+   }
+
+   function clearSelectedEvents(){
+    for (const matchupId in matchupLikelihoodData.value) {
+        const data = matchupLikelihoodData.value[matchupId];
+        const events = data.events;
+        for (const type in events) {
+            if (type == 'win'){
+                for (const fighterEvent of events[type]) {
+                    fighterEvent.selected = false;
+                }
+            }else{
+                events[type].selected = false;
+            }
+        }
+    }
+   }
+
    function populateData(eventLikelihoodMap){
-        console.log(eventLikelihoodMap);
+        // console.log(eventLikelihoodMap);
         for (const x in eventLikelihoodMap){
             const clone = structuredClone(eventLikelihoodMap[x]);
             // console.log(x);
@@ -48,5 +101,5 @@ export const useEventLikelihoodsStore = defineStore('eventLikelihoods',()=>{
         }
    }
 
-   return  { matchupLikelihoodData,getData, populateData };
+   return  { matchupLikelihoodData,getData, populateData, getSelectedEvents, clearSelectedEvents };
 });

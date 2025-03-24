@@ -7,8 +7,6 @@ const props = defineProps(['likelihood','likelihood_val','fighter','type','justi
 const typeReadable = ref('');
 
 onMounted(() => {
-
-    console.log(props);
     
     if (props.type == 'WIN'){
         typeReadable.value = props.type;

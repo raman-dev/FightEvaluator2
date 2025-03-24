@@ -8,7 +8,7 @@ const props  = defineProps(['line']);
 <template>
     <div class="line border flex-wrap">
         <template v-for="(value,key) in props.line">
-            <MatchUpEvents :matchup_id="key" :eventMap="value" :title="value.title"/>
+            <MatchUpEvents :matchup_id="key" :eventMap="value.eventMap" :title="value.title"/>
         </template>
     </div>
 </template>

@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+import { useEventLikelihoodsStore } from './event_likelihoods';
+
 export const useSelectedEventsStore = defineStore('selectedEvents',()=>{
     const events = ref({});
     
@@ -41,8 +43,8 @@ export const useSelectedEventsStore = defineStore('selectedEvents',()=>{
   
   
   export const useLinesStore = defineStore('lines',() => {
-    const selectedEvents = useSelectedEventsStore()
-    const lines = ref ([]) 
+    const eventLikelihoodStore = useEventLikelihoodsStore();
+    const lines = ref ([]) ;
     /*
       what are lines? lines - list of lines
         line ->
@@ -71,8 +73,9 @@ export const useSelectedEventsStore = defineStore('selectedEvents',()=>{
          need input data
          as list
       */
-        lines.value.push(selectedEvents.getSelectedEvents());
-        selectedEvents.clearEvents();
+         const newLine = eventLikelihoodStore.getSelectedEvents();
+         lines.value.push(newLine);
+         eventLikelihoodStore.clearSelectedEvents()
     }
 
     function removeLine(){
