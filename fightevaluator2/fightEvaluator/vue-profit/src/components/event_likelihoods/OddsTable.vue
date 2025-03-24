@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref, useTemplateRef } from 'vue';
+import { onMounted, provide, ref, useTemplateRef } from 'vue';
 import EventLikelihoodRow from './EventLikelihoodRow.vue';
 import TableActions from './TableActions.vue';
 import { useEventLikelihoodsStore } from '@/stores/event_likelihoods';
@@ -101,8 +101,8 @@ onMounted(() => {
       </thead>
       <tbody>
 
-        <template v-for="(data,index) in matchupLikelihoodData" :key="index">
-          <EventLikelihoodRow v-bind="data" @height-change="resizeTableHeight" />
+        <template v-for="(data,matchupId) in matchupLikelihoodData" :key="matchupId">
+          <EventLikelihoodRow v-bind="data" :matchupId="matchupId" @height-change="resizeTableHeight" />
         </template>
 
       </tbody>

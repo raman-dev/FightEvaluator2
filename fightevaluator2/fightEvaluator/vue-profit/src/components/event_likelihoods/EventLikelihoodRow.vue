@@ -4,7 +4,7 @@ import { onMounted, ref, useTemplateRef } from 'vue';
 import EventLikelihood from './EventLikelihood.vue';
 import { useSelectedEventsStore } from '@/stores/lines';
 
-const props = defineProps(['matchup_id', 'events', 'title']);
+const props = defineProps(['matchupId', 'events', 'title']);
 const emits = defineEmits(['height-change']);
 const expanded = ref(false);
 
@@ -15,6 +15,7 @@ const selectedEvents = ref({
 });
 
 const selectedEventsStore = useSelectedEventsStore();
+const eventLikelihoodObject = {};
 
 const currentWinner = ref();
 
@@ -66,24 +67,24 @@ function onClickEvent(event,type){
             selectedEvents.value[type][event.fighter] = false;
             currentWinner.value = null;
             
-            selectedEventsStore.removeEvent(props.matchup_id,type);
+            selectedEventsStore.removeEvent(props.matchupId,type);
         }else{
             //deselect previous
             if (currentWinner.value != null){
                 selectedEvents.value[type][currentWinner.value] = false;
-                selectedEventsStore.removeEvent(props.matchup_id,type);
+                selectedEventsStore.removeEvent(props.matchupId,type);
             }
             selectedEvents.value[type][event.fighter] = true; 
-            selectedEventsStore.addEvent(props.matchup_id,event,type,props.title);
+            selectedEventsStore.addEvent(props.matchupId,event,type,props.title);
             currentWinner.value = event.fighter;
         }
     }else{
         if (selectedEvents.value[type] == true){
             selectedEvents.value[type] = false;
-            selectedEventsStore.removeEvent(props.matchup_id,type);
+            selectedEventsStore.removeEvent(props.matchupId,type);
         }else{
             selectedEvents.value[type] = true;
-            selectedEventsStore.addEvent(props.matchup_id,event,type,props.title);
+            selectedEventsStore.addEvent(props.matchupId,event,type,props.title);
         }
     }
 }

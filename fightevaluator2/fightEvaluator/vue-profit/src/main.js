@@ -6,9 +6,8 @@ import "bootstrap/dist/css/bootstrap.css"
 import { useEventLikelihoodsStore } from './stores/event_likelihoods'
 
 
-const matchupData = [
-    {
-      matchup_id: 1,
+const matchupData = {
+     1: {
       title: "Fighter A vs Fighter B",
       events: {
         win: [
@@ -37,8 +36,8 @@ const matchupData = [
         }
       }
     },
-    {
-      matchup_id: 2,
+    
+    2:{
       title: "Fighter C vs Fighter D",
       events: {
         win: [
@@ -67,8 +66,8 @@ const matchupData = [
         }
       }
     },
-    {
-      matchup_id: 3,
+    
+    3 : {
       title: "Fighter E vs Fighter F",
       events: {
         win: [
@@ -97,7 +96,7 @@ const matchupData = [
         }
       }
     }
-  ];
+};
 
 const app = createApp(App)
 const pinia = createPinia();

@@ -17,20 +17,34 @@ export const useEventLikelihoodsStore = defineStore('eventLikelihoods',()=>{
                 //other stuff
             event_x_win
                 []special case
+        
+        matchup_id:
+            title
+            events
+                
     */
-   const matchupLikelihoodData = ref([]);
+   const matchupLikelihoodData = ref({});
 
    function getData(){
     return matchupLikelihoodData.value;
    }
 
-   function populateData(eventLikelihoodDataList){
-        console.log(eventLikelihoodDataList);
-        for (const data of eventLikelihoodDataList){
-            const x = structuredClone(data);
+   function populateData(eventLikelihoodMap){
+        console.log(eventLikelihoodMap);
+        for (const x in eventLikelihoodMap){
+            const clone = structuredClone(eventLikelihoodMap[x]);
             // console.log(x);
-            x['selected'] = false;
-            matchupLikelihoodData.value.push(x);
+            // x['selected'] = false;
+            for (const eventType in clone['events']) {
+                if (eventType == 'win'){
+                    for (const fighterWin of clone['events'][eventType]) {
+                        fighterWin['selected'] = false;
+                    }
+                }else{
+                    clone['events'][eventType]['selected'] = false;
+                }
+            }
+            matchupLikelihoodData.value[x] = clone;
         }
    }
 
