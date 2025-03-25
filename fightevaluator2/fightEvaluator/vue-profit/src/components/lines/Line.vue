@@ -19,7 +19,7 @@ const props  = defineProps(['line']);
         width: fit-content;
         
         display: flex;
-        padding: 0.8rem !important;
+        padding: 0.4rem !important;
 
         border-color: #151616 !important;
         border-width: 2px !important;

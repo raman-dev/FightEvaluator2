@@ -49,21 +49,23 @@ export const useEventLikelihoodsStore = defineStore('eventLikelihoods',()=>{
    }
 
    function getSelectedEvents(){
-        const result = {};
+        const line = {};
+        let count = 0;
         for (const matchupId in matchupLikelihoodData.value) {
             const data = matchupLikelihoodData.value[matchupId];
             const eventMap = data.events;
             const selectedEventMap = {count:0};
             getSelectedEventsFromMap(eventMap,selectedEventMap);
             if (selectedEventMap.count > 0){
-                result[matchupId] = {
+                line[matchupId] = {
                     matchupId : matchupId,
                     eventMap:selectedEventMap,
                     title:data.title
                 };
+                count++;
             }
         }
-        return result;
+        return { line, count };
    }
 
    function clearSelectedEvents(){

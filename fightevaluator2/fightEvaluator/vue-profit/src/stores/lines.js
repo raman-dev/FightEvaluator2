@@ -73,8 +73,11 @@ export const useSelectedEventsStore = defineStore('selectedEvents',()=>{
          need input data
          as list
       */
-         const newLine = eventLikelihoodStore.getSelectedEvents();
-         lines.value.push(newLine);
+         const result  = eventLikelihoodStore.getSelectedEvents();
+         
+         if (result.count > 0){
+            lines.value.push(result.line);
+         }
          eventLikelihoodStore.clearSelectedEvents()
     }
 
