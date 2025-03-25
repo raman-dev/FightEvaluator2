@@ -5,6 +5,7 @@ from django.http import JsonResponse,HttpResponse
 
 urlpatterns = [
     # path('', views.FightEventDetailView.as_view(), name='index'),
+    # path('test-data',views.get_some_data,name='test-data-ting'),
     path('', views.index, name='index'),
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
     # path('mf-test',views.modelformfactory_test)
@@ -13,6 +14,8 @@ urlpatterns = [
     path('profit/get-odds',views.get_odds,name='odds_endpoint'),
     path('profit/',views.profit_index,name='profit-index-0'),
     path('profit/<int:eventId>',views.profit_index,name='profit-index'),
+    path('profit-data/',views.profit_data,name='profit-data-recent-event'),
+    path('profit-data/<int:eventId>',views.profit_data,name='profit-data-event-by-id'),
 
     path('predictions',views.predictions,name="predictions"),
     path('predictions/publish',views.publishResults,name="publish-results"),

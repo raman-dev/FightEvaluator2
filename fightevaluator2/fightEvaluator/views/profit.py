@@ -22,6 +22,29 @@ def toMultiplier(odd):
 
 
 @require_GET
+def get_some_data(request):
+    print(request,request.body,request.headers)
+    return  JsonResponse({"message":"hello from django-server"})
+
+@require_GET
+def profit_data(request,eventId=-1):
+    fightEvent = None
+    if eventId != -1:
+        fightEvent = FightEvent.objects.get(pk=eventId)
+        pass
+    else:
+        fightEvent = FightEvent.objects.all().first()
+    
+    #get all predictions
+    for m in MatchUp.objects.filter(event=fightEvent):
+        print(m)
+        
+        for e in EventLikelihood.objects.filter(matchup=m):
+            print(e)
+        print()
+    return JsonResponse({"message":'hello from server'})
+
+@require_GET
 def get_odds(request):
     # check if data available
     # if available return data

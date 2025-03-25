@@ -1,7 +1,8 @@
 <script setup>
+import { onMounted } from 'vue';
 import OddsTable from './event_likelihoods/OddsTable.vue';
-import TableActions from './event_likelihoods/TableActions.vue'
 import LinesTable from './lines/LinesTable.vue';
+
 
 </script>
 <template>

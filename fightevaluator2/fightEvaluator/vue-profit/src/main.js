@@ -98,11 +98,40 @@ const matchupData = {
     }
 };
 
+function getPredictionData(urlIn,eventId){
+  let url = urlIn;
+  if (eventId != undefined){
+    url = `${urlIn}/${eventId}`;
+  }
+  fetch (url,{
+    method:'GET'
+  })
+  .then((response) => response.json())
+  .then((data) => {
+      console.log(data);
+      //populate eventLilelihoodStore
+
+  });
+}
+
 const app = createApp(App)
 const pinia = createPinia();
 app.use(pinia);
 
 const eventLikelihoodStore = useEventLikelihoodsStore();
+//fetch here
+const testUrl = '/test-data';
+const predictionUrl = '/profit-data';
+const eventId = 103
+
+getPredictionData(predictionUrl,eventId);
+// fetch (testUrl,{method:'GET'})
+// .then((response) => response.json())
+// .then((data) => {
+//     console.log(data)
+// });
+
+
 
 eventLikelihoodStore.populateData(matchupData);
 app.mount('#app')
