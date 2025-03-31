@@ -3,61 +3,72 @@ import { useGraphStore } from '@/stores/graphs';
 import { storeToRefs } from 'pinia';
 import { Network} from 'vis-network';
 import { DataSet } from 'vis-data';
-import { onMounted, useTemplateRef } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
 const graphStore = useGraphStore();
 const { show } = storeToRefs(graphStore);
 
 const graphRef = useTemplateRef('mGraph');
+// const testthing = ref(new DataSet());
+const network = ref(null);
+// create an array with nodes
+const nodes = new DataSet([
+    {id: 1, label: 'Node 1'},
+    {id: 2, label: 'Node 2'},
+    {id: 3, label: 'Node 3'},
+    {id: 4, label: 'Node 4'},
+    {id: 5, label: 'Node 5'}
+]);
 
+// create an array with edges
+const edges = new DataSet([
+    {from: 1, to: 3,id:0},
+    {from: 1, to: 3,id:1},
+    {from: 1, to: 2},
+    {from: 2, to: 4},
+    {from: 2, to: 5}
+]);
+
+const data = {
+    nodes: nodes,
+    edges: edges
+};
+const options = {
+    // autoResize: false,
+    layout:{
+        hierarchical:{
+            enabled:true,
+            // direction:"LR",
+            levelSeparation: 150,
+            nodeSpacing: 150,
+        },
+    },
+    // interaction:{
+        // dragNodes:false,
+    // },
+    edges:{
+        arrows:'to'
+    }
+};
+
+watch (graphRef,async (newVal,oldVal) => {
+    console.log(newVal,oldVal);
+    if(newVal != null){
+        network.value = new Network(newVal,data,options);
+    }else{
+        network.value = null;//release memory type shit
+    }
+});
 
 onMounted(()=>{
-    // create an array with nodes
-    const nodes = new DataSet([
-        {id: 1, label: 'Node 1'},
-        {id: 2, label: 'Node 2'},
-        {id: 3, label: 'Node 3'},
-        {id: 4, label: 'Node 4'},
-        {id: 5, label: 'Node 5'}
-    ]);
-     // create an array with edges
-     const edges = new DataSet([
-        {from: 1, to: 3,id:0},
-        {from: 1, to: 3,id:1},
-        {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5}
-    ]);
 
      // create a network
-    const container = graphRef.value;//document.getElementById('mGraph');
+    // const container = graphRef.value;//document.getElementById('mGraph');
     // provide the data in the vis format
-    console.log(container);
-    const data = {
-        nodes: nodes,
-        edges: edges
-    };
-    const options = {
-        // autoResize: false,
-        layout:{
-            hierarchical:{
-                enabled:true,
-                // direction:"LR",
-                levelSeparation: 150,
-                nodeSpacing: 150,
-            },
-        },
-        // interaction:{
-            // dragNodes:false,
-        // },
-        edges:{
-            arrows:'to'
-        }
-    };
-
-    // initialize your network!
-    const network = new Network(container, data, options);
-    console.log(network);
+    // console.log(container);
+    // // initialize your network!
+    // network.value = new Network(container, data, options);
+    // console.log(network);
     // function updateGraph(nodeList){
     //     /*
     //         graph can be changed by adding nodes to nodes list
@@ -124,7 +135,7 @@ onMounted(()=>{
     .graph{
         height: 100%;
         width: 100%;
-        background-color: blue;
+        background-color: lavender;
     }
     height: 60%;
     width: 80%;

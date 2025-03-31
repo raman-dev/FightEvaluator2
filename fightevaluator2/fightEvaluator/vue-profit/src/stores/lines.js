@@ -84,8 +84,12 @@ export const useSelectedEventsStore = defineStore('selectedEvents',()=>{
     function removeLine(){
   
     }
-  
-    return { lines,createLine,removeLine }
+
+    function getLines() {
+      return lines.value;
+    }  
+
+    return { lines,createLine,removeLine, getLines }
   
   })
   
