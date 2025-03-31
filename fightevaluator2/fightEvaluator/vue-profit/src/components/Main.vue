@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import OddsTable from './event_likelihoods/OddsTable.vue';
 import LinesTable from './lines/LinesTable.vue';
+import VisGraph from './VisGraph.vue';
 
 
 </script>
@@ -9,11 +10,14 @@ import LinesTable from './lines/LinesTable.vue';
     <div class="main-container">
       <OddsTable/>
       <LinesTable/>
+      <VisGraph/>
     </div>
     
 </template>
 
 <style lang="scss">
+
+
 
 .likely-5 {
     background-color: #dc3545;
