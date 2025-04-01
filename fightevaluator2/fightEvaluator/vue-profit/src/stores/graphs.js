@@ -13,7 +13,7 @@ export const useGraphStore = defineStore('graph',()=>{
     function toggleGraph(){
 
         const lines = linesStore.getLines();
-        console.log(lines);
+        console.log(nodes);
         /*
         
             a node is what?
@@ -23,6 +23,7 @@ export const useGraphStore = defineStore('graph',()=>{
                 matchup_id.event_a2
 
         */
+        let prev = null;
         for (const line of lines) {
             //what is  a line
             //line is a map 
@@ -31,10 +32,30 @@ export const useGraphStore = defineStore('graph',()=>{
 
             */
            for (const matchupId in line) {
-            
+                const { eventMap, title } = line[matchupId];
+                for (const type in eventMap) {
+                    if (type == 'count'){
+                        continue;
+                    }
+                    const nodeId = `${matchupId}|${type}`;
+                    let node = nodes.get(nodeId);
+                    let nodeLabel = `${title}\n${type}`;
+                    if (node == null || node == undefined){
+                        node = {
+                            id: nodeId,
+                            label : nodeLabel,
+                        }
+                        console.log ('creating node => ',node);
+                        nodes.add(node);
+                    }
+                    if (prev != null){
+                        edges.add({
+                            from: prev.id, to: node.id
+                        });
+                    }
+                    prev = node;
+                }
            }
-
-            
         }
         show.value = !show.value;
 
