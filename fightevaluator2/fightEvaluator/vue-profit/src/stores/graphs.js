@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useLinesStore } from "./lines";
 import { DataSet } from "vis-data";
+import { Network } from "vis-network";
 
 export const useGraphStore = defineStore('graph',()=>{
     const show = ref(false);
@@ -9,6 +10,36 @@ export const useGraphStore = defineStore('graph',()=>{
 
     const nodes = new DataSet([]);
     const edges = new DataSet([]);
+    const options = {
+        // physics: {
+        //     barnesHut: {
+        //       avoidOverlap: 1 // Prevents nodes from overlapping
+        //     }
+        // },
+        // autoResize: false,
+        // layout:{
+        //     // hierarchical:{
+        //         // enabled:true,
+        //         // direction:"LR",
+        //         // levelSeparation: 150,
+                nodeSpacing: 150,
+            // },
+        // },
+        // interaction:{
+            // dragNodes:false,
+        // },
+        edges:{
+            arrows:'to'
+        },
+        nodes: {
+            shape: "box",
+            font: {
+              bold: {
+                color: "#0077aa",
+              },
+            },
+          },
+    };
 
     function toggleGraph(){
 
@@ -55,12 +86,24 @@ export const useGraphStore = defineStore('graph',()=>{
                     }
                     prev = node;
                 }
+                prev = null;
            }
         }
         show.value = !show.value;
-
+        
         return show.value;
     }
 
-    return  { show,toggleGraph }
+    function getVisNetwork(container){
+        if (show.value == false){
+            return null;
+        }
+        const data = {
+            nodes: nodes,
+            edges: edges
+        };
+        return new Network(container,data,options);
+    }
+
+    return  { show,toggleGraph,getVisNetwork }
 });
