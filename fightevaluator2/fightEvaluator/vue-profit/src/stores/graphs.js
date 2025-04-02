@@ -9,25 +9,19 @@ export const useGraphStore = defineStore('graph',()=>{
     const linesStore = useLinesStore();
 
     const nodes = new DataSet([]);
-    const edges = new DataSet([]);
+    let edges = new DataSet([]);
+
     const options = {
-        // physics: {
-        //     barnesHut: {
-        //       avoidOverlap: 1 // Prevents nodes from overlapping
-        //     }
-        // },
-        // autoResize: false,
-        // layout:{
-        //     // hierarchical:{
-        //         // enabled:true,
-        //         // direction:"LR",
-        //         // levelSeparation: 150,
-                nodeSpacing: 150,
-            // },
-        // },
-        // interaction:{
-            // dragNodes:false,
-        // },
+        physics:{
+            hierarchicalRepulsion : {
+                avoidOverlap:1
+            }
+        },
+        layout:{
+            hierarchical: {
+                direction:"DU"
+            }
+        },
         edges:{
             arrows:'to'
         },
@@ -44,6 +38,7 @@ export const useGraphStore = defineStore('graph',()=>{
     function toggleGraph(){
 
         const lines = linesStore.getLines();
+        edges = new DataSet([]);
         console.log(nodes);
         /*
         
@@ -86,8 +81,8 @@ export const useGraphStore = defineStore('graph',()=>{
                     }
                     prev = node;
                 }
-                prev = null;
            }
+           prev = null;
         }
         show.value = !show.value;
         
