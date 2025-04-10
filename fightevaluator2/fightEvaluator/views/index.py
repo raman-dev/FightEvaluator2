@@ -173,6 +173,7 @@ def verifyPrediction(matchups):
         prediction = Prediction.objects.filter(matchup=matchup).first()
         if prediction:
             outcome = matchup.outcome
+            print(outcome)
             #if prediction has a fighter then it is a winner determination
             prediction.isCorrect = False
             match prediction.prediction.event:
@@ -216,6 +217,7 @@ def getFightEventResults2(request,eventId):
     fightOutcomes = []
     if not fightEvent.hasResults:
         matchupResults = scraper.getFightEventResults2(fightEvent.link)
+        print(matchupResults)
         nameMatchUpMap = {}
         for m in matchups:
             if m.fighter_a.name_unmod not in nameMatchUpMap:
