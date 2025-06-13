@@ -10,7 +10,7 @@ import Main from './components/Main.vue';
 <style lang="scss">
 @import url('@/assets/css/fonts.scss');
   
-  html, body {
+  html, body {p
       height: 100% !important;
       min-height: 800px;
       font-family: PoppinsLight !important;
