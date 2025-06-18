@@ -253,11 +253,22 @@ def getFightEventResults2(request,eventId):
             elif fb['isWinner'] == True:
                 winnerName = fb['name']
             
+            #update winner/loser win/loss count
             if winnerName:
+                #fighter_a is winner
                 winner = matchup.fighter_a
+                loser = matchup.fighter_b
+                #fighter_b is winner
                 if winnerName != matchup.fighter_a.name_unmod:
                     winner = matchup.fighter_b
-            
+                    loser = matchup.fighter_a
+                
+                winner.wins = winner.wins + 1
+                loser.losses = loser.losses + 1
+                
+                winner.save()
+                loser.save()
+
             matchup.outcome.winner = winner
             matchup.outcome.save()
             matchup.save()
