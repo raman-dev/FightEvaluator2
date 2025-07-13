@@ -208,6 +208,9 @@ def getFightEventResults2(request,eventId):
     fightEvent = get_object_or_404(FightEvent,id=eventId)
     #do not try and get event results if the event is in the future
     #or if the it is not the atleast 2:00 am the day after the event
+    """
+
+    """
 
     if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
         return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
