@@ -6,3 +6,4 @@ from .fighter import *
 from .prediction import *
 from .profit import *
 from .test_view import *
+from .vue_index import *
