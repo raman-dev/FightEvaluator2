@@ -10,4 +10,4 @@ def vueIndex(request):
     """
     Render the Vue.js index page.
     """
-    return render(request, 'vue_index.html')
+    return render(request, 'fightEvaluator/vue_index.html')
