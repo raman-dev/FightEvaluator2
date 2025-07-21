@@ -160,7 +160,7 @@ def scrapeMatchups(source):
         matchup['weight_class'] = weightlbs
         matchup['rounds'] = rounds
         matchup['isprelim'] = isPrelim
-        matchups.append(matchup)
+        matchups.append(matchup) 
         
     return matchups
 
