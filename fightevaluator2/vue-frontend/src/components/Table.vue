@@ -1,6 +1,6 @@
 <script setup>
     
-const props = defineProps(['tableName','columns']);
+const props = defineProps(['tableName','columns','matchups']);
 
 </script>
 <template>
@@ -24,7 +24,12 @@ const props = defineProps(['tableName','columns']);
                 </tr>
             </thead>
             <tbody>
-
+                <tr v-for="matchup in props.matchups" :key="matchup.id">
+                    <td>{{ matchup.fighter_a }} vs {{ matchup.fighter_b }}</td>
+                    <td>{{ matchup.weight_class }}</td>
+                    <td>{{ matchup.rounds }}</td>
+                    <td v-if="props.tableName === 'WatchList'">{{ matchup.analysisComplete ? 'Yes' : 'No' }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
