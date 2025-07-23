@@ -27,12 +27,26 @@ def vueFightEvent(request):
         #convert the event to a dictionary
         event_dict = model_to_dict(event)
         #get matchups related to the event
-        mainCardMatchups = MatchUp.objects.filter(event=event,isprelim=False)
-        prelimMatchups = MatchUp.objects.filter(event=event,isprelim=True)
-        #return the event and matchups as a JSON response
-        return JsonResponse({
-            'event': event_dict,
-            'mainCardMatchups': [model_to_dict(matchup) for matchup in mainCardMatchups],
-            'prelimMatchups': [model_to_dict(matchup) for matchup in prelimMatchups]
-        })
+        matchups = MatchUp.objects.filter(event=event)
+        result = {
+            'event': event_dict
+        }
+        #add fighter names to the matchups 
+        mainCardJSON = []
+        prelimJSON = []
+
+        for isprelim_state in (True,False):
+            matchups = MatchUp.objects.filter(event=event,isprelim=isprelim_state)
+            for m in matchups:
+                matchup_dict = model_to_dict(m)
+                matchup_dict['fighter_a_name'] = m.fighter_a.name 
+                matchup_dict['fighter_b_name'] = m.fighter_b.name 
+                if isprelim_state:
+                    prelimJSON.append(matchup_dict)
+                else:
+                    mainCardJSON.append(matchup_dict)
+
+        result['mainCardMatchups'] = mainCardJSON
+        result['prelimMatchups'] = prelimJSON
+        return JsonResponse(result)
     return JsonResponse({'No Event Upcoming':None})
