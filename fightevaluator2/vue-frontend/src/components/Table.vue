@@ -1,7 +1,11 @@
 <script setup>
     
 const props = defineProps(['tableName','columns','matchups']);
+const emits = defineEmits(['requestNewMatchUp'])
 
+function showMatchUpEditor(){
+    emits('requestNewMatchUp');
+}
 </script>
 <template>
     <div class="table-container border">
@@ -10,7 +14,7 @@ const props = defineProps(['tableName','columns','matchups']);
                 <div class="d-flex justify-content-between">
                   <h4 style="text-transform: capitalize;">{{props.tableName}}</h4>
                   <div class="action-wrapper">
-                    <button type="button" class="btn btn-primary" v-if="props.tableName !== 'WatchList'">
+                    <button type="button" class="btn btn-primary" v-if="props.tableName !== 'WatchList'" @click="showMatchUpEditor()">
                       add
                     </button>
                   </div>

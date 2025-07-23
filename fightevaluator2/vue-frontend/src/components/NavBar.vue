@@ -15,9 +15,10 @@ const props = defineProps(['links','navTitle'])
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!--implement current link status-->
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-for="link in links">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{{ link }}</a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
+                    <li class="nav-item" v-for="linkObj in links">
+                        <!-- <a class="nav-link" href="#">{{ linkObj.name }}</a> -->
+                        <RouterLink class="nav-link" :to=linkObj.path> {{ linkObj.name }}</RouterLink>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">

@@ -2,13 +2,26 @@
 
 import NavBar from './components/NavBar.vue';
 import MainContent from './components/MainContent.vue';
+import { RouterLink,RouterView } from 'vue-router';
 
 
 const links = [
-    "home",
-    "events",
-    "predictions",
-    "profit"
+    {
+        name:"home",
+        path:"/"
+    },
+    {
+        name:"events",
+        path:"/events"
+    },
+    {
+        name:"predictions",
+        path:"/predictions"
+    },
+    {
+        name:"profit",
+        path:"/profit"
+    }
 ];
 
 const title = 'Fight Evaluator';
@@ -17,7 +30,9 @@ const title = 'Fight Evaluator';
 
 <template>
     <NavBar :links="links" :nav-title="title"></NavBar>
-    <MainContent></MainContent>
+    <!-- <MainContent></MainContent> -->
+
+    <RouterView/>
 </template>
 
 <style lang="scss">
