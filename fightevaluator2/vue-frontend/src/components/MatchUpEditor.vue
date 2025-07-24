@@ -1,12 +1,31 @@
 <script setup>
 
+import { onMounted, ref } from 'vue';
+import ModalScreen from './ModalScreen.vue';
+
+
+const model = defineModel('open',{default: false});
+const showModalScreen = ref(false);
+const emits = defineEmits(['closeEditor']);
+// const editorOpenState = defineModel('editorOpenState',{default: false});
+
 function commitChanges(){
 
 }
 
+function onModalScreenClosing(){
+    // editorOpenState.value = false;
+    emits('closeEditor');
+}
+
+onMounted(() => {
+    showModalScreen.value = true;
+});
+
 </script>
 <template>
-    <div class="matchup-editor border rounded-2" data-event-id="118">
+    <ModalScreen  v-model:show="showModalScreen" @closing-screen="onModalScreenClosing()"></ModalScreen>
+    <div   class="matchup-editor border rounded-2" data-event-id="118">
           <h1 class="modal-title title fs-4">Create MatchUp</h1>
           <form>
               <div class="search-box2">
@@ -94,3 +113,145 @@ function commitChanges(){
           </div>
     </div>
 </template>
+
+<style lang="scss">
+
+.matchup-editor{
+
+    width: fit-content;
+    padding: 0.6rem;
+    margin: auto;
+    transform: translate(0% -100%);
+
+    .title{
+        margin-bottom: 0.8rem;
+    }
+
+    form{
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+
+        select, option, button {
+            cursor: pointer !important;
+        }
+
+    }
+
+    .search-box2{
+        text-transform: capitalize;
+        input, ul{
+            width: 28ch;
+            text-transform: capitalize;
+        }
+        ul{
+            position: absolute;
+            overflow: visible;
+            z-index: 10000;
+            li p{
+                margin: 0px; 
+            }
+        }
+    }
+
+    .searchbox-seperator{
+        text-align: center;
+        p{
+            margin: 0px;
+            text-transform: capitalize;
+        }
+    }
+
+    .weightclass-selector{
+        width: fit-content;
+    }
+
+    .rounds-isprelim-wrapper{
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .rounds-radio-group{
+        width: fit-content;
+        display: flex;
+        .radio-group-title{
+            margin: 0px;
+        }
+    }
+    
+    .isprelim-checkbox{
+        label{
+            text-transform: capitalize;
+        }
+    }
+
+    .editor-actions{
+        display: flex;
+        justify-content: end;
+
+        .submit-btn{
+            display: none;
+        }
+        .current-action{
+            display: block;
+        }
+    }
+}
+
+.r-modal{
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+
+    background-color: rgba($color: #000000, $alpha: 0);
+    // opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+
+    
+    transition: background-color 0.2s ease-in-out;
+
+    .r-modal-content{
+        position: absolute;
+        display: none;
+        
+        background-color: #212529;
+        width: fit-content;
+ 
+        top:0px;
+        border: 1px solid black;
+        
+        opacity: 0;
+        transition: all 0.2s ease-out !important;
+
+        pointer-events: none;
+        user-select: none; 
+        * {     
+            pointer-events: initial;
+            user-select: initial;
+        }
+    }
+
+}
+
+.r-modal.r-show{
+    background-color: rgba($color: #000000, $alpha: 0.5);
+    pointer-events: initial;
+    .r-modal-content{
+        opacity: 1 !important;
+        top: 15%;
+
+        pointer-events: initial;
+        user-select: initial;
+        * {    
+            pointer-events: initial;
+            user-select: initial;
+        }
+    } 
+}
+
+</style>

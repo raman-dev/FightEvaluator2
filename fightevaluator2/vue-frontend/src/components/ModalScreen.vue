@@ -3,15 +3,17 @@
 import { watch } from 'vue';
 
 const show = defineModel('show',{default: false});
+const emits = defineEmits(['closingScreen'])
 
-// watch(show,(oldVal,newVal) => {
-//     console.log('show changed',oldVal,newVal);
-// });
+function onClickScreen(){
+    show.value = !show.value;
+    emits('closingScreen');
+}
 
 </script>
 
 <template>
-    <div class="modal-screen" :class="{show : show}" @click="show=!show">
+    <div class="modal-screen" :class="{show : show}" @click="onClickScreen()">
     </div>
 </template>
 
