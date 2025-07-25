@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, Transition } from 'vue';
 import Table from '@/components/Table.vue';
 import MatchUpEditor from '@/components/MatchUpEditor.vue';
 
@@ -45,7 +45,6 @@ onMounted(() => {
 })
 
 function showMatchupEditor(emptyEditor){
-    //show the editor
     matchUpEditorOpen.value = true;
 }
 
@@ -79,8 +78,32 @@ function showMatchupEditor(emptyEditor){
         <Table class="mt-2" table-name="MainCard" :columns=standardColumns :matchups="mainCardMatchups" @request-new-match-up="showMatchupEditor(true)"></Table>
         <Table class="mt-2" table-name="Prelims" :columns=standardColumns :matchups="prelimMatchups" @request-new-match-up="showMatchupEditor(true)"></Table>
         
-        <MatchUpEditor v-model:open="matchUpEditorOpen"> </MatchUpEditor>
+        <Transition>
+            <MatchUpEditor v-if="matchUpEditorOpen"></MatchUpEditor>
+        </Transition>
+        <!--
+            entirely different paradigm to normal html and bootstrap
 
+            transition wraps an element 
+            and is triggered when element is rendered or not rendered
+
+            transition will trigger named animations
+                v-enter-from   -> before animation start
+                    v-enter-active -> animating
+                v-enter-to -> after animation
+                      
+                v-leave from -> before animation start
+                    v-leave-active -> animatiing
+                v-leave to -> after animating
+            
+            use name attribute for animations
+
+            Transition name="animName"
+
+            class -> 
+                animName-enter-from
+                animName-enter-active...
+        -->
 
     </div>
 </template>
