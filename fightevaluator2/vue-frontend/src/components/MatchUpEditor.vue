@@ -6,7 +6,6 @@ import { Transition } from 'vue';
 
 const emits = defineEmits(['editorClosing']);
 const open = defineModel('open', { default: false });
-const csrftoken = inject('csrftoken');
 
 
 const fighterAText = ref('');

@@ -9,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
 
+import pluginTest from './plugins/pluginTest';
+
 
 import App from './App.vue'
 
@@ -31,7 +33,7 @@ function getCookie(name) {
 
 const app = createApp(App)
 
-app.provide('csrftoken',getCookie('csrftoken'));
+
 app.use(createPinia())
 app.use(router);
 app.mount('#app')

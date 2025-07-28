@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref, Transition } from 'vue';
+import { onMounted, ref, Transition,inject } from 'vue';
 import Table from '@/components/Table.vue';
 import MatchUpEditor from '@/components/MatchUpEditor.vue';
 
@@ -17,30 +17,47 @@ const prelimMatchups = ref(null);
 
 const matchUpEditorOpen = ref(false);
 
+// const pluginFunc = inject('pluginFunc');
+
 onMounted(() => {
+    // pluginFunc();
     console.log("MainContent mounted");
-    // fetch('/vue-next-event')
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         fetchResult.value = data;
-    //         console.log("Matchups data fetched:", fetchResult.value.mainCardMatchups);
-    //     })
-    //     .catch(error => {
-    //         console.error("Error fetching data:", error);
-    // });
-    mainCardMatchups.value = sampleFetchResult.mainCardMatchups;
-    prelimMatchups.value = sampleFetchResult.prelimMatchups;
-    watchlist.value = [];
-    for (const m of mainCardMatchups.value){
-        if (m.inWatchList){
-            watchlist.value.push(m);
-        }
-    }
-    for (const m of prelimMatchups.value){
-        if (m.inWatchList){
-            watchlist.value.push(m);
-        }
-    }
+    fetch('/vue-next-event')
+        .then(response => response.json())
+        .then(data => {
+            fetchResult.value = data;
+
+            console.log("Matchups data fetched:", fetchResult.value.mainCardMatchups);
+            mainCardMatchups.value = fetchResult.value.mainCardMatchups;
+            prelimMatchups.value = fetchResult.value.prelimMatchups;
+            watchlist.value = [];
+            for (const m of mainCardMatchups.value){
+                if (m.inWatchList){
+                    watchlist.value.push(m);
+                }
+            }
+            for (const m of prelimMatchups.value){
+                if (m.inWatchList){
+                    watchlist.value.push(m);
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+    });
+    // mainCardMatchups.value = sampleFetchResult.mainCardMatchups;
+    // prelimMatchups.value = sampleFetchResult.prelimMatchups;
+    // watchlist.value = [];
+    // for (const m of mainCardMatchups.value){
+    //     if (m.inWatchList){
+    //         watchlist.value.push(m);
+    //     }
+    // }
+    // for (const m of prelimMatchups.value){
+    //     if (m.inWatchList){
+    //         watchlist.value.push(m);
+    //     }
+    // }
     // console.log("Watchlist:", watchlist.value);
 })
 
