@@ -3,11 +3,11 @@
 import { watch } from 'vue';
 
 const show = defineModel('show',{default: false});
-const emits = defineEmits(['closingScreen'])
+const emits = defineEmits(['screenClick'])
 
 function onClickScreen(){
     show.value = !show.value;
-    emits('closingScreen');
+    emits('screenClick');
 }
 
 </script>
