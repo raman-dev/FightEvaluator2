@@ -8,8 +8,7 @@ import router from './router';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
-
-import pluginTest from './plugins/pluginTest';
+import server from './plugins/server.js';
 
 
 import App from './App.vue'
@@ -33,6 +32,13 @@ function getCookie(name) {
 
 const app = createApp(App)
 
+app.use(server,{
+    headers :{
+        accept: "application/json",
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+    }
+})
 
 app.use(createPinia())
 app.use(router);

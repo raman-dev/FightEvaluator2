@@ -1,5 +1,4 @@
 class Server {
-
     static URLS = {
       CREATE_NOTE : '/notes/create-note',
       DELETE_NOTE : '/notes/delete-note/',
@@ -15,10 +14,6 @@ class Server {
     static headers = {
 
     }
-
-    // constructor(headers) {
-    //     this.headers = headers
-    // }
 
     static async update_fighter(requestData,callback,fighterId){
       fetch(Server.URLS.UPDATE_FIGHTER + `${fighterId}`,{
@@ -104,4 +99,11 @@ class Server {
     // get(url,requestData,callback){
 
     // }
+}
+
+export default {
+  install: (app,options) => {
+    Server.headers = options.headers;
+    app.provide('server', Server);
+  }
 }

@@ -2,17 +2,28 @@
 
 import { onMounted, ref, inject, watch } from 'vue';
 import { Transition } from 'vue';
+import SuggestionBox from './SuggestionBox.vue';
 
 
 const emits = defineEmits(['editorClosing']);
 const open = defineModel('open', { default: false });
 
+const selectedFighterA = ref(null);
+const selectedFighterB = ref(null);
+
+const queryFighterAEnabled = ref(true);
+const suggestionsFighterA = ref([]);
+
+const queryFighterBEnabled = ref(true);
+const suggestionsFighterB = ref([]);
 
 const fighterAText = ref('');
 const fighterBText = ref('');
 const rounds = ref("3");
 const isPrelim = ref(false);
 const weightClass = ref('');
+
+const server = inject('server');
 
 function commitChanges() {
 
@@ -25,13 +36,49 @@ function onClickBackground(event) {
     }
 }
 
-watch(fighterAText,(newVal,oldVal) => {
-  // console.log("Fighter A text: ",oldVal,newVal);
-  //send get request to server to fetch top 5 suggestions
+function onFighterSearchResult(data) {
+  let fighters = data['fighters'];
+  //populate the suggestion box
+  this.model.value = fighters;
+}
+
+function onSearchBoxValueChange(queryFlag,suggestions,searchText){
+  if (searchText.length > 0) {
+    if (queryFlag.value == true){
+      server.search_fighters(onFighterSearchResult.bind({model:suggestions}),searchText);
+    }
+  } else{
+    suggestions.value = [];
+  }
+}
+
+watch(fighterAText,(newSearchVal,_) => {
+  onSearchBoxValueChange(queryFighterAEnabled,suggestionsFighterA,newSearchVal);
 });
 
-watch(fighterBText,(newVal,oldVal)=>{
-  console.log("Fighter B text: ",oldVal,newVal);
+watch(fighterBText,(newSearchVal,_) => {
+  onSearchBoxValueChange(queryFighterBEnabled,suggestionsFighterB,newSearchVal);
+});
+
+function onFighterSelect(queryFlag,fighterText,newFighter){
+  console.log('onFighterSelect called with: ',newFighter);
+  if (newFighter != null){
+    queryFlag.value = false;
+    fighterText.value = `${newFighter.first_name} ${newFighter.last_name}`;
+  }else{
+    queryFlag.value = true;
+    fighterText.value = '';
+  }
+}
+
+watch(selectedFighterA, (newFighter,_) => {
+  // console.log("Fighter A selected:", newFighter);
+  onFighterSelect(queryFighterAEnabled,fighterAText,newFighter);
+});
+
+watch (selectedFighterB, (newFighter,_) => {
+  // console.log("Fighter B selected:", newFighter);
+  onFighterSelect(queryFighterBEnabled,fighterBText,newFighter);
 });
 
 </script>
@@ -50,10 +97,11 @@ watch(fighterBText,(newVal,oldVal)=>{
                   <div class="input-wrapper">
                     <input class="form-control rounded-0" data-fighter-id="-1" type="text" name="fighter-a"
                       id="fighter-a-input" placeholder="Enter fighter name..." v-model="fighterAText">
-                    <ul class="suggestion-box list-group"></ul>
+                    <!-- <ul class="suggestion-box list-group" id="fighter-a-suggestion-box"></ul>-->
+                    <SuggestionBox v-model:fighters="suggestionsFighterA" v-model:selectedFighter="selectedFighterA"></SuggestionBox>
                   </div>
 
-                  <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
+                  <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2" @click="selectedFighterA=null">Clear</button>
                 </div>
 
               </div>
@@ -67,12 +115,11 @@ watch(fighterBText,(newVal,oldVal)=>{
 
                   <label class="input-group-text" for="fighter-b-input">Fighter B</label>
                   <div class="input-wrapper">
-                    <input class="form-control rounded-0" data-fighter-id="-1" type="text" v-model="fighterBText" name="fighter-b"
-                      id="fighter-b-input" placeholder="Enter fighter name...">
-                    <ul class="suggestion-box list-group"></ul>
+                    <input class="form-control rounded-0" data-fighter-id="-1" type="text" v-model="fighterBText" name="fighter-b" id="fighter-b-input" placeholder="Enter fighter name...">
+                    <SuggestionBox v-model:fighters="suggestionsFighterB" v-model:selectedFighter="selectedFighterB"></SuggestionBox>
                   </div>
 
-                  <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2">Clear</button>
+                  <button class="btn btn-outline-danger clear-btn" type="button" id="button-addon2" @click="selectedFighterB=null">Clear</button>
                 </div>
               </div>
 

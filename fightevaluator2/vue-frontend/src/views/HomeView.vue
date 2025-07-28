@@ -21,13 +21,11 @@ const matchUpEditorOpen = ref(false);
 
 onMounted(() => {
     // pluginFunc();
-    console.log("MainContent mounted");
+    // console.log("MainContent mounted");
     fetch('/vue-next-event')
         .then(response => response.json())
         .then(data => {
             fetchResult.value = data;
-
-            console.log("Matchups data fetched:", fetchResult.value.mainCardMatchups);
             mainCardMatchups.value = fetchResult.value.mainCardMatchups;
             prelimMatchups.value = fetchResult.value.prelimMatchups;
             watchlist.value = [];
