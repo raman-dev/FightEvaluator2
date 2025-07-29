@@ -76,7 +76,7 @@ watch(selectedFighterA, (newFighter,_) => {
   onFighterSelect(queryFighterAEnabled,fighterAText,newFighter);
 });
 
-watch (selectedFighterB, (newFighter,_) => {
+watch(selectedFighterB, (newFighter,_) => {
   // console.log("Fighter B selected:", newFighter);
   onFighterSelect(queryFighterBEnabled,fighterBText,newFighter);
 });
@@ -96,7 +96,7 @@ watch (selectedFighterB, (newFighter,_) => {
 
                   <div class="input-wrapper">
                     <input class="form-control rounded-0" data-fighter-id="-1" type="text" name="fighter-a"
-                      id="fighter-a-input" placeholder="Enter fighter name..." v-model="fighterAText">
+                      id="fighter-a-input" placeholder="Enter fighter name..." v-model="fighterAText" :disabled="!queryFighterAEnabled">
                     <!-- <ul class="suggestion-box list-group" id="fighter-a-suggestion-box"></ul>-->
                     <SuggestionBox v-model:fighters="suggestionsFighterA" v-model:selectedFighter="selectedFighterA"></SuggestionBox>
                   </div>
@@ -115,7 +115,8 @@ watch (selectedFighterB, (newFighter,_) => {
 
                   <label class="input-group-text" for="fighter-b-input">Fighter B</label>
                   <div class="input-wrapper">
-                    <input class="form-control rounded-0" data-fighter-id="-1" type="text" v-model="fighterBText" name="fighter-b" id="fighter-b-input" placeholder="Enter fighter name...">
+                    <input class="form-control rounded-0" data-fighter-id="-1" type="text" v-model="fighterBText" name="fighter-b" id="fighter-b-input" 
+                      placeholder="Enter fighter name..." :disabled="!queryFighterBEnabled">
                     <SuggestionBox v-model:fighters="suggestionsFighterB" v-model:selectedFighter="selectedFighterB"></SuggestionBox>
                   </div>
 
@@ -175,9 +176,9 @@ watch (selectedFighterB, (newFighter,_) => {
               <button type="button" class="btn btn-secondary mx-2 close-btn"
                 @click="open=!open">Close</button>
               <button type="button" class="btn btn-primary create-btn current-action submit-btn"
-                v-on:click="commitChanges(true)">Create</button>
+                @click="commitChanges(true)">Create</button>
               <button type="button" class="btn btn-primary save-btn submit-btn"
-                v-on:click="commitChanges(false)">Save</button>
+                @click="commitChanges(false)">Save</button>
             </div>
           </div>
 

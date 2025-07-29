@@ -17,7 +17,7 @@ function selectFighter(fighter){
 
 </script>
 <template>
-    <ul class="suggestion-box list-group">
+    <ul class="suggestion-box list-group" >
         <li class="list-group-item list-group-item-action" v-for="fighter in fighters" :key="fighter.id" @click="selectFighter(fighter)">
           <div class="suggestion">
             <p class="name">{{fighter.first_name}} {{fighter.last_name}}</p>
