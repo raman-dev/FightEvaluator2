@@ -7,12 +7,23 @@ class Server {
       SEARCH_FIGHTERS : '/fighters/search/?search=',
 
       CREATE_MATCHUP : '/matchup/create-matchup',
-      UPDATE_MATCHUP:'/matchup/update-matchup/'
+      UPDATE_MATCHUP:'/matchup/update-matchup/',
+
+      GET_NEXT_EVENT: '/vue-next-event'
     }
 
     //provide
     static headers = {
 
+    }
+
+    //gets event data and matchups 
+    static async get_next_event(callback){
+      fetch(Server.URLS.GET_NEXT_EVENT)
+        .then(response => response.json())
+        .then((data) => {
+          callback(data);
+        });
     }
 
     static async update_fighter(requestData,callback,fighterId){

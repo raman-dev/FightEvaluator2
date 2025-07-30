@@ -1,6 +1,7 @@
 <script setup>
 
 import { onMounted, ref, Transition, inject } from 'vue';
+import { useMatchupStore } from '@/stores/matchupStore.js';
 import Table from '@/components/Table.vue';
 import MatchUpEditor from '@/components/MatchUpEditor.vue';
 
@@ -16,10 +17,12 @@ const mainCardMatchups = ref(null);
 const prelimMatchups = ref(null);
 
 const matchUpEditorOpen = ref(false);
+const matchupStore = useMatchupStore();
 
 onMounted(() => {
     // pluginFunc();
     // console.log("MainContent mounted");
+    matchupStore.fetchEvent();    
     fetch('/vue-next-event')
         .then(response => response.json())
         .then(data => {
@@ -27,7 +30,7 @@ onMounted(() => {
             mainCardMatchups.value = fetchResult.value.mainCardMatchups;
             prelimMatchups.value = fetchResult.value.prelimMatchups;
 
-            console.log(mainCardMatchups.value);
+            // console.log(mainCardMatchups.value);
             watchlist.value = [];
             for (const m of mainCardMatchups.value) {
                 if (m.inWatchList) {
@@ -68,7 +71,7 @@ function showMatchupEditor(emptyEditor) {
     <div class="container-fluid">
         <div class="title-container">
             <h3>
-                {{ sampleFetchResult.event.title }}
+                {{ fetchResult.event.title }}
             </h3>
         </div>
 

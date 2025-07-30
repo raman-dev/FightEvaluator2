@@ -10,7 +10,6 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 
 import server from './plugins/server.js';
 
-
 import App from './App.vue'
 
 function getCookie(name) {
