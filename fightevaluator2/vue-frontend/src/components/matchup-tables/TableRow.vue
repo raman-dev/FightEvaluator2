@@ -1,19 +1,19 @@
 <script setup>
 import {defineModel} from 'vue';
 
-const matchup = defineModel ('matchup',{
-    default : {
-        id: null,
-        fighter_a : -1,
-        fighter_b: -1,
-        fighter_a_name: '',
-        fighter_b_name: '',
-        weight_class: '',
-        rounds: 0,
-        analysisComplete: false,
-        inWatchList: false
-    }
-});
+const matchup = defineModel ('matchup',{});
+//     default : {
+//         id: null,
+//         fighter_a : -1,
+//         fighter_b: -1,
+//         fighter_a_name: '',
+//         fighter_b_name: '',
+//         weight_class: '',
+//         rounds: 0,
+//         analysisComplete: false,
+//         inWatchList: false
+//     }
+// });
 
 
 const props = defineProps(['tableName']); 

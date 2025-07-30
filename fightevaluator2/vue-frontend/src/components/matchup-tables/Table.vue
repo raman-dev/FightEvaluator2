@@ -2,12 +2,20 @@
     
 import TableRow from './TableRow.vue';
 import MatchUpActionMenu from './MatchUpActionMenu.vue';
+import { useMatchupStore } from '@/stores/matchupStore';
+
 
 const props = defineProps(['tableName','columns','matchups']);
 const emits = defineEmits(['requestNewMatchUp'])
 
 function showMatchUpEditor(){
     emits('requestNewMatchUp');
+}
+
+const { toggleActiveMatchUp } = useMatchupStore();
+
+function toggleActive(matchupId){
+
 }
 
 </script>
@@ -33,8 +41,8 @@ function showMatchUpEditor(){
             </thead>
             <tbody>
 
-                <template v-for="(matchup,i) in props.matchups" :key="i">
-                    <TableRow v-model:matchup="props.matchups[i]" :table-name="props.tableName" @click=""></TableRow>
+                <template v-for="(matchup,matchupId) in props.matchups" :key="matchupId">
+                    <TableRow v-model:matchup="props.matchups[matchupId]" :table-name="props.tableName" @click="toggleActive(matchupId)"></TableRow>
                 </template>
                 
             </tbody>
