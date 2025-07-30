@@ -59,7 +59,7 @@ function showMatchUpEditor(){
                 show confirmation dialog
     -->
     
-    <MatchUpActionMenu v-model:open="actionMenuOpen"></MatchUpActionMenu>
+    <!-- <MatchUpActionMenu v-model:open="actionMenuOpen"></MatchUpActionMenu> -->
 </template>
 
 <style lang="scss" scoped>

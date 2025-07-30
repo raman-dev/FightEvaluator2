@@ -10,20 +10,28 @@ export const useMatchupStore = defineStore('matchup', () => {
   //query server for matchups 
   const server = inject('server');
   
-  const event = ref ({});
+  const event = ref({});
   const mainCard = ref({});
   const prelims = ref({});
+  const watchlist = ref ({});
 
   function onReceiveEvent(eventData){
     console.log("Received event data:", eventData);
     //do what populate event and matchups 
     eventData.mainCardMatchups.forEach((matchup) => {
         mainCard.value[matchup.id] = matchup;
+        if (matchup.inWatchList){
+          watchlist.value[matchup.id] = matchup;
+        }
     });
     eventData.prelimMatchups.forEach((matchup) => {
         prelims.value[matchup.id] = matchup;
+        if (matchup.inWatchList){
+          watchlist.value[matchup.id] = matchup;
+        }
     });
-    event.value = eventData.event;
+    // event.value = eventData.event;
+    
   }
 
   async function fetchEvent(eventId){

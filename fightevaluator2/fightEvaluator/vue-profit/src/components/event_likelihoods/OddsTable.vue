@@ -102,7 +102,7 @@ onMounted(() => {
       <tbody>
 
         <template v-for="(data,matchupId) in matchupLikelihoodData" :key="matchupId">
-          <EventLikelihoodRow :title="data.title":matchupId="matchupId" v-model:events="data.events" @height-change="resizeTableHeight" />
+          <EventLikelihoodRow :title="data.title" :matchupId="matchupId" v-model:events="data.events" @height-change="resizeTableHeight" />
         </template>
 
       </tbody>

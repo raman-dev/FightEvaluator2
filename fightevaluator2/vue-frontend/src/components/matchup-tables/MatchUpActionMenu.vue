@@ -9,7 +9,7 @@ const open = defineModel('open',{default: false});
     <div class="matchup-actions-menu-container " v-if="open">
         <ul class="menu-item-list">
             <li class="menu-list-item">
-                <div class="menu-item watch-menu-item" @click="onClickWatch(event)">
+                <div class="menu-item watch-menu-item" >
                     <svg id="unwatch-icon" class="d-none" xmlns="http://www.w3.org/2000/svg" height="24px"
                         viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                         <path
@@ -24,7 +24,7 @@ const open = defineModel('open',{default: false});
                 </div>
             </li>
             <li class="menu-list-item">
-                <div class="menu-item" @click="onClickAnalyze(event)">
+                <div class="menu-item" >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#5f6368">
                         <path
@@ -35,7 +35,7 @@ const open = defineModel('open',{default: false});
             </li>
 
             <li class="menu-list-item">
-                <div class="menu-item" @click="showEditor(true)">
+                <div class="menu-item" >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#5f6368">
                         <path
@@ -45,7 +45,7 @@ const open = defineModel('open',{default: false});
                 </div>
             </li>
             <li class="menu-list-item">
-                <div class="menu-item delete-menu-item" @click="onClickDelete(event)">
+                <div class="menu-item delete-menu-item" >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#CC3323">
                         <path
