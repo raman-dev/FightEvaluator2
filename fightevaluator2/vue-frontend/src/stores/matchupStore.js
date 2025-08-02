@@ -79,12 +79,20 @@ export const useMatchupStore = defineStore('matchup', () => {
     }
   }
 
+  function getActiveMatchup(){
+    if (currActive.id != -1){
+      let table = getTableByName(currActive.table);
+      return table[currActive.id];
+    }
+    return null;
+  }
+
   async function fetchEvent(eventId) {
     if (eventId === undefined || eventId === null) {
       server.get_next_event(onReceiveEvent);
     }
   }
 
-  return { event, mainCard, prelims, watchlist, fetchEvent, toggleActiveMatchUp }
+  return { event, mainCard, prelims, watchlist, fetchEvent, toggleActiveMatchUp, getActiveMatchup }
 
 })

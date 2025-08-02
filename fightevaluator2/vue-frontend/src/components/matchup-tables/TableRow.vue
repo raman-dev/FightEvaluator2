@@ -22,7 +22,7 @@ const props = defineProps(['tableName']);
 <template>
     <tr :class="{active:matchup.active}" class="matchup">
         <td>{{ matchup.fighter_a_name }} vs {{ matchup.fighter_b_name }}</td>
-        <td>{{ matchup.weight_class }}</td>
+        <td class="weightclass">{{ matchup.weight_class }}</td>
         <td>{{ matchup.rounds }}</td>
         <td v-if="props.tableName === 'WatchList'"> {{ matchup.analysisComplete ? 'Yes' : 'No' }}</td>
     </tr>
@@ -40,6 +40,10 @@ const props = defineProps(['tableName']);
     //hover active order matters to not change active color when hover and active
     .matchup.active{
         background-color: hsl(175, 61.57%, 24.95%);
+    }
+
+    td.weightclass{
+        text-transform: capitalize;
     }
 
 </style>

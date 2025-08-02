@@ -12,10 +12,17 @@ function showMatchUpEditor() {
     emits('requestNewMatchUp');
 }
 
-const { toggleActiveMatchUp } = useMatchupStore();
+const { toggleActiveMatchUp,getActiveMatchup } = useMatchupStore();
 
 function toggleActive(matchupId) {
     toggleActiveMatchUp(matchupId, props.tableName);
+}
+
+function onRightClickRow(event){
+    console.log('rightclick row!');
+    event.preventDefault();
+    const activeMatchup = getActiveMatchup();
+    if (activeMatchup == null) return;
 }
 
 </script>
@@ -43,8 +50,10 @@ function toggleActive(matchupId) {
             <tbody>
 
                 <template v-for="(matchup, matchupId) in props.matchups" :key="matchupId">
-                    <TableRow v-model:matchup="props.matchups[matchupId]" :table-name="props.tableName"
-                        @click="toggleActive(matchupId)"></TableRow>
+                    <TableRow v-model:matchup="props.matchups[matchupId]" :table-name="props.tableName" 
+                    @click="toggleActive(matchupId)"
+                    @contextmenu="onRightClickRow"
+                    ></TableRow>
                 </template>
 
             </tbody>
