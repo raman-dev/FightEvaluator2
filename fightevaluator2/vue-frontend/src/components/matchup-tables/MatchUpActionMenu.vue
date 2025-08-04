@@ -6,7 +6,7 @@ import {defineModel, onMounted, useTemplateRef,watch} from 'vue';
 import { storeToRefs } from 'pinia';
 
 const matchupActionMenuStore = useMatchupActionMenuStore();
-const { menuOpen,menuPosition } = storeToRefs(matchupActionMenuStore);
+const { menuOpen,menuPosition,menuLimitRect } = storeToRefs(matchupActionMenuStore);
 const menuRef = useTemplateRef('menu');
 
 const { activeMatchup } = storeToRefs(useMatchupStore());
@@ -32,21 +32,39 @@ function position () {
         watchMenuLabel.textContent = 'watch';
     }
     
-    let height = 0;//menu.offsetHeight;
-    menu.style.left = `${menuPosition.value.x}px`;
-    menu.style.top = `${menuPosition.value.y - height}px`;
+    //how to check if menu is offscreen?
+    //x + width < pageX + containerWidth -> within page
+    //y + height < pageY + containerHeight -> within page
+    
+    //menu.x + width cannot go beyond limitrect right
+    const limitRect = menuLimitRect.value;
+    const right = limitRect.left + limitRect.width + window.scrollX;
+    const bottom = limitRect.top + limitRect.height + window.scrollY;
+    
+    let left = menuPosition.value.x;//
+    let top = menuPosition.value.y;
+    
+    if (left + menu.clientWidth > right){
+        left -= (left + menu.clientWidth) - right;
+    }
+    if (top + menu.clientHeight > bottom){
+        top -= (top + menu.clientHeight) - bottom;
+    }
+    
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+
 };
 
-watch (menuOpen,(newVal,oldVal) => {
-    if (newVal === true){
-        position();
-    }
-});
+function onEnter(menuContainer){
+    position();
+}
 
 
 </script>
 <template>
-    <div class="matchup-actions-menu-container " :class="{'d-none':!menuOpen}" ref="menu">
+    <Transition  @enter="onEnter">
+    <div class="matchup-actions-menu-container " ref="menu" v-if="menuOpen">
         <ul class="menu-item-list" >
             <li class="menu-list-item">
                 <div class="menu-item watch-menu-item" >
@@ -96,6 +114,8 @@ watch (menuOpen,(newVal,oldVal) => {
             </li>
         </ul>
     </div>
+    </Transition>
+    
 </template>
 <style lang="scss" scoped>
 .matchup-actions-menu-container {

@@ -8,6 +8,7 @@ import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
 
+
 const standardColumns = ['matchup', 'weightclass', 'rounds'];
 const watchListColumns = ['matchup', 'weightclass', 'rounds', 'analysis complete']
 /*
@@ -24,6 +25,9 @@ const { menuPosition } = storeToRefs(matchupActionMenuStore)
 const guideXRef = useTemplateRef('guideX');
 const guideYRef = useTemplateRef('guideY');
 
+const cursorX = ref(0);
+const cursorY = ref(0);
+
 const showingGuides = ref(false);
 onMounted(() => {
     matchupStore.fetchEvent();
@@ -34,20 +38,32 @@ function showMatchupEditor(emptyEditor) {
 }
 
 function showGuides(event){
+    
     if (showingGuides.value === false){
         return;
     }
+    event.stopPropagation();
     const guideX = guideXRef.value;
     const guideY = guideYRef.value;
 
-    guideX.style.top = `${event.clientY}px`;
-    guideY.style.left = `${event.clientX}px`;
+    guideX.style.top = `${event.pageY}px`;
+    guideY.style.left = `${event.pageX}px`;
 
-    // console.log (event.clientX,event.clientY);
+    // console.log(event.pageX,event.pageY);
+    /*
+        viewport is the visible portion of the document to the user
+    */
+   cursorX.value = event.pageX;
+   cursorY.value = event.pageY;
 }
 
 </script>
 <template>
+    <!-- <div class="mx-auto d-flex align-items-center">
+        <input id="guideCheckbox" type="checkbox" @input="showingGuides=!showingGuides" name="guides"/>
+        <label class="mx-1" for="guideCheckbox">Guides</label>
+        <p class="p-0 m-0">{{ cursorX }}, {{ cursorY }}</p>
+    </div> -->
     <div class="container-fluid main-container" @mousemove="showGuides">
         <div class="title-container">
             <h3>
@@ -73,9 +89,9 @@ function showGuides(event){
         <MatchUpActionMenu v-model:menu-position="menuPosition"></MatchUpActionMenu>
     </div>
     <!--horizontal line guide moves up and down-->
-    <div class="guide-x" ref="guideX" v-if="showingGuides"></div>
+    <!-- <div class="guide-x" ref="guideX" v-if="showingGuides"></div> -->
     <!--vertical line guide moves left and right-->
-    <div class="guide-y" ref="guideY" v-if="showingGuides"></div>
+    <!-- <div class="guide-y" ref="guideY" v-if="showingGuides"></div> -->
 </template>
 
 <style scoped lang="scss">
@@ -98,6 +114,7 @@ function showGuides(event){
 .main-container{
     // position: relative;
 }
+
 .empty-watchlist-notification {
     width: fit-content;
 }
