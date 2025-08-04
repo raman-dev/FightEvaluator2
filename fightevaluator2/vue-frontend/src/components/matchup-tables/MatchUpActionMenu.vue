@@ -1,13 +1,53 @@
 <script setup>
 
-import {defineModel} from 'vue';
+import { useMatchupStore } from '@/stores/matchupStore';
+import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
+import {defineModel, onMounted, useTemplateRef,watch} from 'vue';
+import { storeToRefs } from 'pinia';
 
-const open = defineModel('open',{default: false});
+const matchupActionMenuStore = useMatchupActionMenuStore();
+const { menuOpen,menuPosition } = storeToRefs(matchupActionMenuStore);
+const menuRef = useTemplateRef('menu');
+
+const { activeMatchup } = storeToRefs(useMatchupStore());
+
+function position () {
+    const matchup = activeMatchup.value.matchup;
+    const menu = menuRef.value;
+
+    console.log(menuPosition.value);
+    
+    let watchIcon = menu.querySelector('#watch-icon');
+    let unwatchIcon = menu.querySelector('#unwatch-icon');
+    let watchMenuLabel = menu.querySelector('.watch-menu-item span');
+
+    if (matchup.inWatchList === true){
+        watchIcon.classList.add('d-none');//hide watch icon
+        unwatchIcon.classList.remove('d-none');
+        watchMenuLabel.textContent = 'unwatch';
+    }
+    else{
+        watchIcon.classList.remove('d-none');//show watch icon
+        unwatchIcon.classList.add('d-none');
+        watchMenuLabel.textContent = 'watch';
+    }
+    
+    let height = 0;//menu.offsetHeight;
+    menu.style.left = `${menuPosition.value.x}px`;
+    menu.style.top = `${menuPosition.value.y - height}px`;
+};
+
+watch (menuOpen,(newVal,oldVal) => {
+    if (newVal === true){
+        position();
+    }
+});
+
 
 </script>
 <template>
-    <div class="matchup-actions-menu-container " v-if="open">
-        <ul class="menu-item-list">
+    <div class="matchup-actions-menu-container " :class="{'d-none':!menuOpen}" ref="menu">
+        <ul class="menu-item-list" >
             <li class="menu-list-item">
                 <div class="menu-item watch-menu-item" >
                     <svg id="unwatch-icon" class="d-none" xmlns="http://www.w3.org/2000/svg" height="24px"
@@ -20,7 +60,7 @@ const open = defineModel('open',{default: false});
                         <path
                             d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" />
                     </svg>
-                    <span>watch</span>
+                    <span>&nbsp;watch</span>
                 </div>
             </li>
             <li class="menu-list-item">
@@ -30,7 +70,7 @@ const open = defineModel('open',{default: false});
                         <path
                             d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
                     </svg>
-                    <span>analyze</span>
+                    <span>&nbsp;analyze</span>
                 </div>
             </li>
 
@@ -87,7 +127,7 @@ const open = defineModel('open',{default: false});
 
     }
 
-    li.menu-list-item :hover {
+    li.menu-list-item:hover {
         cursor: pointer;
         background-color: violet;
         color: black;

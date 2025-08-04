@@ -1,34 +1,67 @@
 <script setup>
 
+import { onMounted, ref,useTemplateRef,watch } from 'vue';
 import TableRow from './TableRow.vue';
 import MatchUpActionMenu from './MatchUpActionMenu.vue';
 import { useMatchupStore } from '@/stores/matchupStore';
+import { storeToRefs } from 'pinia';
+import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
 
 
 const props = defineProps(['tableName', 'columns', 'matchups']);
-const emits = defineEmits(['requestNewMatchUp'])
+const tableContainerRef = useTemplateRef('tableContainer');
+
+const emits = defineEmits(['requestNewMatchUp']);
 
 function showMatchUpEditor() {
     emits('requestNewMatchUp');
 }
 
-const { toggleActiveMatchUp,getActiveMatchup } = useMatchupStore();
+const matchupStore = useMatchupStore();
+const { toggleActiveMatchUp } = matchupStore;
+const { activeMatchup } = storeToRefs(matchupStore);
+const { menuOpen,menuPosition } = storeToRefs(useMatchupActionMenuStore());
 
+
+watch (activeMatchup,(newVal,oldVal) => {
+    //if oldVal is not null means the active matchup
+    //that the action menu was open on is no longer active so the menu is
+    //no longer valid to be shown
+    if (oldVal != null){
+        console.log ('close menu!');
+        menuOpen.value = false;
+    }
+},{deep:true});//deep is necessary if you don't a
+ 
 function toggleActive(matchupId) {
     toggleActiveMatchUp(matchupId, props.tableName);
 }
 
 function onRightClickRow(event){
-    console.log('rightclick row!');
     event.preventDefault();
-    const activeMatchup = getActiveMatchup();
-    if (activeMatchup == null) return;
+    const currActive = activeMatchup.value.matchup;
+    if (currActive == null) return;
+    if (activeMatchup.value.table != props.tableName) return;
+    //show right click 
+    setMenuPosition(event);
+}
+
+function setMenuPosition(event){
+    const tableContainer = tableContainerRef.value;
+    // let rect = tableContainer.getBoundingClientRect(); // Get element's position and size
+    let x = parseInt(event.clientX);
+    let y = parseInt(event.clientY);
+    
+    menuOpen.value = true;
+    //position the thing
+    menuPosition.value.x = x;
+    menuPosition.value.y = y;
 }
 
 </script>
 <template>
-    <div class="table-container border">
-        <table class>
+    <div class="table-container border mt-2" ref="tableContainer">
+        <table>
             <caption style="caption-side:top">
                 <div class="d-flex justify-content-between">
                     <h4 style="text-transform: capitalize;">{{ props.tableName }}</h4>
@@ -52,8 +85,7 @@ function onRightClickRow(event){
                 <template v-for="(matchup, matchupId) in props.matchups" :key="matchupId">
                     <TableRow v-model:matchup="props.matchups[matchupId]" :table-name="props.tableName" 
                     @click="toggleActive(matchupId)"
-                    @contextmenu="onRightClickRow"
-                    ></TableRow>
+                    @contextmenu="onRightClickRow"></TableRow>
                 </template>
 
             </tbody>
@@ -78,10 +110,12 @@ function onRightClickRow(event){
                 show confirmation dialog
     -->
 
-    <!-- <MatchUpActionMenu v-model:open="actionMenuOpen"></MatchUpActionMenu> -->
 </template>
 
 <style lang="scss" >
+    .table-container {        
+        position: relative;
+    }
     .table-container table{
         width: 100%;
         transition: all 0.3s ease-out;

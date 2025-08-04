@@ -1,10 +1,12 @@
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 import { useMatchupStore } from '@/stores/matchupStore.js';
 import Table from '@/components/matchup-tables/Table.vue';
 import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor.vue';
+import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue';
 import { storeToRefs } from 'pinia';
+import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
 
 const standardColumns = ['matchup', 'weightclass', 'rounds'];
 const watchListColumns = ['matchup', 'weightclass', 'rounds', 'analysis complete']
@@ -14,10 +16,16 @@ const watchListColumns = ['matchup', 'weightclass', 'rounds', 'analysis complete
 const matchUpEditorOpen = ref(false);
 
 const matchupStore = useMatchupStore();
-const { event,mainCard,prelims,watchlist } = storeToRefs(matchupStore);
+const matchupActionMenuStore = useMatchupActionMenuStore();
 
+const { event,mainCard,prelims,watchlist } = storeToRefs(matchupStore);
+const { menuPosition } = storeToRefs(matchupActionMenuStore)
+
+const guideXRef = useTemplateRef('guideX');
+const guideYRef = useTemplateRef('guideY');
+
+const showingGuides = ref(false);
 onMounted(() => {
-    // console.log("MainContent mounted");
     matchupStore.fetchEvent();
 })
 
@@ -25,9 +33,22 @@ function showMatchupEditor(emptyEditor) {
     matchUpEditorOpen.value = true;
 }
 
+function showGuides(event){
+    if (showingGuides.value === false){
+        return;
+    }
+    const guideX = guideXRef.value;
+    const guideY = guideYRef.value;
+
+    guideX.style.top = `${event.clientY}px`;
+    guideY.style.left = `${event.clientX}px`;
+
+    // console.log (event.clientX,event.clientY);
+}
+
 </script>
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid main-container" @mousemove="showGuides">
         <div class="title-container">
             <h3>
                 {{ event.title }}
@@ -43,17 +64,40 @@ function showMatchupEditor(emptyEditor) {
             </div>
         </template>
 
-        <Table class="mt-2" table-name="MainCard" :columns=standardColumns :matchups="mainCard"
+        <Table table-name="MainCard" :columns=standardColumns :matchups="mainCard"
             @request-new-match-up="showMatchupEditor(true)"></Table>
-        <Table class="mt-2" table-name="Prelims" :columns=standardColumns :matchups="prelims"
+        <Table table-name="Prelims" :columns=standardColumns :matchups="prelims"
             @request-new-match-up="showMatchupEditor(true)"></Table>
 
         <MatchUpEditor v-model:open="matchUpEditorOpen"></MatchUpEditor>
-
+        <MatchUpActionMenu v-model:menu-position="menuPosition"></MatchUpActionMenu>
     </div>
+    <!--horizontal line guide moves up and down-->
+    <div class="guide-x" ref="guideX" v-if="showingGuides"></div>
+    <!--vertical line guide moves left and right-->
+    <div class="guide-y" ref="guideY" v-if="showingGuides"></div>
 </template>
 
 <style scoped lang="scss">
+
+.guide-x{
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: cyan;
+}
+
+.guide-y{
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background-color: red;
+}
+
+
+.main-container{
+    // position: relative;
+}
 .empty-watchlist-notification {
     width: fit-content;
 }
