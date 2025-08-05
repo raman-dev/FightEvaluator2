@@ -17,6 +17,19 @@ def vueIndex(request):
     return render(request, 'fightEvaluator/vue_index.html')
 
 @require_GET
+def vueAllEvents(request):
+    # events = []
+    eventQuerySet = FightEvent.objects.all()
+    yearDict = {}
+    for year in range(2025,2022,-1):
+        yearSet = eventQuerySet.filter(date__year=year)
+        monthDict = {}
+        for month in range(12,0,-1):
+            monthDict[month] = [model_to_dict(x) for x in yearSet.filter(date__month=month)]
+        yearDict[year] = monthDict
+    return JsonResponse({'events_yearMonth':yearDict})
+
+@require_GET
 def vueFightEvent(request):
     #return the next fight event
     #get current day date

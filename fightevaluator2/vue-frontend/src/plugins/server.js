@@ -9,12 +9,21 @@ class Server {
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
 
-      GET_NEXT_EVENT: '/vue-next-event'
+      GET_NEXT_EVENT: '/vue-next-event',
+      ALL_EVENTS: '/events-vue'
     }
 
     //provide
     static headers = {
 
+    }
+
+    static async get_all_events(callback){
+      fetch(Server.URLS.ALL_EVENTS)
+      .then(response => response.json())
+      .then((data) => {
+        callback(data);
+      });
     }
 
     //gets event data and matchups 

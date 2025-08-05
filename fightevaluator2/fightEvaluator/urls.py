@@ -59,4 +59,5 @@ urlpatterns = [
 
     path('index-vue',views.vueIndex,name='index-vue'),
     path('vue-next-event',views.vueFightEvent, name='vue-next-event'),
+    path('events-vue',views.vueAllEvents,name='events-vue')
 ]
