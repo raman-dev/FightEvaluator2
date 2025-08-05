@@ -6,7 +6,7 @@ import { onMounted } from 'vue';
 
 const eventStore = useEventsStore();
 const { fetchEvents } = eventStore
-const { events } = storeToRefs(eventStore);
+const { eventsData } = storeToRefs(eventStore);
 
 onMounted(() => {
     fetchEvents();
@@ -17,14 +17,14 @@ onMounted(() => {
     <div class="main-container container-fluid">
         <div class="mx-auto content-container col-xxl-6 col-xl-9 col-lg-10 col-md-12 col-12">
             <h1>Events</h1>
-            <template v-for="(monthDict, year) in events.events_yearMonth" :key="year">
-                <h3>{{ year }}</h3>
-                <div class="month-container m-2 my-4" v-for="(events, month) in monthDict">
+            <template v-for="(data,index) in eventsData" :key="index">
+                <h3>{{ data.year }}</h3>
+                <div class="month-container m-2 my-4" v-for="(events, month) in data.monthMap">
                     <template v-if="events.length > 0">
                         <h4 class="date-title">{{ month }}</h4>
                         <div class="events-container p-2">
-                            <div class="rounded-3 event-item" v-for="event in events">
-                                <a href="/{{event.id}}">
+                            <div class="rounded-3 event-item" v-for="event in events" :key="event.id">
+                                <a v-bind:href="'/'+event.id">
                                     <h6 class="py-3 p-1 m-0 text-center">
                                         {{ event.title }}
                                     </h6>
