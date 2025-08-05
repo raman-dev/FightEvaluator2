@@ -19,6 +19,14 @@ class Server {
 
     }
 
+    static async get_event(eventId,callback){
+      fetch(Server.URLS.GET_EVENT + `/${eventId}`)
+      .then(response => response.json())
+      .then((data)=>{
+        callback(data)
+      });
+    }
+
     static async get_all_events(callback){
       fetch(Server.URLS.ALL_EVENTS)
       .then(response => response.json())

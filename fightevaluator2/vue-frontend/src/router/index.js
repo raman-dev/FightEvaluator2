@@ -5,18 +5,19 @@ import AllEventsView from "@/views/AllEventsView.vue";
 
 const router = createRouter({
     history: createMemoryHistory(),
-    routes:[
-        //route objects
+    routes:[//route objects
         {
-            path:'/',
-            name:'home',
-            component : HomeView
+            path:'/:eventId', name:'home-event-specific',
+            component: HomeView
         },
         {
-            path:'/events',
-            name:'events',
+            path:'/', name:'home',
+            component : HomeView
+        },{
+            path:'/events', name:'events',
             component: AllEventsView
-        }
+        },
+        
     ]
     //when building prepend index-vue to all links
     // routes:[

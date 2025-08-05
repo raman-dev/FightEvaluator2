@@ -1,13 +1,17 @@
 <script setup>
 
-import { onMounted, ref, useTemplateRef } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { useMatchupStore } from '@/stores/matchupStore.js';
 import Table from '@/components/matchup-tables/Table.vue';
 import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor.vue';
 import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue';
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
+import { useRouter,useRoute } from 'vue-router';
 
+
+// const router = useRouter();
+const route = useRoute();
 
 const standardColumns = ['matchup', 'weightclass', 'rounds'];
 const watchListColumns = ['matchup', 'weightclass', 'rounds', 'analysis complete']
@@ -29,9 +33,15 @@ const cursorX = ref(0);
 const cursorY = ref(0);
 
 const showingGuides = ref(false);
+
 onMounted(() => {
     matchupStore.fetchEvent();
 })
+
+watch(route, (newId, oldId) => {
+    // react to route changes...
+    console.log (newId,oldId);
+});
 
 function showMatchupEditor(emptyEditor) {
     matchUpEditorOpen.value = true;

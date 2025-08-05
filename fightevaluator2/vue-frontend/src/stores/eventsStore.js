@@ -33,5 +33,10 @@ export const useEventsStore = defineStore('eventsStore',()=>{
         onReceiveData(sampleFetchResult);
     }
 
+
+    async function fetchEvent(eventId){
+        // server.get_event(eventId,onReceiveData);
+        onReceiveData(sampleFetchResult);
+    }
     return {eventsData, fetchEvents}
 });
