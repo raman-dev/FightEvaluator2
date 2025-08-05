@@ -17,17 +17,73 @@ def vueIndex(request):
     return render(request, 'fightEvaluator/vue_index.html')
 
 @require_GET
+def get_event(request,eventId):
+    resultSet = FightEvent.objects.filter(pk=eventId)
+    if not resultSet:
+        return JsonResponse({'No such event':None})
+    event = resultSet[0]
+    return aggregateAndParseEventMatchups(event)
+
+@require_GET
 def vueAllEvents(request):
-    # events = []
+    events = []
     eventQuerySet = FightEvent.objects.all()
-    yearDict = {}
+
     for year in range(2023,2026):
         yearSet = eventQuerySet.filter(date__year=year)
-        monthDict = {}
-        for month in range(12,0,-1):
-            monthDict[month] = [model_to_dict(x) for x in yearSet.filter(date__month=month)]
-        yearDict[year] = monthDict
-    return JsonResponse({'events_yearMonth':yearDict})
+        months = []
+        for month in range(0,13):
+             t = [model_to_dict(x) for x in yearSet.filter(date__month=month)]
+             t.sort(key=lambda x: x['date'],reverse=True)
+             months.append ({
+                 'month':month,
+                 'events':t
+             })
+        months.sort(key=lambda x:x['month'],reverse=True)
+        events.append({
+            'year':year,
+            'months': months
+        })
+    """
+
+        events:[
+            {
+                year: y
+                months:  [
+                    {month: i, events: events.sorted.reverse}
+            ]},...
+        ]
+
+    """
+    events.sort(key=lambda x :x['year'],reverse=True)
+    return JsonResponse({'events':events})
+
+def aggregateAndParseEventMatchups(event: FightEvent):
+    #convert the event to a dictionary
+    event_dict = model_to_dict(event)
+    #get matchups related to the event
+    matchups = MatchUp.objects.filter(event=event)
+    result = {
+        'event': event_dict
+    }
+    #add fighter names to the matchups 
+    mainCardJSON = []
+    prelimJSON = []
+
+    for isprelim_state in (True,False):
+        matchups = MatchUp.objects.filter(event=event,isprelim=isprelim_state)
+        for m in matchups:
+            matchup_dict = model_to_dict(m)
+            matchup_dict['fighter_a_name'] = m.fighter_a.name 
+            matchup_dict['fighter_b_name'] = m.fighter_b.name 
+            if isprelim_state:
+                prelimJSON.append(matchup_dict)
+            else:
+                mainCardJSON.append(matchup_dict)
+
+    result['mainCardMatchups'] = mainCardJSON
+    result['prelimMatchups'] = prelimJSON
+    return JsonResponse(result)
 
 @require_GET
 def vueFightEvent(request):
@@ -37,29 +93,5 @@ def vueFightEvent(request):
     #from FightEvent model, get the first event that is after or on the current date
     event = FightEvent.objects.filter(date__gte=current_date).order_by('date').first()
     if event:
-        #convert the event to a dictionary
-        event_dict = model_to_dict(event)
-        #get matchups related to the event
-        matchups = MatchUp.objects.filter(event=event)
-        result = {
-            'event': event_dict
-        }
-        #add fighter names to the matchups 
-        mainCardJSON = []
-        prelimJSON = []
-
-        for isprelim_state in (True,False):
-            matchups = MatchUp.objects.filter(event=event,isprelim=isprelim_state)
-            for m in matchups:
-                matchup_dict = model_to_dict(m)
-                matchup_dict['fighter_a_name'] = m.fighter_a.name 
-                matchup_dict['fighter_b_name'] = m.fighter_b.name 
-                if isprelim_state:
-                    prelimJSON.append(matchup_dict)
-                else:
-                    mainCardJSON.append(matchup_dict)
-
-        result['mainCardMatchups'] = mainCardJSON
-        result['prelimMatchups'] = prelimJSON
-        return JsonResponse(result)
+        return aggregateAndParseEventMatchups(event)
     return JsonResponse({'No Event Upcoming':None})

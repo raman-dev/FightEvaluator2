@@ -9,8 +9,9 @@ class Server {
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
 
-      GET_NEXT_EVENT: '/vue-next-event',
-      ALL_EVENTS: '/events-vue'
+      GET_NEXT_EVENT: 'vue/next-event',
+      ALL_EVENTS: 'vue/events',
+      GET_EVENT:'vue/events/'
     }
 
     //provide
