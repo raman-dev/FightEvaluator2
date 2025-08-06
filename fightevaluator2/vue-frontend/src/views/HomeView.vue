@@ -41,7 +41,7 @@ onMounted(() => {
 watch(route, (newId, oldId) => {
     // react to route changes...
     console.log (newId,oldId);
-});
+},{deep:true});
 
 function showMatchupEditor(emptyEditor) {
     matchUpEditorOpen.value = true;
