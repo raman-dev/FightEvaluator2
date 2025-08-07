@@ -7,14 +7,18 @@ const router = createRouter({
     history: createWebHistory(),
     routes:[//route objects
         {
-            path:'/:eventId', name:'home-event-specific',
+            // path:'/:eventId', name:'home-event-specific',
+            path:'/vue/events/:eventId', name:'event-specific',
             component: HomeView
         },
         {
-            path:'/', name:'home',
+            // path:'/', name:'home'
+            path:'/vue/index',name:'home',
             component : HomeView
-        },{
-            path:'/events', name:'events',
+        },
+        {
+            // path:'/events', name:'events',
+            path:'/vue/events', name:'events',
             component: AllEventsView
         },
         

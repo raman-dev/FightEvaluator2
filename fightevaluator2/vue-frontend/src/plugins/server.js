@@ -9,9 +9,8 @@ class Server {
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
 
-      GET_NEXT_EVENT: 'vue/next-event',
-      ALL_EVENTS: 'vue/events',
-      GET_EVENT:'vue/events/'
+      GET_NEXT_EVENT: '/vue/next-event',
+      ALL_EVENTS: '/vue/events',
     }
 
     //provide
@@ -20,7 +19,7 @@ class Server {
     }
 
     static async get_event(eventId,callback){
-      fetch(Server.URLS.GET_EVENT + `/${eventId}`)
+      fetch(Server.URLS.ALL_EVENTS + `/${eventId}`)
       .then(response => response.json())
       .then((data)=>{
         callback(data)

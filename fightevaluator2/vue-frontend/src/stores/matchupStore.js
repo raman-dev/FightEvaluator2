@@ -15,11 +15,19 @@ export const useMatchupStore = defineStore('matchup', () => {
   const mainCard = ref({});
   const prelims = ref({});
   const watchlist = ref({});
-  const activeMatchup = ref({ table:null,id:-1,matchup:null});
+
+  const defaultActiveMatchup = {table:null,id:-1,matchup:null};
+  const activeMatchup = ref(defaultActiveMatchup);
 
   function onReceiveEvent(eventData) {
     // console.log("Received event data:", eventData);
     //do what populate event and matchups 
+    event.value = {};
+    mainCard.value = {};
+    prelims.value = {};
+    watchlist.value = {};
+    activeMatchup.value = structuredClone(defaultActiveMatchup);
+
     eventData.mainCardMatchups.forEach((matchup) => {
       matchup['active'] = false;
       mainCard.value[matchup.id] = matchup;
@@ -81,8 +89,12 @@ export const useMatchupStore = defineStore('matchup', () => {
 
   async function fetchEvent(eventId) {
     if (eventId === undefined || eventId === null) {
-      // server.get_next_event(onReceiveEvent);
-      onReceiveEvent(sampleFetchResult);
+      server.get_next_event(onReceiveEvent);
+      // onReceiveEvent(sampleFetchResult);
+    }else{
+      console.log ('fetching event-specific',eventId);
+      server.get_event(eventId,onReceiveEvent);
+      // onReceiveEvent(sampleFetchResult);
     }
   }
 

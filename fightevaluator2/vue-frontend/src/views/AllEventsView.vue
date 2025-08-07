@@ -42,7 +42,7 @@ function monthNumberToString(monthInput) {
                         <h4 class="date-title">{{ monthNumberToString(monthEvents.month) }}</h4>
                         <div class="events-container p-2">
                             <div class="rounded-3 event-item" v-for="event in monthEvents.events" :key="event.id">
-                                <RouterLink :to="'/'+ event.id">
+                                <RouterLink :to="{ name:'event-specific', params: {eventId:event.id }}">
                                     <h6 class="py-3 p-1 m-0 text-center">
                                         {{ event.title }}
                                     </h6>
