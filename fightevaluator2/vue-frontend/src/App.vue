@@ -2,25 +2,25 @@
 
 import NavBar from './components/NavBar.vue';
 import MainContent from './components/MainContent.vue';
-import { RouterLink,RouterView } from 'vue-router';
+import { RouterLink, RouterView } from 'vue-router';
 
 
 const links = [
     {
-        name:"home",
-        path:"/v-index"
+        name: "home",
+        path: "/v-index"
     },
     {
-        name:"events",
-        path:"/v-events"
+        name: "events",
+        path: "/v-events"
     },
     {
-        name:"predictions",
-        path:"/v-predictions"
+        name: "predictions",
+        path: "/v-predictions"
     },
     {
-        name:"profit",
-        path:"/v-profit"
+        name: "profit",
+        path: "/v-profit"
     }
 ];
 
@@ -32,22 +32,27 @@ const title = 'Fight Evaluator';
     <NavBar :links="links" :nav-title="title"></NavBar>
     <!-- <MainContent></MainContent> -->
 
-    <RouterView/>
+    <RouterView />
 </template>
 
 <style lang="scss">
-    html, body{
-        height: 100%;
-        width: 100%;
-    }
-    #app{
-        width: 100% !important;
+/* use font as variable */
+$backgroundColor: #212529;
 
-        display: flex;
-        flex-direction: column;
-       
-        padding: 0rem;
-        margin: 0rem;
-    }
 
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+#app {
+    width: 100% !important;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 0rem;
+    margin: 0rem;
+}
 </style>

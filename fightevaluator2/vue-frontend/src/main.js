@@ -1,6 +1,3 @@
-
-
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import router from './router';
@@ -10,7 +7,8 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 
 import server from './plugins/server.js';
 
-import App from './App.vue'
+import App from './App.vue';
+// import './assets/fonts.scss';
 
 function getCookie(name) {
     let raw = document.cookie;
