@@ -1,10 +1,10 @@
-import { createRouter,createMemoryHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import HomeView from "@/views/HomeView.vue";
 import AllEventsView from "@/views/AllEventsView.vue";
 
 const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHistory(),
     routes:[//route objects
         {
             path:'/:eventId', name:'home-event-specific',

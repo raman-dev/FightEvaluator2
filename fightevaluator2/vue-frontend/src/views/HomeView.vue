@@ -40,7 +40,7 @@ onMounted(() => {
 
 watch(route, (newId, oldId) => {
     // react to route changes...
-    console.log (newId,oldId);
+    console.log (newId.params,oldId.params);
 },{deep:true});
 
 function showMatchupEditor(emptyEditor) {
@@ -74,6 +74,7 @@ function showGuides(event){
         <label class="mx-1" for="guideCheckbox">Guides</label>
         <p class="p-0 m-0">{{ cursorX }}, {{ cursorY }}</p>
     </div> -->
+    <h1>Route:{{ $route.fullPath }}</h1>
     <div class="container-fluid main-container" @mousemove="showGuides">
         <div class="title-container">
             <h3>
