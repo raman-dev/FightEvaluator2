@@ -34,9 +34,6 @@ const cursorY = ref(0);
 
 const showingGuides = ref(false);
 
-onMounted(() => {
-    matchupStore.fetchEvent();
-})
 
 watch(route, (newData, oldData) => {
     // react to route changes...

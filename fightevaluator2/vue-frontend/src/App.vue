@@ -8,19 +8,19 @@ import { RouterLink,RouterView } from 'vue-router';
 const links = [
     {
         name:"home",
-        path:"/vue/index"
+        path:"/v-index"
     },
     {
         name:"events",
-        path:"/vue/events"
+        path:"/v-events"
     },
     {
         name:"predictions",
-        path:"/vue/predictions"
+        path:"/v-predictions"
     },
     {
         name:"profit",
-        path:"/vue/profit"
+        path:"/v-profit"
     }
 ];
 

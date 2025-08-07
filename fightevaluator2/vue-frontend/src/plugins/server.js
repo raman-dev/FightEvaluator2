@@ -22,7 +22,7 @@ class Server {
       fetch(Server.URLS.ALL_EVENTS + `/${eventId}`)
       .then(response => response.json())
       .then((data)=>{
-        callback(data)
+        callback(data);
       });
     }
 

@@ -7,31 +7,19 @@ const router = createRouter({
     history: createWebHistory(),
     routes:[//route objects
         {
-            // path:'/:eventId', name:'home-event-specific',
-            path:'/vue/events/:eventId', name:'event-specific',
+            path:'/v-events/:eventId', name:'event-specific',
             component: HomeView
         },
         {
-            // path:'/', name:'home'
-            path:'/vue/index',name:'home',
+            path:'/v-index',name:'home',
             component : HomeView
         },
         {
-            // path:'/events', name:'events',
-            path:'/vue/events', name:'events',
+            path:'/v-events', name:'events',
             component: AllEventsView
         },
         
     ]
-    //when building prepend index-vue to all links
-    // routes:[
-    //     //route objects
-    //     {
-    //         path:'/index-vue',
-    //         name:'home',
-    //         component : HomeView
-    //     }
-    // ]
 })
 
 export default router;

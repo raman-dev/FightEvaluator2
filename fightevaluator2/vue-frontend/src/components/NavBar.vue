@@ -15,6 +15,7 @@ function onNavbarLinkClick(){
         navbarToggler.click();
     }
 }
+
 </script>
 
 <template>

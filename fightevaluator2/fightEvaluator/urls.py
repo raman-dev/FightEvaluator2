@@ -57,7 +57,7 @@ urlpatterns = [
     path('polling-test',views.polling_end,name='polling-test-sht'),
     path('stat-update',views.update_stats,name='force-stat-update'),
 
-    path('vue/index',views.vueIndex,name='vue-index'),
+    path('v-index',views.vueIndex,name='vue-index'),
     path('vue/next-event',views.vueFightEvent, name='vue-next-event'),
     path('vue/events/<int:eventId>',views.get_event,name='vue-get-event'),
     path('vue/events',views.vueAllEvents,name='vue-events')

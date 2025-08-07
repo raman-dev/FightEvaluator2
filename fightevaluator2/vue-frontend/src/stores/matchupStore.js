@@ -20,7 +20,7 @@ export const useMatchupStore = defineStore('matchup', () => {
   const activeMatchup = ref(defaultActiveMatchup);
 
   function onReceiveEvent(eventData) {
-    // console.log("Received event data:", eventData);
+    console.log("Received event data: ", eventData.event.id);
     //do what populate event and matchups 
     event.value = {};
     mainCard.value = {};
