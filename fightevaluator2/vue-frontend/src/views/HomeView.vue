@@ -7,7 +7,7 @@ import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor.vue';
 import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue';
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
-import { useRoute  } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute  } from 'vue-router';
 
 
 // const router = useRouter();
@@ -37,6 +37,13 @@ watch(route, (newData, oldData) => {
         matchupStore.fetchEvent();//normal next event
     }
 }, { immediate: true });
+
+
+onBeforeRouteLeave((to,from) => {
+    console.log('onBeforeRouteLeave',to.fullPath,from.fullPath);
+    
+});
+
 
 
 function showMatchupEditor(emptyEditor) {

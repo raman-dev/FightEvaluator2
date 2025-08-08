@@ -60,5 +60,6 @@ urlpatterns = [
     path('v-index',views.vueIndex,name='vue-index'),
     path('vue/next-event',views.vueFightEvent, name='vue-next-event'),
     path('vue/events/<int:eventId>',views.get_event,name='vue-get-event'),
-    path('vue/events',views.vueAllEvents,name='vue-events')
+    path('vue/events',views.vueAllEvents,name='vue-events'),
+    path('vue/matchups/<int:matchupId>',views.get_matchup_comparison,name='vue-matchup-analyze')
 ]

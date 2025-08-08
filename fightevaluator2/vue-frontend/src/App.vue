@@ -21,7 +21,7 @@ const links = [
     {
         name: "profit",
         path: "/v-profit"
-    }
+    },
 ];
 
 const title = 'Fight Evaluator';

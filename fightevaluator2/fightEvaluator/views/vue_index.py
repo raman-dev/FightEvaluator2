@@ -6,7 +6,7 @@ from django.http import JsonResponse,HttpResponse
 
 
 from datetime import datetime
-from ..models import FightEvent,MatchUp
+from ..models import FightEvent,MatchUp,Note
 
 
 @require_GET
@@ -95,3 +95,16 @@ def vueFightEvent(request):
     if event:
         return aggregateAndParseEventMatchups(event)
     return JsonResponse({'No Event Upcoming':None})
+
+
+@require_GET
+def get_matchup_comparison(request,matchupId):
+    matchup = get_object_or_404(MatchUp,id=matchupId)
+    data = {
+        'matchup' :  model_to_dict(matchup),
+        'fighter_a' :  model_to_dict(matchup.fighter_a),
+        'fighter_b' :  model_to_dict(matchup.fighte_b)
+    }
+
+
+    return JsonResponse({'data':data})

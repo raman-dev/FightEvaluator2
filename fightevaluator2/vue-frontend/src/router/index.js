@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import HomeView from "@/views/HomeView.vue";
 import AllEventsView from "@/views/AllEventsView.vue";
+import AnalysisView from "@/views/AnalysisView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -18,6 +19,10 @@ const router = createRouter({
             path:'/v-events', name:'events',
             component: AllEventsView
         },
+        {
+            path:'/v-matchup/:matchupId',name:'analyze',
+            component: AnalysisView
+        }
         
     ]
 })
