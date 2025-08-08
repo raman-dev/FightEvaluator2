@@ -75,7 +75,7 @@ function setMenuPosition(event) {
 
 </script>
 <template>
-    <div class="table-container border mt-2" ref="tableContainer">
+    <div class="table-container mt-2" ref="tableContainer" :class="{'w-100':props.tableName ==='WatchList'}">
         <table>
             <caption style="caption-side:top">
                 <div class="d-flex justify-content-between">
@@ -105,24 +105,6 @@ function setMenuPosition(event) {
             </tbody>
         </table>
     </div>
-    <!--
-        on right click table row
-            show a menu with options
-             - watch/unwatch
-             - analyze
-             - edit
-             - delete
-
-            on click watch
-                add to watchlist 
-                    update matchup on server
-            on click analyze 
-                open analysis page
-            on click edit
-                open editor with matchup data instead of empty editor
-            on click delete
-                show confirmation dialog
-    -->
 
 </template>
 
@@ -147,8 +129,7 @@ function setMenuPosition(event) {
         border: 1px solid lavender;
     }
 
-    th,
-    td {
+    th, td {
         text-align: center;
         vertical-align: middle;
         padding: 0.4rem;
