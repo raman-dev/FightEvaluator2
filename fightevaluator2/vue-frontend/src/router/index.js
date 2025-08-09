@@ -20,7 +20,7 @@ const router = createRouter({
             component: AllEventsView
         },
         {
-            path:'/v-matchup/:matchupId',name:'analyze',
+            path:'/v-matchup/:matchupId', name:'analyze',
             component: AnalysisView
         }
         

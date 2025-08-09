@@ -83,7 +83,7 @@ function onEnter(menuContainer){
             </li>
             <li class="menu-list-item">
                 <div class="menu-item">
-                    <RouterLink to="">
+                    <RouterLink :to="{name:'analyze',params : {matchupId: activeMatchup.id}}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                             fill="#5f6368">
                             <path
@@ -141,6 +141,11 @@ function onEnter(menuContainer){
         li.menu-list-item {
             list-style: none;
             border-top: 1px solid gray;
+
+            a {
+                text-decoration: none;
+                color: #dee2e6;
+            }
         }
 
         li.menu-list-item:first-child {

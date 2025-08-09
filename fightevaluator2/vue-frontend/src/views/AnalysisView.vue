@@ -1,4 +1,6 @@
 <script setup></script> 
 <template>
-    <div class=""`></div>
+    <div class="">
+        <h1>AnalysisView</h1>
+    </div>
 </template>

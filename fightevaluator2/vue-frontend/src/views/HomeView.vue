@@ -24,7 +24,7 @@ const matchupStore = useMatchupStore();
 const matchupActionMenuStore = useMatchupActionMenuStore();
 
 const { event, mainCard, prelims, watchlist } = storeToRefs(matchupStore);
-const { menuPosition } = storeToRefs(matchupActionMenuStore)
+const { menuPosition,menuOpen } = storeToRefs(matchupActionMenuStore)
 
 
 watch(route, (newData, oldData) => {
@@ -41,7 +41,7 @@ watch(route, (newData, oldData) => {
 
 onBeforeRouteLeave((to,from) => {
     console.log('onBeforeRouteLeave',to.fullPath,from.fullPath);
-    
+    menuOpen.value = false;//close incase open
 });
 
 
