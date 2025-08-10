@@ -43,39 +43,71 @@ def scrapeFighterDetails(fighterDetailsDiv,fighterData) -> dict:
      'September 09, 2023 in UFC'
      '$0 USD'
      'Telêmaco Borba, Paraná, Brazil' 
+     
+     2025-08-10 new query result structure
+     0 name
+     1 nickname
+     2 record
+     3 streak
+     4 
+    
+     
     """
+    height_pattern = re.compile(r"(\d)'(\d{1,2})\"\s+\(\d{3}cm\)")
+    dob_pattern = re.compile(r"(\d{4})\s+(\w{3})\s+(\d{1,2})")
+    reach_pattern = re.compile(r"((\d{2}\.\d+)|(\d{2}))\"\s+\(\d{3}cm\)")
+
     print(data)
-    height_string = data[0]
+    # height_string = data[6]
     #3 height values if both feet'inch" and cm are present
     #1 height value if only cm is present
-    height_match = re.findall(r'[0-9]+',height_string)#try feet'inch"
-    height_inches = 0
-    if len(height_match) == 1:
-        height_inches = math.floor(int(height_match[0]) / 2.54)
-    if len(height_match) > 1:
-        height_inches = int(height_match[0])*12 + int(height_match[1])
-    fighterData['height'] = height_inches
+    fighterData['height'] = 0
+    fighterData['reach'] = 0
+    fighterData['date_of_birth'] = 'N/A'
+    fighterData['weight_class'] = WeightClass.LIGHTWEIGHT
+    for d in data:
+        weight_class = d.replace(" ","_").lower()
+        height_match = re.search(height_pattern,d)#try feet'inch"
+        reach_match = re.search(reach_pattern,d)
+        dob_match = re.search(dob_pattern,d)
+        # height_inches = 0
+        # if len(height_match) == 1:
+        #     height_inches = math.floor(int(height_match[0]) / 2.54)
+        # if len(height_match) > 1:
+        #     height_inches = int(height_match[0])*12 + int(height_match[1])
+        if height_match:
+            feet, inches = map(int, height_match.groups())
+            height_inches = feet * 12 + inches
+            fighterData['height'] = height_inches
+        elif reach_match:
+            reach_val = float(reach_match.group(1))
+            reach_inches = int(round(reach_val))
+            fighterData['reach'] = reach_inches
+        elif weight_class != 'n/a' and  weight_class in WeightClass:
+            fighterData['weight_class'] = WeightClass[weight_class.upper()]#first lower to query then upper to reference wtf
+        elif dob_match:
+            print('dob_string', d)
+            dob = datetime.strptime(d, "%Y %b %d").date()
+            fighterData['date_of_birth'] = dob
 
-    weight_class = data[8].replace(" ","_").upper()
-    fighterData['weight_class'] = WeightClass[weight_class]
-
-    reach_string = data[7].strip()
-    reach_match = re.findall(r'[0-9]+',reach_string)
-    reach_inches = 0
-    if len(reach_match) == 2:
-        reach_inches = int(reach_match[0])
-    else:
-        #if cm it is always gonna be the last match
-        if reach_match != []:
-            reach_inches = math.floor(int(reach_match[-1]) / 2.54)
-    fighterData['reach'] = reach_inches
-    dob_string = data[5].strip()#last span element
-    if dob_string != 'N/A':
-        print('dob_string',dob_string)
-        dob = datetime.strptime(dob_string,"%Y %b %d").date()
-        fighterData['date_of_birth'] = dob
-    else:
-        fighterData['date_of_birth'] = 'N/A'
+    #search all items of list since sometimes the list is in wrong order
+    # reach_string = data[7].strip()
+    # reach_match = re.findall(r'[0-9]+',reach_string)
+    # reach_inches = 0
+    # if len(reach_match) == 2:
+    #     reach_inches = int(reach_match[0])
+    # else:
+    #     #if cm it is always gonna be the last match
+    #     if reach_match != []:
+    #         reach_inches = math.floor(int(reach_match[-1]) / 2.54)
+    # fighterData['reach'] = reach_inches
+    # dob_string = data[5].strip()#last span element
+    # if dob_string != 'N/A':
+    #     print('dob_string',dob_string)
+    #     dob = datetime.strptime(dob_string,"%Y %b %d").date()
+    #     fighterData['date_of_birth'] = dob
+    # else:
+    #     fighterData['date_of_birth'] = 'N/A'
     # print(data)
 
 #grab fighter data from an element

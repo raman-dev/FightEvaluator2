@@ -1,4 +1,6 @@
-import requests 
+import socket
+
+import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from selenium import webdriver
@@ -9,6 +11,8 @@ import re
 # import unicodedata
 
 from django.db.models import Q
+from urllib3.exceptions import ProtocolError
+
 from .models import WeightClass,Fighter,Assessment
 from .forms import FightEventForm,FighterForm
 
@@ -33,12 +37,27 @@ from .scraper2 import *
 
 def getPageSource(url):
     browser = webdriver.Chrome(options=options)
-    browser.get(url)
-    
-    time.sleep(5)
-    source = browser.page_source
-    browser.quit()
-    return source
+    try:
+        browser.get(url)
+        time.sleep(3.25)
+        source = browser.page_source  # full page source if no error
+        browser.quit()
+        return source
+    except (ConnectionResetError, ProtocolError, socket.error) as e:
+        print(f"Connection reset after loading started: {e}")
+        # Try to return whatever is currently loaded in the browser
+        result = None
+        try:
+            result = browser.page_source
+        except Exception as e2:
+            print(f"Could not get page_source after connection error: {e2}")
+        browser.quit()
+        return result
+    # browser.get(url)
+
+    # source = browser.page_source
+    # browser.quit()
+    # return source
 
 def extractLinkAndDate(url):
     page = requests.get(url)
@@ -132,9 +151,11 @@ def generateMatchupFighterObjs(matchups):
                 #query fighter api for data
                 fighterData = {}
                 fighterObj = getFighterData(fighter['link'],fighterData)
+                print(fighterData)
                 if fighterObj == None:
                     fighterData['data_api_link'] = fighter['link']
-
+                    if fighterData['date_of_birth'] == 'N\A':
+                        fighterData['date_of_birth'] = datetime.strptime("2001-01-01","%Y-%m-%d").date()
                     fighterForm = FighterForm(fighterData)#validate fighter data
                     # print(fighterForm.data,fighterForm)
                     if fighterForm.is_valid():
