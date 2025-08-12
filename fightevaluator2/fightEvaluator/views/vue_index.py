@@ -6,7 +6,7 @@ from django.http import JsonResponse,HttpResponse
 
 
 from datetime import datetime
-from ..models import FightEvent,MatchUp,Note
+from ..models import FightEvent,MatchUp,Note,Assessment
 
 
 @require_GET
@@ -100,10 +100,14 @@ def vueFightEvent(request):
 @require_GET
 def get_matchup_comparison(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
+    fighter_a = matchup.fighter_a
+    fighter_b = matchup.fighter_b
     data = {
         'matchup' :  model_to_dict(matchup),
-        'fighter_a' :  model_to_dict(matchup.fighter_a),
-        'fighter_b' :  model_to_dict(matchup.fighte_b)
+        'fighter_a' :  model_to_dict(fighter_a),
+        'fighter_a_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_a)),
+        'fighter_b' :  model_to_dict(fighter_b),
+        'fighter_b_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_b)),
     }
 
 

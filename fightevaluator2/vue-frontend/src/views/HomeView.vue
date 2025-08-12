@@ -45,7 +45,6 @@ onBeforeRouteLeave((to,from) => {
 });
 
 
-
 function showMatchupEditor(emptyEditor) {
     matchUpEditorOpen.value = true;
 }
