@@ -67,12 +67,12 @@ async function attribCommitButtonClickListener(event){
     //dataStateChanged try and commit changes to server
     let data = {id: assessment_data['id']};
     // let data = structuredClone(assessment_data);
-    data[attribName] = selectedAttribOptionState;
-    for (let key in data){   
-        if (data[key] in attribLabelValueMap){
-            data[key] = attribLabelValueMap[data[key]];
-        }
-    }
+    data[attribName] = attribLabelValueMap[selectedAttribOptionState];
+    // for (let key in data){   
+    //     if (data[key] in attribLabelValueMap){
+    //         data[key] = attribLabelValueMap[data[key]];
+    //     }
+    // }
     console.log(data);
     
     let response = await fetch('/assessment/update',{
