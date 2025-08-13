@@ -23,15 +23,16 @@ class Assessment2(models.Model):
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
-    fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
-    head_movement = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    gas_tank = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    aggression = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    desire_to_win = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    striking = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    chinny = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    grappling_offense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
-    grappling_defense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier)
+    fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE,blank=True)
+    #blank=True means the a form may have these as blank but a model instance cannot
+    head_movement = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    gas_tank = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    aggression = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    desire_to_win = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    striking = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    chinny = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    grappling_offense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
+    grappling_defense = models.IntegerField(default=AttributeQualifier.UNTESTED,choices=AttributeQualifier,blank=True)
 
     @property
     def attrib_map(self):

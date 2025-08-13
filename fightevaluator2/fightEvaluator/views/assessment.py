@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse,Http404
 from django.db.models import Q
-from django.forms.models import model_to_dict
+from django.forms.models import model_to_dict,modelform_factory
 from django.views.decorators.http import require_GET,require_http_methods
 from django.views.generic import TemplateView,DetailView
 
@@ -92,27 +92,25 @@ def update_assessment(request):
     #convert body bytes to json object
     inputBody = json.loads(request.body)
     # print(inputBody)
+    attributes = [ k for k in inputBody.keys() if k !='id']
+    
     #need to inverse map values 
-    form = AssessmentForm(inputBody)
+    # form = AssessmentForm(inputBody)
     valid_id = inputBody['id']
     #validate valid_id is a valid non-negative integer
     if type(valid_id) != int or valid_id < 0:
         return JsonResponse({'error':'invalid id'})
-    assessment = None
-    if form.is_valid():
+    assessment = get_object_or_404(Assessment,id=valid_id)
+    assessmentUpdateData = inputBody
+    assessmentUpdateData.pop('id')
+
+    print(assessmentUpdateData,attributes)
+    CustomAssessmentFormClass = modelform_factory(Assessment,fields=attributes)
+    customForm = CustomAssessmentFormClass(data=assessmentUpdateData,instance=assessment)
+    if customForm.is_valid():#form.is_valid():
         # print('form is valid')
-        # print(form.cleaned_data)
-        assessment = get_object_or_404(Assessment,id=valid_id)
-        #write all values to assessment
-        assessment.head_movement = form.cleaned_data['head_movement']
-        assessment.gas_tank = form.cleaned_data['gas_tank']
-        assessment.aggression = form.cleaned_data['aggression']
-        assessment.desire_to_win = form.cleaned_data['desire_to_win']
-        assessment.striking = form.cleaned_data['striking']
-        assessment.chinny = form.cleaned_data['chinny']
-        assessment.grappling_offense = form.cleaned_data['grappling_offense']
-        assessment.grappling_defense = form.cleaned_data['grappling_defense']
-        assessment.save()
+        customForm.save()
+        assessment.refresh_from_db()
     else:
         # print('invalid')
         return JsonResponse({'error':'invalid form'})
