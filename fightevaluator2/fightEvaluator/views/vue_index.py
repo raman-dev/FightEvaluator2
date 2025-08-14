@@ -109,6 +109,23 @@ def get_matchup_comparison(request,matchupId):
         'fighter_b' :  model_to_dict(fighter_b),
         'fighter_b_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_b)),
     }
+    """
+        how to consume this endpoint data
+
+         data 
+            matchup:
+                matchup_data
+            fighter_a :
+                fighter_a data
+                assessment
+                    data
+            fighter_b:
+                fighter_b data
+                assessment
+                    data
+            
+            
+    """
 
 
     return JsonResponse({'data':data})
