@@ -124,7 +124,12 @@ def get_matchup_comparison(request,matchupId):
                 assessment
                     data
             
+        
+        assessment
+            fighter 
+            attributes 
             
+        
     """
 
 
