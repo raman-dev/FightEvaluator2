@@ -30,6 +30,7 @@ def predictions(request):
             
 
     """
+    # calculate_stats()
     events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
     # years = Prediction.objects.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct()#query set of years of predictions
     
