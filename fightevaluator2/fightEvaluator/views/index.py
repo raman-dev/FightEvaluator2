@@ -212,8 +212,8 @@ def getFightEventResults2(request,eventId):
 
     """
 
-    if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
-        return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
+    # if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
+    #     return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
     matchups = MatchUp.objects.filter(event=fightEvent)
 
     matchupResults = {}
