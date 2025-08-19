@@ -6,7 +6,7 @@ from django.http import JsonResponse,HttpResponse
 
 from django.views.generic import ListView,DetailView
 
-from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState
+from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
 from ..forms import FightEventForm,MatchUpFormMF
 from .prediction import calculate_stats
 import json
@@ -169,8 +169,16 @@ class FightEventDetailView(DetailView):
         return context
 
 def verifyPrediction(matchups):
+    m  = matchups[0]
+    esQuerySet = EventStat.objects.filter(event=prediction.matchup.event)
+    es = None
+    if not esQuerySet.exists():
+        es = EventStat(event=m.event,predictions=0,correct=0)
+    else:
+        es = esQuerySet[0]
     for matchup in matchups:
         prediction = Prediction.objects.filter(matchup=matchup).first()
+        es.predictions += 1
         if prediction:
             outcome = matchup.outcome
             print(outcome)
@@ -198,6 +206,15 @@ def verifyPrediction(matchups):
                         prediction.isCorrect = True
 
             prediction.save()
+            """
+                for this event 
+                    grab eventStat object if doesn't exist
+
+            """
+
+            if prediction.isCorrect:
+                es.correct += 1
+    es.save()
     calculate_stats()
 
 def update_stats(request):

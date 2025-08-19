@@ -13,10 +13,10 @@ def updateEventStat(eventStat: EventStat,prediction: Prediction):
     eventStat.predictions += 1
     if prediction.isCorrect:
         eventStat.correct += 1
-    eventStat.save()
+    # eventStat.save()
 
 
-def run():
+def seed_monthly_stats():
     preds = Prediction.objects.all()
     #pred -> matchup -> event
     #update(eventStat,pred)
@@ -50,7 +50,9 @@ def run():
         mes.predictions += 1
         if p.isCorrect == True:
             mes.correct += 1
-        mes.save()
+        # mes.save()
+    for eventStat in eventStatCache.values():
+        eventStat.save()
     events = FightEvent.objects.all()
     for year in monthStatCache.keys():
         for month in monthStatCache[year].keys():
@@ -60,7 +62,7 @@ def run():
     print(monthStatCache)
 
 
-run()
+seed_monthly_stats()
         
 
 

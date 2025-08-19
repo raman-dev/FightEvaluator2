@@ -2,6 +2,9 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
+@admin.register(EventStat)
+class EventStatAdmin(admin.ModelAdmin):
+    list_display = ["event","predictions","correct"]
 
 @admin.register(MonthlyEventStats)
 class MonthlyEventStatsAdmin(admin.ModelAdmin):

@@ -6,7 +6,7 @@ from django.http import JsonResponse,HttpResponse
 
 
 from datetime import datetime
-from ..models import FightEvent,MatchUp,Note,Assessment
+from ..models import FightEvent,MatchUp,Note,Assessment,MonthlyEventStats
 
 
 @require_GET
@@ -34,10 +34,18 @@ def vueAllEvents(request):
         months = []
         for month in range(0,13):
              t = [model_to_dict(x) for x in yearSet.filter(date__month=month)]
+             if len(t) ==0:
+                 continue
              t.sort(key=lambda x: x['date'],reverse=True)
+             mes = MonthlyEventStats.objects.filter(year=year,month=month)
+             mesDict = {}
+             if mes.exists():
+                 mesDict = model_to_dict(mes[0]) | {'accuracy':mes[0].accuracy}
+             
              months.append ({
                  'month':month,
-                 'events':t
+                 'events':t,
+                 'monthlyStats': mesDict
              })
         months.sort(key=lambda x:x['month'],reverse=True)
         events.append({
