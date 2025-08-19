@@ -39,7 +39,15 @@ function monthNumberToString(monthInput) {
                 <h3>{{ data.year }}</h3>
                 <div class="month-container m-2 my-4" v-for="(monthEvents, monthIndex) in data.months" :key="monthIndex">
                     <template v-if="monthEvents.events.length > 0">
+                        <div class="border">
                         <h4 class="date-title">{{ monthNumberToString(monthEvents.month) }}</h4>
+                            <div>
+                                <div>Num Events: 3</div>
+                                <div>accuracy: 75%</div>
+                                <div>predictions: 12</div>
+                                <div>correct: 9</div>
+                            </div>
+                        </div>
                         <div class="events-container p-2">
                             <div class="rounded-3 event-item" v-for="event in monthEvents.events" :key="event.id">
                                 <RouterLink :to="{ name:'event-specific', params: {eventId:event.id }}">

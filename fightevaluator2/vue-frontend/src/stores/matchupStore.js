@@ -89,12 +89,13 @@ export const useMatchupStore = defineStore('matchup', () => {
 
   async function fetchEvent(eventId) {
     if (eventId === undefined || eventId === null) {
-      // server.get_next_event(onReceiveEvent);
-      onReceiveEvent(sampleFetchResult);
+      console.log('fetching next event');
+      server.get_next_event(onReceiveEvent);
+      // onReceiveEvent(sampleFetchResult);
     }else{
       console.log ('fetching event-specific',eventId);
-      // server.get_event(eventId,onReceiveEvent);
-      onReceiveEvent(sampleFetchResult);
+      server.get_event(eventId,onReceiveEvent);
+      // onReceiveEvent(sampleFetchResult);
     }
   }
 

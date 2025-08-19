@@ -3,6 +3,14 @@ from .models import *
 # Register your models here.
 
 
+@admin.register(MonthlyEventStats)
+class MonthlyEventStatsAdmin(admin.ModelAdmin):
+    @admin.display
+    def yearMonth(self):
+        return f'{self.year}-{self.month}'
+
+    list_display = [yearMonth,"events","correct","predictions","accuracy"]
+
 @admin.register(Stat)
 class StatAdmin(admin.ModelAdmin):
     list_display = ["name","total","count","ratio_percent","type"]

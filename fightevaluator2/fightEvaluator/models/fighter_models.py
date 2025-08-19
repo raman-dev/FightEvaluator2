@@ -1,6 +1,6 @@
 from django.db import models
 from .qualifiers_and_choices import *
-from django.db.models import Index, Func,Value
+from django.db.models import Index, Func,Value, UniqueConstraint
 from django.db.models.functions import Concat
 
 class Note(models.Model):
@@ -119,3 +119,87 @@ class Stat(models.Model):
         if self.total == -1:
             return "no quantities"
         return self.name + "| Ratio : " + str(self.count) + "/" + str(self.total)# +" | Percentage: " + str(self.ratio)
+
+class EventStat(models.Model):
+    #store stats for predictions and correct predictions
+    event = models.ForeignKey('FightEvent',on_delete=models.CASCADE)
+    predictions = models.IntegerField(default=0)
+    correct = models.IntegerField(default=0)
+
+    @property
+    def accuracy(self):
+        ratio = self.correct/self.predictions
+        if self.predictions == 0:
+            return "0%"
+        return str(round(100 * (ratio),2)) + "%"
+
+class MonthlyEventStats(models.Model):
+    year = models.IntegerField()
+    month = models.IntegerField()
+
+    events = models.IntegerField(default=0)
+    predictions = models.IntegerField(default=0)
+    correct = models.IntegerField(default=0)
+
+    @property
+    def accuracy(self):
+        ratio = self.correct/self.predictions
+        if self.predictions == 0:
+            return "0%"
+        return str(round(100 * ratio,2)) + "%"
+
+    class Meta:
+        # unique_together = (('year', 'month'),)
+        constraints = [
+            UniqueConstraint(fields=["year","month"],name="unique_year_month")
+        ]
+
+    def __str__(self):
+        return str(self.year) + "-" + str(self.month) + " | Events: " + str(self.events) + " | Predictions: " + str(self.predictions) + " | Correct: " + str(self.correct) + " | Accuracy: " + self.accuracy + "%"
+    """
+        how to store a stat 
+            what is a stat
+                a stat is a or all
+                    count
+                    frequency
+                    percentage
+
+        how to store arbitrary stat
+            name 
+            value_type
+            value
+
+            integer field
+            float field
+        what if we want to store multiple stats together?
+            you wouldn't 
+            you would have a forein key to a stat aggregate
+            from a stat object
+        
+            Stat
+                name
+                label
+                value_type
+                value
+
+            naming convention?    
+            StatAggregate
+                name
+                label
+                stats -> many to many stats
+            
+            need monthly event stats for predictions 
+                name:year-month-stats 
+                label: January 2024
+                stats: many to many to stat 
+            
+            or less generalized
+
+            MonthlyEventStats
+                primary_key(year: int,month: int)
+                eventCount: int
+                predictions: int
+                correct: int
+                accuracy: float 
+    """
+    

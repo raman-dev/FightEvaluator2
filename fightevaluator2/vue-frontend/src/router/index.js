@@ -16,6 +16,9 @@ const router = createRouter({
             component : HomeView
         },
         {
+            path:'/',redirect:'/v-index'
+        },
+        {
             path:'/v-events', name:'events',
             component: AllEventsView
         },
