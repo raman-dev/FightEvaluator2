@@ -30,6 +30,36 @@ function monthNumberToString(monthInput) {
     return months[monthNumber - 1];
 }
 
+function percentToColor(percentStr) {
+  let value = parseFloat(percentStr.replace('%', ''));
+  if (isNaN(value)) throw new Error("Invalid percentage string");
+
+  // Clamp between 0 and 100
+  value = Math.max(0, Math.min(100, value));
+
+  // Color steps
+  const steps = [
+    "red",    // 0–50
+    "orange", // 51–60
+    "yellow", // 61–70
+    "limegreen", // 71–80
+    "lime",   // 81–90
+    "green"   // 91–100
+  ];
+
+  if (value <= 50) return steps[0];
+
+  // Divide 50–100 into 5 ranges
+  let stepIndex = Math.min(
+    steps.length - 1,
+    Math.floor((value - 50) / 10) + 1
+  );
+
+  return steps[stepIndex];
+}
+
+
+
 </script>
 <template>
     <div class="main-container container-fluid">
@@ -63,12 +93,12 @@ function monthNumberToString(monthInput) {
                     <div class="month-container m-2 my-4 p-1" v-for="(monthEvents, monthIndex) in data.months"
                         :key="monthIndex">
                         <template v-if="monthEvents.events.length > 0">
-                            <div class="d-flex align-items-center justify-content-between">
+                            <div class="month-header d-flex align-items-center justify-content-between">
                                 <h4 class="date-title">{{ monthNumberToString(monthEvents.month) }}</h4>
                                 <div class="monthly-stats-container d-flex"
                                     v-if="Object.keys(monthEvents.monthlyStats).length > 0">
-                                    <div class="stat">
-                                        {{ monthEvents.monthlyStats.accuracy }} Accurracy
+                                    <div class="stat" :style="{'color':'black','background-color':percentToColor(monthEvents.monthlyStats.accuracy)}">
+                                        <strong>{{ monthEvents.monthlyStats.accuracy }} Accurracy</strong>
                                     </div>
                                     <div class="stat">
                                         {{ monthEvents.monthlyStats.correct }} Correct
@@ -192,6 +222,22 @@ ul.event-list {
         a {
             text-decoration: underline;
         }
+    }
+}
+
+@media (max-width: 768px){
+
+    .month-header{
+        flex-direction: column;
+    }
+
+    .monthly-stats-container{
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .events-container{
+        grid-template-columns: 1fr;
     }
 }
 </style>
