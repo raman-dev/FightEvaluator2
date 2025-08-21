@@ -18,6 +18,7 @@ class Assessment2(models.Model):
     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
     attributes = models.ManyToManyField('AttributeValue',default=None,blank=True)
 
+    
     def __str__(self):
         return self.fighter.name
 
