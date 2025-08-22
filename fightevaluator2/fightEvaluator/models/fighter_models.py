@@ -2,6 +2,7 @@ from django.db import models
 from .qualifiers_and_choices import *
 from django.db.models import Index, Func,Value, UniqueConstraint
 from django.db.models.functions import Concat
+from .attributes import AttributeValue
 
 class Note(models.Model):
     assessment = models.ForeignKey('Assessment',on_delete=models.CASCADE)
@@ -16,11 +17,20 @@ class Note(models.Model):
 class Assessment2(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted
     fighter = models.ForeignKey('Fighter',on_delete=models.CASCADE)
-    attributes = models.ManyToManyField('AttributeValue',default=None,blank=True)
-
+    attributes = models.ManyToManyField(AttributeValue,
+                                        through="AssessmentAttribValue",
+                                        default=None,blank=True)
     
     def __str__(self):
         return self.fighter.name
+
+class AssessmentAttribValue(models.Model):
+    assessment = models.ForeignKey('Assessment2',on_delete=models.CASCADE)
+    attribute_value = models.ForeignKey('AttributeValue',on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=["assessment","attribute_value"],name="unique_assessment_value")]
+
 
 class Assessment(models.Model):
     #when the fighter is deleted the corresponding assessment is also deleted

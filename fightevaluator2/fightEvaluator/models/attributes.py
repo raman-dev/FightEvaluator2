@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 
 class Attribute(models.Model):
     name = models.CharField(max_length=128)
@@ -22,7 +23,8 @@ class AttributeValue(models.Model):
     value_label = models.CharField(max_length=128)
     description = models.CharField(max_length=1024)
     
-
+    class Meta:
+        constraints = [UniqueConstraint(fields=["attribute","value"],name="unique_attribute_value")]
     def __str__(self):
         return self.attribute.name +"|"+ self.value_label
 

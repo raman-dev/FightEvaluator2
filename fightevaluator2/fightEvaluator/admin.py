@@ -20,14 +20,14 @@ class StatAdmin(admin.ModelAdmin):
 
 @admin.register(Assessment2)
 class AssessmentAdmin(admin.ModelAdmin):
-    @admin.display
-    def mAttributes(self):
-        result = []
-        for attribM in self.attributes.all():
-            result.append(attribM.__str__())
-        return result
-    filter_horizontal = ["attributes"]
-    list_display = ["id","fighter",mAttributes]
+    # @admin.display
+    # def mAttributes(self):
+    #     result = []
+    #     for attribM in self.attributes.all():
+    #         result.append(attribM.__str__())
+    #     return result
+    # filter_horizontal = ["attributes"]
+    list_display = ["id","fighter"]
     autocomplete_fields = ["fighter"]
 
 @admin.register(Attribute)
