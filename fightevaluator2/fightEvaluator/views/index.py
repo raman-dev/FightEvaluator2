@@ -123,7 +123,6 @@ def index(request):
             prelims.append(matchup)
         else:
             mainCard.append(matchup)
-    
     print('event ==> ',nextEvent)
     context = {
         'event': nextEvent,
@@ -170,7 +169,7 @@ class FightEventDetailView(DetailView):
 
 def verifyPrediction(matchups):
     m  = matchups[0]
-    esQuerySet = EventStat.objects.filter(event=prediction.matchup.event)
+    esQuerySet = EventStat.objects.filter(event=m.event)
     es = None
     if not esQuerySet.exists():
         es = EventStat(event=m.event,predictions=0,correct=0)
