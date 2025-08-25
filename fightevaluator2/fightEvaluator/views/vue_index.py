@@ -106,6 +106,11 @@ def vueFightEvent(request):
 
 
 @require_GET
+def vueAssessment(request,fighterId):
+    data = {}
+    return JsonResponse(data)
+
+@require_GET
 def get_matchup_comparison(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     fighter_a = matchup.fighter_a

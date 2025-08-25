@@ -11,7 +11,7 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
    const route = useRoute();
 
    function fetchMatchupDetails(){
-    console.log (route.params,route.path);
+    console.log (route.path);
    }
 
    return { fetchMatchupDetails }

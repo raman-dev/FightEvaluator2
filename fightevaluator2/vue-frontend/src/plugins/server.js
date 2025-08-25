@@ -11,11 +11,21 @@ class Server {
 
       GET_NEXT_EVENT: '/vue/next-event',
       ALL_EVENTS: '/vue/events',
+
+      GET_ASSESSMENT: '/vue/fighter-assessment'
     }
 
     //provide
     static headers = {
 
+    }
+
+    static async get_assessment(fighterId,callback){
+      fetch(Server.URLS.GET_ASSESSMENT + `/${fighterId}`)
+      .then(response => response.json())
+      .then((data)=>{
+        callback(data);
+      });
     }
 
     static async get_event(eventId,callback){

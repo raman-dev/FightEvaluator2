@@ -90,15 +90,30 @@ export const useMatchupStore = defineStore('matchup', () => {
   async function fetchEvent(eventId) {
     if (eventId === undefined || eventId === null) {
       console.log('fetching next event');
-      server.get_next_event(onReceiveEvent);
-      // onReceiveEvent(sampleFetchResult);
+      // server.get_next_event(onReceiveEvent);
+      onReceiveEvent(sampleFetchResult);
     }else{
       console.log ('fetching event-specific',eventId);
-      server.get_event(eventId,onReceiveEvent);
-      // onReceiveEvent(sampleFetchResult);
+      // server.get_event(eventId,onReceiveEvent);
+      onReceiveEvent(sampleFetchResult);
     }
   }
 
-  return { event, mainCard, prelims, watchlist, activeMatchup, fetchEvent, toggleActiveMatchUp }
+  function getMatchup(matchupId){
+    //return matchup data if in maincard or prelims
+    console.log(`getMatchup.${matchupId}`);
+    console.log (Object.keys(mainCard.value));
+    if (matchupId in mainCard.value){
+      return mainCard.value[matchupId];
+    }
+
+    if (matchupId in prelims.value){
+      return prelims.value[matchupId];
+    }
+
+    return null;
+  }
+
+  return { event, mainCard, prelims, watchlist, activeMatchup, fetchEvent, toggleActiveMatchUp, getMatchup }
 
 })

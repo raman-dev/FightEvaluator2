@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import AllEventsView from "@/views/AllEventsView.vue";
 import AnalysisView from "@/views/AnalysisView.vue";
+import AssessmentView from "@/views/AssessmentView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -23,8 +24,12 @@ const router = createRouter({
             component: AllEventsView
         },
         {
-            path:'/v-matchup/:matchupId', name:'analyze',
+            path:'/v-matchup/:matchupId', name:'analyze',props:true,
             component: AnalysisView
+        },
+        {
+            path:'/v-assessment/:fighterId', name:'assessment',
+            component: AssessmentView
         }
         
     ]
