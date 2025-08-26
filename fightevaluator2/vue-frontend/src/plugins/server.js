@@ -12,7 +12,7 @@ class Server {
       GET_NEXT_EVENT: '/vue/next-event',
       ALL_EVENTS: '/vue/events',
 
-      GET_ASSESSMENT: '/vue/fighter-assessment'
+      GET_ASSESSMENT: '/vue/assessments'
     }
 
     //provide

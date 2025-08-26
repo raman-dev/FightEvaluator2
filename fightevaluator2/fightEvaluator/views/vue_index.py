@@ -6,7 +6,7 @@ from django.http import JsonResponse,HttpResponse
 
 
 from datetime import datetime
-from ..models import FightEvent,MatchUp,Note,Assessment,MonthlyEventStats
+from ..models import FightEvent,MatchUp,Note,Assessment,MonthlyEventStats,Fighter
 
 
 @require_GET
@@ -107,7 +107,26 @@ def vueFightEvent(request):
 
 @require_GET
 def vueAssessment(request,fighterId):
-    data = {}
+    
+    fighterQ = Fighter.objects.filter(id=fighterId)
+    if not fighterQ.exists():
+        return JsonResponse({'error':'fighter does not exist'})
+    
+    fighter = fighterQ[0]
+    assessmentQ = Assessment.objects.filter(fighter=fighter)
+    if not assessmentQ.exists():
+        return JsonResponse({'error':'assessment object does not exist'})
+
+    assessment = assessmentQ[0]
+    notes = []
+    noteQ = Note.objects.filter(assessment=assessment)
+    if noteQ.exists():
+        notes = [ {'data':note.data,'createdAt':note.createdAt} for note in noteQ ]
+    data = {
+        'fighter':model_to_dict(fighter),
+        'assessment':model_to_dict(assessment),
+        'notes':notes
+    }
     return JsonResponse(data)
 
 @require_GET

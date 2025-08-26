@@ -1,6 +1,6 @@
-<script>
+<script setup>
 
-const notes = defineModel(['notes']);
+const notes = defineModel('notes');
 
 </script>
 
@@ -8,7 +8,7 @@ const notes = defineModel(['notes']);
     <ul>
         <template v-for="note in notes">
             <li>
-                {{ note }}
+                {{ note.data }}
             </li>
         </template>
     </ul>
