@@ -38,7 +38,7 @@ onMounted(() => {
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $positiveBg: #0d6efd;
 $negativeBg: #dc3545;
 $neutralBg: #ffc107;

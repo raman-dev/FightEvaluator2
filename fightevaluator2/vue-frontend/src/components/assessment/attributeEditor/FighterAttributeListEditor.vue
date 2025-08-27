@@ -14,12 +14,20 @@ onMounted(() => {
 </script>
 
 <template>
-    <ul>
-        <template v-for="value,key in assessment">
-            <AttributeCard v-if="key !== 'id' && key !='fighter'" 
-                v-model:attributeValue="assessment[key]" 
-                :attrib_name="key">
-            </AttributeCard>
-        </template>
-    </ul>
+    <div class=".fighter-attrib-list">
+        <ul>
+            <template v-for="value, key in assessment">
+                <AttributeCard v-if="key !== 'id' && key != 'fighter'" v-model:attributeValue="assessment[key]"
+                    :attrib_name="key">
+                </AttributeCard>
+            </template>
+        </ul>
+    </div>
+
 </template>
+
+<style>
+.fighter-attrib-list {
+    padding: 0.5rem;
+}
+</style>

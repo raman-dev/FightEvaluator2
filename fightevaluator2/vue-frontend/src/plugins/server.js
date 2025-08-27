@@ -24,7 +24,6 @@ class Server {
       fetch(Server.URLS.GET_ASSESSMENT + `/${fighterId}`)
       .then(response => response.json())
       .then((data)=>{
-        console.log('running .then ')
         callback(data);
       });
     }
