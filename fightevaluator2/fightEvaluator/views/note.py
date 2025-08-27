@@ -31,4 +31,4 @@ def create_note(request):
 def delete_note(_,noteId):
     note = get_object_or_404(Note,id=noteId)
     note.delete()
-    return JsonResponse({"success":"true","noteId":noteId})
+    return JsonResponse({"noteId":noteId})

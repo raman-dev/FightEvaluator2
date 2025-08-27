@@ -2,16 +2,18 @@
 
 const props = defineProps(['link'])
 
-const openLink = (url) => {
-  if (url) window.open(url, "_blank");
+function openLink(url) {
+  // console.log('openLink!!');
+  if (url) {
+    window.open(url, "_blank");
+  }
 };
 
 </script>
 
 <template>
-  <button class="event-link-btn btn btn-outline-info" id="data_api_link" :data-url="props.link" style="width: 140px;"
-    @click="openLink(props.link)">
-    <svg id="tapology-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 748 117">
+  <button class="event-link-btn btn btn-outline-info" id="data_api_link" :data-url="props.link" style="width: 140px;" @click="openLink(props.link)">
+    <svg id="tapology-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 748 117" >
       <g stroke="none" stroke-width="1" fill="none">
         <g transform="translate(373.500000, 58.500000) scale(1, -1) translate(-373.500000, -58.500000) translate(-1.000000, -1.000000)"
           fill="rgb(222, 226, 230)">

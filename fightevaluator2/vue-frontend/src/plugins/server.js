@@ -24,6 +24,7 @@ class Server {
       fetch(Server.URLS.GET_ASSESSMENT + `/${fighterId}`)
       .then(response => response.json())
       .then((data)=>{
+        console.log('running .then ')
         callback(data);
       });
     }
@@ -76,7 +77,7 @@ class Server {
       // post(Server.URLS.CREATE_NOTE,requestData,callback);
     }
 
-    static async remove_note(callback,noteId){
+    static async delete_note(noteId,callback){
       //need error checking, parameter validation
       fetch(Server.URLS.DELETE_NOTE + `${noteId}`,{
         method:"DELETE",

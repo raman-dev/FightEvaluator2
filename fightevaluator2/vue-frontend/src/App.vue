@@ -55,5 +55,6 @@ body {
 
     padding: 0rem;
     margin: 0rem;
+    overflow: auto;
 }
 </style>

@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
 import server from './plugins/server.js';
+import attributeDefinitions from './plugins/attribute-definitions';
 
 import App from './App.vue';
 import './assets/fonts.scss';
@@ -36,6 +37,7 @@ app.use(server,{
         'X-CSRFToken': getCookie('csrftoken'),
     }
 })
+app.use(attributeDefinitions);
 
 app.use(createPinia())
 app.use(router);

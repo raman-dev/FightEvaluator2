@@ -121,7 +121,7 @@ def vueAssessment(request,fighterId):
     notes = []
     noteQ = Note.objects.filter(assessment=assessment)
     if noteQ.exists():
-        notes = [ {'data':note.data,'createdAt':note.createdAt} for note in noteQ ]
+        notes = [ {'data':note.data,'createdAt':note.createdAt,'id':note.id} for note in noteQ ]
     data = {
         'fighter':model_to_dict(fighter),
         'assessment':model_to_dict(assessment),
