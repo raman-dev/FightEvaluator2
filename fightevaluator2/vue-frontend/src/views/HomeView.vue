@@ -8,6 +8,7 @@ import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute  } from 'vue-router';
+import TapologyButton from '@/components/TapologyButton.vue';
 
 
 // const router = useRouter();
@@ -58,6 +59,8 @@ function showMatchupEditor(emptyEditor) {
             <h3>
                 {{ event.title }}
             </h3>
+            
+            <TapologyButton :link="event.link"></TapologyButton>
         </div>
 
         <div class="tables-wrapper">

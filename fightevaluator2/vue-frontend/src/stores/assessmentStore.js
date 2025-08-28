@@ -4,13 +4,7 @@ import { inject, ref } from "vue";
 export const useAssessmentStore = defineStore('assessment', () => {
     const server = inject('server');
 
-    const sampleFetchResult = { 
-        "fighter": { "id": 1226, "first_name": "davey", "middle_name": null, "last_name": "grant", "nick_name": "N/A", "weight_class": "bantamweight", "height": 68, "reach": 69, "wins": 15, "losses": 7, "draws": 0, "stance": "Orthodox", "date_of_birth": "1985-12-18", "data_api_link": "https://www.tapology.com/fightcenter/fighters/18815-david-grant", "img_link": "https://images.tapology.com/headshot_images/18815/large/Davey-Grant-hs.jpg?1389648532", "name_index": "davey-grant" }, 
-        "assessment": { "id": 1225, "fighter": 1226, "head_movement": 3, "gas_tank": 0, "aggression": 3, "desire_to_win": 3, "striking": 3, "chinny": 0, "grappling_offense": 0, "grappling_defense": 0 }, 
-        "notes": [
-            { "data": "Good striking volume, always throwing strikes.", "createdAt": "2025-04-03T22:28:19.111Z", "id": 876 }, 
-            { "data": "Doesn't switch up into grappling or clinching.", "createdAt": "2025-04-04T15:32:51.721Z", "id": 877 }, 
-            { "data": "hello", "createdAt": "2025-08-26T21:02:40.922Z", "id": 959 }] }
+    const sampleFetchResult = {"fighter":{"id":3604,"first_name":"fares","middle_name":null,"last_name":"ziam","nick_name":"N/A","weight_class":"lightweight","height":73,"reach":75,"wins":16,"losses":4,"draws":0,"stance":"orthodox","date_of_birth":"1997-03-21","data_api_link":null,"img_link":"https://images.tapology.com/headshot_images/119061/large/Fares_Ziam-hs.jpg?1667400450","name_index":"fares-ziam"},"assessment":{"id":3603,"fighter":3604,"head_movement":3,"gas_tank":3,"aggression":2,"desire_to_win":3,"striking":3,"chinny":0,"grappling_offense":0,"grappling_defense":3},"notes":[{"data":"Leans over lead leg, susceptible to leg kicks or overhands.","createdAt":"2024-09-26T18:48:44.959Z","id":625},{"data":"Backs up against the cage against aggressive opponents.","createdAt":"2024-09-26T18:52:02.751Z","id":626},{"data":"Knows when to be aggressive and tries to finish his opponents.","createdAt":"2025-01-31T19:50:45.475Z","id":762}]}
 
     const assessment = ref({});
     const fighter = ref({});
@@ -44,8 +38,8 @@ export const useAssessmentStore = defineStore('assessment', () => {
     async function fetchAssessment(fighterId) {
         resetData();
         console.log('Fetching => assessment.fighterId.',fighterId);
-        server.get_assessment(fighterId, onReceiveAssessment);
-        // onReceiveAssessment(sampleFetchResult);
+        // server.get_assessment(fighterId, onReceiveAssessment);
+        onReceiveAssessment(sampleFetchResult);
     }
 
     async function addNote(noteText) {

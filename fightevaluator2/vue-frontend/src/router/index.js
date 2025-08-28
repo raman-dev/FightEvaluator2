@@ -17,7 +17,9 @@ const router = createRouter({
             component : HomeView
         },
         {
-            path:'/',redirect:'/v-index'
+            path:'/',
+            redirect:'/v-assessment/3604'
+            // redirect:'/v-index'
         },
         {
             path:'/v-events', name:'events',

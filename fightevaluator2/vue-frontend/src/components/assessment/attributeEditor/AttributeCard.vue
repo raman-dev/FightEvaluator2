@@ -2,7 +2,7 @@
 import { inject, onMounted, ref, watch } from 'vue';
 import AttributeOption from './AttributeOption.vue';
 
-const attribLabelValueMap = inject('attribValueMap');
+const attribLabelValueMap = inject('attribLabelValueMap');
 const attribValueLabelMap = inject('attribValueLabelMap');
 const attribInfoMap = inject('attribInfoMap');
 
@@ -19,7 +19,7 @@ const props = defineProps(['attrib_name']);
 
 onMounted(() => {
   attrib_value.value = attribValueLabelMap[attributeValue.value];
-  console.log(props.attrib_name, attrib_value.value);
+  // console.log(props.attrib_name, attrib_value.value);
 })
 
 watch(attributeValue, (newVal, oldVal) => {
@@ -28,6 +28,7 @@ watch(attributeValue, (newVal, oldVal) => {
 
 function onClickEdit(){
     editModeEnabled.value = !editModeEnabled.value
+    attrib_value.value = attribValueLabelMap[attributeValue.value];
 }
 
 //called before element is in the dom no heights and dimensions
@@ -40,8 +41,16 @@ function onBeforeEnterCardBodyTransition(cardBody){
 function onEnterCardBodyTransition(cardBody){
   // console.log('onEnterCardBodyTransition! scrollHeight => ',cardBody.scrollHeight);
   cardBody.style.height = `${cardBody.scrollHeight}px`;
-
 }
+
+function onAfterEnterCardBodyTransition(cardBody) {
+  cardBody.style.height='auto';
+}
+
+function onBeforeLeaveCardBodyTransition(cardBody) {
+  cardBody.style.height=`${cardBody.scrollHeight}px`;
+}
+
 function onLeaveCardBodyTransition(cardBody) {
   // console.log('onLeaveCardBodyTransition!');
   cardBody.style.height = '0px';
@@ -62,7 +71,7 @@ function onClickAttribOption(value,attribOption){
         <svg class="arrow" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path fill="white" d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
         </svg>
-        <div class="card-state">{{ attribValueLabelMap[attributeValue] }}</div>
+        <div class="card-state">{{ attribInfoMap[props.attrib_name][attribValueLabelMap[attributeValue]].state }}</div>
       </div>
       <div class="button-container">
         <button class="attrib-edit-button btn btn-outline-light" @click="onClickEdit">edit</button>
@@ -70,9 +79,13 @@ function onClickAttribOption(value,attribOption){
       </div>
 
     </div>
+
     <Transition 
       @before-enter="onBeforeEnterCardBodyTransition"
       @enter="onEnterCardBodyTransition"
+      @after-enter="onAfterEnterCardBodyTransition"
+
+      @before-leave="onBeforeLeaveCardBodyTransition"
       @leave="onLeaveCardBodyTransition"
     >
       <div class="card-body" v-if="editModeEnabled">
@@ -116,33 +129,14 @@ function onClickAttribOption(value,attribOption){
 $positiveBg: #0d6efd;
 $negativeBg: #dc3545;
 $neutralBg: #ffc107;
-$outlineColor : #3d7efd;
 
-$backgroundColor: #212529;
-// $cardColor: #242a34;
-$cardBorderColor: #131b23;
 $cardColor: #12161A;
-
-$color-0: #01161E;
-$color-1: #124559;
-$color-2: #598392;
-$color-3: #AEC3B0;
-$color-4: #EFF6E0;
-
-// $backgroundColor: #01121E;
-// $cardColor: #124554;
-
-$btnBackgroundColor: #598392;
-$btnBorderColor: black;
-$btnBorderRadius: 0.6rem;
-$btnClickBackground: #5983928f;
 
 $cardPadding: 1.2rem;
 $cardStatePadding: 0.3rem;
 $optionPadding: 0.8rem;
 $descriptionPadding: 0.5rem;
 $borderRadius: 0.5rem;
-$flickerDuration: 400ms;
 
 @mixin button-active {
   box-shadow: black 2px 2px 0 0;

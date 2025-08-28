@@ -4,7 +4,7 @@ import TapologyButton from "../TapologyButton.vue";
 
 // fighter comes from v-model
 const fighter = defineModel("fighter", { type: Object, required: true });
-
+const emit = defineEmits(['editClick']);
 // nextMatchup is still a one-way prop
 defineProps({
     nextMatchup: {
@@ -118,7 +118,7 @@ function dobToAge(dobString) {
                 </div>
 
                 <div class="button-container">
-                    <button class="bio-edit-button btn btn-outline-light" @click="$emit('editFighter', fighter)">
+                    <button class="bio-edit-button btn btn-outline-light" @click="$emit('editClick')">
                         edit
                     </button>
                 </div>
@@ -257,6 +257,26 @@ $borderRadius: 0.5rem;
 
     .info-wrapper .fighter-stance {
         text-transform: capitalize;
+    }
+}
+
+@media(max-width: 720px) {
+    .fighter-card {
+        width: 100%;
+        margin: auto;
+        row-gap: 1rem;
+
+        .content-wrapper {
+            justify-content: space-around;
+            width: 100%;
+        }
+    }
+}
+
+
+@media(max-width: 576px) {
+    .fighter-card {
+        flex-direction: column;
     }
 }
 </style>

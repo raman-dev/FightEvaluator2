@@ -54,6 +54,11 @@ function deleteNote(){
 </template>
 
 <style lang="scss" scoped>
+
+.note-editor-actions button:hover {
+    box-shadow: black 4px 4px 0 0;
+}
+
 .notes-title {
     padding: 0.5rem;
 }
