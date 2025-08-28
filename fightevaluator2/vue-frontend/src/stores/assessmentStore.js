@@ -35,11 +35,18 @@ export const useAssessmentStore = defineStore('assessment', () => {
         notes.value = [];
     }
 
+    function onUpdateFighter(latestFighterData) {
+        // console.log(data);
+        for (const key in latestFighterData) {
+            fighter.value[key] = latestFighterData[key];
+        }
+    }
+
     async function fetchAssessment(fighterId) {
         resetData();
         console.log('Fetching => assessment.fighterId.',fighterId);
-        // server.get_assessment(fighterId, onReceiveAssessment);
-        onReceiveAssessment(sampleFetchResult);
+        server.get_assessment(fighterId, onReceiveAssessment);
+        // onReceiveAssessment(sampleFetchResult);
     }
 
     async function addNote(noteText) {
@@ -54,6 +61,10 @@ export const useAssessmentStore = defineStore('assessment', () => {
         server.delete_note(noteId, onDeleteNote);
         // onDeleteNote(noteId);
     }
+
+    async function updateFighter(changes){
+        server.update_fighter(changes,fighter.value.id,onUpdateFighter);
+    }
     /*
     
         data
@@ -67,5 +78,6 @@ export const useAssessmentStore = defineStore('assessment', () => {
     
     */
 
-    return { assessment, fighter, notes, fetchAssessment, deleteNote, addNote };
+    return { assessment, fighter, notes, 
+        fetchAssessment, deleteNote, addNote, updateFighter };
 });

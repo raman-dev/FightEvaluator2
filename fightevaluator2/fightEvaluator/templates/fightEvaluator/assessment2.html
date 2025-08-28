@@ -409,6 +409,7 @@
         }
 
         onFighterUpdate(latestFighterData){
+          console.log ('latest->',latestFighterData);
           for (let key in latestFighterData){
               fighter_data[key] = latestFighterData[key];
           }

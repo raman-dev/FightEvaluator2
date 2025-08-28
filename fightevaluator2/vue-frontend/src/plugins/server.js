@@ -21,39 +21,23 @@ class Server {
     }
 
     static async get_assessment(fighterId,callback){
-      fetch(Server.URLS.GET_ASSESSMENT + `/${fighterId}`)
-      .then(response => response.json())
-      .then((data)=>{
-        callback(data);
-      });
+      Server.get(Server.URLS.GET_ASSESSMENT + `/${fighterId}`,callback)
     }
 
     static async get_event(eventId,callback){
-      fetch(Server.URLS.ALL_EVENTS + `/${eventId}`)
-      .then(response => response.json())
-      .then((data)=>{
-        callback(data);
-      });
+      Server.get(Server.URLS.ALL_EVENTS + `/${eventId}`,callback)
     }
 
     static async get_all_events(callback){
-      fetch(Server.URLS.ALL_EVENTS)
-      .then(response => response.json())
-      .then((data) => {
-        callback(data);
-      });
+      Server.get(Server.URLS.ALL_EVENTS,callback);
     }
 
     //gets event data and matchups 
     static async get_next_event(callback){
-      fetch(Server.URLS.GET_NEXT_EVENT)
-        .then(response => response.json())
-        .then((data) => {
-          callback(data);
-        });
+      Server.get(Server.URLS.GET_NEXT_EVENT,callback);
     }
 
-    static async update_fighter(requestData,callback,fighterId){
+    static async update_fighter(requestData,fighterId,callback){
       fetch(Server.URLS.UPDATE_FIGHTER + `${fighterId}`,{
         method:"PATCH",
         headers:Server.headers,
@@ -134,9 +118,13 @@ class Server {
 
     // }
 
-    // get(url,requestData,callback){
-
-    // }
+    static async get(url,callback){
+      fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+          callback(data);
+        });
+    }
 }
 
 export default {

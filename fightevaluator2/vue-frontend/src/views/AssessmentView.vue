@@ -28,9 +28,18 @@ onMounted(() => {
     assessmentStore.fetchAssessment(fighterId.value);
 });
 
-function onClickEdit() {
-    console.log('onClickEdit');
+function onClickFighterEdit() {
+    console.log('onClickFighterEdit');
     showModal.value = true;
+}
+
+function onFighterEditorClose() {
+    showModal.value = false;
+}
+
+function onFighterEditorSave(changes) {
+    // console.log('onFighterEditorSave',changes);
+    assessmentStore.updateFighter(changes);
 }
 
 </script>
@@ -38,7 +47,10 @@ function onClickEdit() {
 
 <template>
     <div class="content-container">
-        <FighterCard :fighter="assessmentStore.fighter" @edit-click="onClickEdit"></FighterCard>
+        <FighterCard 
+            v-model:fighter="assessmentStore.fighter" 
+            @edit-click="onClickFighterEdit">
+        </FighterCard>
         <div class="grid-container">
             <FighterAttributeListEditor></FighterAttributeListEditor>
             <div class="fighter-notes list-group-item d-flex flex-column">
@@ -47,7 +59,11 @@ function onClickEdit() {
             </div>
         </div>
     </div>
-    <FighterEditor :visible="showModal" :fighter="assessmentStore.fighter"></FighterEditor>
+    <FighterEditor 
+        v-model:showModal="showModal" 
+        :fighterServer="assessmentStore.fighter"
+        @update-fighter="onFighterEditorSave">
+    </FighterEditor>
 
 </template>
 
