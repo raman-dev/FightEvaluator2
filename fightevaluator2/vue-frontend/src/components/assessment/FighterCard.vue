@@ -1,5 +1,4 @@
 <script setup>
-import sampleImg from "@/assets/sample_150.png";
 import TapologyButton from "../TapologyButton.vue";
 
 // fighter comes from v-model

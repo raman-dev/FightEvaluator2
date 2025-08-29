@@ -6,7 +6,7 @@ from django.http import JsonResponse,HttpResponse
 
 
 from datetime import datetime
-from ..models import FightEvent,MatchUp,Note,Assessment,MonthlyEventStats,Fighter
+from ..models import FightEvent,MatchUp,Note,Assessment,MonthlyEventStats,Fighter,Event,EventLikelihood,Prediction
 
 
 @require_GET
@@ -140,6 +140,13 @@ def get_matchup_comparison(request,matchupId):
         'fighter_a_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_a)),
         'fighter_b' :  model_to_dict(fighter_b),
         'fighter_b_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_b)),
+        'standardEvents':[
+            {'name':Event.WIN.label,'value':Event.WIN},
+            {'name':Event.ROUNDS_GEQ_ONE_AND_HALF.label,'value':Event.ROUNDS_GEQ_ONE_AND_HALF},
+            { 'name':Event.DOES_NOT_GO_THE_DISTANCE.label,'value': Event.DOES_NOT_GO_THE_DISTANCE}
+        ],
+        'eventLikelihoods': [model_to_dict(e) for e in EventLikelihood.objects.filter(matchup=matchup)],
+        'prediction': Prediction.objects.filter(matchup=matchup).first(),
     }
     """
         how to consume this endpoint data
