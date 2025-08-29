@@ -38,8 +38,13 @@ function onFighterEditorClose() {
 }
 
 function onFighterEditorSave(changes) {
-    // console.log('onFighterEditorSave',changes);
+    console.log('onFighterEditorSave',changes);
     assessmentStore.updateFighter(changes);
+}
+
+function onAttributeChange(changes) {
+    console.log('onAttributeChange',changes);
+    assessmentStore.updateAssessment(changes);
 }
 
 </script>
@@ -52,7 +57,10 @@ function onFighterEditorSave(changes) {
             @edit-click="onClickFighterEdit">
         </FighterCard>
         <div class="grid-container">
-            <FighterAttributeListEditor></FighterAttributeListEditor>
+            <FighterAttributeListEditor
+                @attribute-change="onAttributeChange"
+            >
+            </FighterAttributeListEditor>
             <div class="fighter-notes list-group-item d-flex flex-column">
                 <NotesEditor v-model:activeNote="activeNote"></NotesEditor>
                 <NotesList :notes="assessmentStore.notes" v-model:activeNote="activeNote"></NotesList>

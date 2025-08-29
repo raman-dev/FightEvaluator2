@@ -5,19 +5,18 @@ import { storeToRefs } from 'pinia';
 
 import AttributeCard from './AttributeCard.vue';
 
-
+const emit = defineEmits(["attributeChange"]);
 const { assessment } = storeToRefs(useAssessmentStore());
 
-onMounted(() => {
-    console.log('FighterAttributeListEditor.onMounted -> ');
-});
 </script>
 
 <template>
     <div class=".fighter-attrib-list">
         <template v-for="value, key in assessment">
             <AttributeCard v-if="key !== 'id' && key != 'fighter'" v-model:attributeValue="assessment[key]"
-                :attrib_name="key">
+                :attrib_name="key"
+                @attributeChange="$emit('attributeChange',$event)"
+                >
             </AttributeCard>
         </template>
     </div>

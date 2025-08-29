@@ -87,6 +87,33 @@ def assessment_index(request,fighterId):
 """
 
 @require_http_methods(["PATCH"])
+def update_assessment2(request,assessmentId):
+    
+    assessment = get_object_or_404(Assessment,id=assessmentId)
+    
+    inputBody = json.loads(request.body)
+    attributes = [ k for k in inputBody.keys() if k !='id']
+
+    assessmentUpdateData = inputBody
+
+    CustomAssessmentFormClass = modelform_factory(Assessment,fields=attributes)
+    customForm = CustomAssessmentFormClass(data=assessmentUpdateData,instance=assessment)
+    if customForm.is_valid():#form.is_valid():
+        # print('form is valid')
+        customForm.save()
+        assessment.refresh_from_db()
+        model = model_to_dict(assessment)
+        result = {}
+        for key in attributes:
+            result[key] = model[key]
+        print(result)
+        return JsonResponse(result)
+    # else:
+        # print('invalid')
+    return JsonResponse({'error':'invalid form'})
+    # result = model_to_dict(assessment)
+
+@require_http_methods(["PATCH"])
 def update_assessment(request):
     #get body parameters from request object
     #convert body bytes to json object

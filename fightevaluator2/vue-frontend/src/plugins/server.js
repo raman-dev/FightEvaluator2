@@ -12,12 +12,23 @@ class Server {
       GET_NEXT_EVENT: '/vue/next-event',
       ALL_EVENTS: '/vue/events',
 
-      GET_ASSESSMENT: '/vue/assessments'
+      GET_ASSESSMENT: '/vue/assessments',
+      UPDATE_ASSESSMENT:'/assessment/update2',
     }
 
     //provide
     static headers = {
 
+    }
+
+    static async update_assessment(requestData,assessmentId,callback){
+      fetch(Server.URLS.UPDATE_ASSESSMENT + `/${assessmentId}`,{
+        method:'PATCH',
+        headers:Server.headers,
+        body:JSON.stringify(requestData)
+      })
+      .then((response) => response.json())
+      .then((data) => callback(data));
     }
 
     static async get_assessment(fighterId,callback){

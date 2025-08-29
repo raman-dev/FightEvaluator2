@@ -16,10 +16,10 @@ const attributeValue = defineModel('attributeValue');
 
 const attrib_value = ref('');
 const props = defineProps(['attrib_name']);
+const emit = defineEmits(['attributeChange']);
 
 onMounted(() => {
   attrib_value.value = attribValueLabelMap[attributeValue.value];
-  // console.log(props.attrib_name, attrib_value.value);
 })
 
 watch(attributeValue, (newVal, oldVal) => {
@@ -29,6 +29,15 @@ watch(attributeValue, (newVal, oldVal) => {
 function onClickEdit(){
     editModeEnabled.value = !editModeEnabled.value
     attrib_value.value = attribValueLabelMap[attributeValue.value];
+}
+
+function onClickCommit() {
+    if (attribLabelValueMap[attrib_value.value] !== attributeValue.value){
+      //change occured
+      const data = {}
+      data[props.attrib_name] = attribLabelValueMap[attrib_value.value];
+      emit('attributeChange',data);
+    }
 }
 
 //called before element is in the dom no heights and dimensions
@@ -57,8 +66,13 @@ function onLeaveCardBodyTransition(cardBody) {
 }
 
 function onClickAttribOption(value,attribOption){
-  console.log('onClickAttribOption!',attribOption);
-  attrib_value.value=value;
+  //special untested value 
+  if (attrib_value.value === value){
+      console.log('set untested');
+      attrib_value.value='untested';
+  }else{
+      attrib_value.value=value;
+  }
 }
 
 </script>
@@ -75,7 +89,7 @@ function onClickAttribOption(value,attribOption){
       </div>
       <div class="button-container">
         <button class="attrib-edit-button btn btn-outline-light" @click="onClickEdit">edit</button>
-        <button class="attrib-commit-button btn btn-outline-info">commit</button>
+        <button class="attrib-commit-button btn btn-outline-info" @click="onClickCommit">commit</button>
       </div>
 
     </div>
