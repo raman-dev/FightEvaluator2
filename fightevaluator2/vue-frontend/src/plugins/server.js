@@ -8,6 +8,7 @@ class Server {
 
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
+      GET_MATCHUP:'/vue/matchups',
 
       GET_NEXT_EVENT: '/vue/next-event',
       ALL_EVENTS: '/vue/events',
@@ -19,6 +20,10 @@ class Server {
     //provide
     static headers = {
 
+    }
+
+    static async get_matchup_analysis(matchupId,callback) {
+        Server.get(Server.URLS.GET_MATCHUP + `/${matchupId}`,callback);
     }
 
     static async update_assessment(requestData,assessmentId,callback){

@@ -4,13 +4,23 @@ import TapologyButton from "../TapologyButton.vue";
 
 // fighter comes from v-model
 const fighter = defineModel("fighter", { type: Object, required: true });
+//
+
 const emit = defineEmits(['editClick']);
 // nextMatchup is still a one-way prop
-defineProps({
+const props = defineProps({
     nextMatchup: {
         type: Object,
         default: null,
     },
+    fullSize:{
+        type: Boolean,
+        default: true,
+    },
+    rtlImage:{
+        type: Boolean,
+        default: false
+    }
 });
 
 // helpers
@@ -49,10 +59,10 @@ function dobToAge(dobString) {
 
 <template>
     <div class="fighter-info-container">
-        <div class="fighter-card">
+        <div class="fighter-card" :class="{rtlImage:props.rtlImage}">
             <div class="img-wrapper">
                 <img class="fighter-image" :src="fighter.img_link" alt="fighter image" />
-                <div class="next-matchup d-flex">
+                <div class="next-matchup d-flex" v-if="props.fullSize">
                     <template v-if="nextMatchup">
                         <a class="text-center" :href="`/matchup/${nextMatchup.id}`">
                             <p class="m-0">
@@ -106,18 +116,18 @@ function dobToAge(dobString) {
                             <p class="fighter-reach" id="reach">{{ fighter.reach }}</p>
                         </div>
 
-                        <div class="info-wrapper">
+                        <div class="info-wrapper" v-if="props.fullSize">
                             <h6>stance:&nbsp;</h6>
                             <p class="fighter-stance" id="stance">{{ fighter.stance }}</p>
                         </div>
 
-                        <div class="info-wrapper">
+                        <div class="info-wrapper" v-if="props.fullSize">
                             <TapologyButton :link="fighter.data_api_link"></TapologyButton>
                         </div>
                     </div>
                 </div>
 
-                <div class="button-container">
+                <div class="button-container" v-if="props.fullSize">
                     <button class="bio-edit-button btn btn-outline-light" @click="$emit('editClick')">
                         edit
                     </button>
@@ -161,6 +171,10 @@ $borderRadius: 0.5rem;
     }
 }
 
+.rtlImage{
+    flex-direction: row-reverse;
+}
+
 .fighter-card {
     display: flex;
     align-items: center;
@@ -174,6 +188,9 @@ $borderRadius: 0.5rem;
         justify-content: center;
         align-items: center;
         font-size: 0.85rem;
+
+        margin-left: 0.6rem;
+        margin-right: 0.6rem;
     }
 
     .img-wrapper .next-matchup {
@@ -205,7 +222,7 @@ $borderRadius: 0.5rem;
         // border: 1px solid $cardBorderColor;
         background-color: $cardColor;
 
-        margin-left: 0.8rem;
+        // margin-left: 0.8rem;
         padding: 1.2rem;
 
         .button-container {

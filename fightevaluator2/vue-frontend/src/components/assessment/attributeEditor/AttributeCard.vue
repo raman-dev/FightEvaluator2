@@ -24,6 +24,9 @@ onMounted(() => {
 
 watch(attributeValue, (newVal, oldVal) => {
   attrib_value.value = attribValueLabelMap[newVal];
+  if (editModeEnabled.value == true){
+    editModeEnabled.value = false;
+  }
 });
 
 function onClickEdit(){
@@ -88,7 +91,7 @@ function onClickAttribOption(value,attribOption){
         <div class="card-state">{{ attribInfoMap[props.attrib_name][attribValueLabelMap[attributeValue]].state }}</div>
       </div>
       <div class="button-container">
-        <button class="attrib-edit-button btn btn-outline-light" @click="onClickEdit">edit</button>
+        <button class="attrib-edit-button btn btn-outline-light mx-1" @click="onClickEdit">edit</button>
         <button class="attrib-commit-button btn btn-outline-info" @click="onClickCommit">commit</button>
       </div>
 

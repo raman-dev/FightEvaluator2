@@ -165,4 +165,4 @@ def get_matchup_comparison(request,matchupId):
     """
 
 
-    return JsonResponse({'data':data})
+    return JsonResponse(data)
