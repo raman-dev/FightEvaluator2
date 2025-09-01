@@ -1,12 +1,15 @@
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET,require_POST
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
 
+# from ..forms import PickForm
 from datetime import datetime
-from ..models import FightEvent,MatchUp,Note,Assessment,MonthlyEventStats,Fighter,Event,EventLikelihood,Prediction
+from ..models import *
+from ..forms import *
+import json
 
 
 @require_GET
@@ -173,3 +176,32 @@ def get_matchup_comparison(request,matchupId):
 
 
     return JsonResponse(data)
+
+@require_POST
+def makePick(request,matchupId):
+    """
+    
+        pick
+            matchupId
+            event
+            prediction: nullable
+
+        prediction
+            matchupId
+            event 
+            likelihood
+            justification
+    
+    """
+    matchup = get_object_or_404(id=matchupId)
+    inputBody = json.loads(request.body)
+    pickForm = PickForm(data=inputBody)
+    if pickForm.is_valid():
+        print(pickForm.cleaned_data)
+        pick = Pick.objects.filter(matchup=matchup)
+        if not pick.exists():
+            pick = pickForm.save()
+        
+        # pick.event = pickForm.cleaned_data['event']
+        return JsonResponse({'stuff':''})
+    return JsonResponse({'error':'error in data'})

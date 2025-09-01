@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Fighter,Assessment,WeightClass,FightEvent,MatchUp,Event,AttributeQualifier
+from .models import *
 
 """
     **NOTE**************************************************
@@ -10,6 +10,23 @@ from .models import Fighter,Assessment,WeightClass,FightEvent,MatchUp,Event,Attr
     *********************************************************
 """
 
+class PickForm(ModelForm):
+    fighterId = models.IntegerField(default=-1,blank=True)
+    class Meta:
+        model = Pick
+        fields=['matchup','event']
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        matchup = cleaned_data.get("matchup")
+        event = cleaned_data.get("event")
+        fighterId = cleaned_data.get("fighterId")
+        if event == Event.WIN:
+            #check if fighter is fighter_a or fighter_b or matchup
+            print('fighterId',fighterId)
+        return cleaned_data
+    
 class FightEventForm(ModelForm):
     class Meta:
         model = FightEvent

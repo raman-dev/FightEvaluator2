@@ -2,6 +2,14 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
+
+
+@admin.register(Pick)
+class PickAdmin(admin.ModelAdmin):
+    list_display = ["event","matchup","isCorrect","isGamble","matchup__event"]
+    search_fields = ["matchup"]
+    autocomplete_fields = ["matchup"]
+
 @admin.register(EventStat)
 class EventStatAdmin(admin.ModelAdmin):
     list_display = ["event","predictions","correct"]
@@ -62,6 +70,10 @@ class MatchUpAdmin(admin.ModelAdmin):
         return str(obj.fighter_a_references) + ":" +str(obj.fighter_b_references)
 
     list_display = [fighterA,fighterB,"isprelim","weight_class","analysisComplete","event__date","event"]
+    search_fields = ["fighter_a__first_name",
+                     "fighter_a__last_name",
+                     "fighter_b__first_name",
+                     "fighter_b__last_name"]
 
 @admin.register(MatchUp2)
 class MatchUpAdmin2(admin.ModelAdmin):

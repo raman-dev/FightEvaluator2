@@ -20,6 +20,7 @@ const likelihoodText = computed(() => `Likelihood: ${likelihood.value}%`);
 function savePrediction() {
   console.log("Saving prediction:", prediction.value);
 }
+
 </script>
 
 <template>

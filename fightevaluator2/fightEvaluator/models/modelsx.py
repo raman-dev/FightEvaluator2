@@ -1,5 +1,6 @@
 from django.db import models
 from .qualifiers_and_choices import *    
+from django.db.models import UniqueConstraint
 
 class FightEvent(models.Model):
      title = models.CharField(max_length=256)#name of event     
@@ -214,19 +215,19 @@ class Prediction2(models.Model):
           return self.get_event_display()
 
 class Pick(models.Model):
-    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
+    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE,unique=True)
+    fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)#why nullable because a prediction can be non fighter related
     prediction = models.ForeignKey('Prediction2',on_delete=models.SET_NULL,default=None,null=True,blank=True)
     
+
     event = models.CharField(choices=Event.choices,max_length=256,default=None,null=True,blank=True)
-    isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis
+    isGamble = models.BooleanField(default=False,blank=True) #if the prediction is a gamble or an prediction based on analysis
     isCorrect = models.BooleanField(default=None,null=True,blank=True)
 
-    
+
     def __str__(self):
         #return what event is predicted and the likelihood
-        if self.prediction.fighter != None:
-             return self.prediction.fighter.name +", " + str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
-        return str(self.prediction.event) + "|" + str(self.prediction.get_likelihood_display())
+        return f'{self.event} | {self.matchup}' 
 
 #only 1 prediction per matchup
 class Prediction(models.Model):
