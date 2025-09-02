@@ -16,20 +16,44 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
    const fighter_a = ref({});
    const fighter_b = ref({});
    const standardEvents = ref([]);
+   const pick = ref({});
+   const predictions = ref([]);
 
    function onReceiveMatchupAnalysis(matchupComparison) {
         matchup.value = matchupComparison['matchup']
         fighter_a.value = matchupComparison['fighter_a'];
         fighter_b.value = matchupComparison['fighter_b'];
         standardEvents.value = matchupComparison['standardEvents'];
-     //    console.log (standardEvents.value);
+        if ('pick' in matchupComparison){
+          pick.value = matchupComparison['pick']
+        }
+        // console.log (standardEvents.value);
+        if ('predictions' in matchupComparison) {
+          predictions.value = matchupComparison['predictions'];
+        }
    }
 
    function fetchMatchupDetails(matchupId){
-    // console.log (route.path);
-//     server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
+    //console.log (route.path);
+    //server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
      onReceiveMatchupAnalysis(sampleFetchResult);
    }
 
-   return { matchup,fighter_a,fighter_b,fetchMatchupDetails,standardEvents }
+   function onReceivePick(data) {
+      console.log (data);
+      pick.value = data;
+   }
+
+   function pickOutcome(outcome){
+
+      const data = {'event':outcome.value};
+      if (outcome.value === 'WIN'){
+        data.fighter = outcome.fighterId;
+      }
+      
+      server.make_pick(data,matchup.value.id,onReceivePick);
+
+   }
+
+   return { matchup,fighter_a,fighter_b,predictions,pick,fetchMatchupDetails,standardEvents,pickOutcome }
 });

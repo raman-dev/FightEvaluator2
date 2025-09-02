@@ -15,6 +15,8 @@ class Server {
 
       GET_ASSESSMENT: '/vue/assessments',
       UPDATE_ASSESSMENT:'/assessment/update2',
+
+      MAKE_PICK : '/vue/matchups/pick'
     }
 
     //provide
@@ -22,8 +24,13 @@ class Server {
 
     }
 
-    static async get_matchup_analysis(matchupId,callback) {
-        Server.get(Server.URLS.GET_MATCHUP + `/${matchupId}`,callback);
+    static async make_pick(requestData,matchupId,callback){
+      fetch(Server.URLS.MAKE_PICK + `/${matchupId}`,{
+        method:'POST',
+        headers:Server.headers,
+        body: JSON.stringify(requestData)
+      }).then((response) => response.json())
+        .then((data) => callback(data));
     }
 
     static async update_assessment(requestData,assessmentId,callback){
@@ -34,6 +41,10 @@ class Server {
       })
       .then((response) => response.json())
       .then((data) => callback(data));
+    }
+
+    static async get_matchup_analysis(matchupId,callback) {
+        Server.get(Server.URLS.GET_MATCHUP + `/${matchupId}`,callback);
     }
 
     static async get_assessment(fighterId,callback){

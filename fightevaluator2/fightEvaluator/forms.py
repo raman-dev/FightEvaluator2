@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm,ValidationError
 
 from .models import *
 
@@ -11,20 +11,23 @@ from .models import *
 """
 
 class PickForm(ModelForm):
-    fighterId = models.IntegerField(default=-1,blank=True)
     class Meta:
         model = Pick
-        fields=['matchup','event']
+        fields=['matchup','event','fighter']
 
     def clean(self):
         cleaned_data = super().clean()
 
         matchup = cleaned_data.get("matchup")
         event = cleaned_data.get("event")
-        fighterId = cleaned_data.get("fighterId")
+        fighter = None
+        if 'fighter' in cleaned_data: 
+            fighter = cleaned_data.get("fighter")
         if event == Event.WIN:
             #check if fighter is fighter_a or fighter_b or matchup
-            print('fighterId',fighterId)
+            if fighter != matchup.fighter_a and fighter != matchup.fighter_b:
+                raise ValidationError("Invalid fighter value, possibly None")
+            
         return cleaned_data
     
 class FightEventForm(ModelForm):

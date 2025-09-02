@@ -137,6 +137,10 @@ def get_matchup_comparison(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     fighter_a = matchup.fighter_a
     fighter_b = matchup.fighter_b
+    pick = None
+    pickQSet = Pick.objects.filter(matchup=matchup)
+    if pickQSet.exists():
+        pick = pickQSet[0]
     data = {
         'matchup' :  model_to_dict(matchup),
         'fighter_a' :  model_to_dict(fighter_a),
@@ -150,6 +154,7 @@ def get_matchup_comparison(request,matchupId):
         ],
         'eventLikelihoods': [model_to_dict(e) for e in EventLikelihood.objects.filter(matchup=matchup)],
         'prediction': Prediction.objects.filter(matchup=matchup).first(),
+        'pick': model_to_dict(pick)
     }
     """
         how to consume this endpoint data
@@ -193,15 +198,22 @@ def makePick(request,matchupId):
             justification
     
     """
-    matchup = get_object_or_404(id=matchupId)
+    matchup = get_object_or_404(MatchUp,id=matchupId)
     inputBody = json.loads(request.body)
-    pickForm = PickForm(data=inputBody)
+    inputBody['matchup'] = matchup.id
+    print('make pick => ',inputBody)
+    pick = None
+    pickQSet = Pick.objects.filter(matchup=matchup)
+    pickForm = None
+    if pickQSet.exists():
+        pick = pickQSet[0]
+        pickForm = PickForm(data=inputBody,instance=pick)
+    else:
+        pickForm = PickForm(data=inputBody)
     if pickForm.is_valid():
         print(pickForm.cleaned_data)
-        pick = Pick.objects.filter(matchup=matchup)
-        if not pick.exists():
-            pick = pickForm.save()
-        
-        # pick.event = pickForm.cleaned_data['event']
-        return JsonResponse({'stuff':''})
+        pick.event = pickForm.cleaned_data['event']
+        pick.save()
+        return JsonResponse({'pick':model_to_dict(pick)})
+    print(pickForm.errors)
     return JsonResponse({'error':'error in data'})

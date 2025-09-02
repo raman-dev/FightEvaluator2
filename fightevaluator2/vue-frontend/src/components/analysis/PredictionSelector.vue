@@ -1,4 +1,5 @@
 <script setup>
+import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 import { ref, computed } from "vue";
 
 // props for dynamic data (you can change based on your setup)
@@ -11,14 +12,17 @@ const props = defineProps({
 });
 
 // local state
-const prediction = ref("NA");
+const pick = ref("NA");
+const predictions = ref({});
 const likelihood = ref(0);
 
 // derived text for likelihood (you can extend styling/logic here)
 const likelihoodText = computed(() => `Likelihood: ${likelihood.value}%`);
+const matchupDetailStore = useMatchupDetailStore();
 
 function savePrediction() {
-  console.log("Saving prediction:", prediction.value);
+  console.log("Saving prediction:", pick.value);
+  matchupDetailStore.pickOutcome(pick.value);
 }
 
 </script>
@@ -36,10 +40,10 @@ function savePrediction() {
       </template>
     </div>
 
-    <div class="prediction-selector" data-outcome-prediction-id="0" :data-prediction="prediction">
+    <div class="prediction-selector" data-outcome-prediction-id="0" :data-prediction="pick">
       <div class="title-container d-flex justify-content-between">
         <h2>Prediction</h2>
-        <button class="save-prediction-btn btn btn-primary" :class="{ disabled: prediction === 'NA' }"
+        <button class="save-prediction-btn btn btn-primary" :class="{ disabled: pick === 'NA' }"
           @click="savePrediction">
           Save
         </button>
@@ -48,7 +52,7 @@ function savePrediction() {
       <!-- Bootstrap dropdown -->
       <div class="form-select-container">
         <form @submit.prevent>
-          <select class="form-select" v-model="prediction" name="prediction" style="text-transform: capitalize;">
+          <select class="form-select" v-model="pick" name="prediction" style="text-transform: capitalize;">
             <option value="NA" data-event-type="NA" data-fighter-id="0">Choose Outcome</option>
 
             <template v-for="(event, idx) in standardEvents" :key="idx">
