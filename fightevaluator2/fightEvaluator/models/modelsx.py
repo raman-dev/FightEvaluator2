@@ -174,7 +174,7 @@ class EventLikelihood(models.Model):
     event = models.CharField(choices=Event.choices,max_length=256)
     eventType = models.CharField(default=None,null=True,blank=True,max_length=256)#helper
     likelihood = models.IntegerField(default=Likelihood.NOT_PREDICTED,null=True,blank=True,choices=Likelihood.choices)
-    justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
+    justification = models.CharField(default="",null=True,blank=True,max_length=1024)
     
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)
 

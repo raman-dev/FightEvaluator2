@@ -153,12 +153,13 @@ def getPredictionsMap(predictions,standardEvents,matchup):
         if p.event not in result:
             result[p.event] = {}
         if p.event == 'WIN':
-            result[p.event][p.fighter.id] = {'likelihood':p.likelihood,'label':p.likelihood.get_likelihood_display(),'justification':p.justification}
+            result[p.event][p.fighter.id] = {'likelihood':p.likelihood,'label':p.get_likelihood_display(),'justification':p.justification}
         else:
             result[p.event] = {'likelihood':p.likelihood,'label':p.get_likelihood_display(),'justification':p.justification}
     
     #default likelihoods 
-    for _,event in standardEvents:
+    for e in standardEvents:
+        event = e['value']
         if event not in result:
             if event == Event.WIN:
                 result[Event.WIN] = {}
@@ -166,12 +167,13 @@ def getPredictionsMap(predictions,standardEvents,matchup):
                 result[Event.WIN][matchup.fighter_b.id] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label,'justification':""}
             else:
                 result[event] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label ,'justification':""}
-        elif event == 'WIN' and len(result[Event.WIN]) != 2:
-            winMap = result[Event.WIN]
-            fid = matchup.fighter_a.id
-            if fid in winMap:
-                fid = matchup.fighter_b.id
-            winMap[fid] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label ,'justification':""}
+        elif event == Event.WIN:
+            if len(result[Event.WIN]) != 2:
+                winMap = result[Event.WIN]
+                fid = matchup.fighter_a.id
+                if fid in winMap:
+                    fid = matchup.fighter_b.id
+                winMap[fid] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label ,'justification':""}
     return result
 
 @require_GET
@@ -187,6 +189,10 @@ def get_matchup_comparison(request,matchupId):
             {'name':Event.ROUNDS_GEQ_ONE_AND_HALF.label,'value':Event.ROUNDS_GEQ_ONE_AND_HALF},
             { 'name':Event.DOES_NOT_GO_THE_DISTANCE.label,'value': Event.DOES_NOT_GO_THE_DISTANCE}
     ]
+
+    eventLikelihoodsQSet = EventLikelihood.objects.filter(matchup=matchup)
+    predictionsMap = getPredictionsMap(eventLikelihoodsQSet,standardEvents,matchup)
+    
     if pickQSet.exists():
         pick = pickQSet[0]
     data = {
@@ -196,9 +202,9 @@ def get_matchup_comparison(request,matchupId):
         'fighter_b' :  model_to_dict(fighter_b),
         'fighter_b_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_b)),
         'standardEvents': standardEvents,
-        'predictions': [model_to_dict(e) for e in EventLikelihood.objects.filter(matchup=matchup)],
+        'predictions': predictionsMap,
         'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
-        'pick': model_to_dict(pick) if pick else {'event':None,'fighter':None}
+        'pick': model_to_dict(pick) if pick else {'event':None,'fighter':None},
     }
     """
         how to consume this endpoint data

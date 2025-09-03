@@ -2,12 +2,8 @@
 <script>function defaultPickValue (){ return {event:null,fighter:null};} </script>
 <script setup>
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
-import { ref, computed, watch, inject, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import PredictionSelectOption from "@/components/analysis/PredictionSelectOption.vue"
-
-// props for dynamic data (you can change based on your setup)
-
-const likelihoodLabelMap = inject('likelihoodLabelMap');
 
 const props = defineProps({
   result: { type: Boolean, default: false },
@@ -16,48 +12,40 @@ const props = defineProps({
   fighter_a: { type: Object, default: () => ({ last_name: "" }) },
   fighter_b: { type: Object, default: () => ({ last_name: "" }) },
   serverPick : { type: Object, default: defaultPickValue() },
-  serverPredictions : {type: Array, default: () => []}
+  serverPredictions : {type: Object, default: () => {}}
 });
 
 
 // local state
 const selectorPick = ref(defaultPickValue());
-const predictions = ref({});
-const likelihood = ref(0);
+
+const likelihood = computed (() => {
+  if (selectorPick.value.event === null) return 0;
+  const event = selectorPick.value.event;
+  if (event === 'WIN'){
+    return  props.serverPredictions[event][selectorPick.value.fighter].likelihood;
+  }
+  return  props.serverPredictions[event].likelihood;
+});
 
 // derived text for likelihood (you can extend styling/logic here)
-const likelihoodText = computed(() => `Likelihood: ${likelihood.value}%`);
+const likelihoodText = computed(() => {
+    if (selectorPick.value.event === null) return `Likelihood`;
+    if (selectorPick.value.event === 'WIN'){
+      return `${props.serverPredictions[selectorPick.value.event][selectorPick.value.fighter].label}` ;
+    }
+    return `${props.serverPredictions[selectorPick.value.event].label}`;
+  });
 const { pickOutcome } = useMatchupDetailStore();//functions can be destructured from stores
 
 onMounted(()=>{
   // console.log('serverPick:',newVal,oldVal);
     const {event,fighter} = props.serverPick;
+    selectorPick.value.event = event;
     if (event === 'WIN'){
       //need fighter Id
-      selectorPick.value = {fighter:fighter.id,event:event}
-    }else{
-      selectorPick.value = {event:event,fighter:null};
+      selectorPick.value.fighter = fighter;
     }
-
-    for (const p of props.serverPredictions) {
-      
-      const { event,likelihood } = p;
-      console.log(event,likelihood);
-      
-      if (!(event in predictions.value) ){
-        if (event === 'WIN'){
-          predictions.value[event] = {};
-        }
-      }
-      if (event === 'WIN'){
-          predictions.value['WIN'][p.fighter] = { likelihood:likelihood, label:likelihoodLabelMap[likelihood]};
-      }else{
-          predictions.value[event] = {
-            likelihood:likelihood,
-            label : likelihoodLabelMap[likelihood]
-          };
-      }
-  }
 });
 
 
@@ -124,8 +112,7 @@ function isPickSame(){
         </form>
 
         <div class="current-confidence d-flex align-items-center current-likelihood" :data-likelihood="likelihood">
-          <p class="prediction-likelihood-text confidence my-0 w-100" :class="`likely-${likelihood}`"
-            style="color:black;">
+          <p class="prediction-likelihood-text confidence my-0 w-100" :class="`likely-${likelihood}`" style="color:black;">
             {{ likelihoodText }}
           </p>
         </div>
