@@ -1,6 +1,6 @@
 <script setup>
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 // props for dynamic data (you can change based on your setup)
 const props = defineProps({
@@ -9,20 +9,49 @@ const props = defineProps({
   matchup: { type: Object, default: () => ({ fighter_a: {}, fighter_b: {} }) },
   fighter_a: { type: Object, default: () => ({ last_name: "" }) },
   fighter_b: { type: Object, default: () => ({ last_name: "" }) },
+  serverPick : { type: Object, default: () => null }
 });
 
+
 // local state
-const pick = ref("NA");
+const selectorPick = ref(null);
 const predictions = ref({});
 const likelihood = ref(0);
 
 // derived text for likelihood (you can extend styling/logic here)
 const likelihoodText = computed(() => `Likelihood: ${likelihood.value}%`);
-const matchupDetailStore = useMatchupDetailStore();
+const { pickOutcome } = useMatchupDetailStore();//functions can be destructured from stores
+
+watch (props.serverPick,(newVal,oldVal) => {
+    console.log('serverPick:',newVal,oldVal);
+    const event = newVal.event;
+    if (event === 'WIN'){
+      //need fighter Id
+      selectorPick.value = {fighterId:newVal.fighter,value:event}
+    }
+    selectorPick.value = {value:newVal.event};
+});
 
 function savePrediction() {
-  console.log("Saving prediction:", pick.value);
-  matchupDetailStore.pickOutcome(pick.value);
+  console.log("Saving prediction:", selectorPick.value);
+  pickOutcome(selectorPick.value);
+}
+
+function isPickDifferent(){
+  if (selectorPick.value !== null){
+    if (props.serverPick == null){
+      return true;
+    }
+    
+    if (selectorPick.value.value === props.serverPick.event){
+      if (props.serverPick.event === 'WIN'){
+        return selectorPick.value.fighterId === props.serverPick.fighter;
+      }
+    }
+    return false;
+  }
+  
+  return selectorPick.value === (props.serverPick === null);
 }
 
 </script>
@@ -40,20 +69,21 @@ function savePrediction() {
       </template>
     </div>
 
-    <div class="prediction-selector" data-outcome-prediction-id="0" :data-prediction="pick">
+    <div class="prediction-selector" data-outcome-prediction-id="0" :data-prediction="selectorPick">
       <div class="title-container d-flex justify-content-between">
-        <h2>Prediction</h2>
-        <button class="save-prediction-btn btn btn-primary" :class="{ disabled: pick === 'NA' }"
+        <h2>Pick Outcome</h2>
+        <button class="save-prediction-btn btn btn-primary" 
+          :class="{ disabled: isPickDifferent() }" 
           @click="savePrediction">
-          Save
+            Save
         </button>
       </div>
 
       <!-- Bootstrap dropdown -->
       <div class="form-select-container">
-        <form @submit.prevent>
-          <select class="form-select" v-model="pick" name="prediction" style="text-transform: capitalize;">
-            <option value="NA" data-event-type="NA" data-fighter-id="0">Choose Outcome</option>
+        <form @submit.prevent class="m-0">
+          <select class="form-select" v-model="selectorPick" name="pick" style="text-transform: capitalize;">
+            <option :value="null" data-event-type="NA" data-fighter-id="0">Choose Outcome</option>
 
             <template v-for="(event, idx) in standardEvents" :key="idx">
               <template v-if="event.value == 'WIN'">

@@ -10,7 +10,7 @@ import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
 const matchupDetailStore = useMatchupDetailStore();
 const matchupStore = useMatchupStore();
 const { matchupId } = defineProps(['matchupId'])
-const { matchup,fighter_a,fighter_b,standardEvents } = storeToRefs(matchupDetailStore);
+const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick } = storeToRefs(matchupDetailStore);
 
 onMounted(() => {
     matchupDetailStore.fetchMatchupDetails(matchupId);
@@ -33,7 +33,9 @@ onMounted(() => {
        <PredictionSelector 
         :standardEvents="standardEvents" 
         :fighter_a="fighter_a"
-        :fighter_b="fighter_b">
+        :fighter_b="fighter_b"
+        :predictions="predictions"
+        :serverPick="pick" >
 
        </PredictionSelector>
     </div>

@@ -139,6 +139,7 @@ def get_matchup_comparison(request,matchupId):
     fighter_b = matchup.fighter_b
     pick = None
     pickQSet = Pick.objects.filter(matchup=matchup)
+    predictionQSet = Prediction.objects.filter(matchup=matchup)
     if pickQSet.exists():
         pick = pickQSet[0]
     data = {
@@ -152,9 +153,9 @@ def get_matchup_comparison(request,matchupId):
             {'name':Event.ROUNDS_GEQ_ONE_AND_HALF.label,'value':Event.ROUNDS_GEQ_ONE_AND_HALF},
             { 'name':Event.DOES_NOT_GO_THE_DISTANCE.label,'value': Event.DOES_NOT_GO_THE_DISTANCE}
         ],
-        'eventLikelihoods': [model_to_dict(e) for e in EventLikelihood.objects.filter(matchup=matchup)],
-        'prediction': Prediction.objects.filter(matchup=matchup).first(),
-        'pick': model_to_dict(pick)
+        'predictions': [model_to_dict(e) for e in EventLikelihood.objects.filter(matchup=matchup)],
+        'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
+        'pick': model_to_dict(pick) if pick else {}
     }
     """
         how to consume this endpoint data
@@ -205,13 +206,20 @@ def makePick(request,matchupId):
     pick = None
     pickQSet = Pick.objects.filter(matchup=matchup)
     pickForm = None
+        
     if pickQSet.exists():
         pick = pickQSet[0]
         pickForm = PickForm(data=inputBody,instance=pick)
     else:
         pickForm = PickForm(data=inputBody)
+    if pickForm.data['event'] == None:
+        if pickQSet.exists():
+            pick.delete()
+            return JsonResponse({'pick':None})
     if pickForm.is_valid():
         print(pickForm.cleaned_data)
+        if pick == None:
+            pick = pickForm.save()
         pick.event = pickForm.cleaned_data['event']
         pick.save()
         return JsonResponse({'pick':model_to_dict(pick)})
