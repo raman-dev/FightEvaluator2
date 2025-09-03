@@ -132,6 +132,48 @@ def vueAssessment(request,fighterId):
     }
     return JsonResponse(data)
 
+def getPredictionsMap(predictions,standardEvents,matchup):
+    """
+        {
+            event: {
+                likelihood
+                label
+            }
+
+            win:{
+                fighter_id:{
+                    likelihood
+                    label
+                }
+            }
+        }
+    """
+    result = {}
+    for p in predictions:
+        if p.event not in result:
+            result[p.event] = {}
+        if p.event == 'WIN':
+            result[p.event][p.fighter.id] = {'likelihood':p.likelihood,'label':p.likelihood.get_likelihood_display(),'justification':p.justification}
+        else:
+            result[p.event] = {'likelihood':p.likelihood,'label':p.get_likelihood_display(),'justification':p.justification}
+    
+    #default likelihoods 
+    for _,event in standardEvents:
+        if event not in result:
+            if event == Event.WIN:
+                result[Event.WIN] = {}
+                result[Event.WIN][matchup.fighter_a.id] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label,'justification':""}
+                result[Event.WIN][matchup.fighter_b.id] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label,'justification':""}
+            else:
+                result[event] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label ,'justification':""}
+        elif event == 'WIN' and len(result[Event.WIN]) != 2:
+            winMap = result[Event.WIN]
+            fid = matchup.fighter_a.id
+            if fid in winMap:
+                fid = matchup.fighter_b.id
+            winMap[fid] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label ,'justification':""}
+    return result
+
 @require_GET
 def get_matchup_comparison(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
@@ -140,6 +182,11 @@ def get_matchup_comparison(request,matchupId):
     pick = None
     pickQSet = Pick.objects.filter(matchup=matchup)
     predictionQSet = Prediction.objects.filter(matchup=matchup)
+    standardEvents = [
+            {'name':Event.WIN.label,'value':Event.WIN},
+            {'name':Event.ROUNDS_GEQ_ONE_AND_HALF.label,'value':Event.ROUNDS_GEQ_ONE_AND_HALF},
+            { 'name':Event.DOES_NOT_GO_THE_DISTANCE.label,'value': Event.DOES_NOT_GO_THE_DISTANCE}
+    ]
     if pickQSet.exists():
         pick = pickQSet[0]
     data = {
@@ -148,14 +195,10 @@ def get_matchup_comparison(request,matchupId):
         'fighter_a_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_a)),
         'fighter_b' :  model_to_dict(fighter_b),
         'fighter_b_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_b)),
-        'standardEvents':[
-            {'name':Event.WIN.label,'value':Event.WIN},
-            {'name':Event.ROUNDS_GEQ_ONE_AND_HALF.label,'value':Event.ROUNDS_GEQ_ONE_AND_HALF},
-            { 'name':Event.DOES_NOT_GO_THE_DISTANCE.label,'value': Event.DOES_NOT_GO_THE_DISTANCE}
-        ],
+        'standardEvents': standardEvents,
         'predictions': [model_to_dict(e) for e in EventLikelihood.objects.filter(matchup=matchup)],
         'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
-        'pick': model_to_dict(pick) if pick else {}
+        'pick': model_to_dict(pick) if pick else {'event':None,'fighter':None}
     }
     """
         how to consume this endpoint data
@@ -215,7 +258,7 @@ def makePick(request,matchupId):
     if pickForm.data['event'] == None:
         if pickQSet.exists():
             pick.delete()
-            return JsonResponse({'pick':None})
+            return JsonResponse({'pick':{'event':None,'fighter':None}})
     if pickForm.is_valid():
         print(pickForm.cleaned_data)
         if pick == None:

@@ -34,7 +34,7 @@ onMounted(() => {
         :standardEvents="standardEvents" 
         :fighter_a="fighter_a"
         :fighter_b="fighter_b"
-        :predictions="predictions"
+        :serverPredictions="predictions"
         :serverPick="pick" >
 
        </PredictionSelector>

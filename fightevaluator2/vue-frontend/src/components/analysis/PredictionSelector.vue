@@ -1,20 +1,27 @@
+
+<script>function defaultPickValue (){ return {event:null,fighter:null};} </script>
 <script setup>
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, inject, onMounted } from "vue";
+import PredictionSelectOption from "@/components/analysis/PredictionSelectOption.vue"
 
 // props for dynamic data (you can change based on your setup)
+
+const likelihoodLabelMap = inject('likelihoodLabelMap');
+
 const props = defineProps({
   result: { type: Boolean, default: false },
   standardEvents: { type: Array, default: () => [] }, // [{ name, label, fighter_id }]
   matchup: { type: Object, default: () => ({ fighter_a: {}, fighter_b: {} }) },
   fighter_a: { type: Object, default: () => ({ last_name: "" }) },
   fighter_b: { type: Object, default: () => ({ last_name: "" }) },
-  serverPick : { type: Object, default: () => null }
+  serverPick : { type: Object, default: defaultPickValue() },
+  serverPredictions : {type: Array, default: () => []}
 });
 
 
 // local state
-const selectorPick = ref(null);
+const selectorPick = ref(defaultPickValue());
 const predictions = ref({});
 const likelihood = ref(0);
 
@@ -22,36 +29,54 @@ const likelihood = ref(0);
 const likelihoodText = computed(() => `Likelihood: ${likelihood.value}%`);
 const { pickOutcome } = useMatchupDetailStore();//functions can be destructured from stores
 
-watch (props.serverPick,(newVal,oldVal) => {
-    console.log('serverPick:',newVal,oldVal);
-    const event = newVal.event;
+onMounted(()=>{
+  // console.log('serverPick:',newVal,oldVal);
+    const {event,fighter} = props.serverPick;
     if (event === 'WIN'){
       //need fighter Id
-      selectorPick.value = {fighterId:newVal.fighter,value:event}
+      selectorPick.value = {fighter:fighter.id,event:event}
+    }else{
+      selectorPick.value = {event:event,fighter:null};
     }
-    selectorPick.value = {value:newVal.event};
+
+    for (const p of props.serverPredictions) {
+      
+      const { event,likelihood } = p;
+      console.log(event,likelihood);
+      
+      if (!(event in predictions.value) ){
+        if (event === 'WIN'){
+          predictions.value[event] = {};
+        }
+      }
+      if (event === 'WIN'){
+          predictions.value['WIN'][p.fighter] = { likelihood:likelihood, label:likelihoodLabelMap[likelihood]};
+      }else{
+          predictions.value[event] = {
+            likelihood:likelihood,
+            label : likelihoodLabelMap[likelihood]
+          };
+      }
+  }
 });
+
 
 function savePrediction() {
   console.log("Saving prediction:", selectorPick.value);
   pickOutcome(selectorPick.value);
 }
 
-function isPickDifferent(){
-  if (selectorPick.value !== null){
-    if (props.serverPick == null){
-      return true;
-    }
+function isPickSame(){
     
-    if (selectorPick.value.value === props.serverPick.event){
-      if (props.serverPick.event === 'WIN'){
-        return selectorPick.value.fighterId === props.serverPick.fighter;
-      }
+    if (selectorPick.value.event !== props.serverPick.event){
+      return false;
     }
-    return false;
-  }
-  
-  return selectorPick.value === (props.serverPick === null);
+
+    if (selectorPick.value.event === 'WIN'){
+      return selectorPick.value.fighter === props.serverPick.fighter;
+    }
+
+    return true;
 }
 
 </script>
@@ -73,7 +98,7 @@ function isPickDifferent(){
       <div class="title-container d-flex justify-content-between">
         <h2>Pick Outcome</h2>
         <button class="save-prediction-btn btn btn-primary" 
-          :class="{ disabled: isPickDifferent() }" 
+          :class="{ disabled: isPickSame() }" 
           @click="savePrediction">
             Save
         </button>
@@ -83,21 +108,15 @@ function isPickDifferent(){
       <div class="form-select-container">
         <form @submit.prevent class="m-0">
           <select class="form-select" v-model="selectorPick" name="pick" style="text-transform: capitalize;">
-            <option :value="null" data-event-type="NA" data-fighter-id="0">Choose Outcome</option>
+            <option :value="defaultPickValue()" data-event-type="NA" data-fighter-id="0">Choose Outcome</option>
 
             <template v-for="(event, idx) in standardEvents" :key="idx">
               <template v-if="event.value == 'WIN'">
-                <option :value="{fighterId:fighter_a.id,value:event.value}" style="text-transform: capitalize;">
-                  {{ fighter_a.last_name }} Wins
-                </option>
-                <option :value="{fighterId:fighter_b.id,value:event.value}" style="text-transform: capitalize;">
-                  {{ fighter_b.last_name }} Wins
-                </option>
+                <PredictionSelectOption :fighter="fighter_a" :event="event.value" :label="event.name"></PredictionSelectOption>
+                <PredictionSelectOption :fighter="fighter_b" :event="event.value" :label="event.name"></PredictionSelectOption>
               </template>
               <template v-else>
-                <option :value="{value:event.value}" style="text-transform: capitalize;">
-                    {{ event.name }}
-                </option>
+                <PredictionSelectOption :event="event.value" :label="event.name"></PredictionSelectOption>
               </template>
             </template>
 

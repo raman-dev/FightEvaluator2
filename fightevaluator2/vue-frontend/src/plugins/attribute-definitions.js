@@ -95,6 +95,15 @@ const attribValueLabelMap = {
   3:'positive'
 }
 
+const likelihoodLabelMap = {
+  0:'not predicted',
+  1: 'very likely',
+  2: 'somewhat likely',
+  3:'neutral',
+  4:'somewhat unlikely',
+  5:'very unlikely'
+}
+
 export default {
   install: (app,options) => {
     
@@ -102,5 +111,6 @@ export default {
     app.provide('attribCardOrder', attribCardOrder);
     app.provide('attribLabelValueMap', attribLabelValueMap);
     app.provide('attribValueLabelMap', attribValueLabelMap);
+    app.provide('likelihoodLabelMap',likelihoodLabelMap);
   }
 }

@@ -33,7 +33,7 @@ function dobToAge(dobString) {
                 </h5>
             </div>
             <div class="d-flex">
-                <img :src="fighter.img_link ? fighter.img_link : '/public/sample_150.png'" alt="">
+                <img :src="fighter.img_link ? fighter.img_link : '/sample_150.png'" alt="">
                 <div class="fighter-bio ">
                     <div class="age">
                         <h6 class="age-label">age:&nbsp;</h6>
