@@ -5,6 +5,7 @@ import { useMatchupStore } from '@/stores/matchupStore';
 import CompactFighterCard from '@/components/assessment/CompactFighterCard.vue';
 import { storeToRefs } from 'pinia';
 import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
+import OutcomesContainer from '@/components/analysis/OutcomesContainer.vue';
 
 
 const matchupDetailStore = useMatchupDetailStore();
@@ -38,6 +39,13 @@ onMounted(() => {
         :serverPick="pick" >
 
        </PredictionSelector>
+
+       <OutcomesContainer 
+          :standardEvents="standardEvents" 
+          :fighter_a="fighter_a" 
+          :fighter_b="fighter_b" :matchup="matchup">
+       </OutcomesContainer>
+
     </div>
 </template>
 

@@ -36,8 +36,8 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
 
   function fetchMatchupDetails(matchupId) {
     //console.log (route.path);
-    server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
-    // onReceiveMatchupAnalysis(sampleFetchResult);
+    // server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
+    onReceiveMatchupAnalysis(sampleFetchResult);
   }
 
   function onReceivePick(data) {
