@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, useTemplateRef, watch } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -10,6 +10,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 const likelihood = ref(props.modelValue);
+const showConfidenceList = ref(false);
+const confidenceSelectorRef = useTemplateRef('confidenceSelectorRef');
 
 watch(
   () => props.modelValue,
@@ -30,28 +32,89 @@ const labels = {
   4: "somewhat unlikely",
   5: "very unlikely",
 };
+
+// function showConfidenceList() {
+  /*
+      animating what?
+        confidence list needs to un collapse itself
+        
+        list   -> 0px height
+          items
+        
+        on click show do what 
+          set list height to its scroll height
+        
+        list container should have what 
+        overflow visible and a fixed height just before animating and while open
+  */
+// }
+function toggleList(){
+  showConfidenceList.value = !showConfidenceList.value;
+}
+function onBeforeEnter(confidenceList) {
+  const container = confidenceSelectorRef.value;
+  //measure container height and then set it
+  const containerHeight = container.offsetHeight;
+  //height needs to be 0px
+  container.style.height = `${containerHeight}px`;
+  //overflow hidden
+  confidenceList.style.height = '0px';
+  // console.log (containerHeight);
+  
+}
+
+function onEnter(confidenceList){
+  const scrollHeight  = confidenceList.scrollHeight;
+  confidenceList.style.height = `${scrollHeight}px`;
+}
+
+function onBeforeLeave(confidenceList){
+
+}
+
+function onLeave(confidenceList){
+  confidenceList.style.height = '0px';
+}
+
+function onAfterLeave(confidenceList){
+  const container = confidenceSelectorRef.value;
+  //height needs to be auto again
+  container.style.height = `auto`;
+}
+
+
 </script>
 
 <template>
-  <div class="confidence-selector">
+<div class="confidence-selector" ref="confidenceSelectorRef">
     <div class="current-confidence d-flex align-items-center" :data-likelihood="likelihood">
       <p class="confidence my-0 w-100" :class="'likely-' + likelihood" style="color:black;">
         {{ labels[likelihood] }}
       </p>
-      <button class="btn show-confidence-list-btn w-0">
+      <button class="btn show-confidence-list-btn w-0" @click="toggleList">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path fill="white" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
         </svg>
       </button>
     </div>
+    <Transition
+      @before-enter="onBeforeEnter"
+      @enter="onEnter"
+      @before-leave="onBeforeLeave"
+      @leave="onLeave"
+      @after-leave="onAfterLeave"
+      >
 
-    <ul class="confidence-list">
-      <li v-for="n in 5" :key="n" :class="{ active: likelihood === n }" :data-likelihood="n"
-        @click="selectLikelihood(n)">
-        <div :class="'likelihood likely-' + n">{{ labels[n] }}</div>
-      </li>
-    </ul>
-  </div>
+      <ul class="confidence-list" v-if="showConfidenceList">
+        <li v-for="n in 5" :key="n" :class="{ active: likelihood === n }" :data-likelihood="n"
+          @click="selectLikelihood(n)">
+          <div :class="'likelihood likely-' + n">{{ labels[n] }}</div>
+        </li>
+      </ul>
+
+    </Transition>
+    
+</div>
 </template>
 
 <style scoped lang="scss">
@@ -59,6 +122,7 @@ const labels = {
   border: 1px solid lavender;
   border-radius: 0.4rem;
   padding: 0.3rem;
+  height: auto;
 
   .current-confidence{
     margin-bottom: 0.1rem;
@@ -76,6 +140,8 @@ const labels = {
 }
 
 ul.confidence-list {
+  position: relative;
+  z-index: 100;
   list-style-type: none;
   
   padding: 0px;
@@ -108,25 +174,5 @@ ul.confidence-list {
     outline: 2px solid white;
     outline-offset: 2px;
   }
-}
-
-.likely-1 {
-  color: green;
-}
-
-.likely-2 {
-  color: limegreen;
-}
-
-.likely-3 {
-  color: black;
-}
-
-.likely-4 {
-  color: orange;
-}
-
-.likely-5 {
-  color: red;
 }
 </style>

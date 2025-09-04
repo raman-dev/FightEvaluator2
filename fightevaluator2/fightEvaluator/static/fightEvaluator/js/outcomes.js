@@ -80,7 +80,7 @@ document.querySelectorAll('.event').forEach((eventElement) => {
     let showConfidenceListBtn = confidenceSelector.querySelector('.show-confidence-list-btn');
     // console.log(showConfidenceListBtn);
 
-    let justifactionEditorWrapper = eventElement.querySelector('.justification .editor-wrapper');
+    let justifactionEditorWrapper = eventElement.querySelector( '.justification .editor-wrapper');
     let justifactionEditor = justifactionEditorWrapper.querySelector('.editor');
 
     let confidenceList = confidenceSelector.querySelector('.confidence-list');
