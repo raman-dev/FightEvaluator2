@@ -154,8 +154,8 @@ def generateMatchupFighterObjs(matchups):
                 print(fighterData)
                 if fighterObj == None:
                     fighterData['data_api_link'] = fighter['link']
-                    if fighterData['date_of_birth'] == 'N\A':
-                        fighterData['date_of_birth'] = datetime.strptime("2001-01-01","%Y-%m-%d").date()
+                    if fighterData['date_of_birth'] == 'N/A':
+                        fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
                     fighterForm = FighterForm(fighterData)#validate fighter data
                     # print(fighterForm.data,fighterForm)
                     if fighterForm.is_valid():
