@@ -82,7 +82,7 @@ function onEnter(confidenceList) {
 }
 
 function onBeforeLeave(confidenceList) {
-
+  
 }
 
 function onLeave(confidenceList) {
@@ -144,6 +144,8 @@ function onAfterLeave(confidenceList) {
 </template>
 
 <style scoped lang="scss">
+
+
 .confidence-selector-wrapper {
   overflow: visible;
   height: auto;
