@@ -16,21 +16,21 @@ const justification = ref("Justification Statements and Conclusions");
 
 function updateLikelihood(val) {
     likelihood.value = val;
-    emit("update:likelihood", { event: props.event.name, value: val });
+    const data = { event: props.event, value: val };
+    if (props.event === 'WIN'){
+        data['fighter'] = props.fighter;
+    }
 }
 
 function updateJustification(e) {
     justification.value = e.target.innerText;
-    emit("update:justification", {
-        event: props.event.name,
-        value: justification.value,
-    });
+    
 }
 </script>
 
 <template>
     <div class="outcome-card event-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
-        <div class="outcome event" :data-event-type="event.name" data-id="0"
+        <div class="outcome event" :data-event-type="event" data-id="0"
             :data-likelihood="likelihood">
             <div class="wrapper">
                 <h6 v-if="event === 'WIN'">Win</h6>

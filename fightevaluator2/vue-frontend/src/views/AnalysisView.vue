@@ -43,7 +43,10 @@ onMounted(() => {
        <OutcomesContainer 
           :standardEvents="standardEvents" 
           :fighter_a="fighter_a" 
-          :fighter_b="fighter_b" :matchup="matchup">
+          :fighter_b="fighter_b" 
+          :matchup="matchup"
+          :predictions="predictions"
+          >
        </OutcomesContainer>
 
     </div>

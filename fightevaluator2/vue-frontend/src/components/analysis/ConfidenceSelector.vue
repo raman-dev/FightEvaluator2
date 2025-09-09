@@ -81,10 +81,6 @@ function onEnter(confidenceList) {
   container.style.height=`${scrollHeight + containerHeight}px`;
 }
 
-function onBeforeLeave(confidenceList) {
-  
-}
-
 function onLeave(confidenceList) {
   const container = confidenceSelectorRef.value;
   const containerHeight = container.offsetHeight;
@@ -126,7 +122,6 @@ function onAfterLeave(confidenceList) {
       <Transition 
         @before-enter="onBeforeEnter" 
         @enter="onEnter" 
-        @before-leave="onBeforeLeave" 
         @leave="onLeave"
         @after-leave="onAfterLeave">
         <ul class="confidence-list" v-if="showConfidenceList">

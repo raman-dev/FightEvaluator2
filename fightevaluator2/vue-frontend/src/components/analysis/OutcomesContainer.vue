@@ -1,25 +1,19 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import OutcomeCard from "./OutcomeCard.vue";
 
-defineProps({
+const props = defineProps({
   standardEvents: Array,
   fighter_a: Object,
   fighter_b: Object,
   matchup: Object,
+  predictions: Object,
 });
 
-// state maps by event name
-const selectedLikelihoods = ref({});
-const justifications = ref({});
+onMounted(()=>{
+  console.log ('predictions',props.predictions.WIN);
+});
 
-function handleLikelihoodUpdate({ event, value }) {
-  selectedLikelihoods.value[event] = value;
-}
-
-function handleJustificationUpdate({ event, value }) {
-  justifications.value[event] = value;
-}
 </script>
 
 <template>
@@ -31,29 +25,21 @@ function handleJustificationUpdate({ event, value }) {
           <OutcomeCard
             :event="event.value"
             :fighter="fighter_a"
-            :matchup="matchup"
-            @update:likelihood="handleLikelihoodUpdate"
-            @update:justification="handleJustificationUpdate">
+            :matchup="matchup">
           </OutcomeCard>  
           <OutcomeCard
             :event="event.value"
             :fighter="fighter_b"
-            :matchup="matchup"
-            @update:likelihood="handleLikelihoodUpdate"
-            @update:justification="handleJustificationUpdate">
+            :matchup="matchup">
           </OutcomeCard>  
         </template>
         <template v-else>
           <OutcomeCard
             :event="event.value"
             :matchup="matchup"
-            :label="event.name"
-            @update:likelihood="handleLikelihoodUpdate"
-            @update:justification="handleJustificationUpdate">
+            :label="event.name">
           </OutcomeCard>  
         </template>
-        
-        
       </template>
     </div>
   </div>
