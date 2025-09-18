@@ -5,8 +5,9 @@ import { ref, useTemplateRef, watch } from "vue";
 const emit = defineEmits(["updateLikelihood"]);
 
 const serverLikelihood = defineModel('serverLikelihood',{ type: Number, required: false,default: 3 });
+const selectorLikelihood = defineModel('selectorLikelihood',{ type: Number, required: false,default: 3 })
 
-const selectorLikelihood = ref(3);
+// const selectorLikelihood = ref(3);
 const showConfidenceList = ref(false);
 
 const wrapperRef = useTemplateRef('wrapperRef');
@@ -52,6 +53,7 @@ const labels = {
 function toggleList() {
   showConfidenceList.value = !showConfidenceList.value;
 }
+
 function onBeforeEnter(confidenceList) {
   const wrapper = wrapperRef.value;
   const container = confidenceSelectorRef.value;

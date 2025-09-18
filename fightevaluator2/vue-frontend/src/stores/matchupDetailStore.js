@@ -71,7 +71,8 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
 
   function updateOutcomePrediction(data){
     console.log(data);
+    
   }
 
-  return { matchup, fighter_a, fighter_b, predictions, pick,  standardEvents, pickOutcome, fetchMatchupDetails }
+  return { matchup, fighter_a, fighter_b, predictions, pick,  standardEvents, pickOutcome, fetchMatchupDetails, updateOutcomePrediction }
 });

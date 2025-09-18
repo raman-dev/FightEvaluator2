@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.decorators.http import require_GET,require_POST
+from django.views.decorators.http import require_GET,require_POST,require_http_methods
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
@@ -175,6 +175,26 @@ def getPredictionsMap(predictions,standardEvents,matchup):
                     fid = matchup.fighter_b.id
                 winMap[fid] = {'likelihood': Likelihood.NEUTRAL,'label' : Likelihood.NEUTRAL.label ,'justification':""}
     return result
+
+@require_http_methods(["PUT"])
+def makePrediction (request,matchupId):
+    #always replace what is there 
+    """
+    
+        prediction2
+            matchup : int
+            fighter: int | None
+            justification : str
+            likelihood: int
+
+    """
+    matchup = get_object_or_404(MatchUp,id=matchupId)
+    inputBody = json.loads(request.body)
+
+    #grab prediction2 form
+    #
+
+    pass
 
 @require_GET
 def get_matchup_comparison(request,matchupId):

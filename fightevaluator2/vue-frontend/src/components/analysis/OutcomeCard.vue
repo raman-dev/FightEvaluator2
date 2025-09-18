@@ -13,20 +13,17 @@ const props = defineProps({
 const emit = defineEmits(["update:likelihood", "update:justification"]);
 
 const likelihood = ref(3);
+const selectorLikelihood = ref(3);
+
 const justification = ref("Justification Statements and Conclusions");
 const changed = ref(false);
 
 const matchupDetailStore = useMatchupDetailStore();
 
+
 function onChangeLikelihood(val) {
-    console.log('val,likelihood.val',val,likelihood.value);
-    
+    // console.log('val,likelihood.val',val,likelihood.value);
     changed.value = likelihood.value !== val;
-    // likelihood.value = val;
-    const data = { event: props.event, value: val };
-    if (props.event === 'WIN'){
-        data['fighter'] = props.fighter;
-    }
 }
 
 function updateJustification(e) {
@@ -36,8 +33,19 @@ function updateJustification(e) {
 function updateOutcomePrediction() {
     if (changed.value === true){
         //send changes to server
+        //grab data from child component how to do that
+        const data = {
+            event:props.event,
+            likelihood:selectorLikelihood.value,
+            justification: justification.value
+        }
+        if (data.event === 'WIN'){
+            data.fighter = props.fighter.id;
+        }
+        matchupDetailStore.updateOutcomePrediction(data);
     }
 }
+
 </script>
 
 <template>
@@ -65,7 +73,10 @@ function updateOutcomePrediction() {
             </p>
 
             <!-- Confidence Selector -->
-            <ConfidenceSelector v-model:server-likelihood="likelihood" @update-likelihood="onChangeLikelihood" />
+            <ConfidenceSelector 
+                v-model:server-likelihood="likelihood" 
+                v-model:selector-likelihood="selectorLikelihood" 
+                @update-likelihood="onChangeLikelihood" />
 
             <!-- Justification -->
             <div class="justification">

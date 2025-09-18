@@ -16,7 +16,8 @@ class Server {
       GET_ASSESSMENT: '/vue/assessments',
       UPDATE_ASSESSMENT:'/assessment/update2',
 
-      MAKE_PICK : '/vue/matchups/pick'
+      MAKE_PICK : '/vue/matchups/pick',
+      UPDATE_OUTCOME:'/vue/analysis/'
     }
 
     //provide
