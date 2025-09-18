@@ -1,32 +1,30 @@
 <script setup>
 import { ref, useTemplateRef, watch } from "vue";
 
-const props = defineProps({
-  modelValue: {
-    type: Number,
-    default: 3, // neutral by default
-  },
-});
 
-const emit = defineEmits(["update:modelValue"]);
-const likelihood = ref(props.modelValue);
+const emit = defineEmits(["updateLikelihood"]);
+
+const serverLikelihood = defineModel('serverLikelihood',{ type: Number, required: false,default: 3 });
+
+const selectorLikelihood = ref(3);
 const showConfidenceList = ref(false);
 
 const wrapperRef = useTemplateRef('wrapperRef');
 const confidenceSelectorRef = useTemplateRef('confidenceSelectorRef');
 const confidenceListRef=  useTemplateRef('confidenceListRef');
 
-watch(
-  () => props.modelValue,
-  (val) => {
-    likelihood.value = val;
-  }
-);
-
 function selectLikelihood(n) {
-  likelihood.value = n;
-  emit("update:modelValue", n);
+  selectorLikelihood.value = n;
+  emit("updateLikelihood", n);
 }
+
+watch (serverLikelihood,(newVal,oldVal)=>{
+  if (newVal !== oldVal){
+    selectorLikelihood.value = newVal;
+  }
+},{immediate:true});
+
+
 
 const labels = {
   1: "very likely",
@@ -109,9 +107,9 @@ function onAfterLeave(confidenceList) {
    
       <div class="confidence-selector" ref="confidenceSelectorRef">
 
-        <div class="current-confidence d-flex align-items-center" :data-likelihood="likelihood">
-          <p class="confidence my-0 w-100" :class="'likely-' + likelihood" style="color:black;">
-            {{ labels[likelihood] }}
+        <div class="current-confidence d-flex align-items-center" :data-likelihood="selectorLikelihood">
+          <p class="confidence my-0 w-100" :class="'likely-' + selectorLikelihood" style="color:black;">
+            {{ labels[selectorLikelihood] }}
           </p>
           <button class="btn show-confidence-list-btn w-0" @click="toggleList">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -125,7 +123,7 @@ function onAfterLeave(confidenceList) {
         @leave="onLeave"
         @after-leave="onAfterLeave">
         <ul class="confidence-list" v-if="showConfidenceList">
-          <li v-for="n in 5" :key="n" :class="{ active: likelihood === n }" :data-likelihood="n"
+          <li v-for="n in 5" :key="n" :class="{ active: selectorLikelihood === n }" :data-likelihood="n"
             @click="selectLikelihood(n)">
             <div :class="'likelihood likely-' + n">{{ labels[n] }}</div>
           </li>

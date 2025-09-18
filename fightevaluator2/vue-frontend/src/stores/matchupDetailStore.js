@@ -69,5 +69,9 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     server.make_pick(data, matchup.value.id, onReceivePick);
   }
 
+  function updateOutcomePrediction(data){
+    console.log(data);
+  }
+
   return { matchup, fighter_a, fighter_b, predictions, pick,  standardEvents, pickOutcome, fetchMatchupDetails }
 });

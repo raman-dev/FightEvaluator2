@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import ConfidenceSelector from "./ConfidenceSelector.vue";
+import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 
 const props = defineProps({
     event: { type: String, required: true }, // { name, label }
@@ -13,9 +14,15 @@ const emit = defineEmits(["update:likelihood", "update:justification"]);
 
 const likelihood = ref(3);
 const justification = ref("Justification Statements and Conclusions");
+const changed = ref(false);
 
-function updateLikelihood(val) {
-    likelihood.value = val;
+const matchupDetailStore = useMatchupDetailStore();
+
+function onChangeLikelihood(val) {
+    console.log('val,likelihood.val',val,likelihood.value);
+    
+    changed.value = likelihood.value !== val;
+    // likelihood.value = val;
     const data = { event: props.event, value: val };
     if (props.event === 'WIN'){
         data['fighter'] = props.fighter;
@@ -24,7 +31,12 @@ function updateLikelihood(val) {
 
 function updateJustification(e) {
     justification.value = e.target.innerText;
-    
+}
+
+function updateOutcomePrediction() {
+    if (changed.value === true){
+        //send changes to server
+    }
 }
 </script>
 
@@ -37,7 +49,7 @@ function updateJustification(e) {
                 <h6 v-else>Yes</h6>
             </div>
 
-            <button class="save-outcome-btn save-event-likelihood-btn btn btn-primary disabled">
+            <button @click="updateOutcomePrediction" class="save-outcome-btn save-event-likelihood-btn btn btn-primary" :class="{disabled: changed === false}">
                 save
             </button>
 
@@ -53,7 +65,7 @@ function updateJustification(e) {
             </p>
 
             <!-- Confidence Selector -->
-            <ConfidenceSelector v-model="likelihood" @update:modelValue="updateLikelihood" />
+            <ConfidenceSelector v-model:server-likelihood="likelihood" @update-likelihood="onChangeLikelihood" />
 
             <!-- Justification -->
             <div class="justification">
