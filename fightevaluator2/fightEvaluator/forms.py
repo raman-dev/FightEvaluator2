@@ -10,6 +10,23 @@ from .models import *
     *********************************************************
 """
 
+class Prediction2Form(ModelForm):
+    class Meta:
+        model = Prediction2
+        fields = ['fighter','event','likelihood','justification']
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        #make sure fighter is not None if event == Event.WIN
+        event = cleaned_data.get("event")
+        fighter = None
+        if 'fighter' in cleaned_data:
+            fighter = cleaned_data.get("fighter")
+        if event == Event.WIN and fighter == None:
+            raise ValidationError("Fighter cannot be None if event is WIN")
+        
+        return cleaned_data
+
 class PickForm(ModelForm):
     class Meta:
         model = Pick

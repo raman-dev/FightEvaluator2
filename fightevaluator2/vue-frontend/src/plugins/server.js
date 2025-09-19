@@ -17,12 +17,21 @@ class Server {
       UPDATE_ASSESSMENT:'/assessment/update2',
 
       MAKE_PICK : '/vue/matchups/pick',
-      UPDATE_OUTCOME:'/vue/analysis/'
+      MAKE_PREDICTION:'/vue/analysis/make-prediction'
     }
 
     //provide
     static headers = {
 
+    }
+
+    static async make_prediction(requestData,matchupId,callback){
+      fetch(Server.URLS.MAKE_PREDICTION + `/${matchupId}`,{
+        method:'PUT',
+        headers:Server.headers,
+        body: JSON.stringify(requestData)
+      }).then((response) => response.json())
+        .then((data) => callback(data));
     }
 
     static async make_pick(requestData,matchupId,callback){

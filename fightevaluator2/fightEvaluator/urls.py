@@ -64,5 +64,6 @@ urlpatterns = [
     path('vue/events',views.vueAllEvents,name='vue-events'),
     path('vue/matchups/<int:matchupId>',views.get_matchup_comparison,name='vue-matchup-analyze'),
     path('vue/assessments/<int:fighterId>',views.vueAssessment,name='vue-assessment'),
-    path('vue/matchups/pick/<int:matchupId>',views.makePick,name='vue-make-pick')
+    path('vue/matchups/pick/<int:matchupId>',views.makePick,name='vue-make-pick'),
+    path('vue/analysis/make-prediction/<int:matchupId>',views.makePrediction,name='vue-make-prediction'),
 ]

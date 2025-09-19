@@ -204,6 +204,11 @@ class Prediction2(models.Model):
      justification = models.CharField(default=None,null=True,blank=True,max_length=1024)
      
 
+     class Meta:
+          constraints = [
+               UniqueConstraint(fields=['matchup','event','fighter'],name='unique_prediction_per_event_per_fighter_per_matchup')
+          ]
+
      def __str__(self):
           if self.fighter != None:
                return self.fighter.name +" " + str(self.event) + " => " + self.get_likelihood_display()

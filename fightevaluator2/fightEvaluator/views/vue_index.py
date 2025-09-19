@@ -177,7 +177,7 @@ def getPredictionsMap(predictions,standardEvents,matchup):
     return result
 
 @require_http_methods(["PUT"])
-def makePrediction (request,matchupId):
+def makePrediction(request,matchupId):
     #always replace what is there 
     """
     
@@ -192,6 +192,8 @@ def makePrediction (request,matchupId):
     inputBody = json.loads(request.body)
 
     #grab prediction2 form
+    inputBody['matchup'] = matchup.id
+    prediction2Form = Prediction2Form(data=inputBody)
     #
 
     pass
