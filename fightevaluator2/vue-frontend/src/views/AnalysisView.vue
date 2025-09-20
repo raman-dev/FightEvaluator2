@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
-import { useMatchupStore } from '@/stores/matchupStore';
+// import { useMatchupStore } from '@/stores/matchupStore';
 import CompactFighterCard from '@/components/assessment/CompactFighterCard.vue';
 import { storeToRefs } from 'pinia';
 import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
@@ -9,7 +9,7 @@ import OutcomesContainer from '@/components/analysis/OutcomesContainer.vue';
 
 
 const matchupDetailStore = useMatchupDetailStore();
-const matchupStore = useMatchupStore();
+// const matchupStore = useMatchupStore();
 const { matchupId } = defineProps(['matchupId'])
 const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick } = storeToRefs(matchupDetailStore);
 

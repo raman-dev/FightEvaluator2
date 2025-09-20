@@ -14,6 +14,7 @@ const emit = defineEmits(["update:likelihood", "update:justification"]);
 
 const likelihood = ref(3);
 const selectorLikelihood = ref(3);
+const showConfidenceList = ref(false);
 
 const justification = ref("Justification Statements and Conclusions");
 const changed = ref(false);
@@ -43,6 +44,8 @@ function updateOutcomePrediction() {
             data.fighter = props.fighter.id;
         }
         matchupDetailStore.updateOutcomePrediction(data);
+        changed.value = false;
+        showConfidenceList.value = false;   
     }
 }
 
@@ -76,7 +79,9 @@ function updateOutcomePrediction() {
             <ConfidenceSelector 
                 v-model:server-likelihood="likelihood" 
                 v-model:selector-likelihood="selectorLikelihood" 
-                @update-likelihood="onChangeLikelihood" />
+                @update-likelihood="onChangeLikelihood" 
+                v-model:show-confidence-list="showConfidenceList"
+                />
 
             <!-- Justification -->
             <div class="justification">

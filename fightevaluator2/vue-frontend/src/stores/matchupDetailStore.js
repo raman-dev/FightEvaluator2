@@ -68,8 +68,14 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
   }
 
   function onReceivePrediction(data){ 
-    predictions.value[data.event] = data;
-    console.log(predictions.value);
+    const prediction = data.prediction;
+    const event = prediction.event;
+    if (event === 'WIN'){
+      predictions.value[event][prediction.fighter] = prediction;
+    }else{
+      predictions.value[event] = prediction;
+    } 
+    console.log('Received Prediction => ',predictions.value[prediction.event]);
   }
 
   function updateOutcomePrediction(data){

@@ -132,6 +132,9 @@ def vueAssessment(request,fighterId):
     }
     return JsonResponse(data)
 
+# def getPredictionsMap2(predictions,standardEvents,matchup):
+#     pass
+
 def getPredictionsMap(predictions,standardEvents,matchup):
     """
         {
@@ -189,14 +192,41 @@ def makePrediction(request,matchupId):
 
     """
     matchup = get_object_or_404(MatchUp,id=matchupId)
+    
     inputBody = json.loads(request.body)
+    print("input received => ",inputBody)
 
     #grab prediction2 form
     inputBody['matchup'] = matchup.id
     prediction2Form = Prediction2Form(data=inputBody)
-    #
-
-    pass
+    if prediction2Form.is_valid():
+        # return JsonResponse({'prediction':'isValid!'})
+        args = {
+            'matchup': matchup,
+            'event': prediction2Form.cleaned_data['event'],
+            'defaults': {
+                'matchup': matchup,
+                'event': prediction2Form.cleaned_data['event'],
+            }
+        }
+        if 'fighter' in prediction2Form.cleaned_data and prediction2Form.cleaned_data['fighter'] != None:
+            fighter = get_object_or_404(Fighter,id=prediction2Form.cleaned_data['fighter'].id)
+            args['fighter'] = fighter
+            args['defaults']['fighter'] = fighter
+        if 'justification' in prediction2Form.cleaned_data:
+            args['defaults']['justification'] = prediction2Form.cleaned_data['justification']
+        if 'likelihood' in prediction2Form.cleaned_data:
+            args['defaults']['likelihood'] = prediction2Form.cleaned_data['likelihood']
+        prediction2, created = Prediction2.objects.update_or_create(**args)
+        result = model_to_dict(prediction2)
+        result['label'] = prediction2.get_likelihood_display()
+        # if created:
+        #     print("CREATED.prediction2 => ",result)
+        # else:
+        #     print("UPDATED.prediction2 => ",result)
+        return JsonResponse({'prediction':result})
+    
+    return JsonResponse({'error':prediction2Form.errors})
 
 @require_GET
 def get_matchup_comparison(request,matchupId):
@@ -213,7 +243,9 @@ def get_matchup_comparison(request,matchupId):
     ]
 
     eventLikelihoodsQSet = EventLikelihood.objects.filter(matchup=matchup)
+    prediction2QSet = Prediction2.objects.filter(matchup=matchup)
     predictionsMap = getPredictionsMap(eventLikelihoodsQSet,standardEvents,matchup)
+    predictionsMap2 = getPredictionsMap(prediction2QSet,standardEvents,matchup)
     
     if pickQSet.exists():
         pick = pickQSet[0]
@@ -224,7 +256,7 @@ def get_matchup_comparison(request,matchupId):
         'fighter_b' :  model_to_dict(fighter_b),
         'fighter_b_assessment' : model_to_dict(Assessment.objects.get(fighter=fighter_b)),
         'standardEvents': standardEvents,
-        'predictions': predictionsMap,
+        'predictions': predictionsMap2,
         'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
         'pick': model_to_dict(pick) if pick else {'event':None,'fighter':None},
     }
