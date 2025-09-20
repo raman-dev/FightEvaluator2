@@ -1,6 +1,8 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import OutcomeCard from "./OutcomeCard.vue";
+import { storeToRefs } from "pinia";
+import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 
 const props = defineProps({
   standardEvents: Array,
@@ -10,8 +12,15 @@ const props = defineProps({
   predictions: Object,
 });
 
+const matchupDetailStore = useMatchupDetailStore();
+const { predictions } = storeToRefs(matchupDetailStore);
+
 onMounted(()=>{
   console.log ('predictions',props.predictions.WIN);
+});
+
+watch (predictions, (newVal,oldVal)=>{
+  console.log ('predictions changed',newVal,oldVal);
 });
 
 </script>
@@ -25,19 +34,28 @@ onMounted(()=>{
           <OutcomeCard
             :event="event.value"
             :fighter="fighter_a"
-            :matchup="matchup">
+            :matchup="matchup"
+            v-model:likelihood="predictions[event.value][props.fighter_a.id].likelihood"
+            v-model:justification="predictions[event.value][props.fighter_a.id].justification"
+            >
           </OutcomeCard>  
           <OutcomeCard
             :event="event.value"
             :fighter="fighter_b"
-            :matchup="matchup">
+            :matchup="matchup"
+            v-model:likelihood="predictions[event.value][props.fighter_b.id].likelihood"
+            v-model:justification="predictions[event.value][props.fighter_b.id].justification"
+            >
           </OutcomeCard>  
         </template>
         <template v-else>
           <OutcomeCard
             :event="event.value"
             :matchup="matchup"
-            :label="event.name">
+            :label="event.name"
+            v-model:likelihood="predictions[event.value].likelihood"
+            v-model:justifcation="predictions[event.value].justification"
+            >
           </OutcomeCard>  
         </template>
       </template>

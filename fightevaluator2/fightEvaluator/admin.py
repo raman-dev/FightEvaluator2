@@ -128,7 +128,7 @@ class Prediction2Admin(admin.ModelAdmin):
             return "--"
         return obj.fighter.first_name.capitalize() + " " + obj.fighter.last_name.capitalize()
     
-    list_display = ["event","likelihood",fighterName,"matchup"]
+    list_display = ["event","likelihood",fighterName,"justification","matchup"]
 
 
 @admin.register(EventLikelihood)

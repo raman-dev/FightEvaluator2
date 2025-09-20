@@ -1,5 +1,6 @@
+
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref,watch } from "vue";
 import ConfidenceSelector from "./ConfidenceSelector.vue";
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 
@@ -12,28 +13,47 @@ const props = defineProps({
 
 const emit = defineEmits(["update:likelihood", "update:justification"]);
 
-const likelihood = ref(3);
+const likelihood = defineModel("likelihood", {
+    type: Number,
+    required: false,
+    default: 3,
+});
+
+const serverJustification = defineModel("justification", {
+    type: String,
+    required: false,
+    default: "Justification Statements and Conclusions",
+});
+
 const selectorLikelihood = ref(3);
 const showConfidenceList = ref(false);
-
-const justification = ref("Justification Statements and Conclusions");
+const justification = ref("");
 const changed = ref(false);
+
+const justificationRef = ref('justificationRef');
 
 const matchupDetailStore = useMatchupDetailStore();
 
 
 function onChangeLikelihood(val) {
     // console.log('val,likelihood.val',val,likelihood.value);
-    changed.value = likelihood.value !== val;
+    changed.value ||= likelihood.value !== val;
 }
 
 function updateJustification(e) {
     justification.value = e.target.innerText;
+    console.log('justification',justification.value);
+    console.log ('serverJustification',serverJustification.value,'\n');
+    
+    changed.value ||=  justification.value !== serverJustification.value;
 }
+
+
 
 function updateOutcomePrediction() {
     if (changed.value === true){
         //send changes to server
+
         //grab data from child component how to do that
         const data = {
             event:props.event,
@@ -49,7 +69,26 @@ function updateOutcomePrediction() {
     }
 }
 
+onMounted(() => {
+    selectorLikelihood.value = likelihood.value;
+    justification.value = serverJustification.value;
+});
+
+watch (likelihood, (newVal, oldVal) => {
+    selectorLikelihood.value = newVal;
+});
+
+watch (serverJustification, (newVal, oldVal) => {   
+    justification.value = newVal;
+});
+
 </script>
+<!-- <script>  
+function t(){
+    justificationRef.value.addEventListener('input',updateJustification);
+}
+t();
+</script> -->
 
 <template>
     <div class="outcome-card event-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
@@ -91,7 +130,11 @@ function updateOutcomePrediction() {
                 </div>
                 <div class="justification-container">
                     <div class="editor-wrapper">
-                        <div class="editor" contenteditable="plaintext-only" @input="updateJustification">
+                        <!--
+                            @input="updateJustification" this line resets cursor to start
+                            and removes ctrl z ability
+                        -->
+                        <div  class="editor" contenteditable="plaintext-only" @input="updateJustification" ref="justificationRef">
                             {{ justification }}
                         </div>
                     </div>
