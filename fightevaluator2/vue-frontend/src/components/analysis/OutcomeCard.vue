@@ -42,12 +42,15 @@ function onChangeLikelihood(val) {
 
 function updateJustification(e) {
     justification.value = e.target.innerText;
-    console.log('justification',justification.value);
-    console.log ('serverJustification',serverJustification.value,'\n');
-    
     changed.value ||=  justification.value !== serverJustification.value;
+    autoResize(e.target);
 }
 
+function autoResize(el) {
+  
+  el.style.height = "auto"                // reset so it can shrink
+  el.style.height = el.scrollHeight + "px" // grow to fit text
+}
 
 
 function updateOutcomePrediction() {
@@ -134,9 +137,10 @@ t();
                             @input="updateJustification" this line resets cursor to start
                             and removes ctrl z ability
                         -->
-                        <div  class="editor" contenteditable="plaintext-only" @input="updateJustification" ref="justificationRef">
+                        <!-- <div  class="editor" contenteditable="plaintext-only" @input="updateJustification" ref="justificationRef">
                             {{ justification }}
-                        </div>
+                        </div> -->
+                        <textarea class="editor" @input="updateJustification">{{ justification }}</textarea>
                     </div>
                 </div>
             </div>
@@ -222,7 +226,7 @@ t();
             overflow: hidden;
             transition: all 0.3s ease-in-out;
 
-            .editor {
+            textarea.editor {
                 margin: 0px;
                 padding: 0.3rem;
                 width: 100%;
@@ -231,6 +235,10 @@ t();
                 // max-width: 32ch;
                 word-break: break-word;
                 min-height: 4rem;
+
+                background-color: transparent;
+                resize: none;
+                overflow: hidden;
             }
         }
     }
