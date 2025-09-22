@@ -29,7 +29,7 @@ function dobToAge(dobString) {
         <div class="fighter-info-wrapper ">
             <div class="name">
                 <h5>
-                    <RouterLink to="/assessment/{{fighter.id}}">{{fighter.first_name }} {{ fighter.last_name }}</RouterLink>
+                    <RouterLink :to="{ name:'assessment', params: {fighterId:fighter.id}}"> {{fighter.first_name }} {{ fighter.last_name }}</RouterLink>
                 </h5>
             </div>
             <div class="d-flex">
