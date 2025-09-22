@@ -114,20 +114,7 @@ function onEnter(menuContainer){
                     <span>delete</span>
                 </div>
             </li>
-            <li class="menu-list-item">
-                <div class="menu-item" >
-                    <router-link :to="{name:'assessment',params : {fighterId: activeMatchup.matchup.fighter_a}}">
-                        <span>&nbsp;{{ activeMatchup.matchup.fighter_a }}&nbsp;assess</span>
-                    </router-link>
-                </div>
-            </li>
-            <li class="menu-list-item">
-                <div class="menu-item" >
-                    <router-link :to="{name:'assessment',params : {fighterId: activeMatchup.matchup.fighter_b}}">
-                        <span>&nbsp;{{ activeMatchup.matchup.fighter_b }}&nbsp;assess</span>
-                    </router-link>
-                </div>
-            </li>
+         
         </ul>
     </div>
     </Transition>

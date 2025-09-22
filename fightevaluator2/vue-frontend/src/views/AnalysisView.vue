@@ -6,6 +6,7 @@ import CompactFighterCard from '@/components/assessment/CompactFighterCard.vue';
 import { storeToRefs } from 'pinia';
 import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
 import OutcomesContainer from '@/components/analysis/OutcomesContainer.vue';
+import { onBeforeRouteUpdate } from 'vue-router';
 
 
 const matchupDetailStore = useMatchupDetailStore();
@@ -13,9 +14,10 @@ const matchupDetailStore = useMatchupDetailStore();
 const { matchupId } = defineProps(['matchupId'])
 const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick } = storeToRefs(matchupDetailStore);
 
-onMounted(() => {
-    matchupDetailStore.fetchMatchupDetails(matchupId);
-})
+
+onBeforeRouteUpdate((a,b)=>{
+  console.log('onBeforeRouteUpdate',a,b);
+});
 
 </script>
 <template>

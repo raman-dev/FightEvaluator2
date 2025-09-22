@@ -9,6 +9,7 @@ import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute  } from 'vue-router';
 import TapologyButton from '@/components/TapologyButton.vue';
+import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
 
 
 // const router = useRouter();
@@ -23,6 +24,7 @@ const matchUpEditorOpen = ref(false);
 
 const matchupStore = useMatchupStore();
 const matchupActionMenuStore = useMatchupActionMenuStore();
+const matchupDetailStore = useMatchupDetailStore();
 
 const { event, mainCard, prelims, watchlist } = storeToRefs(matchupStore);
 const { menuPosition,menuOpen } = storeToRefs(matchupActionMenuStore)
@@ -41,8 +43,15 @@ watch(route, (newData, oldData) => {
 
 
 onBeforeRouteLeave((to,from) => {
-    console.log('onBeforeRouteLeave',to.fullPath,from.fullPath);
+    console.log('HomeView.onBeforeRouteLeave',to.fullPath,from.fullPath);
     menuOpen.value = false;//close incase open
+    
+    console.log ('HomeView.onBeforeRouteLeave.to.params',to.params);
+    console.log('HomeView.onBeforeRouteLeave.to',to);
+    if (to.name === 'analyze'){
+        console.log('analyze yo',to.params.matchupId);
+        matchupDetailStore.fetchMatchupDetails(to.params.matchupId);
+    }
 });
 
 
