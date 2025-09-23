@@ -1,27 +1,11 @@
 <script setup>
 
+import { inject } from 'vue';
+
 const props = defineProps(['fighter'])
+const inchesToFeetStr = inject('inchesToFeetStr');
+const dobToAge= inject('dobToAge');
 
-function inchesToFeetStr(inches) {
-    return `${Math.floor(inches / 12)}'${inches % 12}`;
-}
-function dobToAge(dobString) {
-    if (!dobString) return "N/A"; // handle empty input
-
-    const today = new Date();
-    const dob = new Date(dobString);
-
-    let age = today.getFullYear() - dob.getFullYear();
-    const monthDiff = today.getMonth() - dob.getMonth();
-    const dayDiff = today.getDate() - dob.getDate();
-
-    // if birthday hasn’t occurred yet this year, subtract 1
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-    }
-
-    return age;
-}
 </script>
 
 <template>
@@ -33,7 +17,7 @@ function dobToAge(dobString) {
                 </h5>
             </div>
             <div class="d-flex">
-                <img :src="fighter.img_link ? fighter.img_link : '/sample_150.png'" alt="">
+                <img :src="fighter.img_link ? fighter.img_link : '/static/fightEvaluator/media/sample_150.png'" alt="">
                 <div class="fighter-bio ">
                     <div class="age">
                         <h6 class="age-label">age:&nbsp;</h6>

@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
 import server from './plugins/server.js';
+import formatFuncs from './plugins/formatFuncs.js';
 import attributeDefinitions from './plugins/attribute-definitions';
 
 import App from './App.vue';
@@ -36,7 +37,9 @@ app.use(server,{
         'Content-Type': 'application/json',
         'X-CSRFToken': getCookie('csrftoken'),
     }
-})
+});
+
+app.use(formatFuncs);
 app.use(attributeDefinitions);
 
 app.use(createPinia())

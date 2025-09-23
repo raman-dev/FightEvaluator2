@@ -125,10 +125,19 @@ def vueAssessment(request,fighterId):
     noteQ = Note.objects.filter(assessment=assessment)
     if noteQ.exists():
         notes = [ {'data':note.data,'createdAt':note.createdAt,'id':note.id} for note in noteQ ]
+    
+    nextMatchup = MatchUp.objects.filter(fighter_a=fighter).order_by('event__date').first()
+    matchupInfo = None
+    if nextMatchup:
+        matchupInfo = {
+            'id': nextMatchup.id,
+            'title': nextMatchup.title(),
+        }
     data = {
         'fighter':model_to_dict(fighter),
         'assessment':model_to_dict(assessment),
-        'notes':notes
+        'notes':notes,
+        'nextMatchup': matchupInfo
     }
     return JsonResponse(data)
 

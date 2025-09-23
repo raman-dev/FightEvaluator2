@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { inject } from 'vue';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
 // import { useMatchupStore } from '@/stores/matchupStore';
 import CompactFighterCard from '@/components/assessment/CompactFighterCard.vue';
@@ -14,6 +14,7 @@ const matchupDetailStore = useMatchupDetailStore();
 const { matchupId } = defineProps(['matchupId'])
 const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick } = storeToRefs(matchupDetailStore);
 
+const replaceUnderscoreSpace = inject('replaceUnderscoreSpace');
 
 onBeforeRouteUpdate((a,b)=>{
   console.log('onBeforeRouteUpdate',a,b);
@@ -22,7 +23,7 @@ onBeforeRouteUpdate((a,b)=>{
 </script>
 <template>
     <div class="container-fluid">
-        <h3 class="text-center text-capitalize">{{ matchup.weight_class }} | {{ matchup.rounds }} rounds</h3>
+        <h3 class="text-center text-capitalize">{{ replaceUnderscoreSpace(matchup.weight_class) }} | {{ matchup.rounds }} rounds</h3>
         <div class="matchup-container justify-content-center">
             <!--contains information about each fighter including fighter img-->
             <div class="fighter-container">  

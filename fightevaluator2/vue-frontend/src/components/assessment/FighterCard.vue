@@ -1,77 +1,58 @@
 <script setup>
 import TapologyButton from "../TapologyButton.vue";
+import { watch,inject } from "vue";
 
 // fighter comes from v-model
 const fighter = defineModel("fighter", { type: Object, required: true });
+const nextMatchup = defineModel("nextMatchup", { type: Object, required: false });
 //
 
 const emit = defineEmits(['editClick']);
 // nextMatchup is still a one-way prop
 const props = defineProps({
-    nextMatchup: {
-        type: Object,
-        default: null,
-    },
-    fullSize:{
+
+    fullSize: {
         type: Boolean,
         default: true,
     },
-    rtlImage:{
+    rtlImage: {
         type: Boolean,
         default: false
     }
 });
 
 // helpers
-const removeScores = (val) => {
-    if (!val) return "";
-    return val.replace(/\d+/g, "").trim();
-};
+const removeScores = inject('replaceUnderscoreSpace');
 
 const formatHeight = (val) => {
     if (!val) return "N/A";
     return val;
 };
 
+const dobToAge = inject('dobToAge');
 
-
-function dobToAge(dobString) {
-  if (!dobString) return "N/A"; // handle empty input
-
-  const today = new Date();
-  const dob = new Date(dobString);
-
-  let age = today.getFullYear() - dob.getFullYear();
-  const monthDiff = today.getMonth() - dob.getMonth();
-  const dayDiff = today.getDate() - dob.getDate();
-
-  // if birthday hasn’t occurred yet this year, subtract 1
-  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-    age--;
-  }
-
-  return age;
-}
+watch(nextMatchup, (newVal,oldVal) => {
+    console.log("FighterCard.nextMatchup:", newVal);
+});
 
 
 </script>
 
 <template>
     <div class="fighter-info-container">
-        <div class="fighter-card" :class="{rtlImage:props.rtlImage}">
+        <div class="fighter-card" :class="{ rtlImage: props.rtlImage }">
             <div class="img-wrapper">
-                <img class="fighter-image" :src="fighter.img_link" alt="fighter image" />
+                <img class="fighter-image" :src="fighter.img_link ? fighter.img_link : '/static/fightEvaluator/media/sample_150.png'" alt="fighter image">
                 <div class="next-matchup d-flex" v-if="props.fullSize">
                     <template v-if="nextMatchup">
-                        <a class="text-center" :href="`/matchup/${nextMatchup.id}`">
+                        <RouterLink class="text-center" :to="{ name: 'analyze', params: { matchupId: nextMatchup.id } }">
                             <p class="m-0">
-                                {{ nextMatchup.fighter_a.last_name }} vs
-                                {{ nextMatchup.fighter_b.last_name }}
+                                {{ nextMatchup.title }}
                             </p>
-                        </a>
+                        </RouterLink>
                     </template>
                     <template v-else>
-                        <a href="#">no upcoming matchup</a>
+                        <a href="#">no upcoming matchup fuck</a>
                     </template>
                 </div>
             </div>
@@ -104,9 +85,7 @@ function dobToAge(dobString) {
                         <div class="info-wrapper">
                             <h6>record:&nbsp;</h6>
                             <p class="fighter-record">
-                                <span id="wins">{{ fighter.wins }}</span>-
-                                <span id="losses">{{ fighter.losses }}</span>-
-                                <span id="draws">{{ fighter.draws }}</span>
+                                <span>{{ fighter.wins }}-{{ fighter.losses }}-{{ fighter.draws }}</span>
                             </p>
                         </div>
 
@@ -139,7 +118,6 @@ function dobToAge(dobString) {
 
 
 <style scoped lang="scss">
-
 $backgroundColor: #212529;
 // $cardColor: #242a34;
 $cardBorderColor: #131b23;
@@ -149,9 +127,9 @@ $btnBorderColor: black;
 $btnBorderRadius: 0.6rem;
 $borderRadius: 0.5rem;
 
-@mixin button-active{
-  box-shadow: black 2px 2px 0 0;
-  // background-color: $btnClickBackground;
+@mixin button-active {
+    box-shadow: black 2px 2px 0 0;
+    // background-color: $btnClickBackground;
 }
 
 .fighter-info-container {
@@ -170,7 +148,7 @@ $borderRadius: 0.5rem;
     }
 }
 
-.rtlImage{
+.rtlImage {
     flex-direction: row-reverse;
 }
 

@@ -53,7 +53,8 @@ function onAttributeChange(changes) {
 <template>
     <div class="content-container">
         <FighterCard 
-            v-model:fighter="assessmentStore.fighter" 
+            v-model:fighter="assessmentStore.fighter"
+            v-model:nextMatchup="assessmentStore.nextMatchup"
             @edit-click="onClickFighterEdit">
         </FighterCard>
         <div class="grid-container">
@@ -72,7 +73,7 @@ function onAttributeChange(changes) {
         :fighterServer="assessmentStore.fighter"
         @update-fighter="onFighterEditorSave">
     </FighterEditor>
-
+    
 </template>
 
 <style lang="scss" scoped>

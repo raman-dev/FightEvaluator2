@@ -27,7 +27,7 @@ const serverJustification = defineModel("justification", {
 
 const selectorLikelihood = ref(3);
 const showConfidenceList = ref(false);
-const justification = ref("");
+const justification = ref("Justification Statements and Conclusions");
 const changed = ref(false);
 
 const justificationRef = ref('justificationRef');
@@ -137,9 +137,6 @@ t();
                             @input="updateJustification" this line resets cursor to start
                             and removes ctrl z ability
                         -->
-                        <!-- <div  class="editor" contenteditable="plaintext-only" @input="updateJustification" ref="justificationRef">
-                            {{ justification }}
-                        </div> -->
                         <textarea class="editor" @input="updateJustification">{{ justification }}</textarea>
                     </div>
                 </div>
