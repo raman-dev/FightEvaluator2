@@ -52,7 +52,7 @@ watch(nextMatchup, (newVal,oldVal) => {
                         </RouterLink>
                     </template>
                     <template v-else>
-                        <a href="#">no upcoming matchup fuck</a>
+                        <a href="#">no upcoming matchup</a>
                     </template>
                 </div>
             </div>

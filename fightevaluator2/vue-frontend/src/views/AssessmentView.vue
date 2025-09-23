@@ -10,6 +10,7 @@ import { useAssessmentStore } from '@/stores/assessmentStore';
 import { onMounted, ref, provide } from 'vue';
 import { useRoute } from 'vue-router';
 
+
 /*
     
 */
@@ -67,6 +68,7 @@ function onAttributeChange(changes) {
                 <NotesList :notes="assessmentStore.notes" v-model:activeNote="activeNote"></NotesList>
             </div>
         </div>
+        
     </div>
     <FighterEditor 
         v-model:showModal="showModal" 

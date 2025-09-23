@@ -1,4 +1,5 @@
 function replaceUnderscoreSpace(value) {
+   if (value === undefined || value === null) return "";
   //replace underscores with spaces 
     return value.replace(/_/g,' ');
 }

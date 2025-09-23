@@ -1,18 +1,20 @@
 <script setup>
 import { inject } from 'vue';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
+import { storeToRefs } from 'pinia';
+import { onBeforeRouteUpdate } from 'vue-router';
 // import { useMatchupStore } from '@/stores/matchupStore';
 import CompactFighterCard from '@/components/assessment/CompactFighterCard.vue';
-import { storeToRefs } from 'pinia';
 import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
 import OutcomesContainer from '@/components/analysis/OutcomesContainer.vue';
-import { onBeforeRouteUpdate } from 'vue-router';
+import AttribCompareTable from '@/components/analysis/AttribCompareTable.vue';
+
 
 
 const matchupDetailStore = useMatchupDetailStore();
 // const matchupStore = useMatchupStore();
 const { matchupId } = defineProps(['matchupId'])
-const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick } = storeToRefs(matchupDetailStore);
+const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick,attribComparison } = storeToRefs(matchupDetailStore);
 
 const replaceUnderscoreSpace = inject('replaceUnderscoreSpace');
 
@@ -52,10 +54,81 @@ onBeforeRouteUpdate((a,b)=>{
           >
        </OutcomesContainer>
 
+       <div class="content-grid">
+            <AttribCompareTable :attribComparison="attribComparison"></AttribCompareTable>
+        </div>
+
     </div>
 </template>
 
 <style lang="scss">
+
+/*data-polarity color variables*/
+$positiveBg: #0d6efd; 
+$negativeBg: #dc3545;
+$neutralBg: #ffc107; 
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  .notes-section {
+    .fighter-name {
+      text-transform: capitalize;
+    }
+    .notes {
+      border-radius: 0.4rem;
+      list-style: none;
+      padding: 0.5rem;
+      background-color: #12161A;
+
+      li p {
+        max-width: 36ch;
+      }
+      .note {
+        background-color: #212529;
+        border: 2px solid lavender;
+        border-radius: 0.6rem;
+        list-style: None;
+        display: flex;
+        padding: 1rem;
+        margin: 0.6rem;
+        p {
+          word-break: break-word;
+          text-wrap: wrap;
+          max-width: 32ch;
+          margin: 0px;
+        }
+      }
+      .note[data-tag="positive"]{
+        border: 3px solid $positiveBg; 
+      }
+
+      .note[data-tag="negative"]{
+        border: 3px solid $negativeBg; 
+      }
+    }
+  }
+
+  .notes-left {
+    // grid-row: 1;
+    grid-column: span 1;
+  }
+
+  .notes-right {
+    // grid-row: 1;
+    grid-column: 4;
+  }
+
+  .attrib-compare-table {
+    // grid-row: 1;
+    grid-column: 2/4;
+  }
+}
+
+.content-grid > * {
+  grid-row: 1;
+}
 
 .likely-5 {
   background-color: #dc3545;

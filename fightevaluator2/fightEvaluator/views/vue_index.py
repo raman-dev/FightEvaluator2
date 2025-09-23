@@ -3,6 +3,7 @@ from django.views.decorators.http import require_GET,require_POST,require_http_m
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
+from django.db.models import Q
 
 
 # from ..forms import PickForm
@@ -126,7 +127,8 @@ def vueAssessment(request,fighterId):
     if noteQ.exists():
         notes = [ {'data':note.data,'createdAt':note.createdAt,'id':note.id} for note in noteQ ]
     
-    nextMatchup = MatchUp.objects.filter(fighter_a=fighter).order_by('event__date').first()
+    nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('event__date').last()
+    
     matchupInfo = None
     if nextMatchup:
         matchupInfo = {
@@ -253,8 +255,17 @@ def get_matchup_comparison(request,matchupId):
 
     eventLikelihoodsQSet = EventLikelihood.objects.filter(matchup=matchup)
     prediction2QSet = Prediction2.objects.filter(matchup=matchup)
-    predictionsMap = getPredictionsMap(eventLikelihoodsQSet,standardEvents,matchup)
+    # predictionsMap = getPredictionsMap(eventLikelihoodsQSet,standardEvents,matchup)
     predictionsMap2 = getPredictionsMap(prediction2QSet,standardEvents,matchup)
+
+    attribComparison = []
+    fighterA_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_a))
+    fighterB_assessment = model_to_dict(Assessment.objects.get(fighter=matchup.fighter_b))
+    # print(fighterA_assessment)
+    for k in fighterA_assessment.keys():
+        if k == 'id' or k == 'fighter':
+            continue            
+        attribComparison.append((k,fighterA_assessment[k],fighterB_assessment[k]))
     
     if pickQSet.exists():
         pick = pickQSet[0]
@@ -268,6 +279,7 @@ def get_matchup_comparison(request,matchupId):
         'predictions': predictionsMap2,
         'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
         'pick': model_to_dict(pick) if pick else {'event':None,'fighter':None},
+        'attribComparison' : attribComparison
     }
     """
         how to consume this endpoint data
