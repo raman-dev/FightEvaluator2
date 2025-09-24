@@ -19,6 +19,8 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
   const pick = ref({event:null,fighter:null});
   const predictions = ref({});
   const attribComparison = ref([]);
+  const fighter_a_notes = ref([]);
+  const fighter_b_notes = ref([]);
 
   function onReceiveMatchupAnalysis(matchupComparison) {
     matchup.value = matchupComparison['matchup']
@@ -35,6 +37,16 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     if ('attribComparison' in matchupComparison) {
       attribComparison.value = matchupComparison['attribComparison'];
     }
+    if ('fighter_a_notes' in matchupComparison) {
+      fighter_a_notes.value = matchupComparison['fighter_a_notes'];
+      console.log('fighter_a_notes',fighter_a_notes.value);
+    }
+    if ('fighter_b_notes' in matchupComparison) {
+      fighter_b_notes.value = matchupComparison['fighter_b_notes'];
+      console.log('fighter_b_notes',fighter_b_notes.value);
+      
+    }
+
   }
 
   function fetchMatchupDetails(matchupId) {
@@ -89,5 +101,16 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     server.make_prediction(data,matchup.value.id,onReceivePrediction);
   }
 
-  return { matchup, fighter_a, fighter_b, predictions, pick,  standardEvents,attribComparison, pickOutcome, fetchMatchupDetails, updateOutcomePrediction };
+  return { 
+    matchup, 
+    fighter_a, 
+    fighter_b, 
+    predictions, 
+    pick,  
+    standardEvents,
+    attribComparison,
+    fighter_a_notes, 
+    fighter_b_notes, pickOutcome, fetchMatchupDetails, updateOutcomePrediction 
+  };
+
 });

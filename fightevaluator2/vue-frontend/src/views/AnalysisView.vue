@@ -8,13 +8,14 @@ import CompactFighterCard from '@/components/assessment/CompactFighterCard.vue';
 import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
 import OutcomesContainer from '@/components/analysis/OutcomesContainer.vue';
 import AttribCompareTable from '@/components/analysis/AttribCompareTable.vue';
+import NotesSection from '@/components/analysis/NotesSection.vue';
 
 
 
 const matchupDetailStore = useMatchupDetailStore();
 // const matchupStore = useMatchupStore();
 const { matchupId } = defineProps(['matchupId'])
-const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick,attribComparison } = storeToRefs(matchupDetailStore);
+const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick,attribComparison, fighter_a_notes,fighter_b_notes } = storeToRefs(matchupDetailStore);
 
 const replaceUnderscoreSpace = inject('replaceUnderscoreSpace');
 
@@ -55,8 +56,10 @@ onBeforeRouteUpdate((a,b)=>{
        </OutcomesContainer>
 
        <div class="content-grid">
-            <AttribCompareTable :attribComparison="attribComparison"></AttribCompareTable>
-        </div>
+          <NotesSection :fighter="fighter_a" :notes="fighter_a_notes"> </NotesSection>
+          <AttribCompareTable :attribComparison="attribComparison"></AttribCompareTable>
+          <NotesSection :fighter="fighter_b" :notes="fighter_b_notes"> </NotesSection>
+       </div>
 
     </div>
 </template>
@@ -72,43 +75,7 @@ $neutralBg: #ffc107;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 
-  .notes-section {
-    .fighter-name {
-      text-transform: capitalize;
-    }
-    .notes {
-      border-radius: 0.4rem;
-      list-style: none;
-      padding: 0.5rem;
-      background-color: #12161A;
-
-      li p {
-        max-width: 36ch;
-      }
-      .note {
-        background-color: #212529;
-        border: 2px solid lavender;
-        border-radius: 0.6rem;
-        list-style: None;
-        display: flex;
-        padding: 1rem;
-        margin: 0.6rem;
-        p {
-          word-break: break-word;
-          text-wrap: wrap;
-          max-width: 32ch;
-          margin: 0px;
-        }
-      }
-      .note[data-tag="positive"]{
-        border: 3px solid $positiveBg; 
-      }
-
-      .note[data-tag="negative"]{
-        border: 3px solid $negativeBg; 
-      }
-    }
-  }
+ 
 
   .notes-left {
     // grid-row: 1;
