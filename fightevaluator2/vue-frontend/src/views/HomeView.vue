@@ -64,7 +64,7 @@ function showMatchupEditor(emptyEditor) {
 
     <!-- <h1>Route:{{ $route.fullPath }}</h1> -->
     <div class="container-fluid main-container" @mousemove="showGuides">
-        <div class="title-container">
+        <div class="title-container d-flex justify-content-between">
             <h3>
                 {{ event.title }}
             </h3>
