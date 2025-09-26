@@ -75,8 +75,6 @@ $neutralBg: #ffc107;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 
- 
-
   .notes-left {
     // grid-row: 1;
     grid-column: span 1;
@@ -90,6 +88,21 @@ $neutralBg: #ffc107;
   .attrib-compare-table {
     // grid-row: 1;
     grid-column: 2/4;
+  }
+}
+
+@media (max-width: 1280px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: 0.5rem;
+    .attrib-compare-table {
+      grid-row: 1;
+      grid-column: span 4;
+    }
+    .notes-section {
+      grid-row: 2;
+      grid-column: span 2;
+    }
   }
 }
 

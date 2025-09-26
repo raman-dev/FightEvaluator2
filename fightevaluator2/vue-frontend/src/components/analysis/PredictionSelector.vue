@@ -84,7 +84,7 @@ function isPickSame(){
 
     <div class="prediction-selector" data-outcome-prediction-id="0" :data-prediction="selectorPick">
       <div class="title-container d-flex justify-content-between">
-        <h2>Pick Outcome</h2>
+        <h3>Pick Outcome</h3>
         <button class="save-prediction-btn btn btn-primary" 
           :class="{ disabled: isPickSame() }" 
           @click="savePrediction">
