@@ -88,7 +88,10 @@ const dobToAge= inject('dobToAge');
 
         a {
             text-decoration: none;
-            color: lavender;
+            color: rgb(222, 226, 230);
+        }
+        a:hover {
+            text-decoration: underline;
         }
     }
 

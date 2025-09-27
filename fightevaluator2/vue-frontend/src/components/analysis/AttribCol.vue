@@ -22,7 +22,7 @@ const attribInfoMap = inject('attribInfoMap');
 <template>
   <div class="attrib-col" :class="side" :data-polarity="value">
     <div class="state-container">
-      <h5>{{ value }}</h5>
+      <h5>{{ attribInfoMap[attribName][value].state }}</h5>
     </div>
     <div class="attrib-description-container">
       <p>

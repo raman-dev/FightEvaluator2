@@ -27,7 +27,7 @@ watch (predictions, (newVal,oldVal)=>{
 
 <template>
   <div class="outcomes-container my-4">
-    <h2>Event Likelihood</h2>
+    <h3>Outcome Likelihood</h3>
     <div class="outcomes-wrapper events-wrapper row">
       <template v-for="(event,idx) in standardEvents" :key="idx">
         <template v-if="event.value ==='WIN'">
@@ -64,6 +64,10 @@ watch (predictions, (newVal,oldVal)=>{
 </template>
 
 <style scoped lang="scss">
+.outcomes-container{
+  border: 2px solid #12161A;
+  padding: 1.2rem;
+}
 .outcomes-wrapper {
     display: flex;
     justify-content: space-evenly;

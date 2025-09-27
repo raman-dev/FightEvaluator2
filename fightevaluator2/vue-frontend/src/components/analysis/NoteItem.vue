@@ -5,8 +5,8 @@ defineProps({
     required: true
   },
   tag: {
-    type: String,
-    required: true
+    type: Number,
+    required: false
   }
 })
 </script>
