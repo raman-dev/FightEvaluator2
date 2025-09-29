@@ -75,7 +75,7 @@ function setMenuPosition(event) {
 
 </script>
 <template>
-    <div class="table-container mt-2" ref="tableContainer" :class="{'w-100':props.tableName ==='WatchList'}">
+    <div class="table-container" ref="tableContainer" :class="{'w-100':props.tableName ==='WatchList','mt-2':props.tableName !=='WatchList'}">
         <table>
             <caption style="caption-side:top">
                 <div class="d-flex justify-content-between">
