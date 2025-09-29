@@ -175,12 +175,15 @@ def verifyPrediction(matchups):
         es = EventStat(event=m.event,predictions=0,correct=0)
     else:
         es = esQuerySet[0]
+    es.correct = 0
+    es.predictions = 0
     for matchup in matchups:
         prediction = Prediction.objects.filter(matchup=matchup).first()
-        es.predictions += 1
         if prediction:
+            
+            es.predictions += 1
             outcome = matchup.outcome
-            print(outcome)
+            print(outcome,'predictions => ',prediction)
             #if prediction has a fighter then it is a winner determination
             prediction.isCorrect = False
             match prediction.prediction.event:
@@ -225,10 +228,6 @@ def getFightEventResults2(request,eventId):
     fightEvent = get_object_or_404(FightEvent,id=eventId)
     #do not try and get event results if the event is in the future
     #or if the it is not the atleast 2:00 am the day after the event
-    """
-
-    """
-
     # if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
     #     return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
     matchups = MatchUp.objects.filter(event=fightEvent)
@@ -297,9 +296,10 @@ def getFightEventResults2(request,eventId):
         fightEvent.save()
     else:
         for m in matchups:
-            fightOutcomes.append(model_to_dict(m.outcome))
+            if m.outcome != None:
+                fightOutcomes.append(model_to_dict(m.outcome))
     verifyPrediction(matchups)
-    return JsonResponse({'puta':'madre'})
+    return JsonResponse({'outcomes':fightOutcomes})
     
 #maybe asynchronous in the future evaluate
 #fetch results from web if not already in database

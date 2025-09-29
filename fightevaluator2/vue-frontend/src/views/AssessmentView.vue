@@ -59,10 +59,7 @@ function onAttributeChange(changes) {
             @edit-click="onClickFighterEdit">
         </FighterCard>
         <div class="grid-container">
-            <FighterAttributeListEditor
-                @attribute-change="onAttributeChange"
-            >
-            </FighterAttributeListEditor>
+            <FighterAttributeListEditor @attribute-change="onAttributeChange"></FighterAttributeListEditor>
             <div class="fighter-notes list-group-item d-flex flex-column">
                 <NotesEditor v-model:activeNote="activeNote"></NotesEditor>
                 <NotesList :notes="assessmentStore.notes" v-model:activeNote="activeNote"></NotesList>

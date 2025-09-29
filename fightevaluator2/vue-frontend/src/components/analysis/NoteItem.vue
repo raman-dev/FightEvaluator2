@@ -7,12 +7,17 @@ defineProps({
   tag: {
     type: Number,
     required: false
+  },
+  empty: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 </script>
 
 <template>
-  <li class="note" :data-tag="tag">
+  <li class="note" :data-tag="tag" :class="{'empty-note':empty}">
     <p>{{ text }}</p>
   </li>
 </template>
@@ -38,6 +43,11 @@ $neutralBg: #ffc107;
     max-width: 32ch;
     margin: 0px;
   }
+}
+
+.note.empty-note{
+  border-color: #42464a;
+  background-color: #212328;
 }
 
 .note[data-tag="positive"] {

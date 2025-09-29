@@ -74,7 +74,10 @@ function updateOutcomePrediction() {
 
 onMounted(() => {
     selectorLikelihood.value = likelihood.value;
-    justification.value = serverJustification.value;
+    if (serverJustification.value.length > 0){
+        justification.value = serverJustification.value;
+    }
+    
 });
 
 watch (likelihood, (newVal, oldVal) => {

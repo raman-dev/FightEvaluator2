@@ -11,7 +11,7 @@ const { assessment } = storeToRefs(useAssessmentStore());
 </script>
 
 <template>
-    <div class=".fighter-attrib-list">
+    <div class="fighter-attrib-list">
         <template v-for="value, key in assessment">
             <AttributeCard v-if="key !== 'id' && key != 'fighter'" v-model:attributeValue="assessment[key]"
                 :attrib_name="key"
@@ -23,8 +23,9 @@ const { assessment } = storeToRefs(useAssessmentStore());
 
 </template>
 
-<style>
+<style scoped lang="scss">
 .fighter-attrib-list {
     padding: 0.5rem;
+    width: 100%;
 }
 </style>

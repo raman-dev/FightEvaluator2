@@ -26,7 +26,7 @@ defineProps({
         <h4> Notes</h4>
       </div>
       <ul class="notes">
-        <NoteItem v-if="notes.length === 0" text="No notes taken" tag="info" />
+        <NoteItem v-if="notes.length === 0" text="No notes taken" tag="info" empty="true" />
         <NoteItem v-for="(note, index) in notes" :key="index" :text="note.data" :tag="note.tag" />
       </ul>
     </div>
