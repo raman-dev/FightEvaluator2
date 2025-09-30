@@ -48,6 +48,50 @@ def predictions(request):
         'stats':getStats()
         })
 
+@require_GET
+def getPredictions(request):
+    predictions = []
+    """
+
+        select *
+        from
+            prediction
+        order by
+            date.month
+        group by
+        
+        predictions: [
+            {  
+                event: data
+                predictions:[
+                
+                ]
+            }
+        ]
+
+    """
+    # calculate_stats()
+    events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
+    data = Prediction.objects.all()
+    # eventsByYearMonth = {}
+    for fightEvent in events:
+        #grab predictions for this event
+        preds = data.filter(matchup__event=fightEvent)
+        if preds.count() > 0:#atleast 1 prediction for this event
+             predictions.append({
+                 'event':model_to_dict(fightEvent),
+                 'predictions': [ {
+                     'matchup':p.matchup.title(),
+                     'type':p.prediction.event,
+                     'type_label':p.prediction.get_event_display(),
+                     'likelihood':p.prediction.likelihood,
+                     'fighter': p.prediction.fighter.name if p.prediction.fighter else None,
+                     'correct':p.isCorrect
+                 } for p in preds]
+            })
+
+    return JsonResponse({'predictions':predictions})
+
 def publishResults(request):
     #using matchup results determine if predictions are correct
     #for every prediction grab the corresponding fightResult if it exists

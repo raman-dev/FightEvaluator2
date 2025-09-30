@@ -66,4 +66,5 @@ urlpatterns = [
     path('vue/assessments/<int:fighterId>',views.vueAssessment,name='vue-assessment'),
     path('vue/matchups/pick/<int:matchupId>',views.makePick,name='vue-make-pick'),
     path('vue/analysis/make-prediction/<int:matchupId>',views.makePrediction,name='vue-make-prediction'),
+    path('vue/predictions/all',views.getPredictions,name='vue-all-predictions'),
 ]

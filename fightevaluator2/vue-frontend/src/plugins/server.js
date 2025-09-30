@@ -17,7 +17,8 @@ class Server {
       UPDATE_ASSESSMENT:'/assessment/update2',
 
       MAKE_PICK : '/vue/matchups/pick',
-      MAKE_PREDICTION:'/vue/analysis/make-prediction'
+      MAKE_PREDICTION:'/vue/analysis/make-prediction',
+      GET_PREDICTIONS:'/vue/predictions/all',
     }
 
     //provide
@@ -51,6 +52,10 @@ class Server {
       })
       .then((response) => response.json())
       .then((data) => callback(data));
+    }
+
+    static async get_predictions (callback){
+      Server.get(Server.URLS.GET_PREDICTIONS,callback);
     }
 
     static async get_matchup_analysis(matchupId,callback) {
