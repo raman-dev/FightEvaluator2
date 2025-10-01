@@ -4,12 +4,13 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.db.models import Avg,Count,Q
+from django.views.decorators.cache import cache_page
 
 from ..models import FightEvent,FightOutcome,Prediction,Event,Likelihood,Stat,EventStat,MonthlyEventStats
 from rich import print as rprint
 
+@require_GET
 def predictions(request):
-    
     """
         structure 
             matchup : model_obj,
@@ -48,8 +49,12 @@ def predictions(request):
         'stats':getStats()
         })
 
+
+# @cache_page(60*15)  # Cache the view for 15 minutes
 @require_GET
 def getPredictions(request):
+    
+    print("Running predictions view")
     predictions = []
     """
 
