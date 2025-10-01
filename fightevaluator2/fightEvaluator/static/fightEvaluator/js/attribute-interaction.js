@@ -75,7 +75,7 @@ async function attribCommitButtonClickListener(event){
     // }
     console.log(data);
     
-    let response = await fetch('/assessment/update',{
+    let response = await fetch(`/assessment/update2/${assessment_data['id']}`,{
         method:'PATCH',
         headers:{
             'Content-Type':'application/json',

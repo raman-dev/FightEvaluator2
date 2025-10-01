@@ -48,17 +48,23 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #cache stuff
-    "django.middleware.cache.UpdateCacheMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.cache.FetchFromCacheMiddleware",
+    
 ]
-CACHES = {
-    "default":{
-        "BACKEND":"django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION":"unique-snowflake"
-    }
-}
+
+# MIDDLEWARE += [
+#     #cache stuff
+#     "django.middleware.cache.UpdateCacheMiddleware",
+#     "django.middleware.common.CommonMiddleware",
+#     "django.middleware.cache.FetchFromCacheMiddleware"
+# ]
+# CACHES = {
+#     "default":{
+#         "BACKEND":"django.core.cache.backends.locmem.LocMemCache",
+#         # "LOCATION":"unique-snowflake"
+#     }
+# }
+
+# CACHE_MIDDLEWARE_SECONDS = 30
 
 ROOT_URLCONF = 'fightevaluator2.urls'
 

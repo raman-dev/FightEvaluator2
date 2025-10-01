@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict,modelform_factory
 from django.views.decorators.http import require_GET,require_http_methods
 from django.views.generic import TemplateView,DetailView
+from django.core.cache import cache
 
 from ..models import MatchUp,Fighter,Assessment,Note#,Assessment2, Attribute, AttributeValue
 from ..forms import *
@@ -28,6 +29,8 @@ def assessment_index(request,fighterId):
         'attribs':assessment.attrib_map.items(),
         'nextMatchup':nextMatchup,
     }
+
+    # cache
 
     return render(request,"fightEvaluator/assessment2.html",context)
 
@@ -90,12 +93,11 @@ def assessment_index(request,fighterId):
 def update_assessment2(request,assessmentId):
     
     assessment = get_object_or_404(Assessment,id=assessmentId)
-    
     inputBody = json.loads(request.body)
     attributes = [ k for k in inputBody.keys() if k !='id']
 
     assessmentUpdateData = inputBody
-
+    print(assessmentUpdateData,attributes,'update_assessment2')
     CustomAssessmentFormClass = modelform_factory(Assessment,fields=attributes)
     customForm = CustomAssessmentFormClass(data=assessmentUpdateData,instance=assessment)
     if customForm.is_valid():#form.is_valid():
@@ -118,7 +120,6 @@ def update_assessment(request):
     #get body parameters from request object
     #convert body bytes to json object
     inputBody = json.loads(request.body)
-    # print(inputBody)
     attributes = [ k for k in inputBody.keys() if k !='id']
     
     #need to inverse map values 
@@ -131,7 +132,7 @@ def update_assessment(request):
     assessmentUpdateData = inputBody
     assessmentUpdateData.pop('id')
 
-    print(assessmentUpdateData,attributes)
+    print(assessmentUpdateData,attributes,'update_assessment')
     CustomAssessmentFormClass = modelform_factory(Assessment,fields=attributes)
     customForm = CustomAssessmentFormClass(data=assessmentUpdateData,instance=assessment)
     if customForm.is_valid():#form.is_valid():
