@@ -44,7 +44,7 @@ def predictions(request):
         preds = data.filter(matchup__event=fightEvent)
         if preds.count() > 0:#atleast 1 prediction for this event
             eventPredictionMap[fightEvent] = preds
-    return render(request, "fightEvaluator/prediction.html",{
+    return render(request, "fightEvaluator/prediction.html",{ 
         'event_predictions':eventPredictionMap,
         'stats':getStats()
         })
