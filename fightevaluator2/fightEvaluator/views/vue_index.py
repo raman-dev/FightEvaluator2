@@ -4,6 +4,7 @@ from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
+from django.views.decorators.cache import cache_page
 
 
 # from ..forms import PickForm
@@ -28,6 +29,7 @@ def get_event(request,eventId):
     event = resultSet[0]
     return aggregateAndParseEventMatchups(event)
 
+@cache_page(60 * 10)
 @require_GET
 def vueAllEvents(request):
     events = []
