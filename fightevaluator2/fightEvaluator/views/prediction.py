@@ -3,11 +3,13 @@ from django.views.decorators.http import require_GET
 from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
-from django.db.models import Avg,Count,Q
+from django.db.models import Avg,Count,Q,Sum
 from django.views.decorators.cache import cache_page
 
 from ..models import FightEvent,FightOutcome,Prediction,Event,Likelihood,Stat,EventStat,MonthlyEventStats
 from rich import print as rprint
+
+from datetime import datetime
 
 @require_GET
 def predictions(request):
@@ -192,7 +194,7 @@ def collect_monthly_stats(year=None, month=None):
     Returns: (monthly_stats_object, created_bool)
     """
     if year is None or month is None:
-        today = date.today()
+        today = datetime.today()
         year = year or today.year
         month = month or today.month
 
