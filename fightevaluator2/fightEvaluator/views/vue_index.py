@@ -29,7 +29,7 @@ def get_event(request,eventId):
     event = resultSet[0]
     return aggregateAndParseEventMatchups(event)
 
-@cache_page(60 * 10)
+@cache_page(60 * 2)#only cache this since it does not change often
 @require_GET
 def vueAllEvents(request):
     events = []
