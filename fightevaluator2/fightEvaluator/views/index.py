@@ -5,6 +5,8 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
 from django.views.generic import ListView,DetailView
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
 from ..forms import FightEventForm,MatchUpFormMF
@@ -131,6 +133,7 @@ def index(request):
 
     return render(request, "fightEvaluator/index.html",context)
 
+@method_decorator(cache_page(60 * 2), name="dispatch")
 class FightEventListView(ListView):
     model = FightEvent
     #we need to return a map that has grouped the events by month 
@@ -303,7 +306,7 @@ def getFightEventResults2(request,eventId):
     
 #maybe asynchronous in the future evaluate
 #fetch results from web if not already in database
-
+@cache_page(60 * 2)
 @require_GET
 def event_predictions(request,eventId):
     #should be a list of predictions for matchups for event with eventId

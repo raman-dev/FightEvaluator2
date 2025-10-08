@@ -9,6 +9,7 @@ class Server {
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
       GET_MATCHUP:'/vue/matchups',
+      TOGGLE_WATCHLIST:'/matchup/toggle-watchlist',
 
       GET_NEXT_EVENT: '/vue/next-event',
       ALL_EVENTS: '/vue/events',
@@ -24,6 +25,16 @@ class Server {
     //provide
     static headers = {
 
+    }
+    
+    static async toggle_watchlist(matchupId,callback){
+      //send patch request
+      fetch(Server.URLS.TOGGLE_WATCHLIST + `/${matchupId}`,{
+        method:'PATCH',
+        headers:Server.headers
+      }).then((response) => response.json())
+        .then((data) => callback(data));
+        
     }
 
     static async make_prediction(requestData,matchupId,callback){

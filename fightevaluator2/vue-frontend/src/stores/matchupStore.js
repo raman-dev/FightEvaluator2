@@ -54,6 +54,25 @@ export const useMatchupStore = defineStore('matchup', () => {
     }
   }
 
+  function onReceiveToggleWatchListResult(data) {
+    // should return the matchup with updated inWatchList status
+    //if in watchlist is false
+    //that means it was removed from watchlist
+    //update watchlist table and active matchup if needed
+    
+  }
+
+  function toggleWatchList(){
+    if (activeMatchup.value.id === -1 || activeMatchup.value.table === null){
+      // console.log ('no active matchup to toggle watchlist');
+      return;
+    }
+    
+    //remove from watchlist
+    server.toggle_watchlist(activeMatchup.value.id,onReceiveToggleWatchListResult);
+    
+  }
+
   function toggleActiveMatchUp(matchupId, tableName) {
     let table = getTableByName(tableName);
     // console.log (matchupId,tableName,activeMatchup.value);
@@ -112,6 +131,6 @@ export const useMatchupStore = defineStore('matchup', () => {
     return null;
   }
 
-  return { event, mainCard, prelims, watchlist, activeMatchup, fetchEvent, toggleActiveMatchUp, getMatchup }
+  return { event, mainCard, prelims, watchlist, activeMatchup, fetchEvent, toggleActiveMatchUp, getMatchup, toggleWatchList }
 
 })

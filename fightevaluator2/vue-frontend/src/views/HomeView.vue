@@ -73,12 +73,12 @@ function showMatchupEditor(emptyEditor) {
         </div>
 
         <div class="tables-wrapper">
-            <template v-if="watchlist">
+            <template v-if="watchlist.length > 0">
                 <Table table-name="WatchList" :columns=watchListColumns :matchups="watchlist"></Table>
             </template>
             <template v-else>
-                <div class="empty-watchlist-notification border border-2 rounded-2 px-2 py-1">
-                    <h4>No matchups in watchlist.</h4>
+                <div class="d-flex empty-watchlist-notification border rounded-2 px-2 py-1 justify-content-start">
+                    <h6>No matchups in watchlist.</h6>
                 </div>
             </template>
             
@@ -97,6 +97,20 @@ function showMatchupEditor(emptyEditor) {
 </template>
 
 <style scoped lang="scss">
+
+.empty-watchlist-notification{
+    border: 1px solid lavender !important;
+    border-radius: 0.4rem;
+    width: fit-content;
+    padding: 0.4rem;
+    * {
+        margin: 0px;
+    }
+
+    margin-left: 0px;
+    margin-right: auto;
+}
+
 .tables-wrapper, .title-container{
   margin: auto;
   max-width: 57%;  

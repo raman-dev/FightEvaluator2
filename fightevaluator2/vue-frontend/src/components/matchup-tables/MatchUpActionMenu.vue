@@ -9,7 +9,14 @@ const matchupActionMenuStore = useMatchupActionMenuStore();
 const { menuOpen,menuPosition,menuLimitRect } = storeToRefs(matchupActionMenuStore);
 const menuRef = useTemplateRef('menu');
 
-const { activeMatchup } = storeToRefs(useMatchupStore());
+const { activeMatchup,toggleWatchList } = storeToRefs(useMatchupStore());
+
+defineProps({
+    tableName: {
+        type: String,
+        required: true
+    }
+});
 
 function position () {
     const matchup = activeMatchup.value.matchup;
@@ -67,7 +74,7 @@ function onEnter(menuContainer){
     <div class="matchup-actions-menu-container " ref="menu" v-if="menuOpen">
         <ul class="menu-item-list" >
             <li class="menu-list-item">
-                <div class="menu-item watch-menu-item" >
+                <div class="menu-item watch-menu-item" @click="toggleWatchList()">
                     <svg id="unwatch-icon" class="d-none" xmlns="http://www.w3.org/2000/svg" height="24px"
                         viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                         <path
