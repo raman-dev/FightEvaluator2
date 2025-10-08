@@ -73,7 +73,7 @@ function showMatchupEditor(emptyEditor) {
         </div>
 
         <div class="tables-wrapper">
-            <template v-if="watchlist.length > 0">
+            <template v-if="Object.keys(watchlist).length > 0">
                 <Table table-name="WatchList" :columns=watchListColumns :matchups="watchlist"></Table>
             </template>
             <template v-else>
@@ -103,12 +103,13 @@ function showMatchupEditor(emptyEditor) {
     border-radius: 0.4rem;
     width: fit-content;
     padding: 0.4rem;
-    * {
-        margin: 0px;
-    }
 
     margin-left: 0px;
     margin-right: auto;
+
+    * {
+        margin: 0px;
+    }
 }
 
 .tables-wrapper, .title-container{

@@ -20,6 +20,7 @@ export const useMatchupStore = defineStore('matchup', () => {
   function onReceiveEvent(eventData) {
     console.log("Received event data: ", eventData.event.id);
     //do what populate event and matchups 
+    
     event.value = {};
     mainCard.value = {};
     prelims.value = {};
@@ -29,19 +30,19 @@ export const useMatchupStore = defineStore('matchup', () => {
     eventData.mainCardMatchups.forEach((matchup) => {
       matchup['active'] = false;
       mainCard.value[matchup.id] = matchup;
-      if (matchup.inWatchList) {
+      if (matchup['inWatchList'] === true) {
         watchlist.value[matchup.id] = structuredClone(matchup);
       }
     });
     eventData.prelimMatchups.forEach((matchup) => {
       matchup['active'] = false;
       prelims.value[matchup.id] = matchup;
-      if (matchup.inWatchList) {
+      if (matchup['inWatchList'] === true) {
         watchlist.value[matchup.id] = structuredClone(matchup);
       }
     });
     event.value = eventData.event;
-    // console.log(watchlist.value);
+    // console.log('watchlist',watchlist.value);
   }
 
   function getTableByName (tableName){
@@ -60,6 +61,23 @@ export const useMatchupStore = defineStore('matchup', () => {
     //that means it was removed from watchlist
     //update watchlist table and active matchup if needed
     
+    const matchup = getMatchup(data.id);
+    matchup.inWatchList = data.inWatchList;
+    if (matchup.inWatchList === true){
+      
+      //create copy
+      const copy = {};
+      for (const key in matchup) {
+        copy[key] = matchup[key];
+      }
+      watchlist.value[matchup.id] = copy;
+    }else{
+      //remove from watchlist
+      delete watchlist.value[matchup.id];
+    }
+
+    //reset activeMatchup
+    activeMatchup.value = defaultActiveMatchup;
   }
 
   function toggleWatchList(){
@@ -70,7 +88,7 @@ export const useMatchupStore = defineStore('matchup', () => {
     
     //remove from watchlist
     server.toggle_watchlist(activeMatchup.value.id,onReceiveToggleWatchListResult);
-    
+    toggleActiveMatchUp(activeMatchup.value.id,activeMatchup.value.table);
   }
 
   function toggleActiveMatchUp(matchupId, tableName) {
@@ -118,8 +136,8 @@ export const useMatchupStore = defineStore('matchup', () => {
 
   function getMatchup(matchupId){
     //return matchup data if in maincard or prelims
-    console.log(`getMatchup.${matchupId}`);
-    console.log (Object.keys(mainCard.value));
+    // console.log(`getMatchup.${matchupId}`);
+    // console.log (Object.keys(mainCard.value));
     if (matchupId in mainCard.value){
       return mainCard.value[matchupId];
     }
