@@ -13,6 +13,7 @@ from ..models import *
 from ..forms import *
 import json
 
+PAGE_CACHE_DURATION = 60 * 2
 
 @require_GET
 def vueIndex(request):
@@ -21,6 +22,7 @@ def vueIndex(request):
     """
     return render(request, 'fightEvaluator/vue_index.html')
 
+@cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
 def get_event(request,eventId):
     resultSet = FightEvent.objects.filter(pk=eventId)
@@ -29,7 +31,7 @@ def get_event(request,eventId):
     event = resultSet[0]
     return aggregateAndParseEventMatchups(event)
 
-@cache_page(60 * 2)#only cache this since it does not change often
+@cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
 def vueAllEvents(request):
     events = []
@@ -99,6 +101,7 @@ def aggregateAndParseEventMatchups(event: FightEvent):
     result['prelimMatchups'] = prelimJSON
     return JsonResponse(result)
 
+@cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
 def vueFightEvent(request):
     #return the next fight event
@@ -111,6 +114,7 @@ def vueFightEvent(request):
     return JsonResponse({'No Event Upcoming':None})
 
 
+@cache_page(PAGE_CACHE_DURATION)
 @require_GET
 def vueAssessment(request,fighterId):
     
