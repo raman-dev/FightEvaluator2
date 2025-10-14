@@ -16,6 +16,7 @@ selenium = "*"
 pyquery = "*"
 rich = "*"
 django = "*"
+pymemcache = "*"
 
 [dev-packages]
 
