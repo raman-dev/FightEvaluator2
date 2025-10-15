@@ -3,6 +3,7 @@
 import { onMounted, ref, inject, watch } from 'vue';
 import { Transition } from 'vue';
 import SuggestionBox from './SuggestionBox.vue';
+import WeightClassSelector from './WeightClassSelector.vue';
 
 
 const emits = defineEmits(['editorClosing']);
@@ -26,7 +27,12 @@ const weightClass = ref('');
 const server = inject('server');
 
 function commitChanges() {
-
+    console.log("Committing changes...");
+    console.log("Fighter A:", selectedFighterA.value);
+    console.log("Fighter B:", selectedFighterB.value);
+    console.log("Rounds:", rounds.value);
+    console.log("Is Prelim:", isPrelim.value);
+    console.log("Weight Class:", weightClass.value);
 }
 
 function onClickBackground(event) {
@@ -125,7 +131,7 @@ watch(selectedFighterB, (newFighter,_) => {
               </div>
 
               <!--weight class-->
-              <div class="weightclass-selector my-4">
+              <!-- <div class="weightclass-selector my-4">
                 <div class="weightclass input-group mb-3">
                   <label class="input-group-text" for="weight-class-select">Weightclass</label>
                   <select class="form-select" id="weight-class-select" name="weight_class" v-model="weightClass">
@@ -141,7 +147,10 @@ watch(selectedFighterB, (newFighter,_) => {
                     <option value="heavyweight">Heavyweight</option>
                   </select>
                 </div>
-              </div>
+              </div> -->
+
+              <WeightClassSelector v-model:weightClass="weightClass">
+              </WeightClassSelector>
 
               <div class="rounds-isprelim-wrapper">
                 <!--rounds-->
@@ -239,9 +248,7 @@ watch(selectedFighterB, (newFighter,_) => {
     }
   }
 
-  .weightclass-selector {
-    width: fit-content;
-  }
+  
 
   .rounds-isprelim-wrapper {
     display: flex;
