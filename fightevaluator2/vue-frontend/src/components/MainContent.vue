@@ -48,10 +48,12 @@ onMounted(() => {
     -->
     <div class="container-fluid">
         <!--
+            
             contains 3 tables
             watchlist table
             maincard table
             prelims table
+
         -->
         <div class="title-container">
             <h3>

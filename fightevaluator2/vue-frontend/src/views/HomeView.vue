@@ -3,7 +3,7 @@
 import { ref, watch } from 'vue';
 import { useMatchupStore } from '@/stores/matchupStore.js';
 import Table from '@/components/matchup-tables/Table.vue';
-import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor.vue';
+import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor/MatchUpEditor.vue';
 import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue';
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
@@ -21,6 +21,7 @@ const watchListColumns = ['matchup', 'weightclass', 'rounds', 'analysis complete
     query api here
 */
 const matchUpEditorOpen = ref(false);
+const inEditMode = ref(false);
 
 const matchupStore = useMatchupStore();
 const matchupActionMenuStore = useMatchupActionMenuStore();
@@ -59,6 +60,12 @@ function showMatchupEditor(emptyEditor) {
     matchUpEditorOpen.value = true;
 }
 
+function onClickEdit(){
+    inEditMode.value = true;
+    showMatchupEditor();
+    menuOpen.value = false;
+}
+
 </script>
 <template>
 
@@ -90,8 +97,8 @@ function showMatchupEditor(emptyEditor) {
             </div>
         </div>
 
-        <MatchUpEditor v-model:open="matchUpEditorOpen"></MatchUpEditor>
-        <MatchUpActionMenu v-model:menu-position="menuPosition"></MatchUpActionMenu>
+        <MatchUpEditor v-model:open="matchUpEditorOpen" v-model:inEditMode="inEditMode"></MatchUpEditor>
+        <MatchUpActionMenu v-model:menu-position="menuPosition" @edit-matchup="onClickEdit"></MatchUpActionMenu>
     </div>
 
 </template>

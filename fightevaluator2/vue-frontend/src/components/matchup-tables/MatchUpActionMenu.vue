@@ -19,6 +19,8 @@ defineProps({
     }
 });
 
+const emit = defineEmits(['editMatchup']);
+
 function position () {
     const matchup = activeMatchup.value.matchup;
     const menu = menuRef.value;
@@ -103,7 +105,7 @@ function onEnter(menuContainer){
             </li>
 
             <li class="menu-list-item">
-                <div class="menu-item" >
+                <div class="menu-item" @click="emit('editMatchup')">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#5f6368">
                         <path
