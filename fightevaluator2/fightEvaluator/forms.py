@@ -92,7 +92,8 @@ class FighterForm(ModelForm):
 class MatchUpFormMF(ModelForm):
     class Meta:
         model = MatchUp
-        fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','inWatchList']
+        fields = "__all__"
+        # fields = ['fighter_a','fighter_b','weight_class','rounds','event','isprelim','inWatchList']
 
 class MatchUpUpdateForm(forms.Form):
     fighter_a_id = forms.IntegerField(label='Fighter A Id',required=False)

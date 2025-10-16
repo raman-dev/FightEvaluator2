@@ -10,9 +10,10 @@ import { storeToRefs } from 'pinia';
 import { useMatchupStore } from '@/stores/matchupStore';
 
 
-const emits = defineEmits(['editorClosing']);
+const emits = defineEmits(['editorClosing','editorClose']);
 const open = defineModel('open', { default: false });
 const inEditMode = defineModel('inEditMode', { default: false });
+
 
 const selectedFighterA = ref(null);
 const selectedFighterB = ref(null);
@@ -31,31 +32,45 @@ const weightClass = ref('');
 
 const server = inject('server');
 const matchupStore = useMatchupStore();
-const { activeMatchup,event } = storeToRefs(useMatchupStore());
+const { activeMatchup, event } = storeToRefs(useMatchupStore());
 
 function commitChanges() {
-  // console.log("Committing changes...");
-  // console.log("Fighter A:", selectedFighterA.value);
-  // console.log("Fighter B:", selectedFighterB.value);
-  // console.log("Rounds:", rounds.value);
-  // console.log("Is Prelim:", isPrelim.value);
-  // console.log("Weight Class:", weightClass.value);
+  const matchup = {
+    event: event.value.id,
+    fighter_a: selectedFighterA.value ? selectedFighterA.value.id : null,
+    fighter_b: selectedFighterB.value ? selectedFighterB.value.id : null,
+    rounds: rounds.value,
+    isprelim: isPrelim.value,
+    weight_class: weightClass.value
+  }
+  //check if any field is null or invalid
+  //and show alert
+  /*
+    NO ERROR CHECKING FOR NOW 
+    CHECK SERVER LOGS FOR ERRORS OR DEVELOPER CONSOLE
+  */
+  if (matchup.fighter_a == null || matchup.fighter_b == null) {
+    alert("Please select both fighters.");
+    return;
+  }
+  if (weightClass.value == "") {
+    alert("Please select a weight class.");
+    return;
+  }
+
   if (inEditMode.value) {
     //update existing matchup
     console.log("Updating existing matchup...");
+    //send entire matchup object
+    matchup['id'] = activeMatchup.value.matchup.id
+    matchupStore.updateMatchup(matchup);
   } else {
     //create new matchup
     console.log("Creating new matchup...");
-    const matchup = {
-      event: event.value.id,
-      fighter_a: selectedFighterA.value ? selectedFighterA.value.id : null,
-      fighter_b: selectedFighterB.value ? selectedFighterB.value.id : null,
-      rounds: rounds.value,
-      isprelim: isPrelim.value,
-      weight_class: weightClass.value
-    }
     matchupStore.createMatchup(matchup);
+    
   }
+  emits('editorClose');
 }
 
 function onClickBackground(event) {
@@ -128,7 +143,7 @@ watch(open, (isOpen, _) => {
       selectedFighterA.value = { id: matchup.fighter_a, name: matchup.fighter_a_name };
       selectedFighterB.value = { id: matchup.fighter_b, name: matchup.fighter_b_name };
     }
-  }else{
+  } else {
     console.log('matchup.Editor.closing');
     inEditMode.value = false;
     isPrelim.value = false;
@@ -199,9 +214,14 @@ watch(open, (isOpen, _) => {
         </form>
         <div class="editor-actions mt-3">
           <button type="button" class="btn btn-secondary mx-2 close-btn" @click="open = !open">Close</button>
-          <button type="button" class="btn btn-primary create-btn current-action submit-btn"
-            @click="commitChanges(true)">Create</button>
-          <button type="button" class="btn btn-primary save-btn submit-btn" @click="commitChanges(false)">Save</button>
+          <button type="button" class="btn btn-primary create-btn current-action submit-btn" @click="commitChanges(true)">
+            <span v-if="inEditMode === true">
+              Save
+            </span>
+            <span v-else>
+              Create
+            </span>
+          </button>
         </div>
       </div>
 

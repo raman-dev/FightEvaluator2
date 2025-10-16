@@ -66,6 +66,11 @@ function onClickEdit(){
     menuOpen.value = false;
 }
 
+function closeEditor(){
+    matchUpEditorOpen.value = false;
+    inEditMode.value = false;
+}
+
 </script>
 <template>
 
@@ -96,7 +101,7 @@ function onClickEdit(){
             </div>
         </div>
 
-        <MatchUpEditor v-model:open="matchUpEditorOpen" v-model:inEditMode="inEditMode"></MatchUpEditor>
+        <MatchUpEditor v-model:open="matchUpEditorOpen" v-model:inEditMode="inEditMode" @editor-close="closeEditor"></MatchUpEditor>
         <MatchUpActionMenu v-model:menu-position="menuPosition" @edit-matchup="onClickEdit"></MatchUpActionMenu>
     </div>
 

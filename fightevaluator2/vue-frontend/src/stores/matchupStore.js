@@ -14,13 +14,13 @@ export const useMatchupStore = defineStore('matchup', () => {
   const prelims = ref({});
   const watchlist = ref({});
 
-  const defaultActiveMatchup = {table:null,id:-1,matchup:null};
+  const defaultActiveMatchup = { table: null, id: -1, matchup: null };
   const activeMatchup = ref(defaultActiveMatchup);
 
   function onReceiveEvent(eventData) {
     console.log("Received event data: ", eventData.event.id);
     //do what populate event and matchups 
-    
+
     event.value = {};
     mainCard.value = {};
     prelims.value = {};
@@ -45,7 +45,7 @@ export const useMatchupStore = defineStore('matchup', () => {
     // console.log('watchlist',watchlist.value);
   }
 
-  function getTableByName (tableName){
+  function getTableByName(tableName) {
     if (tableName === 'MainCard') {
       return mainCard.value;
     } else if (tableName === 'Prelims') {
@@ -60,18 +60,18 @@ export const useMatchupStore = defineStore('matchup', () => {
     //if in watchlist is false
     //that means it was removed from watchlist
     //update watchlist table and active matchup if needed
-    
+
     const matchup = getMatchup(data.id);
     matchup.inWatchList = data.inWatchList;
-    if (matchup.inWatchList === true){
-      
+    if (matchup.inWatchList === true) {
+
       //create copy
       const copy = {};
       for (const key in matchup) {
         copy[key] = matchup[key];
       }
       watchlist.value[matchup.id] = copy;
-    }else{
+    } else {
       //remove from watchlist
       delete watchlist.value[matchup.id];
     }
@@ -80,42 +80,42 @@ export const useMatchupStore = defineStore('matchup', () => {
     activeMatchup.value = defaultActiveMatchup;
   }
 
-  function toggleWatchList(){
-    if (activeMatchup.value.id === -1 || activeMatchup.value.table === null){
+  function toggleWatchList() {
+    if (activeMatchup.value.id === -1 || activeMatchup.value.table === null) {
       // console.log ('no active matchup to toggle watchlist');
       return;
     }
-    
+
     //remove from watchlist
-    server.toggle_watchlist(activeMatchup.value.id,onReceiveToggleWatchListResult);
-    toggleActiveMatchUp(activeMatchup.value.id,activeMatchup.value.table);
+    server.toggle_watchlist(activeMatchup.value.id, onReceiveToggleWatchListResult);
+    toggleActiveMatchUp(activeMatchup.value.id, activeMatchup.value.table);
   }
 
   function toggleActiveMatchUp(matchupId, tableName) {
     let table = getTableByName(tableName);
     // console.log (matchupId,tableName,activeMatchup.value);
     //prev active is clicked again to deactive
-    if (activeMatchup.value.id === parseInt(matchupId) && activeMatchup.value.table === tableName){
-        //deactive and return
-        activeMatchup.value.id = -1;
-        activeMatchup.value.table = null;
-        activeMatchup.value.matchup = null;
-        table[matchupId].active = false;
-        return;
+    if (activeMatchup.value.id === parseInt(matchupId) && activeMatchup.value.table === tableName) {
+      //deactive and return
+      activeMatchup.value.id = -1;
+      activeMatchup.value.table = null;
+      activeMatchup.value.matchup = null;
+      table[matchupId].active = false;
+      return;
     }
     //any previous must be deactivated
-    if (activeMatchup.value.id != -1){
+    if (activeMatchup.value.id != -1) {
       //deactivate
       let oldActive = getTableByName(activeMatchup.value.table);
       oldActive[activeMatchup.value.id].active = false;
-      
+
       activeMatchup.value.table = null;
       activeMatchup.value.id = -1;
       activeMatchup.value.matchup = null;
     }
     let m = table[matchupId];
     m.active = !m.active;
-    if (m.active){
+    if (m.active) {
       activeMatchup.value.id = m.id;
       activeMatchup.value.table = tableName;
       activeMatchup.value.matchup = m;
@@ -127,53 +127,75 @@ export const useMatchupStore = defineStore('matchup', () => {
       console.log('fetching next event');
       server.get_next_event(onReceiveEvent);
       // onReceiveEvent(sampleFetchResult);
-    }else{
-      console.log ('fetching event-specific',eventId);
-      server.get_event(eventId,onReceiveEvent);
+    } else {
+      console.log('fetching event-specific', eventId);
+      server.get_event(eventId, onReceiveEvent);
       // onReceiveEvent(sampleFetchResult);
     }
   }
 
-  function getMatchup(matchupId){
+  function getMatchup(matchupId) {
     //return matchup data if in maincard or prelims
     // console.log(`getMatchup.${matchupId}`);
     // console.log (Object.keys(mainCard.value));
-    if (matchupId in mainCard.value){
+    if (matchupId in mainCard.value) {
       return mainCard.value[matchupId];
     }
 
-    if (matchupId in prelims.value){
+    if (matchupId in prelims.value) {
       return prelims.value[matchupId];
     }
 
     return null;
   }
 
-  function onCreateMatchupResult(data){
-    console.log("Created matchup result:",data);
+  function onCreateMatchupResult(data) {
+    console.log("Created matchup result:", data);
     const matchup = data;
-    if (matchup.isprelim === true){
+    if (matchup.isprelim === true) {
       prelims.value[matchup.id] = matchup;
-    }else {
+    } else {
       mainCard.value[matchup.id] = matchup;
     }
   }
 
-  function createMatchup(matchupData){
-    server.create_matchup(matchupData,onCreateMatchupResult);    
+  function createMatchup(matchupData) {
+    server.create_matchup(matchupData, onCreateMatchupResult);
   }
 
-  return { 
-    event, 
-    mainCard, 
-    prelims, 
-    watchlist, 
-    activeMatchup, 
-    fetchEvent, 
-    toggleActiveMatchUp, 
-    getMatchup, 
+  function onUpdateMatchupResult(data) {
+    console.log("Updated matchup result:", data);
+    const matchup = data;
+    let existing = null;
+    if (matchup.isprelim === true) {
+      existing = prelims.value[matchup.id];
+      //update existing fields with updated fields
+    } else {
+      existing = mainCard.value[matchup.id];
+    }
+    for (const key in matchup) {
+      if (key in existing) {
+        existing[key] = matchup[key];
+      }
+    }
+  }
+
+  function updateMatchup(matchupData) {
+    server.update_matchup(matchupData, onUpdateMatchupResult, matchupData.id);
+  }
+
+  return {
+    event,
+    mainCard,
+    prelims,
+    watchlist,
+    activeMatchup,
+    fetchEvent,
+    toggleActiveMatchUp,
+    getMatchup,
     toggleWatchList,
-    createMatchup
+    createMatchup,
+    updateMatchup
   }
 
 })

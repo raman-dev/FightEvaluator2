@@ -98,17 +98,24 @@ def update_matchup(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     inputBody = json.loads(request.body)
     
+    print(inputBody)
     matchupUpdateFormMF = MatchUpFormMF(inputBody,instance=matchup)
-    matchupUpdateForm = MatchUpForm(inputBody)
-    if matchupUpdateForm.is_valid():
-        matchup.fighter_a = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_a_id'])
-        matchup.fighter_b = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_b_id'])
-        matchup.weight_class = matchupUpdateForm.cleaned_data['weight_class']
-        matchup.rounds = matchupUpdateForm.cleaned_data['rounds']
-        matchup.isprelim = matchupUpdateForm.cleaned_data['isprelim']
-        matchup.save()
+    #not using modelform factory since i am sending entire matchup data
+    if matchupUpdateFormMF.is_valid():
+        print('matchup.form is valid')
+    # else:
+    #     print('matchup.form invalid',matchupUpdateFormMF.errors)
+    # matchupUpdateForm = MatchUpForm(inputBody)
+    # if matchupUpdateForm.is_valid():
+    #     matchup.fighter_a = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_a_id'])
+    #     matchup.fighter_b = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_b_id'])
+    #     matchup.weight_class = matchupUpdateForm.cleaned_data['weight_class']
+    #     matchup.rounds = matchupUpdateForm.cleaned_data['rounds']
+    #     matchup.isprelim = matchupUpdateForm.cleaned_data['isprelim']
+    #     matchup.save()
+        matchupUpdateFormMF.save()
     else:
-        return JsonResponse({"success":"false","errors":matchupUpdateForm.errors})
+        return JsonResponse({"success":"false","errors":matchupUpdateFormMF.errors})#matchupUpdateForm.errors})
 
     data = model_to_dict(matchup)
     data['fighter_a_name'] = matchup.fighter_a.name
