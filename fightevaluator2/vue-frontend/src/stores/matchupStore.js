@@ -149,6 +149,31 @@ export const useMatchupStore = defineStore('matchup', () => {
     return null;
   }
 
-  return { event, mainCard, prelims, watchlist, activeMatchup, fetchEvent, toggleActiveMatchUp, getMatchup, toggleWatchList }
+  function onCreateMatchupResult(data){
+    console.log("Created matchup result:",data);
+    const matchup = data;
+    if (matchup.isprelim === true){
+      prelims.value[matchup.id] = matchup;
+    }else {
+      mainCard.value[matchup.id] = matchup;
+    }
+  }
+
+  function createMatchup(matchupData){
+    server.create_matchup(matchupData,onCreateMatchupResult);    
+  }
+
+  return { 
+    event, 
+    mainCard, 
+    prelims, 
+    watchlist, 
+    activeMatchup, 
+    fetchEvent, 
+    toggleActiveMatchUp, 
+    getMatchup, 
+    toggleWatchList,
+    createMatchup
+  }
 
 })

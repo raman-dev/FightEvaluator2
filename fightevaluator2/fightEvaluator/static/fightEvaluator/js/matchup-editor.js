@@ -83,8 +83,8 @@ class MatchUpEditor{
       }
       //no is prelim key means main card
       formData.set('isprelim',formData.has('isprelim'));
-      formData.set('fighter_a_id',fighterA);
-      formData.set('fighter_b_id',fighterB);
+      formData.set('fighter_a',fighterA);
+      formData.set('fighter_b',fighterB);
       // formData.set('event_id',this.eventId);
       const requestData = {};
       for (const key of formData.keys()){
@@ -92,7 +92,7 @@ class MatchUpEditor{
         requestData[key] = formData.get(key);
       }
       //send to server 
-      requestData['event_id']=this.eventId;
+      requestData['event']=this.eventId;
       //process result
       console.log(requestData);
       if (createNew){

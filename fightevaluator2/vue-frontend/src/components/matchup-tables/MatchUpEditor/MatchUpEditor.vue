@@ -30,16 +30,32 @@ const isPrelim = ref(false);
 const weightClass = ref('');
 
 const server = inject('server');
-
-const { activeMatchup } = storeToRefs(useMatchupStore());
+const matchupStore = useMatchupStore();
+const { activeMatchup,event } = storeToRefs(useMatchupStore());
 
 function commitChanges() {
-  console.log("Committing changes...");
-  console.log("Fighter A:", selectedFighterA.value);
-  console.log("Fighter B:", selectedFighterB.value);
-  console.log("Rounds:", rounds.value);
-  console.log("Is Prelim:", isPrelim.value);
-  console.log("Weight Class:", weightClass.value);
+  // console.log("Committing changes...");
+  // console.log("Fighter A:", selectedFighterA.value);
+  // console.log("Fighter B:", selectedFighterB.value);
+  // console.log("Rounds:", rounds.value);
+  // console.log("Is Prelim:", isPrelim.value);
+  // console.log("Weight Class:", weightClass.value);
+  if (inEditMode.value) {
+    //update existing matchup
+    console.log("Updating existing matchup...");
+  } else {
+    //create new matchup
+    console.log("Creating new matchup...");
+    const matchup = {
+      event: event.value.id,
+      fighter_a: selectedFighterA.value ? selectedFighterA.value.id : null,
+      fighter_b: selectedFighterB.value ? selectedFighterB.value.id : null,
+      rounds: rounds.value,
+      isprelim: isPrelim.value,
+      weight_class: weightClass.value
+    }
+    matchupStore.createMatchup(matchup);
+  }
 }
 
 function onClickBackground(event) {

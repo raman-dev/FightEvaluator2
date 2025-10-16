@@ -56,23 +56,25 @@ def create_matchup(request):
     #convert body bytes to json object
     inputBody = json.loads(request.body)
     print(inputBody)
-    form = MatchUpForm(inputBody)#use django form object for data validation
+    # form = MatchUpForm(inputBody)#use django form object for data validation
+    form = MatchUpFormMF(inputBody)
     #takes a querydict class as input querydict is a subclass of dict so a normal dict will suffice
     #create matchup
     matchup = None
     if form.is_valid():
         print('form is valid')    
-        matchup = MatchUp(fighter_a=Fighter.objects.get(id=form.cleaned_data['fighter_a_id']),
-                          fighter_b=Fighter.objects.get(id=form.cleaned_data['fighter_b_id']),#get fighter object from id
-                          weight_class=form.cleaned_data['weight_class'],
-                          rounds=form.cleaned_data['rounds'])
-        if form.cleaned_data['event_id'] != None:
-            matchup.event = FightEvent.objects.get(id=form.cleaned_data['event_id'])
+        # matchup = MatchUp(fighter_a=Fighter.objects.get(id=form.cleaned_data['fighter_a_id']),
+        #                   fighter_b=Fighter.objects.get(id=form.cleaned_data['fighter_b_id']),#get fighter object from id
+        #                   weight_class=form.cleaned_data['weight_class'],
+        #                   rounds=form.cleaned_data['rounds'])
+        matchup = form.save()
+        # if form.cleaned_data['event_id'] != None:
+        #     matchup.event = FightEvent.objects.get(id=form.cleaned_data['event_id'])
             # matchup.scheduled = matchup.event.date
-        if form.cleaned_data['isprelim'] != None:
-            print('isprelim',form.cleaned_data['isprelim'])
-            matchup.isprelim = form.cleaned_data['isprelim']
-        matchup.save()
+        # if form.cleaned_data['isprelim'] != None:
+        #     print('isprelim',form.cleaned_data['isprelim'])
+        #     matchup.isprelim = form.cleaned_data['isprelim']
+        # matchup.save()
     else:
         #raise validation error
         print('invalid',form.errors)
@@ -96,6 +98,7 @@ def update_matchup(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
     inputBody = json.loads(request.body)
     
+    matchupUpdateFormMF = MatchUpFormMF(inputBody,instance=matchup)
     matchupUpdateForm = MatchUpForm(inputBody)
     if matchupUpdateForm.is_valid():
         matchup.fighter_a = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_a_id'])
