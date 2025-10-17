@@ -62,19 +62,8 @@ def create_matchup(request):
     #create matchup
     matchup = None
     if form.is_valid():
-        print('form is valid')    
-        # matchup = MatchUp(fighter_a=Fighter.objects.get(id=form.cleaned_data['fighter_a_id']),
-        #                   fighter_b=Fighter.objects.get(id=form.cleaned_data['fighter_b_id']),#get fighter object from id
-        #                   weight_class=form.cleaned_data['weight_class'],
-        #                   rounds=form.cleaned_data['rounds'])
+        print('form is valid')
         matchup = form.save()
-        # if form.cleaned_data['event_id'] != None:
-        #     matchup.event = FightEvent.objects.get(id=form.cleaned_data['event_id'])
-            # matchup.scheduled = matchup.event.date
-        # if form.cleaned_data['isprelim'] != None:
-        #     print('isprelim',form.cleaned_data['isprelim'])
-        #     matchup.isprelim = form.cleaned_data['isprelim']
-        # matchup.save()
     else:
         #raise validation error
         print('invalid',form.errors)
@@ -103,19 +92,9 @@ def update_matchup(request,matchupId):
     #not using modelform factory since i am sending entire matchup data
     if matchupUpdateFormMF.is_valid():
         print('matchup.form is valid')
-    # else:
-    #     print('matchup.form invalid',matchupUpdateFormMF.errors)
-    # matchupUpdateForm = MatchUpForm(inputBody)
-    # if matchupUpdateForm.is_valid():
-    #     matchup.fighter_a = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_a_id'])
-    #     matchup.fighter_b = Fighter.objects.get(id=matchupUpdateForm.cleaned_data['fighter_b_id'])
-    #     matchup.weight_class = matchupUpdateForm.cleaned_data['weight_class']
-    #     matchup.rounds = matchupUpdateForm.cleaned_data['rounds']
-    #     matchup.isprelim = matchupUpdateForm.cleaned_data['isprelim']
-    #     matchup.save()
         matchupUpdateFormMF.save()
     else:
-        return JsonResponse({"success":"false","errors":matchupUpdateFormMF.errors})#matchupUpdateForm.errors})
+        return JsonResponse({"success":"false","errors":matchupUpdateFormMF.errors},status=400)#matchupUpdateForm.errors})
 
     data = model_to_dict(matchup)
     data['fighter_a_name'] = matchup.fighter_a.name
