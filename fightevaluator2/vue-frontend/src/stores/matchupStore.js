@@ -184,6 +184,24 @@ export const useMatchupStore = defineStore('matchup', () => {
     server.update_matchup(matchupData, onUpdateMatchupResult, matchupData.id);
   }
 
+  function onReceiveMatchupDeleteResult(data){
+    console.log("Deleted matchup result:", data);
+    const matchupId = data.id;
+    if (matchupId in mainCard.value){
+      delete mainCard.value[matchupId];
+    }
+    if (matchupId in prelims.value){
+      delete prelims.value[matchupId];
+    }
+    if (matchupId in watchlist.value){
+      delete watchlist.value[matchupId];
+    }
+  }
+
+  function deleteMatchup(matchupId){
+    server.delete_matchup(matchupId,onReceiveMatchupDeleteResult)
+  }
+
   return {
     event,
     mainCard,
@@ -195,7 +213,8 @@ export const useMatchupStore = defineStore('matchup', () => {
     getMatchup,
     toggleWatchList,
     createMatchup,
-    updateMatchup
+    updateMatchup,
+    deleteMatchup
   }
 
 })

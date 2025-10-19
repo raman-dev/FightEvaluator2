@@ -8,6 +8,8 @@ class Server {
 
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
+      DELETE_MATCHUP:'/matchup/delete-matchup/',
+
       GET_MATCHUP:'/vue/matchups',
       TOGGLE_WATCHLIST:'/matchup/toggle-watchlist',
 
@@ -151,6 +153,17 @@ class Server {
         headers: Server.headers,
       })
       .then(response => response.json())
+      .then((data) => {
+        callback(data);
+      });
+    }
+
+    static async delete_matchup(matchupId,callback){
+      fetch(Server.URLS.DELETE_MATCHUP + `${matchupId}`, {
+        method: "DELETE",
+        headers: Server.headers,
+      })
+      .then (response => response.json())
       .then((data) => {
         callback(data);
       });

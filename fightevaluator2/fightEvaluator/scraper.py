@@ -39,7 +39,7 @@ def getPageSource(url):
     browser = webdriver.Chrome(options=options)
     try:
         browser.get(url)
-        time.sleep(3.25)
+        time.sleep(4.25)
         source = browser.page_source  # full page source if no error
         browser.quit()
         return source

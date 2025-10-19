@@ -1,15 +1,17 @@
 <script setup>
 
 import { ref, watch } from 'vue';
-import { useMatchupStore } from '@/stores/matchupStore.js';
-import Table from '@/components/matchup-tables/Table.vue';
-import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor/MatchUpEditor.vue';
-import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue';
+import { useMatchupStore } from '@/stores/matchupStore.js'; 
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute  } from 'vue-router';
-import TapologyButton from '@/components/TapologyButton.vue';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
+
+import TapologyButton from '@/components/TapologyButton.vue';
+import Table from '@/components/matchup-tables/Table.vue';
+import MatchUpEditor from '@/components/matchup-tables/MatchUpEditor/MatchUpEditor.vue';
+import MatchUpActionMenu from '@/components/matchup-tables/MatchUpActionMenu.vue';
+import ConfirmationDialog from '@/components/matchup-tables/ConfirmationDialog.vue';
 
 
 // const router = useRouter();
@@ -21,6 +23,7 @@ const watchListColumns = ['matchup', 'weightclass', 'rounds', 'analysis complete
     query api here
 */
 const matchUpEditorOpen = ref(false);
+const confirmationDialogOpen = ref(false);
 const inEditMode = ref(false);
 
 const matchupStore = useMatchupStore();
@@ -66,6 +69,12 @@ function onClickEdit(){
     menuOpen.value = false;
 }
 
+function onClickDelete() {
+    menuOpen.value = false;
+    confirmationDialogOpen.value = true;
+    console.log('onClickDelete called');
+}
+
 function closeEditor(){
     matchUpEditorOpen.value = false;
     inEditMode.value = false;
@@ -80,7 +89,7 @@ function closeEditor(){
                 {{ event.title }}
             </h3>
             
-            <TapologyButton :link="event.link"></TapologyButton>
+            <TapologyButton :link="event.link"><h2>test</h2></TapologyButton>
         </div>
 
         <div class="tables-wrapper">
@@ -101,8 +110,9 @@ function closeEditor(){
             </div>
         </div>
 
+        <ConfirmationDialog v-model:open="confirmationDialogOpen"> </ConfirmationDialog>
         <MatchUpEditor v-model:open="matchUpEditorOpen" v-model:inEditMode="inEditMode" @editor-close="closeEditor"></MatchUpEditor>
-        <MatchUpActionMenu v-model:menu-position="menuPosition" @edit-matchup="onClickEdit"></MatchUpActionMenu>
+        <MatchUpActionMenu v-model:menu-position="menuPosition" @edit-matchup="onClickEdit" @delete-matchup="onClickDelete"></MatchUpActionMenu>
     </div>
 
 </template>

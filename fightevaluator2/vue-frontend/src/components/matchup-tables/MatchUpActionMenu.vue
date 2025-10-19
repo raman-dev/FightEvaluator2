@@ -19,7 +19,7 @@ defineProps({
     }
 });
 
-const emit = defineEmits(['editMatchup']);
+const emit = defineEmits(['editMatchup','deleteMatchup']);
 
 function position () {
     const matchup = activeMatchup.value.matchup;
@@ -115,7 +115,7 @@ function onEnter(menuContainer){
                 </div>
             </li>
             <li class="menu-list-item">
-                <div class="menu-item delete-menu-item" >
+                <div class="menu-item delete-menu-item" @click="emit('deleteMatchup')">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#CC3323">
                         <path

@@ -78,9 +78,10 @@ def create_matchup(request):
 def delete_matchup(request,matchupId):
     # MatchUp.objects.filter(id=matchupId).delete()#delete matchup with id
     #get object 404 if not found
+    print('deleting matchup',matchupId)
     matchup = get_object_or_404(MatchUp,id=matchupId)
     matchup.delete()
-    return JsonResponse({"success":"true"})
+    return JsonResponse({"success":"true","id":matchupId})
 
 @require_http_methods(["PATCH"])
 def update_matchup(request,matchupId):
