@@ -22,6 +22,7 @@ class Server {
       MAKE_PICK : '/vue/matchups/pick',
       MAKE_PREDICTION:'/vue/analysis/make-prediction',
       GET_PREDICTIONS:'/vue/predictions/all',
+      GET_STATS :'/vue/predictions/stats',
     }
 
     //provide
@@ -65,6 +66,10 @@ class Server {
       })
       .then((response) => response.json())
       .then((data) => callback(data));
+    }
+
+    static async get_stats(callback){
+      Server.get(Server.URLS.GET_STATS,callback);
     }
 
     static async get_predictions (callback){

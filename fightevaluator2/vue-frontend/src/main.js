@@ -9,6 +9,8 @@ import server from './plugins/server.js';
 import formatFuncs from './plugins/formatFuncs.js';
 import attributeDefinitions from './plugins/attribute-definitions';
 
+import PredictionsView from './views/PredictionsView.vue';
+import { usePredictionsStore } from './stores/predictionsStore';
 import App from './App.vue';
 import './assets/fonts.scss';
 
@@ -17,8 +19,8 @@ function getCookie(name) {
     let cookies = raw.split(';');
     let cookieMap = {};
     for (const rawCookie of cookies) {
-        let [key,value] = rawCookie.split('=');
-        cookieMap[key.trim()]=value.trim();
+        let [key, value] = rawCookie.split('=');
+        cookieMap[key.trim()] = value.trim();
     }
 
     if (name in cookieMap) {
@@ -31,13 +33,25 @@ function getCookie(name) {
 
 const app = createApp(App)
 
-app.use(server,{
-    headers :{
+app.use(server, {
+    headers: {
         accept: "application/json",
         'Content-Type': 'application/json',
         'X-CSRFToken': getCookie('csrftoken'),
     }
 });
+
+function predictionLoader(){
+    const predictionStore = usePredictionsStore();
+    predictionStore.getStats();
+    predictionStore.getPredictions();
+}
+
+router.addRoute({
+    path: '/v-predictions', name: 'predictions',
+    component: PredictionsView,
+    beforeEnter: predictionLoader
+})
 
 app.use(formatFuncs);
 app.use(attributeDefinitions);

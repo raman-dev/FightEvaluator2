@@ -1,15 +1,30 @@
 <script setup>
-import { usePredictionStore } from '@/stores/predictionsStore';
-import { onMounted } from 'vue';
+import PredictionStats from "@/components/predictions/PredictionStats.vue";
+import PredictionTable from "@/components/predictions/PredictionTable.vue";
+import { storeToRefs } from "pinia";
+import { usePredictionsStore } from "@/stores/predictionsStore";
+
+import { onMounted, ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
 
 
-const predictionStore = usePredictionStore();
+const predictionsStore = usePredictionsStore();
+const { stats,eventPredictions  } = storeToRefs(predictionsStore);
 
-onMounted(()=>{
-    predictionStore.getPredictions();
-});
+//only for parameter changes
+// onBeforeRouteUpdate((to, from) => {
+//     console.log ("Route updated, fetching predictions...");
+//     // predictionsStore.getStats();
+//     // predictionsStore.getPredictions();
+// });
+
 </script>
 
 <template>
-    <h1>predictions</h1>
+  <div class="prediction-table-container container-fluid py-2">
+    <PredictionStats :stats="stats" />
+    <PredictionTable :eventPredictions="eventPredictions" />
+  </div>
 </template>
+
+

@@ -129,12 +129,20 @@ def publishResults(request):
         prediction.save()
     return JsonResponse({"hello":"world"})
 
+
 def getStats():
     stats = {}
     stats['general'] = Stat.objects.filter(type=Stat.StatTypes.general)
     stats['fight_outcome'] = Stat.objects.filter(type=Stat.StatTypes.fight_outcome).order_by("-ratio")
     
     return stats
+
+@require_GET
+def getStatsJson(request):
+    stats = getStats()
+    general  = [model_to_dict(s) for s in stats['general']]
+    fight_outcome = [model_to_dict(s) for s in stats['fight_outcome']]
+    return JsonResponse({'general': general,'fight_outcome':fight_outcome})
 
 def calculate_stats():
     """

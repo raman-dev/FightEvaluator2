@@ -34,10 +34,10 @@ const router = createRouter({
             path:'/v-assessment/:fighterId', name:'assessment',
             component: AssessmentView
         },
-        {
-            path:'/v-predictions',name:'predictions',
-            component: PredictionsView
-        }
+        // {
+        //     path:'/v-predictions',name:'predictions',
+        //     component: PredictionsView, 
+        // }
         
     ]
 })
