@@ -191,6 +191,7 @@ def updateMatchUpEventPrediction(request):
     if eventPredictionForm.is_valid():
         fighterId = eventPredictionForm.cleaned_data['fighterId']
         eventType = eventPredictionForm.cleaned_data['eventType']
+        #special value received to unset prediction
         if (fighterId == 0 and eventType == "NA"):
             #unset the prediction
             currentPrediction = Prediction.objects.filter(matchup=matchup).first()
@@ -204,6 +205,7 @@ def updateMatchUpEventPrediction(request):
             #fighter specific event
             fighter = Fighter.objects.get(id=fighterId)
             eventLikelihood = eventLikelihood.filter(fighter=fighter).first()
+            #make eventlikelihood if doesn't exist since prediction.eventlikelihood is non nullable
             if eventLikelihood == None:
                 eventLikelihood = EventLikelihood(matchup=matchup,
                                                   fighter=fighter,
