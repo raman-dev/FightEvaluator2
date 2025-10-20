@@ -237,10 +237,10 @@ class Pick(models.Model):
 class Prediction(models.Model):
 
     matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE)
-    prediction = models.ForeignKey('EventLikelihood',on_delete=models.SET_NULL,default=None,null=True,blank=True)
+    prediction = models.ForeignKey('EventLikelihood',on_delete=models.CASCADE,default=None,null=True,blank=True)
     isGamble = models.BooleanField(default=False) #if the prediction is a gamble or an prediction based on analysis
     isCorrect = models.BooleanField(default=None,null=True,blank=True)
-     #i would need to add an event column here to cleanly specify what event this prediction is for
+     #i would need to add an event column here to decouple prediction from pick
 #     pick = models.CharField(choices=Event.choices,max_length=256,default=None)
     def __str__(self):
         #return what event is predicted and the likelihood

@@ -199,35 +199,22 @@ def updateMatchUpEventPrediction(request):
                 currentPrediction.delete()
             return JsonResponse({"success":"true"})
         
-        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType)
-        currentPrediction = Prediction.objects.filter(matchup=matchup).first()
+        fighter = None
         if fighterId != 0:
-            #fighter specific event
-            fighter = Fighter.objects.get(id=fighterId)
-            eventLikelihood = eventLikelihood.filter(fighter=fighter).first()
-            #make eventlikelihood if doesn't exist since prediction.eventlikelihood is non nullable
-            if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,
-                                                  fighter=fighter,
-                                                  event=Event[eventType],
-                                                  eventType=eventType, 
-                                                  likelihood = Likelihood.NEUTRAL)
-                eventLikelihood.save()
-        else:
-            #general event
-            eventLikelihood = eventLikelihood.first()
-            if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,
-                                                  event=Event[eventType],
-                                                  eventType=eventType,
-                                                  likelihood=Likelihood.NEUTRAL)
-                eventLikelihood.save()
+            Fighter.objects.get(id=fighterId)
+        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType,fighter=fighter).first()
+        currentPrediction = Prediction.objects.filter(matchup=matchup).first()
+        
+        if eventLikelihood == None:
+            #create new event likelihood
+            eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType, likelihood = Likelihood.NEUTRAL)
+            eventLikelihood.save()
+        
         if currentPrediction == None:
             currentPrediction = Prediction(matchup=matchup,prediction=eventLikelihood)
-            currentPrediction.save()
         else:
             currentPrediction.prediction = eventLikelihood
-            currentPrediction.save()
+        currentPrediction.save()
         return JsonResponse({'eventType':currentPrediction.prediction.eventType,
                              'fighterId':fighterId})
     return JsonResponse({"success":"false","errors":eventPredictionForm.errors})
