@@ -1,4 +1,5 @@
 <script setup>
+import { inject } from 'vue';
 defineProps({
     eventPredictions: {
         type: Object,
@@ -16,14 +17,16 @@ const resultText = (isCorrect) => {
     if (isCorrect === null || isCorrect === undefined) return "tbd";
     return isCorrect ? "True" : "False";
 };
+
+const likelihoodLabelMap = inject('likelihoodLabelMap');
 </script>
 
 <template>
-    <div v-for="(predictions, eventIndex) in eventPredictions" :key="eventIndex" class="prediction-table row flex-column">
+    <div v-for="(data, eventIndex) in eventPredictions" :key="eventIndex" class="prediction-table row flex-column">
         <div
             class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
-            <p class="m-0">{{ predictions.event.date }}</p>
-            <p class="m-0 text-end">{{ predictions.event.title }}</p>
+            <p class="m-0">{{ data.event.date }}</p>
+            <p class="m-0 text-end">{{ data.event.title }}</p>
         </div>
 
         <ul class="mx-auto my-0 px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
@@ -44,31 +47,31 @@ const resultText = (isCorrect) => {
                 </div>
             </li>
 
-            <li v-for="(data, index) in predictions.items" :key="index" tabindex="index" class="data-row my-2"
-                :data-prediction="data.prediction.predictionDisplay" :data-result="data.isCorrect"
-                :data-likelihood="data.prediction.likelihood" :data-event="data.matchup.event.title">
+            <li v-for="(prediction, index) in data.predictions" :key="index" tabindex="index" class="data-row my-2"
+                :data-prediction="prediction.type" :data-result="prediction.isCorrect"
+                :data-likelihood="prediction.likelihood" :data-event="prediction.matchup">
                 <div class="row">
-                    <div class="col col-4 d-flex align-items-center">{{ data.matchup.title }}</div>
-                    <div class="col col-4 d-flex align-items-center">{{ data.prediction.predictionDisplay }}</div>
+                    <div class="col col-4 d-flex align-items-center">{{ prediction.matchup }}</div>
+                    <div class="col col-4 d-flex align-items-center">{{ prediction.type_label }}</div>
                     <div class="col col-1 data-result d-flex align-items-center">
-                        <p class="mx-auto" :class="resultClass(data.isCorrect)">
-                            {{ resultText(data.isCorrect) }}
+                        <p class="mx-auto" :class="resultClass(prediction.correct)">
+                            {{ resultText(prediction.correct) }}
                         </p>
                     </div>
                     <div class="col col-3 d-flex align-items-center justify-content-end likelihood">
-                        <p class="confidence" :class="'likely-' + data.prediction.likelihood">
-                            very likely
+                        <p class="confidence" :class="'likely-' + prediction.likelihood">
+                            {{ likelihoodLabelMap[prediction.likelihood] }}
                         </p>
                     </div>
                 </div>
             </li>
         </ul>
 
-        <div v-if="!predictions.event.hasResults"
+        <!-- <div v-if="!predictions.event.hasResults"
             class="fetch-results-wrapper mx-auto d-flex align-items-center justify-content-end col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
             <p class="m-0">Results Available!</p>
             <button class="m-0 btn btn-primary">Fetch</button>
-        </div>
+        </div> -->
     </div>
 </template>
 

@@ -22,6 +22,10 @@ function dobToAge(dobString) {
     return age;
 }
 
+function toPercent(value, decimals = 2){
+    if (isNaN(value)) return "N/A";
+    return (value * 100).toFixed(decimals) + "%";
+}
 
 function inchesToFeetStr(inches) {
     return `${Math.floor(inches / 12)}'${inches % 12}`;
@@ -33,5 +37,6 @@ export default {
     app.provide('replaceUnderscoreSpace',replaceUnderscoreSpace);
     app.provide('dobToAge',dobToAge);
     app.provide('inchesToFeetStr',inchesToFeetStr);
+    app.provide('toPercent',toPercent);
   }
 }

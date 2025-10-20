@@ -1,4 +1,5 @@
 <script setup>
+import { inject } from 'vue';
 defineProps({
   stats: {
     type: Object,
@@ -6,6 +7,7 @@ defineProps({
   }
 });
 
+const toPercent = inject('toPercent');
 const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 </script>
 
@@ -23,7 +25,7 @@ const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
       </div>
       <div class="row">
         <div class="col stat-label">Accuracy</div>
-        <div class="col"><strong>{{ stat.ratio_percent }}</strong></div>
+        <div class="col"><strong>{{ toPercent(stat.ratio) }}</strong></div>
       </div>
     </div>
 
@@ -42,7 +44,7 @@ const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
         </div>
         <div class="prediction-type-stat d-flex justify-content-between">
           <span class="stat-label">accuracy</span>
-          <span class="stat-val"><strong>{{ stat.ratio_percent }}</strong></span>
+          <span class="stat-val"><strong>{{ toPercent(stat.ratio) }}</strong></span>
         </div>
       </div>
     </div>

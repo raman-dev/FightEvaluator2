@@ -11,7 +11,10 @@ from rich import print as rprint
 
 from datetime import datetime
 
-@cache_page(60* 2)  # Cache the view for 2 mins
+CACHE_DURATION = 60 * 2
+PREDICTIONS_CACHE_DURATION = 60 * 15
+
+@cache_page(CACHE_DURATION)  # Cache the view for 2 mins
 @require_GET
 def predictions(request):
     """
@@ -53,7 +56,7 @@ def predictions(request):
         })
 
 
-@cache_page(60* 2)  # Cache the view for 15 minutes
+@cache_page(PREDICTIONS_CACHE_DURATION)  # Cache the view for 15 minutes
 @require_GET
 def getPredictions(request):
     
@@ -137,6 +140,7 @@ def getStats():
     
     return stats
 
+@cache_page(CACHE_DURATION)
 @require_GET
 def getStatsJson(request):
     stats = getStats()

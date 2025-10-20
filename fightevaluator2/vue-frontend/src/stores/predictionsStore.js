@@ -6,14 +6,7 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
     // const predictions = ref({});
 
     const eventPredictions = ref([]);
-    const stats = ref({
-        general: [
-            { count: 10, total: 15, ratio_percent: "66%" }
-        ],
-        fight_outcome: [
-            { label: "ko", count: 5, total: 8, ratio_percent: "62%" }
-        ]
-    });
+    const stats = ref({});
 
     function onReceivePredictions(data) {
         console.log ("Received predictions:", data.predictions);
@@ -21,17 +14,17 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
     }
 
     function onReceiveStats(data) {
-        console.log ("Received stats:", data.stats);
-        for (const [key, value] of Object.entries(data.stats)) {
-            stats.value[key] = value;
+        console.log ("Received stats:", data);
+        for (const [key, value] of Object.entries(data)) {
+            stats.value[key] = value; 
         }
     }
 
-    function getPredictions() {
+    async function getPredictions() {
         server.get_predictions(onReceivePredictions);
     }
 
-    function getStats(){
+    async function getStats(){
         server.get_stats(onReceiveStats);
     }
 
