@@ -135,38 +135,33 @@ def updateMatchUpEventLikelihood(request):
         justification = eventLikelihoodForm.cleaned_data['justification']
         #if fighterId is valid this is a fighter specific event
         #else it is a general event which are unique for each matchup
+        fighter = None 
+        #grab fighter object if needed and filter queryset
         if fighterId != 0:
             fighter = Fighter.objects.get(id=fighterId)
-            eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,fighter=fighter,eventType=eventType).first()
-            if eventLikelihood == None:
-                eventLikelihood = EventLikelihood(matchup=matchup,fighter=fighter,event=Event[eventType],eventType=eventType)
-                eventLikelihood.save()
-            eventLikelihood.likelihood = likelihood
-            eventLikelihood.justification = justification
-            eventLikelihood.save()
-            return JsonResponse({
-                'id':eventLikelihood.id,
-                'eventType':eventLikelihood.eventType,
-                'likelihood':eventLikelihood.likelihood,
-                'likelihood_display':eventLikelihood.get_likelihood_display(),
-                'justification':eventLikelihood.justification,
-                'fighterId':eventLikelihood.fighter.id
-            })
-        #general event
-        eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType).first()
+        #fighter attribute is nullable and default null in eventlikelihood model so we can filter on it directly 
+        eventLikelihoodQset = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType,fighter=fighter)
+        eventLikelihood = eventLikelihoodQset.first()
+
+        #create if doesn't exist
         if eventLikelihood == None:
-            eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType)
+            eventLikelihood = EventLikelihood(matchup=matchup,event=Event[eventType],eventType=eventType,fighter=fighter)
             eventLikelihood.save()
         eventLikelihood.likelihood = likelihood
         eventLikelihood.justification = justification
         eventLikelihood.save()
-        return JsonResponse({
+
+        result = {
             'id':eventLikelihood.id,
             'eventType':eventLikelihood.eventType,
             'likelihood':eventLikelihood.likelihood,
             'justification':eventLikelihood.justification,
             'likelihood_display':eventLikelihood.get_likelihood_display(),
-        })
+        }
+        if fighter != None:
+            result['fighterId'] = fighter.id
+        #non fighter specific event
+        return JsonResponse(result)
     return JsonResponse({"success":"false","errors":eventLikelihoodForm.errors})
 
 @require_http_methods(["PUT"])
