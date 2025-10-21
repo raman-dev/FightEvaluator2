@@ -7,6 +7,8 @@ defineProps({
     }
 });
 
+const abbreviatedDateFormat = inject('abbreviatedDateFormat');
+
 const resultClass = (isCorrect) => {
     if (isCorrect === true) return "data-correct";
     if (isCorrect === false) return "data-incorrect";
@@ -25,7 +27,7 @@ const likelihoodLabelMap = inject('likelihoodLabelMap');
     <div v-for="(data, eventIndex) in eventPredictions" :key="eventIndex" class="prediction-table row flex-column">
         <div
             class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
-            <p class="m-0">{{ data.event.date }}</p>
+            <p class="m-0">{{ abbreviatedDateFormat(data.event.date) }}</p>
             <p class="m-0 text-end">{{ data.event.title }}</p>
         </div>
 

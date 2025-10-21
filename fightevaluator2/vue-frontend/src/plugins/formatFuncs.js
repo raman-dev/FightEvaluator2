@@ -22,6 +22,29 @@ function dobToAge(dobString) {
     return age;
 }
 
+/**
+ * 
+ * @param {*} dateString in the format "YYYY-MM-DD"
+ * @returns Month name abbreviated Day, Year (e.g., "Jan. 5, 2020")
+ */
+function abbreviatedDateFormat(dateString) {
+  // Parse the input string as a Date object
+  const date = new Date(dateString);
+
+  // Array of abbreviated month names
+  const months = ["Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", 
+                  "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
+
+  // Extract parts
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  // Construct formatted string
+  return `${month} ${day}, ${year}`;
+}
+
+
 function toPercent(value, decimals = 2){
     if (isNaN(value)) return "N/A";
     return (value * 100).toFixed(decimals) + "%";
@@ -38,5 +61,6 @@ export default {
     app.provide('dobToAge',dobToAge);
     app.provide('inchesToFeetStr',inchesToFeetStr);
     app.provide('toPercent',toPercent);
+    app.provide('abbreviatedDateFormat',abbreviatedDateFormat);
   }
 }
