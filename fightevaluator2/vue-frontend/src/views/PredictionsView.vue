@@ -9,7 +9,7 @@ import { onBeforeRouteUpdate } from "vue-router";
 
 
 const predictionsStore = usePredictionsStore();
-const { stats,eventPredictions  } = storeToRefs(predictionsStore);
+const { stats,eventPredictions,eventPredictionsByYearMonth  } = storeToRefs(predictionsStore);
 
 //only for parameter changes
 // onBeforeRouteUpdate((to, from) => {
@@ -23,7 +23,10 @@ const { stats,eventPredictions  } = storeToRefs(predictionsStore);
 <template>
   <div class="prediction-table-container container-fluid py-2">
     <PredictionStats :stats="stats" />
-    <PredictionTable :eventPredictions="eventPredictions" />
+    <PredictionTable 
+    :eventPredictions="eventPredictions"
+    :eventPredictionsByYearMonth="eventPredictionsByYearMonth"
+    />
   </div>
 </template>
 

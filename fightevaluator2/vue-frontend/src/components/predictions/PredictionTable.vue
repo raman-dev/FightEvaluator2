@@ -4,6 +4,10 @@ defineProps({
     eventPredictions: {
         type: Object,
         required: true
+    },
+    eventPredictionsByYearMonth:{
+        required: true,
+        type: Object
     }
 });
 
@@ -24,6 +28,15 @@ const likelihoodLabelMap = inject('likelihoodLabelMap');
 </script>
 
 <template>
+    <div class="nav nav-pills" id="yearTabs" role="tablist">
+        <template v-for="(year, index) in Object.keys(eventPredictionsByYearMonth)" :key="index">
+            <button class="nav-link" :class="{ 'active': index == 0 }" :id="'nav-' + year + '-tab'" data-bs-toggle="tab"
+                :data-bs-target="'#' + year + '-tab-pane'" type="button" role="tab" :aria-controls="'nav-' + year"
+                aria-selected="true">
+                <h5 class="m-0">{{ year }}</h5>
+            </button>
+        </template>
+    </div>
     <div v-for="(data, eventIndex) in eventPredictions" :key="eventIndex" class="prediction-table row flex-column">
         <div
             class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
