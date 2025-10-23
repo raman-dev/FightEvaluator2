@@ -13,7 +13,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:likelihood", "update:justification"]);
 
-const likelihood = defineModel("likelihood", {
+const serverLikelihood = defineModel("likelihood", {
     type: Number,
     required: false,
     default: 3,
@@ -33,16 +33,22 @@ const changed = ref(false);
 const justificationRef = ref('justificationRef');
 
 const matchupDetailStore = useMatchupDetailStore();
+// todo use predictions ref from store
+// const { predictions } = storeToRefs(matchupDetailStore);
 
 
 function onChangeLikelihood(val) {
     // console.log('val,likelihood.val',val,likelihood.value);
-    changed.value ||= likelihood.value !== val;
+    changed.value = serverLikelihood.value !== val;
 }
 
 function updateJustification(e) {
     justification.value = e.target.innerText;
-    changed.value ||=  justification.value !== serverJustification.value;
+
+    console.log ('justification.value',justification.value);
+    console.log ('serverJustification.value',serverJustification.value);
+    console.log('\n');
+    changed.value = justification.value !== serverJustification.value;
     autoResize(e.target);
 }
 
@@ -51,7 +57,6 @@ function autoResize(el) {
   el.style.height = "auto"                // reset so it can shrink
   el.style.height = el.scrollHeight + "px" // grow to fit text
 }
-
 
 function updateOutcomePrediction() {
     if (changed.value === true){
@@ -73,14 +78,14 @@ function updateOutcomePrediction() {
 }
 
 onMounted(() => {
-    selectorLikelihood.value = likelihood.value;
+    selectorLikelihood.value = serverLikelihood.value;
     if (serverJustification.value.length > 0){
         justification.value = serverJustification.value;
     }
     
 });
 
-watch (likelihood, (newVal, oldVal) => {
+watch (serverLikelihood, (newVal, oldVal) => {
     selectorLikelihood.value = newVal;
 });
 
@@ -99,7 +104,7 @@ t();
 <template>
     <div class="outcome-card event-card col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-2">
         <div class="outcome event" :data-event-type="event" data-id="0"
-            :data-likelihood="likelihood">
+            :data-likelihood="serverLikelihood">
             <div class="wrapper">
                 <h6 v-if="event === 'WIN'">Win</h6>
                 <h6 v-else>Yes</h6>
@@ -122,7 +127,7 @@ t();
 
             <!-- Confidence Selector -->
             <ConfidenceSelector 
-                v-model:server-likelihood="likelihood" 
+                :server-likelihood="serverLikelihood" 
                 v-model:selector-likelihood="selectorLikelihood" 
                 @update-likelihood="onChangeLikelihood" 
                 v-model:show-confidence-list="showConfidenceList"

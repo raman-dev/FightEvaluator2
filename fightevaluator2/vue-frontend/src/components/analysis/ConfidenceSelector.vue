@@ -1,14 +1,20 @@
 <script setup>
-import { ref, useTemplateRef, watch } from "vue";
+import { onMounted, ref, useTemplateRef, watch } from "vue";
 
 const showConfidenceList = defineModel('showConfidenceList',{ type: Boolean, required: false, default: false });
 
 const emit = defineEmits(["updateLikelihood"]);
 
-const serverLikelihood = defineModel('serverLikelihood',{ type: Number, required: false,default: 3 });
-const selectorLikelihood = defineModel('selectorLikelihood',{ type: Number, required: false,default: 3 })
+const props = defineProps({
+  serverLikelihood: { type: Number, required: false, default: 3 },
+});
 
-// const showConfidenceList = ref(false);
+// const serverLikelihood = defineModel('serverLikelihood',{ type: Number, required: false,default: 3 });
+const selectorLikelihood = defineModel('selectorLikelihood',
+{ type: Number, 
+  required: false,
+  default: 3 })
+
 
 const wrapperRef = useTemplateRef('wrapperRef');
 const confidenceSelectorRef = useTemplateRef('confidenceSelectorRef');
@@ -19,11 +25,15 @@ function selectLikelihood(n) {
   emit("updateLikelihood", n);
 }
 
-watch (serverLikelihood,(newVal,oldVal)=>{
-  if (newVal !== oldVal){
-    selectorLikelihood.value = newVal;
-  }
-},{immediate:true});
+onMounted(()=>{
+  selectorLikelihood.value = props.serverLikelihood;
+});
+
+// watch (serverLikelihood,(newVal,oldVal)=>{
+//   if (newVal !== oldVal){
+//     selectorLikelihood.value = newVal;
+//   }
+// },{immediate:true});
 
 
 
