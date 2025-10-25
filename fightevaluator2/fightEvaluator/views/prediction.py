@@ -37,6 +37,7 @@ def predictions(request):
             
 
     """
+    print("predictions.view.running")
     # calculate_stats()
     events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
     # years = Prediction.objects.annotate(year=ExtractYear('matchup__event__date')).values('year').distinct()#query set of years of predictions
@@ -60,7 +61,7 @@ def predictions(request):
 @require_GET
 def getPredictions(request):
     
-    print("Running predictions view")
+    print("getPredictions.view.running")
     predictions = []
     """
 
@@ -171,6 +172,7 @@ def calculate_stats():
         
     """
     #fight outcome events
+    print('Calculating stats...')
     outcomeStatObjs = Stat.objects.filter(type=Stat.StatTypes.fight_outcome)
     for event_name in Event.names:
         #if we have

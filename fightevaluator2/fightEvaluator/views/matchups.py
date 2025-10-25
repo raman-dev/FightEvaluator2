@@ -201,8 +201,9 @@ def updateMatchUpEventPrediction(request):
         
         fighter = None
         if fighterId != 0:
-            Fighter.objects.get(id=fighterId)
+            fighter = Fighter.objects.get(id=fighterId)
         eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType,fighter=fighter).first()
+        
         currentPrediction = Prediction.objects.filter(matchup=matchup).first()
         
         if eventLikelihood == None:
