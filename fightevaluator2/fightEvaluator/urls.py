@@ -69,4 +69,7 @@ urlpatterns = [
     path('vue/analysis/make-prediction/<int:matchupId>',views.makePrediction,name='vue-make-prediction'),
     path('vue/predictions/all',views.getPredictions,name='vue-all-predictions'),
     path('vue/predictions/stats',views.getStatsJson,name='vue-prediction-stats'),
+
+    # path('scrapy-test',views.scrapy_test,name='scrapy-test'),
+    path ('scrapy-start',views.scrapy_start,name='scrapy-start')
 ]

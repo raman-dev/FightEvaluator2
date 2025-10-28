@@ -17,6 +17,7 @@ pyquery = "*"
 rich = "*"
 django = "*"
 pymemcache = "*"
+scrapy = "*"
 
 [dev-packages]
 

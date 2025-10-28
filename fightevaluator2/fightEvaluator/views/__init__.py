@@ -8,3 +8,4 @@ from .profit import *
 from .test_view import *
 from .vue_index import *
 from .cache_test import *
+from .scrapy_view import *
