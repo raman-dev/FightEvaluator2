@@ -36,9 +36,9 @@ def WorkerThreadControlFunction():
             matchup['scheduled'] = nextEvent.date
             # print(matchup)
             matchupForm = MatchUpFormMF(matchup)
-            if not matchupForm.is_valid():
-                return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
-            matchupForm.save()
+            if matchupForm.is_valid():#save all that are valid 
+                # return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
+                matchupForm.save()
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
     fightEventDataState.staleOrEmpty = False
     fightEventDataState.updating = False
@@ -99,7 +99,7 @@ def index(request):
         fightEventDataState.staleOrEmpty = True
         fightEventDataState.save()
 
-    if fightEventDataState.staleOrEmpty:
+    if fightEventDataState.staleOrEmpty == True:
         print('EVENT IS STALE OR EMPTY')
         #compare current date and next event date
         fightEventDataState.updating=True
