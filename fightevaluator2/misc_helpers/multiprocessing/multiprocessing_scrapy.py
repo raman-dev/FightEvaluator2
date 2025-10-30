@@ -92,6 +92,8 @@ def testFunc():
     printProcessInfo()
     return 456
 
+#thread function that launches a process pool
+#write 
 def launchScrapyWithProcessPool():
     with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
         future = executor.submit(testFunc)
