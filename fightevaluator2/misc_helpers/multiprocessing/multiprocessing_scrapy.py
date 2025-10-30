@@ -33,15 +33,14 @@ def printProcessInfo(sleep=None):
 class MySpider(scrapy.Spider):
     name="multiSpider"
     start_urls = ["http://ufcstats.com/statistics/events/completed"]
-    results = []
+    results = {}
     
     def parse(self,response: HtmlResponse):
         # printProcessInfo()
         # print(response.headers)
-        self.results.append({
-            'headers':response.headers,
-            'text':response.text
-        })
+        self.results ['headers'] = response.headers,
+        self.results ['text']= response.text
+
 
 #do what here create a seperate process that starts scrapy and uses scrapy
 # if __name__ == "__main__":
@@ -58,9 +57,9 @@ def startCrawlerProcess(spider: scrapy.Spider):
 
     process.crawl(spider)
     process.start()
-    print(spider.results)
-    print("Scrapy process finished")
-    printProcessInfo()
+    return spider.results
+    # print("Scrapy process finished")
+    # printProcessInfo()
 
 # Example usage start a crawler process with a given spider
 # startCrawlerProcess(MySpider)
@@ -76,6 +75,13 @@ def startCrawlerProcess(spider: scrapy.Spider):
                                                                            |---------pipe/queue------------|
 
 
+                                                                           
+    working solution
+        launch thread
+            use processpoolexecutor perform scraping or whatever
+            thread receives result
+            modify db if needed to 
+    
 """
 
 
@@ -96,8 +102,10 @@ def testFunc():
 #write 
 def launchScrapyWithProcessPool():
     with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(testFunc)
-        print(future.result())
+        # future = executor.submit(testFunc)
+        future = executor.submit(startCrawlerProcess,MySpider)
+        result = future.result()
+        print(result)
 
 def launchProcessFromThread():
     t = threading.Thread(target=launchScrapyWithProcessPool,args=())
