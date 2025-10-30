@@ -22,6 +22,28 @@ from datetime import datetime
 WorkerThread = None
 globalCounter = 0
 
+
+def ScrapyControlFunction():
+    """
+        do what here
+        launch a scrapy process with a pool
+            scrapy process
+                query fight event for page source
+                break into matchups with fighter links and names
+                return to thread
+            if all fighters of matchups in db
+                save all matchups with corresponding fighter objects
+            else:
+                queue list of unknown fighters
+                launch scrapy process to fetch fighter data
+                    return fighter info to thread
+                create fighter objects
+                save all matchups with corresponding fighter objects  
+
+            complete
+    """
+    pass
+
 def WorkerThreadControlFunction():
     
     print('WorkerThread running....')
