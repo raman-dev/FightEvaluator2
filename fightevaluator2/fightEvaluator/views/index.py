@@ -23,6 +23,11 @@ WorkerThread = None
 globalCounter = 0
 
 
+def ScrapyThreadLaunch():
+    pass
+
+#thread launches scrapy process
+#and waits for it to complete
 def ScrapyControlFunction():
     """
         do what here
