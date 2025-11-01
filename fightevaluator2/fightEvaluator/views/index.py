@@ -29,6 +29,7 @@ def ScrapyThreadLaunch():
 #thread launches scrapy process
 #and waits for it to complete
 def ScrapyControlFunction():
+    #this function is launched when the newest event has not been fetched or created
     """
         do what here
         launch a scrapy process with a pool
@@ -46,6 +47,7 @@ def ScrapyControlFunction():
                 save all matchups with corresponding fighter objects  
 
             complete
+        assume runs uninterrupted
     """
     pass
 
