@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
@@ -115,8 +115,11 @@ def index_endpoint(request):
 
     return JsonResponse(context)
 
+
 @require_GET
 def index(request):
+
+    return redirect("/136")
     #purpose of index
     global WorkerThread
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
