@@ -8,27 +8,39 @@ from django.views.generic import ListView,DetailView
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
+from django.db import transaction
+
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
 from ..forms import FightEventForm,MatchUpFormMF
 from .prediction import calculate_stats
+
 import json
 import datetime
 import re
+
 from .. import scraper
 from threading import Thread
 from datetime import datetime
+import concurrent
 # from ..scraper import getUpcomingFightEvent
+import scrapy
 
 WorkerThread = None
 globalCounter = 0
 
+class EventLinkSpider(scrapy.Spider):
+    name = "eventLinkSpider"
+    start_urls = [
+        scraper.EVENTS_URL2
+    ]
+    results = []
 
-def ScrapyThreadLaunch():
-    pass
+    def parse(self, response: scrapy.http.HtmlResponse):
+        self.results.append(scraper.eventLinkParse(response.text))
 
 #thread launches scrapy process
 #and waits for it to complete
-def ScrapyControlFunction():
+def ScrapyControlThreadFunction():
     #this function is launched when the newest event has not been fetched or created
     """
         do what here
@@ -49,6 +61,12 @@ def ScrapyControlFunction():
             complete
         assume runs uninterrupted
     """
+    with transaction.atomic():
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            #scrape tapology website for upcoming event
+            #return the link data for the event
+            pass
+        pass
     pass
 
 def WorkerThreadControlFunction():
