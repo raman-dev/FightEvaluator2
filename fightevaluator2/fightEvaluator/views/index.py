@@ -9,6 +9,7 @@ from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
 from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
 from ..forms import FightEventForm,MatchUpFormMF
@@ -18,12 +19,13 @@ import json
 import datetime
 import re
 
-from .. import scraper
+from .. import scraper,scraper2
 from threading import Thread
 from datetime import datetime
 import concurrent
 # from ..scraper import getUpcomingFightEvent
 import scrapy
+from scrapy.crawler import CrawlerProcess
 
 WorkerThread = None
 globalCounter = 0
@@ -38,6 +40,36 @@ class EventLinkSpider(scrapy.Spider):
     def parse(self, response: scrapy.http.HtmlResponse):
         self.results.append(scraper.eventLinkParse(response.text))
 
+
+class MatchUpSpider(scrapy.Spider):
+    name="matchupSpider"
+    start_urls=[]
+
+    def parse(self, response: scrapy.http.HtmlResponse):
+        title = response.css('h2::text').get()
+        matchups = scraper2.scrapeMatchups(response.text)
+        for m in matchups:
+            w = scraper.poundsToWeightClass(m['weight_class'])
+            m['weight_class'] = w
+        self.results.append({
+            'title':title,
+            'matchups':matchups
+        })
+
+
+def startCrawlerProcess(spider: scrapy.Spider):
+    if spider == None:
+        raise ValueError("Spider cannot be None")
+    process = CrawlerProcess(
+        settings={
+            "DOWNLOAD_DELAY": 4, #Delay between requests
+            "LOG_LEVEL": "ERROR" 
+        }
+    )
+
+    process.crawl(spider)
+    process.start()
+    return spider.results
 #thread launches scrapy process
 #and waits for it to complete
 def ScrapyControlThreadFunction():
@@ -62,12 +94,33 @@ def ScrapyControlThreadFunction():
         assume runs uninterrupted
     """
     with transaction.atomic():
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            #scrape tapology website for upcoming event
-            #return the link data for the event
-            pass
+        """
+            **NOTE**
+            CANNOT USE ProcessPoolExecutor since it may reuse an existing 
+            process in the pool and scrapy does not allow the underlying
+            twisted.reactor to be restarted once completed in the same process
+
+            MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
+        """
+        # with concurrent.futures.ProcessPoolExecutor() as executor:
+        #     #scrape tapology website for upcoming event
+        #     #return the link data for the event
+        #     eventFetchFuture = executor.submit(startCrawlerProcess,(EventLinkSpider))
+        #     eventDataResultList = eventFetchFuture.result()#returns a list of results
+        #     #now visit the event link and grab all matchup data
+        #     #validate with 
+        #     fightEventData = eventDataResultList[0]
+            
+        #     MatchUpSpider.start_urls.append(fightEventData['link'])
+        #     matchupsDataFuture = executor.submit(startCrawlerProcess,(MatchUpSpider))
+        #     matchupsDataResultList = matchupsDataFuture.result()
+            
+        #     matchupsData = matchupsDataResultList[0]
+
+        #     fightEventData['title'] = matchupsData['title']
         pass
-    pass
+
+            
 
 def WorkerThreadControlFunction():
     
