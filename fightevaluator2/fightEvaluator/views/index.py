@@ -21,6 +21,8 @@ import re
 
 from .. import scraper,scraper2
 from threading import Thread
+from multiprocessing import Process
+import multiprocessing
 from datetime import datetime
 import concurrent
 # from ..scraper import getUpcomingFightEvent
@@ -43,19 +45,16 @@ class EventLinkSpider(scrapy.Spider):
 
 class MatchUpSpider(scrapy.Spider):
     name="matchupSpider"
-    start_urls=[]
+    start_urls= []
+    results = []
 
     def parse(self, response: scrapy.http.HtmlResponse):
         title = response.css('h2::text').get()
         matchups = scraper2.scrapeMatchups(response.text)
-        for m in matchups:
-            w = scraper.poundsToWeightClass(m['weight_class'])
-            m['weight_class'] = w
         self.results.append({
             'title':title,
             'matchups':matchups
         })
-
 
 def startCrawlerProcess(spider: scrapy.Spider):
     if spider == None:
@@ -70,6 +69,27 @@ def startCrawlerProcess(spider: scrapy.Spider):
     process.crawl(spider)
     process.start()
     return spider.results
+
+def FightEventSpiderProcess(q: multiprocessing.Queue):
+    startCrawlerProcess(EventLinkSpider)
+    q.put([item for item  in EventLinkSpider.results])
+
+
+def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
+    MatchUpSpider.start_urls.append(eventLink)
+    startCrawlerProcess(MatchUpSpider)
+
+    q.put([item for item in MatchUpSpider.results])
+
+def launchScrapyProcess(spiderProcessFunc,**kwargs):
+    p = Process(target=spiderProcessFunc,kwargs=kwargs)
+    p.start()
+    """
+        do not join here py3 docs say not to join a process 
+        that has used a queue to pass data until the data has been read
+    """
+    # p.join()
+    
 #thread launches scrapy process
 #and waits for it to complete
 def ScrapyControlThreadFunction():
@@ -102,6 +122,21 @@ def ScrapyControlThreadFunction():
 
             MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
         """
+        #get event
+        q = multiprocessing.Queue()
+        launchScrapyProcess(FightEventSpiderProcess,{'q':q})
+
+        eventDataResultList = q.get()#wait for a result
+        fightEventData = eventDataResultList[0]
+
+        launchScrapyProcess(MatchUpSpiderProcess,{'eventLink':fightEventData['link'],'q':q})
+        matchupsDataResultList = q.get()#wait for a result
+        matchupsData = matchupsDataResultList[0]
+
+        fightEventData['title'] = matchupsData['title']
+        matchups = matchupsData['matchups']
+        #check if fighters exist in db
+        
         # with concurrent.futures.ProcessPoolExecutor() as executor:
         #     #scrape tapology website for upcoming event
         #     #return the link data for the event

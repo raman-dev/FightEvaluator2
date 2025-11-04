@@ -3,6 +3,7 @@ import unicodedata
 from pyquery import PyQuery as pq
 from .models import WeightClass
 import math
+from scraper import poundsToWeightClass
 from datetime import datetime
 
 domain = "https://www.tapology.com"
@@ -189,7 +190,7 @@ def scrapeMatchups(source):
         rounds = scrapeRounds(m)
         if not weightlbs or not rounds:#not a valid matchup
             continue
-        matchup['weight_class'] = weightlbs
+        matchup['weight_class'] = poundsToWeightClass(weightlbs)
         matchup['rounds'] = rounds
         matchup['isprelim'] = isPrelim
         matchups.append(matchup) 

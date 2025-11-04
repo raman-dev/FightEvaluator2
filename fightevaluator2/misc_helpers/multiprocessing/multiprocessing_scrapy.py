@@ -263,7 +263,7 @@ class EventLinkSpider(scrapy.Spider):
 class MatchUpSpider(scrapy.Spider):
     name="matchupSpider"
     start_urls=[]
-
+    results = []
     def parse(self, response: scrapy.http.HtmlResponse):
         title = response.css('h2::text').get()
         matchups = scrapeMatchups(response.text)
@@ -298,19 +298,22 @@ def testFunction(*args,key,key0=None):
 if __name__ == "__main__":
     q = multiprocessing.Queue()
 
-    # t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':q})
-    t = threading.Thread(target=testFunction,kwargs={"key":"value"})
+    t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':q})
+    # t = threading.Thread(target=testFunction,kwargs={"key":"value"})
     #kwargs must be one to one mapping to keyword arguments
     #keys can only be missing if and only if function has default values in signature
     t.start()
     t.join()#block until done
 
-    # results = q.get()
-    # fightEventData = results[0]
+    results = q.get()
+    fightEventData = results[0]
 
-    # t = threading.Thread(target=launchScrapyProcess,args=(Ma,q))
-    # t.start()
-    # t.join()#block until done
+    t = threading.Thread(target=launchScrapyProcess,args=(MatchUpSpiderProcess,),
+                         kwargs={'eventLink':fightEventData['link'],'q':q})
+    t.start()
+    t.join()#block until done
+    matchupResults = q.get()
+    print(matchupResults)
     # with concurrent.futures.ProcessPoolExecutor() as executor:
     #     eventFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
     #     eventResults = eventFuture.result()
