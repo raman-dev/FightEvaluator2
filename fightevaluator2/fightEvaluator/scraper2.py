@@ -3,7 +3,7 @@ import unicodedata
 from pyquery import PyQuery as pq
 from .models import WeightClass
 import math
-from scraper import poundsToWeightClass
+# from .scraper import poundsToWeightClass
 from datetime import datetime
 
 domain = "https://www.tapology.com"
@@ -22,6 +22,31 @@ def extract_text(element: pq):
         result += extract_text(pq(child))
     
     return result
+
+def poundsToWeightClass(weight_lbs):
+    weight_lbs = int(weight_lbs)
+    if weight_lbs <= 110:
+        return WeightClass['ATOMWEIGHT']
+    elif weight_lbs <= 116:
+        return WeightClass['STRAWWEIGHT']
+    elif weight_lbs <= 126:
+        return WeightClass['FLYWEIGHT']
+    elif weight_lbs <= 136:
+        return WeightClass['BANTAMWEIGHT']
+    elif weight_lbs <= 146:
+        return WeightClass['FEATHERWEIGHT']
+    elif weight_lbs <= 156:
+        return WeightClass['LIGHTWEIGHT']
+    elif weight_lbs <= 171:
+        return WeightClass['WELTERWEIGHT']
+    elif weight_lbs <= 186:
+        return WeightClass['MIDDLEWEIGHT']
+    elif weight_lbs <= 206:
+        return WeightClass['LIGHT_HEAVYWEIGHT']
+    elif weight_lbs <= 266:
+        return WeightClass['HEAVYWEIGHT']
+    else:
+        return WeightClass['CATCH_WEIGHT']
 
 def scrapeFighterDetails(fighterDetailsDiv,fighterData) -> dict:
     data = []
@@ -190,7 +215,7 @@ def scrapeMatchups(source):
         rounds = scrapeRounds(m)
         if not weightlbs or not rounds:#not a valid matchup
             continue
-        matchup['weight_class'] = poundsToWeightClass(weightlbs)
+        matchup['weight_class'] = weightlbs#poundsToWeightClass(weightlbs)
         matchup['rounds'] = rounds
         matchup['isprelim'] = isPrelim
         matchups.append(matchup) 

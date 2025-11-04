@@ -267,9 +267,6 @@ class MatchUpSpider(scrapy.Spider):
     def parse(self, response: scrapy.http.HtmlResponse):
         title = response.css('h2::text').get()
         matchups = scrapeMatchups(response.text)
-        # for m in matchups:
-        #     w = scraper.poundsToWeightClass(m['weight_class'])
-        #     m['weight_class'] = w
         self.results.append({
             'title':title,
             'matchups':matchups
@@ -312,8 +309,13 @@ if __name__ == "__main__":
                          kwargs={'eventLink':fightEventData['link'],'q':q})
     t.start()
     t.join()#block until done
-    matchupResults = q.get()
-    print(matchupResults)
+    matchupResults = q.get()[0]
+    matchups = matchupResults['matchups']
+    for m in matchups:
+        #create index key from name
+        for fighterData in m['fighters_raw']:
+            name,link = fighterData.values()
+            print(name,link)
     # with concurrent.futures.ProcessPoolExecutor() as executor:
     #     eventFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
     #     eventResults = eventFuture.result()

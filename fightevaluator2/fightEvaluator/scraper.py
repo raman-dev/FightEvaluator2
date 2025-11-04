@@ -129,30 +129,7 @@ def extractLinkAndDate(url):
     # print(result)
     return result
 
-def poundsToWeightClass(weight_lbs):
-    weight_lbs = int(weight_lbs)
-    if weight_lbs <= 110:
-        return WeightClass['ATOMWEIGHT']
-    elif weight_lbs <= 116:
-        return WeightClass['STRAWWEIGHT']
-    elif weight_lbs <= 126:
-        return WeightClass['FLYWEIGHT']
-    elif weight_lbs <= 136:
-        return WeightClass['BANTAMWEIGHT']
-    elif weight_lbs <= 146:
-        return WeightClass['FEATHERWEIGHT']
-    elif weight_lbs <= 156:
-        return WeightClass['LIGHTWEIGHT']
-    elif weight_lbs <= 171:
-        return WeightClass['WELTERWEIGHT']
-    elif weight_lbs <= 186:
-        return WeightClass['MIDDLEWEIGHT']
-    elif weight_lbs <= 206:
-        return WeightClass['LIGHT_HEAVYWEIGHT']
-    elif weight_lbs <= 266:
-        return WeightClass['HEAVYWEIGHT']
-    else:
-        return WeightClass['CATCH_WEIGHT']
+
     
 def generateMatchupFighterObjs(matchups):
     for matchup in matchups:
@@ -241,9 +218,6 @@ def getUpcomingFightEvent(): #returns a dictionary of the next upcoming fight ev
     """
     #list of matchups
     matchups = scrapeMatchups(source) 
-    for m in matchups:
-        w = poundsToWeightClass(m['weight_class'])
-        m['weight_class'] = w
     generateMatchupFighterObjs(matchups)
     fightEventData['matchups'] = matchups
     return fightEventData

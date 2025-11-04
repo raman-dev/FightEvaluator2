@@ -1,17 +1,19 @@
-from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from django.views.decorators.cache import cache_page
+
 from django.shortcuts import render,get_object_or_404,redirect
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 
 from django.views.generic import ListView,DetailView
-from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
-from ..models import FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
+
+from ..models import Fighter,FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
 from ..forms import FightEventForm,MatchUpFormMF
 from .prediction import calculate_stats
 
@@ -20,8 +22,10 @@ import datetime
 import re
 
 from .. import scraper,scraper2
+
+from ..scraper import eventLinkParse,EVENTS_URL2
+from ..scraper2 import scrapeMatchups
 from threading import Thread
-from multiprocessing import Process
 import multiprocessing
 from datetime import datetime
 import concurrent
@@ -35,12 +39,12 @@ globalCounter = 0
 class EventLinkSpider(scrapy.Spider):
     name = "eventLinkSpider"
     start_urls = [
-        scraper.EVENTS_URL2
+        EVENTS_URL2
     ]
     results = []
 
     def parse(self, response: scrapy.http.HtmlResponse):
-        self.results.append(scraper.eventLinkParse(response.text))
+        self.results.append(eventLinkParse(response.text))
 
 
 class MatchUpSpider(scrapy.Spider):
@@ -50,7 +54,7 @@ class MatchUpSpider(scrapy.Spider):
 
     def parse(self, response: scrapy.http.HtmlResponse):
         title = response.css('h2::text').get()
-        matchups = scraper2.scrapeMatchups(response.text)
+        matchups = scrapeMatchups(response.text)
         self.results.append({
             'title':title,
             'matchups':matchups
@@ -61,7 +65,7 @@ def startCrawlerProcess(spider: scrapy.Spider):
         raise ValueError("Spider cannot be None")
     process = CrawlerProcess(
         settings={
-            "DOWNLOAD_DELAY": 4, #Delay between requests
+            "DOWNLOAD_DELAY": 10, #Delay between requests
             "LOG_LEVEL": "ERROR" 
         }
     )
@@ -71,8 +75,9 @@ def startCrawlerProcess(spider: scrapy.Spider):
     return spider.results
 
 def FightEventSpiderProcess(q: multiprocessing.Queue):
-    startCrawlerProcess(EventLinkSpider)
-    q.put([item for item  in EventLinkSpider.results])
+    return startCrawlerProcess(EventLinkSpider)
+    # q.put([item for item  in EventLinkSpider.results])
+    
 
 
 def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
@@ -82,14 +87,23 @@ def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
     q.put([item for item in MatchUpSpider.results])
 
 def launchScrapyProcess(spiderProcessFunc,**kwargs):
-    p = Process(target=spiderProcessFunc,kwargs=kwargs)
+    # multiprocessing.set_start_method('spawn')
+    p = multiprocessing.Process(target=spiderProcessFunc,kwargs=kwargs)
     p.start()
     """
         do not join here py3 docs say not to join a process 
         that has used a queue to pass data until the data has been read
     """
     # p.join()
-    
+
+scrapyThread = None
+def scrapyThreadTestEndpoint(request):
+    global scrapyThread
+    if scrapyThread == None or not scrapyThread.is_alive():
+        scrapyThread = Thread(target=ScrapyControlThreadFunction)
+        scrapyThread.start()
+        return JsonResponse({"state":"scrapy thread started"})
+    return JsonResponse({"state":"scrapy thread running"})
 #thread launches scrapy process
 #and waits for it to complete
 def ScrapyControlThreadFunction():
@@ -113,47 +127,129 @@ def ScrapyControlThreadFunction():
             complete
         assume runs uninterrupted
     """
-    with transaction.atomic():
-        """
-            **NOTE**
-            CANNOT USE ProcessPoolExecutor since it may reuse an existing 
-            process in the pool and scrapy does not allow the underlying
-            twisted.reactor to be restarted once completed in the same process
+    # with transaction.atomic():
+    """
+        **NOTE**
+        CANNOT USE ProcessPoolExecutor since it may reuse an existing 
+        process in the pool and scrapy does not allow the underlying
+        twisted.reactor to be restarted once completed in the same process
 
-            MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
-        """
-        #get event
-        q = multiprocessing.Queue()
-        launchScrapyProcess(FightEventSpiderProcess,{'q':q})
+        MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
+    """
+    #get event
+    # q = multiprocessing.Queue()
+    # launchScrapyProcess(FightEventSpiderProcess,kwargs={'q':q})
 
-        eventDataResultList = q.get()#wait for a result
-        fightEventData = eventDataResultList[0]
+    eventResultList = []
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        eventResultFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
+        eventResultList = eventResultFuture.result()
+    # eventDataResultList = q.get()#wait for a result
+    fightEventData = eventResultList[0]
 
-        launchScrapyProcess(MatchUpSpiderProcess,{'eventLink':fightEventData['link'],'q':q})
-        matchupsDataResultList = q.get()#wait for a result
-        matchupsData = matchupsDataResultList[0]
+    # launchScrapyProcess(MatchUpSpiderProcess,kwargs={'eventLink':fightEventData['link'],'q':q})
+    # matchupsDataResultList = q.get()#wait for a result
+    matchupsResultList = []
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        MatchUpSpider.start_urls.append(fightEventData['link'])
+        matchupResultFuture = executor.submit(startCrawlerProcess,MatchUpSpider)
+        matchupsResultList = matchupResultFuture.result()
+    matchupsData = matchupsResultList[0]
 
-        fightEventData['title'] = matchupsData['title']
-        matchups = matchupsData['matchups']
-        #check if fighters exist in db
+    fightEventData['title'] = matchupsData['title']
+    matchups = matchupsData['matchups']
+    #matchups returned in this format
+    """
+        fighters_raw
+            0 
+                name
+                link
+            1
+                name 
+                link
+        weight_class
+        rounds
+        isprelim
+
+        matchup construction from raw data
+
+        matchupRaw
+            isprelim
+            rounds
+            weight_class
         
-        # with concurrent.futures.ProcessPoolExecutor() as executor:
-        #     #scrape tapology website for upcoming event
-        #     #return the link data for the event
-        #     eventFetchFuture = executor.submit(startCrawlerProcess,(EventLinkSpider))
-        #     eventDataResultList = eventFetchFuture.result()#returns a list of results
-        #     #now visit the event link and grab all matchup data
-        #     #validate with 
-        #     fightEventData = eventDataResultList[0]
-            
-        #     MatchUpSpider.start_urls.append(fightEventData['link'])
-        #     matchupsDataFuture = executor.submit(startCrawlerProcess,(MatchUpSpider))
-        #     matchupsDataResultList = matchupsDataFuture.result()
-            
-        #     matchupsData = matchupsDataResultList[0]
+            fighter_a:obj or None if missing
+            fighter_b:obj or None if missing
 
-        #     fightEventData['title'] = matchupsData['title']
+            fighter_a_link: str
+            fighter_b_link: str
+        matchupFighter404Queue
+            matchupRawIndex,fighter_a,link
+            matchupRawIndex,fighter_b,link
+            ...
+        for each matchup item
+            check if db has each fighter
+            if fighter_a and fighter_b in db
+            we can construct a matchup
+
+            if fighter_a not in db
+
+
+    """
+    matchupsRaw = []
+    matchupFighter404Q = []
+    for i,m in enumerate(matchups):
+        #create index key from name
+        currMatchup = { 'isprelim':m['isprelim'], 'rounds':m['rounds'],'weight_class':m['weight_class']}
+        for j,fighterData in enumerate(m['fighters_raw']):
+            name,link = fighterData.values()
+            names = [x.lower() for x in name.split(' ')]
+            name_index = "-".join(names)
+            first_name = names[0]
+            last_name = ""
+            if len(names) > 1:
+                last_name = names[-1]
+
+            #try name index
+            fighterObj = Fighter.objects.filter(name_index=name_index).first()
+            if not fighterObj:
+                #try a first name last name query
+                first_name_and_last_name_contains = Q(first_name=first_name) & Q(last_name__contains=last_name)
+                fighterObj = Fighter.objects.filter(first_name_and_last_name_contains).first()
+            key  = 'fighter_a' if i == 0 else 'fighter_b'
+            currMatchup[key] = fighterObj
+            if fighterObj == None:
+                currMatchup[key + '_link'] = link
+
+        if currMatchup['fighter_a'] == None:
+            matchupFighter404Q.append(currMatchup['fighter_a_link'])
+        if currMatchup['fighter_b'] == None:
+            matchupFighter404Q.append(currMatchup['fighter_b_link'])
+        
+        matchupsRaw.append(currMatchup)
+    for m in matchupsRaw:
+        print(m)
+    for m in matchupFighter404Q:
+        print(m)
+    if len(matchupFighter404Q) != 0:
         pass
+    # with concurrent.futures.ProcessPoolExecutor() as executor:
+    #     #scrape tapology website for upcoming event
+    #     #return the link data for the event
+    #     eventFetchFuture = executor.submit(startCrawlerProcess,(EventLinkSpider))
+    #     eventDataResultList = eventFetchFuture.result()#returns a list of results
+    #     #now visit the event link and grab all matchup data
+    #     #validate with 
+    #     fightEventData = eventDataResultList[0]
+        
+    #     MatchUpSpider.start_urls.append(fightEventData['link'])
+    #     matchupsDataFuture = executor.submit(startCrawlerProcess,(MatchUpSpider))
+    #     matchupsDataResultList = matchupsDataFuture.result()
+        
+    #     matchupsData = matchupsDataResultList[0]
+
+    #     fightEventData['title'] = matchupsData['title']
+    # pass
 
             
 
