@@ -47,9 +47,11 @@ class MySpider(scrapy.Spider):
 def startCrawlerProcess(spider: scrapy.Spider):
     if spider == None:
         raise ValueError("Spider cannot be None")
+
+    print("starting CrawlerProcess")
     process = CrawlerProcess(
         settings={
-            "DOWNLOAD_DELAY": 4, #Delay between requests
+            "DOWNLOAD_DELAY": 8, #Delay between requests
             "LOG_LEVEL": "ERROR" 
         }
     )
@@ -292,30 +294,48 @@ def launchScrapyProcess(spiderProcessFunc,**kwargs):
 def testFunction(*args,key,key0=None):
     print(*args,key)
 
+
+def processSpawner():
+    print("prcoessSpawner running")
+    startCrawlerProcess(EventLinkSpider)
+    results = [r for r in EventLinkSpider.results]
+    resultDict= results[0]
+    print(resultDict)
+    MatchUpSpider.start_urls.append(resultDict['link'])
+    startCrawlerProcess(MatchUpSpider)
+
+
+def processControlThread():
+    #create a process spawner
+    p = multiprocessing.Process(target=processSpawner,kwargs={})
+    p.start()
+    p.join()
+
 if __name__ == "__main__":
     q = multiprocessing.Queue()
 
-    t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':q})
+    # t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':q})
+    t = threading.Thread(target=processControlThread,args=())
     # t = threading.Thread(target=testFunction,kwargs={"key":"value"})
     #kwargs must be one to one mapping to keyword arguments
     #keys can only be missing if and only if function has default values in signature
     t.start()
     t.join()#block until done
 
-    results = q.get()
-    fightEventData = results[0]
+    # results = q.get()
+    # fightEventData = results[0]
 
-    t = threading.Thread(target=launchScrapyProcess,args=(MatchUpSpiderProcess,),
-                         kwargs={'eventLink':fightEventData['link'],'q':q})
-    t.start()
-    t.join()#block until done
-    matchupResults = q.get()[0]
-    matchups = matchupResults['matchups']
-    for m in matchups:
-        #create index key from name
-        for fighterData in m['fighters_raw']:
-            name,link = fighterData.values()
-            print(name,link)
+    # t = threading.Thread(target=launchScrapyProcess,args=(MatchUpSpiderProcess,),
+    #                      kwargs={'eventLink':fightEventData['link'],'q':q})
+    # t.start()
+    # t.join()#block until done
+    # matchupResults = q.get()[0]
+    # matchups = matchupResults['matchups']
+    # for m in matchups:
+    #     #create index key from name
+    #     for fighterData in m['fighters_raw']:
+    #         name,link = fighterData.values()
+    #         print(name,link)
     # with concurrent.futures.ProcessPoolExecutor() as executor:
     #     eventFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
     #     eventResults = eventFuture.result()
