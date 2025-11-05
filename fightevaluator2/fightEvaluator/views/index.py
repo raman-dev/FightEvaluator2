@@ -21,10 +21,12 @@ import json
 import datetime
 import re
 
-from .. import scraper,scraper2
+from .. import scraper
 
 from ..scraper import eventLinkParse,EVENTS_URL2
 from ..scraper2 import scrapeMatchups
+
+from ..scraper3 import printProcessInfo
 from threading import Thread
 import multiprocessing
 from datetime import datetime
@@ -46,6 +48,36 @@ class EventLinkSpider(scrapy.Spider):
     def parse(self, response: scrapy.http.HtmlResponse):
         self.results.append(eventLinkParse(response.text))
 
+    def eventLinkParse(source: str):
+        domain = "https://www.tapology.com"
+        from bs4 import BeautifulSoup
+        soup = BeautifulSoup(source, 'html.parser')
+        table = soup.find('table',class_='fcLeaderboard')
+        # print(table.tbody)
+        today = datetime.now().date()
+        rows = table.findAll('tr')
+        result = {'link':'','date':None}
+        for i,row in enumerate(rows):
+            if i == 0:
+                continue
+            data = row.findAll('td')
+            #get href value from data object
+            data_event_title = data[0].a.text.strip()
+            #skip non fight nights and non ppvs
+            if re.search(r'(UFC\s+([0-9]+))|UFC\s+Fight\s+Night',data_event_title) == None:
+                # print(data_event_title,'not a ufc event')
+                continue
+            data_link = data[0].a['href']
+            #get date from data object
+            data_date = datetime.strptime(data[2].text.strip(),"%Y.%m.%d").date()
+            #compare today and date when the distance from today and date increases break loop
+            print(data_event_title,data_date)
+            if data_date < today:
+                break
+            result['link'] = domain + data_link
+            result['date'] = data_date
+        # print(result)
+        return result
 
 class MatchUpSpider(scrapy.Spider):
     name="matchupSpider"
@@ -54,11 +86,11 @@ class MatchUpSpider(scrapy.Spider):
 
     def parse(self, response: scrapy.http.HtmlResponse):
         title = response.css('h2::text').get()
-        matchups = scrapeMatchups(response.text)
-        self.results.append({
-            'title':title,
-            'matchups':matchups
-        })
+        # matchups = scrapeMatchups(response.text)
+        # self.results.append({
+        #     'title':title,
+        #     'matchups':matchups
+        # })
 
 def startCrawlerProcess(spider: scrapy.Spider):
     if spider == None:
@@ -78,8 +110,6 @@ def FightEventSpiderProcess(q: multiprocessing.Queue):
     return startCrawlerProcess(EventLinkSpider)
     # q.put([item for item  in EventLinkSpider.results])
     
-
-
 def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
     MatchUpSpider.start_urls.append(eventLink)
     startCrawlerProcess(MatchUpSpider)
@@ -94,7 +124,7 @@ def launchScrapyProcess(spiderProcessFunc,**kwargs):
         do not join here py3 docs say not to join a process 
         that has used a queue to pass data until the data has been read
     """
-    # p.join()
+    p.join()
 
 scrapyThread = None
 def scrapyThreadTestEndpoint(request):
@@ -137,27 +167,34 @@ def ScrapyControlThreadFunction():
         MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
     """
     #get event
+    p = multiprocessing.Process(
+        target=printProcessInfo,
+        kwargs={'sleep':2},
+        daemon=True
+    )
+    p.start()
+    p.join()
     # q = multiprocessing.Queue()
     # launchScrapyProcess(FightEventSpiderProcess,kwargs={'q':q})
 
-    eventResultList = []
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        eventResultFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
-        eventResultList = eventResultFuture.result()
+    # eventResultList = []
+    # with concurrent.futures.ProcessPoolExecutor() as executor:
+    #     eventResultFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
+    #     eventResultList = eventResultFuture.result()
     # eventDataResultList = q.get()#wait for a result
-    fightEventData = eventResultList[0]
+    # fightEventData = eventResultList[0]
 
-    # launchScrapyProcess(MatchUpSpiderProcess,kwargs={'eventLink':fightEventData['link'],'q':q})
-    # matchupsDataResultList = q.get()#wait for a result
-    matchupsResultList = []
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        MatchUpSpider.start_urls.append(fightEventData['link'])
-        matchupResultFuture = executor.submit(startCrawlerProcess,MatchUpSpider)
-        matchupsResultList = matchupResultFuture.result()
-    matchupsData = matchupsResultList[0]
+    # # launchScrapyProcess(MatchUpSpiderProcess,kwargs={'eventLink':fightEventData['link'],'q':q})
+    # # matchupsDataResultList = q.get()#wait for a result
+    # matchupsResultList = []
+    # with concurrent.futures.ProcessPoolExecutor() as executor:
+    #     MatchUpSpider.start_urls.append(fightEventData['link'])
+    #     matchupResultFuture = executor.submit(startCrawlerProcess,MatchUpSpider)
+    #     matchupsResultList = matchupResultFuture.result()
+    # matchupsData = matchupsResultList[0]
 
-    fightEventData['title'] = matchupsData['title']
-    matchups = matchupsData['matchups']
+    # fightEventData['title'] = matchupsData['title']
+    # matchups = matchupsData['matchups']
     #matchups returned in this format
     """
         fighters_raw
@@ -196,43 +233,43 @@ def ScrapyControlThreadFunction():
 
 
     """
-    matchupsRaw = []
-    matchupFighter404Q = []
-    for i,m in enumerate(matchups):
-        #create index key from name
-        currMatchup = { 'isprelim':m['isprelim'], 'rounds':m['rounds'],'weight_class':m['weight_class']}
-        for j,fighterData in enumerate(m['fighters_raw']):
-            name,link = fighterData.values()
-            names = [x.lower() for x in name.split(' ')]
-            name_index = "-".join(names)
-            first_name = names[0]
-            last_name = ""
-            if len(names) > 1:
-                last_name = names[-1]
+    # matchupsRaw = []
+    # matchupFighter404Q = []
+    # for i,m in enumerate(matchups):
+    #     #create index key from name
+    #     currMatchup = { 'isprelim':m['isprelim'], 'rounds':m['rounds'],'weight_class':m['weight_class']}
+    #     for j,fighterData in enumerate(m['fighters_raw']):
+    #         name,link = fighterData.values()
+    #         names = [x.lower() for x in name.split(' ')]
+    #         name_index = "-".join(names)
+    #         first_name = names[0]
+    #         last_name = ""
+    #         if len(names) > 1:
+    #             last_name = names[-1]
 
-            #try name index
-            fighterObj = Fighter.objects.filter(name_index=name_index).first()
-            if not fighterObj:
-                #try a first name last name query
-                first_name_and_last_name_contains = Q(first_name=first_name) & Q(last_name__contains=last_name)
-                fighterObj = Fighter.objects.filter(first_name_and_last_name_contains).first()
-            key  = 'fighter_a' if i == 0 else 'fighter_b'
-            currMatchup[key] = fighterObj
-            if fighterObj == None:
-                currMatchup[key + '_link'] = link
+    #         #try name index
+    #         fighterObj = Fighter.objects.filter(name_index=name_index).first()
+    #         if not fighterObj:
+    #             #try a first name last name query
+    #             first_name_and_last_name_contains = Q(first_name=first_name) & Q(last_name__contains=last_name)
+    #             fighterObj = Fighter.objects.filter(first_name_and_last_name_contains).first()
+    #         key  = 'fighter_a' if i == 0 else 'fighter_b'
+    #         currMatchup[key] = fighterObj
+    #         if fighterObj == None:
+    #             currMatchup[key + '_link'] = link
 
-        if currMatchup['fighter_a'] == None:
-            matchupFighter404Q.append(currMatchup['fighter_a_link'])
-        if currMatchup['fighter_b'] == None:
-            matchupFighter404Q.append(currMatchup['fighter_b_link'])
+    #     if currMatchup['fighter_a'] == None:
+    #         matchupFighter404Q.append(currMatchup['fighter_a_link'])
+    #     if currMatchup['fighter_b'] == None:
+    #         matchupFighter404Q.append(currMatchup['fighter_b_link'])
         
-        matchupsRaw.append(currMatchup)
-    for m in matchupsRaw:
-        print(m)
-    for m in matchupFighter404Q:
-        print(m)
-    if len(matchupFighter404Q) != 0:
-        pass
+    #     matchupsRaw.append(currMatchup)
+    # for m in matchupsRaw:
+    #     print(m)
+    # for m in matchupFighter404Q:
+    #     print(m)
+    # if len(matchupFighter404Q) != 0:
+    #     pass
     # with concurrent.futures.ProcessPoolExecutor() as executor:
     #     #scrape tapology website for upcoming event
     #     #return the link data for the event

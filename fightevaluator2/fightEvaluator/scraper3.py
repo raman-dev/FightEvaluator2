@@ -5,6 +5,14 @@ from scrapy.crawler import CrawlerProcess
 from .scraper import eventLinkParse,EVENTS_URL2
 from .scraper2 import scrapeMatchups
 
+def printProcessInfo(sleep=None):
+    if sleep != None:
+        time.sleep(sleep)
+    print("==== Process Info ====")
+    print("current.process => ", multiprocessing.current_process().name)
+    print("current.process.id => ", multiprocessing.current_process().pid)
+    print("current.thread => ",threading.current_thread().name)
+    print("======================")
 
 class EventLinkSpider(scrapy.Spider):
     name = "eventLinkSpider"
