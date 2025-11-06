@@ -215,7 +215,7 @@ def scrapeMatchups(source):
         rounds = scrapeRounds(m)
         if not weightlbs or not rounds:#not a valid matchup
             continue
-        matchup['weight_class'] = weightlbs#poundsToWeightClass(weightlbs)
+        matchup['weight_class'] = poundsToWeightClass(weightlbs)
         matchup['rounds'] = rounds
         matchup['isprelim'] = isPrelim
         matchups.append(matchup) 

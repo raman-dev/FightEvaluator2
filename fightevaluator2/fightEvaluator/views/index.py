@@ -358,7 +358,7 @@ def index_endpoint(request):
 @require_GET
 def index(request):
 
-    return redirect("/136")
+    # return redirect("/136")
     #purpose of index
     global WorkerThread
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
