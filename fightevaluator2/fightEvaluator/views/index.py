@@ -289,7 +289,53 @@ def ScrapyControlThreadFunction():
     # pass
 
             
+"""
 
+     client          django-server                            scraper-server
+        get index------>
+                        check has event
+                        data
+                <-----data available  
+                        data unavailable
+                        if isUpdating
+                <-----currently updating
+                        if not updating
+                        ask scraper-server
+                        for event data
+                           if event data unavailable
+                           determine why?
+                              scraper-server processing?
+                              if processing
+                <---------------currently updating
+                              if not processing
+                               start 
+                               scraper-server update
+                                 process--------------------->
+                                
+                                                  start-----> start scraper process for next event data
+                                                              write to json file when complete
+                                                              return response from scraper-server
+                                <------------------------------event data                                                     
+                        when data available
+                         process json data 
+                         create fight event models 
+                         for every matchup
+                            check if fighter in db 
+                            if not in db
+                                add to fighter fetch queue
+                        if fighter fetch queue not empty
+                            send fetch fighter
+                              request to scraper-server-------------------->
+                                                                start-----> start scraper process for fighter data
+                                                                            write to json file when complete
+                                                                            return response from scraper-server
+                                    <------------------------------fighter data
+                            create fighter models for fetched fighters
+                        create matchup models for every matchup
+                        mark event data state as not stale/updating
+                        
+
+"""
 def WorkerThreadControlFunction():
     
     print('WorkerThread running....')
