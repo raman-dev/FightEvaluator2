@@ -61,10 +61,17 @@ def print_menu():
     print("===============================")
 
 
+
+DEFAULT_TIMEOUT = 5#seconds
+def timeout(seconds=DEFAULT_TIMEOUT):
+    return seconds * 1000
+
 def runTestClient():
     with zmq.Context() as context:
         with context.socket(zmq.REQ) as socket:
             socket.connect(f"tcp://localhost:{PORT}")
+            poller = zmq.Poller()
+            poller.register(socket, zmq.POLLIN)
 
             commandMap = {}
             for i,cmd in enumerate(Commands):
@@ -88,8 +95,19 @@ def runTestClient():
 
                 choice = commandMap[int(userin)]
                 print(Commands[choice])
+                socket.send_pyobj(Commands[choice].value)
+                socketEvents = poller.poll(timeout(seconds=5))
+                socket,event_mask = socketEvents[0]
 
-                
+                if (event_mask & zmq.POLLIN) != 0:
+                    message = socket.recv_pyobj()
+                    rprint(f"[bold green]Received reply:[/bold green] {message}")
+                else:
+                    rprint(f"[bold red]No response from server within {DEFAULT_TIMEOUT} seconds.[/bold red]")
+                    socket.close()
+                    break
+
+            poller.unregister(socket)
 
 
 if __name__ =="__main__":
