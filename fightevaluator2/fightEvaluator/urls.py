@@ -72,5 +72,6 @@ urlpatterns = [
 
     # path('scrapy-test',views.scrapy_test,name='scrapy-test'),
     path ('scrapy-start',views.scrapy_start,name='scrapy-start'),
-    path('scrapy-start-thread',views.scrapyThreadTestEndpoint,name='scrapy-start-thread')
+    path('scrapy-start-thread',views.scrapyThreadTestEndpoint,name='scrapy-start-thread'),
+    path('zmq-start-client',views.zmq_client_test,name='zmq-client-test')
 ]

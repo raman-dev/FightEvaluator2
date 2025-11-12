@@ -1,15 +1,37 @@
 import zmq
+from rich import print as rprint
+
+DEFAULT_SERVER_TIMEOUT = 5 * 60#5 MINIUTES
+
+def timeout(seconds=DEFAULT_SERVER_TIMEOUT):
+    return seconds * 1000
 with zmq.Context() as context:
     with context.socket(zmq.REP) as socket:
+        
+        socket.setsockopt(zmq.LINGER, 0)#don't block when trying to close
         socket.bind("tcp://*:42069")
+        poller = zmq.Poller()
+        poller.register(socket, zmq.POLLIN)
 
         while True:
-            message = socket.recv()  # blocking call
-            print(f"Received request: {message}")
-
-            # print(type(message))
-            if message == b"quit" or message == b"exit":
+            events = poller.poll(timeout(DEFAULT_SERVER_TIMEOUT))
+            
+            if events == []:
+                #no events
+                rprint(f"[bold red]No requests within {DEFAULT_SERVER_TIMEOUT} seconds.[/bold red]")
                 break
-            # time.sleep(2)
+            else:
+                #message available 
+                message = socket.recv_pyobj()
+                rprint(f"Received message: {message}")
 
-            socket.send_string(f"Server Response you sent {message}")
+                if message['action'] == 'kill':
+                    #kill server 
+                    socket.send_pyobj({
+                        'server':'server closing...'
+                    })
+                    break
+                socket.send_pyobj({
+                    'server':'hello from server! I got your message'
+                })
+        poller.unregister(socket)

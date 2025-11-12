@@ -2,6 +2,8 @@ from django.views.decorators.http import require_GET
 from django.http import JsonResponse
 import threading
 import time
+import zmq
+from rich import print as rprint
 
 import scrapy
 from scrapy.http import HtmlResponse
@@ -46,6 +48,56 @@ def scrapy_start(request):
 
     return JsonResponse({'status': 'Scrapy start endpoint'})
 
+@require_GET
+def zmq_client_test(request):
+    global mThread
+    if mThread == None or not mThread.is_alive() : 
+        mThread = threading.Thread(target=clientStartTestFunction,args=())
+        mThread.start()
+        return JsonResponse({'status': 'Scrapy started'})
+
+    return JsonResponse({'status': 'Scrapy start endpoint'})
+
+
+DEFAULT_TIMEOUT = 5#seconds
+def timeout(seconds=DEFAULT_TIMEOUT):
+    return seconds * 1000
+
+def clientStartTestFunction():
+    PORT = 42069
+    with zmq.Context() as context:
+        with context.socket(zmq.REQ) as socket:
+            
+            socket.setsockopt(zmq.LINGER,0)#must be set so pending messages are 
+            #discarded and when term and disconnect are called
+            socket.setsockopt(zmq.SNDTIMEO,timeout(seconds=5))#send timeout
+            socket.setsockopt(zmq.RCVTIMEO,timeout(seconds=5))#receive timeout
+
+            socket.connect(f"tcp://localhost:{PORT}")
+            poller = zmq.Poller()
+            poller.register(socket, zmq.POLLIN)
+            
+            try:
+                socket.send_pyobj({'hello':'world'})
+                event_mask = socket.poll(timeout(seconds=5))
+                # if socketEvents == []:
+                #     rprint(f"[bold red]No response from server within {DEFAULT_TIMEOUT} seconds.[/bold red]")
+                #     socket.close()
+                #     break
+                # socket,event_mask = socketEvents[0]
+                if (event_mask & zmq.POLLIN) != 0:
+                    message = socket.recv_pyobj()
+                    rprint(f"[bold green]Received reply:[/bold green] {message}")
+                    # if Commands[choice] == Commands.KILL_SERVER:
+                    #     rprint("Client will now close.")
+                    #     break
+                else:
+                    rprint(f"[bold red]No response from server within {DEFAULT_TIMEOUT} seconds.[/bold red]")
+                    socket.close()
+            except KeyboardInterrupt:
+                print("Ending client..")
+           
+            poller.unregister(socket)
 
 #---------------------------------------------------------------------------
 def threadRunner(*args, **kwargs):
