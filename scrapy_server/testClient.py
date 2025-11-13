@@ -1,5 +1,7 @@
 import zmq
 from enum import Enum
+from scraper_client import Client,DEFAULT_CLIENT_TIMEOUT_SECONDS
+from commands import ServerCommands
 # import json
 #read config file for port number
 PORT = 42069
@@ -111,27 +113,32 @@ def inputLoop(socket):
             break
 
 def runTestClient():
-    with zmq.Context() as context:
-        with context.socket(zmq.REQ) as socket:
+    with Client(serverPort=PORT) as client:
+        try:
+            client.send_command(ServerCommands.SERVER_STATE)
+        except TimeoutError as te:
+            rprint(f"[bold red]No response from server within {DEFAULT_CLIENT_TIMEOUT_SECONDS} seconds.[/bold red]")
+    # with zmq.Context() as context:
+    #     with context.socket(zmq.REQ) as socket:
             
-            socket.setsockopt(zmq.LINGER,0)#must be set so pending messages are 
-            #discarded and when term and disconnect are called
-            socket.setsockopt(zmq.SNDTIMEO,timeout(seconds=5))#send timeout
-            socket.setsockopt(zmq.RCVTIMEO,timeout(seconds=5))#receive timeout
+    #         socket.setsockopt(zmq.LINGER,0)#must be set so pending messages are 
+    #         #discarded and when term and disconnect are called
+    #         socket.setsockopt(zmq.SNDTIMEO,timeout(seconds=5))#send timeout
+    #         socket.setsockopt(zmq.RCVTIMEO,timeout(seconds=5))#receive timeout
 
-            socket.connect(f"tcp://localhost:{PORT}")
-            poller = zmq.Poller()
-            poller.register(socket, zmq.POLLIN)
+    #         socket.connect(f"tcp://localhost:{PORT}")
+    #         poller = zmq.Poller()
+    #         poller.register(socket, zmq.POLLIN)
 
             
-            print_menu()
+    #         print_menu()
 
-            try:
-                inputLoop(socket)
-            except KeyboardInterrupt:
-                print("Ending client..")
+    #         try:
+    #             inputLoop(socket)
+    #         except KeyboardInterrupt:
+    #             print("Ending client..")
            
-            poller.unregister(socket)
+    #         poller.unregister(socket)
 
 
 if __name__ =="__main__":
