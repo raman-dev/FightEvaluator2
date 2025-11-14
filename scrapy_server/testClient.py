@@ -63,7 +63,6 @@ def print_menu():
     print("===============================")
 
 
-
 DEFAULT_TIMEOUT = 5#seconds
 def timeout(seconds=DEFAULT_TIMEOUT):
     return seconds * 1000
