@@ -19,7 +19,7 @@ class Client:
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)
         
-        self.socket.setsockopt(zmq.LINGER,0)#must be set so pending messages are
+        self.socket.setsockopt(zmq.LINGER,0)#must be set so pending messages are cleared from buffer
         self.socket.setsockopt(zmq.SNDTIMEO, self.clientTimeoutSeconds * 1000)#send timeout
         self.socket.setsockopt(zmq.RCVTIMEO, self.clientTimeoutSeconds * 1000)#receive timeout
         
