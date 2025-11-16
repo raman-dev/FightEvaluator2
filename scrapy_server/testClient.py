@@ -69,7 +69,7 @@ def timeout(seconds=DEFAULT_TIMEOUT):
 
 
 commandMap = {}
-for i,cmd in enumerate(Commands):
+for i,cmd in enumerate(ServerCommands):
     commandMap[i + 1] = cmd.name
 
 def inputLoop(socket):
@@ -113,10 +113,30 @@ def inputLoop(socket):
 
 def runTestClient():
     with Client(serverPort=PORT) as client:
-        try:
-            client.send_command(ServerCommands.SERVER_STATE)
-        except TimeoutError as te:
-            rprint(f"[bold red]No response from server within {DEFAULT_CLIENT_TIMEOUT_SECONDS} seconds.[/bold red]")
+        # breakLoop = False
+        while True:
+            userin = input("Select an option: ").strip()
+            if userin != "q" and userin != "m" and not userin.isnumeric():
+                print("invalid input")
+                continue
+            if userin == "q":
+                break
+            if userin == "m":
+                print_menu()
+                continue
+            key = int(userin)
+            if key not in commandMap:
+                print("invalid command")
+                continue
+            choice = commandMap[int(userin)]
+            print(ServerCommands[choice])
+            try:
+                client.send_command(ServerCommands.SERVER_STATE)
+            except TimeoutError as te:
+                rprint(f"[bold red]Client Timed Out. No response from server within {DEFAULT_CLIENT_TIMEOUT_SECONDS} seconds.[/bold red]")
+                break
+
+        
     # with zmq.Context() as context:
     #     with context.socket(zmq.REQ) as socket:
             
