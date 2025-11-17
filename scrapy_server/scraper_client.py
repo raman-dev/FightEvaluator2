@@ -38,8 +38,11 @@ class Client:
         self.context = None
 
     
-    def send_command(self,command: ServerCommands):
-        self.socket.send_pyobj(command.value)
+    def send_command(self,command: ServerCommands,data: dict = {}):
+        self.socket.send_pyobj({
+            'command': command.value,
+            'data':data
+        })
         event_mask = self.socket.poll(self.timeout(self.clientTimeoutSeconds))
 
         if (event_mask & zmq.POLLIN) != 0:
