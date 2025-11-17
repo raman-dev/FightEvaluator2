@@ -2,6 +2,8 @@ import zmq
 from rich import print as rprint
 from enum import Enum
 from commands import ServerCommands
+import threading 
+from pathlib import Path
 
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
@@ -18,11 +20,13 @@ class ServerStates(Enum):
         - do work in the background 
         - maintain state
     """
+
+#do the work of scraping and parsing
+
 class Server:
     def __init__(self,serverPort: int,timeoutSeconds: int = DEFAULT_SERVER_TIMEOUT_S):
         self.port = serverPort
         self.timeout = timeoutSeconds
-        self.state = ServerStates.IDLE
 
         # Create a command router
         self.command_handlers = {
@@ -33,7 +37,11 @@ class Server:
             ServerCommands.KILL_SERVER: self.handle_kill_server,
         }
 
+        self.state = ServerStates.IDLE
         self.running = False
+        
+        self.fightEventFileName = "fight-event.json"
+        self.matchupsFileName = "matchups.json"
 
     def start(self):
         self.context = zmq.Context()
@@ -51,7 +59,11 @@ class Server:
     def run(self):
         self.running = True
         rprint(f"[bold green]Server running on port {self.port}[/bold green]")
-        while True:
+        #Keyboard interrupt doesn't work when poller.poll is called
+        #if you want to use keyboard interrupts
+        #need to run server in background thread 
+        #and allow user to stop from main thread
+        while self.running:
             events = self.poller.poll(timeout(DEFAULT_SERVER_TIMEOUT_S))
             
             if events == []:
@@ -101,38 +113,86 @@ class Server:
     # HANDLERS
     # ------------------------------------------------------------------
 
-    def handle_server_state(self, msg):
+    def handle_server_state(self, msg) -> dict:
         return {
             "result": "SERVER_STATE",
             "state": self.state.value
         }
 
-    def handle_fetch_event(self, msg):
-        event_id = msg.get("event_id")
+    def handle_fetch_event(self, msg) -> dict: 
         # TODO: fetch event data here
+        if self.state == ServerStates.BUSY:
+            #return its busy working
+            return {
+                "result":"FETCH_EVENT",
+                "state" : ServerStates.BUSY.value,
+            }
+        #do the work in a background thread
+        """
+            data is written to json file
+
+            fight-event.json
+            matchups.json
+
+            fight-event.json
+                title:
+                date:
+                link: 
+            matchups.json
+                matchups: [
+                    {
+                        fighter_a
+                        fighter_b
+                        fighter_a_link
+                        fighter_b_link
+                        weightclass
+                        round
+                        isprelim
+                    }
+                ]
+
+            client queries for event
+                if busy response busy
+                if idle get event
+                    if event-file dne or event-file.date is in the past:
+                        fetch new event
+                    else:
+                        event is yet to come return file data
+                
+
+            do not save single fighter fetch calls        
+
+        """
+        #check file exists
+        fightEventFilePath = Path(self.fightEventFileName)
+
+        #is file
+        if fightEventFilePath.is_file():
+            pass
+        else:
+            pass
         return {
             "result": "FETCH_EVENT",
-            "event_id": event_id,
-            "data": f"Mock event data for {event_id}"
+            "data": f"Mock event data for next event"
         }
 
-    def handle_fetch_fighter(self, msg):
-        link = msg.get("fighter_link")
+    def handle_fetch_fighter(self, msg) -> dict:
+        # link = msg.get("fighter_link")
         return {
             "result": "FETCH_FIGHTER",
-            "fighter_link": link,
-            "data": f"Mock fighter data for {link}"
+            # "fighter_link": link,
+            "data": f"Mock fighter data for fighter_link"
         }
 
-    def handle_fetch_fighter_multi(self, msg):
-        links = msg.get("fighter_links", [])
+    def handle_fetch_fighter_multi(self, msg) -> dict:
+        # links = msg.get("fighter_links", [])
         return {
             "result": "FETCH_FIGHTER_MULTI",
-            "requested": links,
-            "data": [f"Mock fighter data for {l}" for l in links]
+            # "requested": links,
+            "data": "Fetching data for multiple fighters"
         }
 
-    def handle_kill_server(self, msg):
+    def handle_kill_server(self, msg) -> dict:
         self.running = False
         return {"result": "KILL_SERVER", "status": "Server shutting down"}
 

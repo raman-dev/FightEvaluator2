@@ -128,10 +128,13 @@ def runTestClient():
             if key not in commandMap:
                 print("invalid command")
                 continue
+            
             choice = commandMap[int(userin)]
+
             print(ServerCommands[choice])
             try:
-                client.send_command(ServerCommands.SERVER_STATE)
+                response = client.send_command(ServerCommands[choice],data={})
+                rprint(f"[bold green]Server response: [bold/green]\n [green]{response}")
             except TimeoutError as te:
                 rprint(f"[bold red]Client Timed Out. No response from server within {DEFAULT_CLIENT_TIMEOUT_SECONDS} seconds.[/bold red]")
                 break

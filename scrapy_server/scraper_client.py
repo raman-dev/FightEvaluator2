@@ -39,10 +39,14 @@ class Client:
 
     
     def send_command(self,command: ServerCommands,data: dict = {}):
+        if type(command) != ServerCommands:
+            raise ValueError("Command arg is not of type ServerCommand")
+        
         self.socket.send_pyobj({
             'command': command.value,
             'data':data
         })
+        
         event_mask = self.socket.poll(self.timeout(self.clientTimeoutSeconds))
 
         if (event_mask & zmq.POLLIN) != 0:
