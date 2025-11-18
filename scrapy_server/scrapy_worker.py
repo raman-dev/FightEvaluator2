@@ -132,7 +132,7 @@ def eventLinkParse(source: str):
         if data_date < today:
             break
         result['link'] = domain + data_link
-        result['date'] = data_date
+        result['date'] = str(data_date)
     # print(result)
     return result
 
@@ -177,36 +177,55 @@ class MatchUpSpider(scrapy.Spider):
         })
 
 def FightEventSpiderProcess(q: multiprocessing.Queue):
+    print("FightEventSpiderProcess starting...")
     startCrawlerProcess(EventLinkSpider)
     q.put([item for item  in EventLinkSpider.results])
 
 
 def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
+    print("MatchUpSpiderProcess starting...")
+    
     MatchUpSpider.start_urls.append(eventLink)
     startCrawlerProcess(MatchUpSpider)
-
     q.put([item for item in MatchUpSpider.results])
 
-def processSpawner():
-    print("prcoessSpawner running")
-    startCrawlerProcess(EventLinkSpider)
-    results = [r for r in EventLinkSpider.results]
-    resultDict= results[0]
-    print(resultDict)
-    MatchUpSpider.start_urls.append(resultDict['link'])
-    startCrawlerProcess(MatchUpSpider)
+def launchScrapyProcess(spiderProcessFunc,**kwargs):
+    p = Process(target=spiderProcessFunc,kwargs=kwargs)
+    p.start()
+    p.join()#will wait 
 
 
-# def processControlThread():
-#     #create a process spawner
-#     p = multiprocessing.Process(target=processSpawner,kwargs={})
-#     p.start()
-#     p.join()
-
-
-def runScrapyFetchEvent(q: queue.Queue):
+def runScrapyFetchEvent(result_q: queue.Queue):
     #necessary since scrapy needs to use its own process
     #and only works in the main thread 
-    p = multiprocessing.Process(target=processSpawner,kwargs={})
-    p.start()
-    p.join()
+    ipc_q = multiprocessing.Queue()
+
+    t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':ipc_q})
+    #kwargs must be one to one mapping to keyword arguments
+    #keys can only be missing if and only if function has default values in signature
+    t.start()
+    t.join()#block until done
+
+    results = ipc_q.get()
+    fightEventData = results[0]
+
+    time.sleep(15)#wait 15 seconds before making another request
+    print(fightEventData)
+    t = threading.Thread(target=launchScrapyProcess,args=(MatchUpSpiderProcess,),
+                         kwargs={'eventLink':fightEventData['link'],'q':ipc_q})
+    t.start()
+    t.join()#block until done
+    matchupResults = ipc_q.get()[0]
+    matchups = matchupResults['matchups']
+    for m in matchups:
+    #     #create index key from name
+        for fighterData in m['fighters_raw']:
+            name,link = fighterData.values()
+            print(name,link)
+    
+    #
+    result_q.put({
+        'event':fightEventData,
+        'matchups': matchups
+    })
+    

@@ -1,0 +1,218 @@
+{
+    "event": {
+        "link": "https://www.tapology.com/fightcenter/events/130635-ufc-fight-night",
+        "date": "2025-11-22"
+    },
+    "matchups": [
+        {
+            "fighters_raw": [
+                {
+                    "name": "arman tsarukyan",
+                    "link": "https://www.tapology.com/fightcenter/fighters/115752-arman-tsarukyan"
+                },
+                {
+                    "name": "dan hooker",
+                    "link": "https://www.tapology.com/fightcenter/fighters/18854-daniel-hooker"
+                }
+            ],
+            "weight_class": 155,
+            "rounds": 5,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "belal muhammad",
+                    "link": "https://www.tapology.com/fightcenter/fighters/32797-belal-muhammad"
+                },
+                {
+                    "name": "ian machado garry",
+                    "link": "https://www.tapology.com/fightcenter/fighters/171377-ian-garry"
+                }
+            ],
+            "weight_class": 170,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "volkan oezdemir",
+                    "link": "https://www.tapology.com/fightcenter/fighters/35488-volkan-oezdemir-cousin"
+                },
+                {
+                    "name": "alonzo menifield",
+                    "link": "https://www.tapology.com/fightcenter/fighters/69032-alonzo-menifield"
+                }
+            ],
+            "weight_class": 205,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "jack hermansson",
+                    "link": "https://www.tapology.com/fightcenter/fighters/13893-Jack-Hermansson"
+                },
+                {
+                    "name": "myktybek orolbai",
+                    "link": "https://www.tapology.com/fightcenter/fighters/182971-myktybek-orolbaev"
+                }
+            ],
+            "weight_class": 170,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "serghei spivac",
+                    "link": "https://www.tapology.com/fightcenter/fighters/90068-sergey-spivak"
+                },
+                {
+                    "name": "shamil gaziev",
+                    "link": "https://www.tapology.com/fightcenter/fighters/201352-shamil-gaziev"
+                }
+            ],
+            "weight_class": 265,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "alex perez",
+                    "link": "https://www.tapology.com/fightcenter/fighters/alex-perez"
+                },
+                {
+                    "name": "asu almabayev",
+                    "link": "https://www.tapology.com/fightcenter/fighters/127726-khamzat-sakalov"
+                }
+            ],
+            "weight_class": 125,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "luke riley",
+                    "link": "https://www.tapology.com/fightcenter/fighters/243621-luke-riley"
+                },
+                {
+                    "name": "bogdan grad",
+                    "link": "https://www.tapology.com/fightcenter/fighters/106776-bogdan-grad"
+                }
+            ],
+            "weight_class": 145,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "abdulrakhman yakhyaev",
+                    "link": "https://www.tapology.com/fightcenter/fighters/243673-abdulrakhman-yakhyaev"
+                },
+                {
+                    "name": "raffael cerqueira",
+                    "link": "https://www.tapology.com/fightcenter/fighters/236274-rafael-lima-rafael-bjj"
+                }
+            ],
+            "weight_class": 205,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "kyoji horiguchi",
+                    "link": "https://www.tapology.com/fightcenter/fighters/19983-kyoji-horiguchi"
+                },
+                {
+                    "name": "tagir ulanbekov",
+                    "link": "https://www.tapology.com/fightcenter/fighters/130955-tagir-ulanbekov"
+                }
+            ],
+            "weight_class": 125,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "bekzat almakhan",
+                    "link": "https://www.tapology.com/fightcenter/fighters/192704-bekzat-almakhan"
+                },
+                {
+                    "name": "aleksandre topuria",
+                    "link": "https://www.tapology.com/fightcenter/fighters/100890-alex-topuria"
+                }
+            ],
+            "weight_class": 135,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "ryan loder",
+                    "link": "https://www.tapology.com/fightcenter/fighters/292593-ryan-loder"
+                },
+                {
+                    "name": "ismail naurdiev",
+                    "link": "https://www.tapology.com/fightcenter/fighters/79755-ismael-naurdiev"
+                }
+            ],
+            "weight_class": 185,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "nurullo aliev",
+                    "link": "https://www.tapology.com/fightcenter/fighters/178801-nurullo-aliev"
+                },
+                {
+                    "name": "shaqueme rock",
+                    "link": "https://www.tapology.com/fightcenter/fighters/130621-shaqueme-rock"
+                }
+            ],
+            "weight_class": 155,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "saygid izagakhmaev",
+                    "link": "https://www.tapology.com/fightcenter/fighters/104330-saigid-izagahmayev"
+                },
+                {
+                    "name": "nicolas dalby",
+                    "link": "https://www.tapology.com/fightcenter/fighters/18302-nicolas-dalby"
+                }
+            ],
+            "weight_class": 170,
+            "rounds": 3,
+            "isprelim": true
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "marek bujo",
+                    "link": "https://www.tapology.com/fightcenter/fighters/71179-marek-bujo"
+                },
+                {
+                    "name": "denzel freeman",
+                    "link": "https://www.tapology.com/fightcenter/fighters/124753-denzedenzel-freeman"
+                }
+            ],
+            "weight_class": 265,
+            "rounds": 3,
+            "isprelim": true
+        }
+    ]
+}

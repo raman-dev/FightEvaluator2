@@ -55,7 +55,7 @@ class Commands(Enum):
 
 def print_menu():
     print("\n=== Scrapy Server Test Client ===")
-    for i,command in enumerate(Commands):
+    for i,command in enumerate(ServerCommands):
         print(f"{i + 1}. {command.name}")
     
     print("m. Print menu")
@@ -134,7 +134,7 @@ def runTestClient():
             print(ServerCommands[choice])
             try:
                 response = client.send_command(ServerCommands[choice],data={})
-                rprint(f"[bold green]Server response: [bold/green]\n [green]{response}")
+                rprint(f"[bold green]Server response: [/bold green]\n [cyan]{response}")
             except TimeoutError as te:
                 rprint(f"[bold red]Client Timed Out. No response from server within {DEFAULT_CLIENT_TIMEOUT_SECONDS} seconds.[/bold red]")
                 break

@@ -296,7 +296,7 @@ def testFunction(*args,key,key0=None):
 
 
 def processSpawner():
-    print("prcoessSpawner running")
+    print("processSpawner running")
     startCrawlerProcess(EventLinkSpider)
     results = [r for r in EventLinkSpider.results]
     resultDict= results[0]
@@ -314,28 +314,28 @@ def processControlThread():
 if __name__ == "__main__":
     q = multiprocessing.Queue()
 
-    # t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':q})
-    t = threading.Thread(target=processControlThread,args=())
+    t = threading.Thread(target=launchScrapyProcess,args=(FightEventSpiderProcess,),kwargs={'q':q})
+    # t = threading.Thread(target=processControlThread,args=())
     # t = threading.Thread(target=testFunction,kwargs={"key":"value"})
     #kwargs must be one to one mapping to keyword arguments
     #keys can only be missing if and only if function has default values in signature
     t.start()
     t.join()#block until done
 
-    # results = q.get()
-    # fightEventData = results[0]
-
-    # t = threading.Thread(target=launchScrapyProcess,args=(MatchUpSpiderProcess,),
-    #                      kwargs={'eventLink':fightEventData['link'],'q':q})
-    # t.start()
-    # t.join()#block until done
-    # matchupResults = q.get()[0]
-    # matchups = matchupResults['matchups']
-    # for m in matchups:
+    results = q.get()
+    fightEventData = results[0]
+    print(fightEventData)
+    t = threading.Thread(target=launchScrapyProcess,args=(MatchUpSpiderProcess,),
+                         kwargs={'eventLink':fightEventData['link'],'q':q})
+    t.start()
+    t.join()#block until done
+    matchupResults = q.get()[0]
+    matchups = matchupResults['matchups']
+    for m in matchups:
     #     #create index key from name
-    #     for fighterData in m['fighters_raw']:
-    #         name,link = fighterData.values()
-    #         print(name,link)
+        for fighterData in m['fighters_raw']:
+            name,link = fighterData.values()
+            print(name,link)
     # with concurrent.futures.ProcessPoolExecutor() as executor:
     #     eventFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
     #     eventResults = eventFuture.result()

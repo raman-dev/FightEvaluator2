@@ -1,14 +1,17 @@
 
 import zmq
 import threading 
+import json
 
 from queue import Queue
 from rich import print as rprint
 from enum import Enum
 from commands import ServerCommands
 from pathlib import Path
+from datetime import datetime
 
 
+import scrapy_worker
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
     
@@ -35,7 +38,7 @@ class Server:
         # Create a command router
         self.command_handlers = {
             ServerCommands.SERVER_STATE: self.handle_server_state,
-            ServerCommands.FETCH_EVENT: self.handle_fetch_event,
+            ServerCommands.FETCH_EVENT_LATEST: self.handle_fetch_event,
             ServerCommands.FETCH_FIGHTER: self.handle_fetch_fighter,
             ServerCommands.FETCH_FIGHTER_MULTI: self.handle_fetch_fighter_multi,
             ServerCommands.KILL_SERVER: self.handle_kill_server,
@@ -45,8 +48,8 @@ class Server:
         self.running = False
         
         self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
-        self.dataQ = Queue()#thread safe queue for data from worker to server
-
+        self.data_q = Queue()#thread safe queue for data from worker to server
+        self.workerThread = None
     def start(self):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
@@ -117,6 +120,34 @@ class Server:
     # HANDLERS
     # ------------------------------------------------------------------
 
+
+    def checkDataIsAvailable(self,filename: str):
+        filePath = Path(filename)
+        #check if file exists
+        if filePath.is_file():
+            #if exists check if is stale
+            isStale = False
+            with open(filePath,"r",encoding="utf-8") as file:
+                data = json.load(file)
+                date_str = data['event']['date']
+                eventDate = datetime.strptime(data['event']['date'],"%Y-%m-%d")
+                today = datetime.today()
+                #eventDate is in the past
+                if eventDate < today:
+                    isStale = True
+            #if stale date not available if not stale date is available
+            return not isStale 
+        return False
+
+    def getDataFromFile(self,filename: str):
+        data = {}
+        try:
+            with open(filename,"r",encoding="utf-8") as file:
+                data = json.load(file)
+        except OSError as e:
+            print("Error opening fight event data file.",e)
+        return data 
+       
     def handle_server_state(self, msg) -> dict:
         return {
             "result": "SERVER_STATE",
@@ -124,15 +155,33 @@ class Server:
         }
 
     def handle_fetch_event(self, msg) -> dict: 
-        # TODO: fetch event data here
         if self.state == ServerStates.BUSY:
-            #return its busy working
+            #check q for data 
+            if self.data_q.empty():
+                #return its busy working
+                return {
+                    "result":ServerCommands.FETCH_EVENT_LATEST.value,
+                    "state" : ServerStates.BUSY.value,
+                }
+            #non empty queue 
+            #grab data and write to file 
+            data = self.data_q.get()
+
+            with open(self.fightEventFileName,"w",encoding="utf-8") as file:
+                json.dump(data,file,indent=4,default=str)
+            
+            self.state = ServerStates.IDLE
+            self.workerThread.join()
+            self.workerThread = None
             return {
-                "result":"FETCH_EVENT",
-                "state" : ServerStates.BUSY.value,
+                "result":ServerCommands.FETCH_EVENT_LATEST.value,
+                "data" : data
             }
         #do the work in a background thread
         """
+
+            scrapy worker correctly returns data
+
             data is written to json file
 
             fight-event-data.json
@@ -151,6 +200,7 @@ class Server:
                     }
                 ]
 
+            data is available on a thread 
             client queries for event
                 if busy response busy
                 if idle get event
@@ -171,19 +221,24 @@ class Server:
 
         """
         #check file exists
-        fightEventFilePath = Path(self.fightEventFileName)
-
-        #is file
-        if fightEventFilePath.is_file():
-            #parse file and return data 
-            pass
+        if self.checkDataIsAvailable(self.fightEventFileName):
+            return self.getDataFromFile(self.fightEventFileName)
         else:
             #file does not exist start worker thread to fetch data
-            self.state = ServerStates.BUSY
-            self.worker = threading.Thread(target=runScrapyFetchEvent,args=[self.q)])
+            if self.workerThread == None or not self.workerThread.is_alive():
+                self.state = ServerStates.BUSY
+                self.workerThread = threading.Thread(
+                    target=scrapy_worker.runScrapyFetchEvent,
+                    args=[self.data_q]
+                    )
+                self.workerThread.start()
+                return {
+                    "result": ServerCommands.FETCH_EVENT_LATEST.value,
+                    "data" : "Server starting scraper workers..."
+                }
         return {
-            "result": "FETCH_EVENT",
-            "data": f"Mock event data for next event"
+            "result": ServerCommands.FETCH_EVENT_LATEST.value,
+            "data": f"Should not reach here check if server is operating correctly"
         }
 
     def handle_fetch_fighter(self, msg) -> dict:
