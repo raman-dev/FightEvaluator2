@@ -1,9 +1,13 @@
+
 import zmq
+import threading 
+
+from queue import Queue
 from rich import print as rprint
 from enum import Enum
 from commands import ServerCommands
-import threading 
 from pathlib import Path
+
 
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
@@ -40,8 +44,8 @@ class Server:
         self.state = ServerStates.IDLE
         self.running = False
         
-        self.fightEventFileName = "fight-event.json"
-        self.matchupsFileName = "matchups.json"
+        self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
+        self.dataQ = Queue()#thread safe queue for data from worker to server
 
     def start(self):
         self.context = zmq.Context()
@@ -131,14 +135,10 @@ class Server:
         """
             data is written to json file
 
-            fight-event.json
-            matchups.json
-
-            fight-event.json
+            fight-event-data.json
                 title:
                 date:
                 link: 
-            matchups.json
                 matchups: [
                     {
                         fighter_a
@@ -160,7 +160,14 @@ class Server:
                         event is yet to come return file data
                 
 
-            do not save single fighter fetch calls        
+            server thread
+            worker thread
+               write data to file
+               write state to queue
+            on receive command
+                read state from queue
+                update server state 
+                respond to client if worker complete and data available       
 
         """
         #check file exists
@@ -168,9 +175,12 @@ class Server:
 
         #is file
         if fightEventFilePath.is_file():
+            #parse file and return data 
             pass
         else:
-            pass
+            #file does not exist start worker thread to fetch data
+            self.state = ServerStates.BUSY
+            self.worker = threading.Thread(target=runScrapyFetchEvent,args=[self.q)])
         return {
             "result": "FETCH_EVENT",
             "data": f"Mock event data for next event"
