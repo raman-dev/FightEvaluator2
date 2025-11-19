@@ -8,6 +8,7 @@ import time
 import multiprocessing
 import threading
 import queue
+import enum 
 
 from multiprocessing import Process
 
@@ -15,13 +16,28 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from pyquery import PyQuery as pq
 
+class WeightClass(enum.Enum):
+    NA = "n/a"
+    ATOMWEIGHT = "atomweight"
+    STRAWWEIGHT = "strawweight"
+    FLYWEIGHT = "flyweight"
+    BANTAMWEIGHT = "bantamweight"
+    FEATHERWEIGHT = "featherweight"
+    LIGHTWEIGHT = "lightweight"
+    WELTERWEIGHT = "welterweight"
+    MIDDLEWEIGHT = "middleweight"
+    LIGHT_HEAVYWEIGHT = "light_heavyweight"
+    HEAVYWEIGHT = "heavyweight"
+    CATCH_WEIGHT = "catch_weight"
+    
+
 domain = "https://www.tapology.com"
 
 def normalizeString(string):
     return unicodedata.normalize('NFD',string).encode('ascii', 'ignore').decode("ascii").lower()
 
 
-def scrapeFighterData(element,result_only=False):
+def scrapeFighterNameAndLink(element,result_only=False):
     fighterPQ = pq(element)
     
     atag = fighterPQ('[class*="link-primary-red"]').eq(0)
@@ -81,8 +97,8 @@ def scrapeMatchups(source):
 
         fighter_a,boutInfo,fighter_b = pq(dataParent).children()
         
-        x = scrapeFighterData(fighter_a)
-        y = scrapeFighterData(fighter_b)
+        x = scrapeFighterNameAndLink(fighter_a)
+        y = scrapeFighterNameAndLink(fighter_b)
         matchup['fighters_raw'] = [x,y]
         m = pq(boutInfo).text()
         #if contains 5 x 5 -> 5 rounder
@@ -136,6 +152,106 @@ def eventLinkParse(source: str):
     # print(result)
     return result
 
+def scrapeFighterDetails(fighterDetailsDiv,fighterData) -> dict:
+    data = []
+    result = pq(fighterDetailsDiv)("span")
+    n = len(result)
+    for i in range(0,n - 1):
+        data.append(pq(result[i]).text())
+    """
+   0 'Gabriel Miranda' : name 
+   1 'Fly' : nickname
+   2 '17-6-0 (Win-Loss-Draw)' : record
+   3 '1 Win': streak
+   4 '34'   : age
+   5 '1990 Mar 25': date-of-birth
+   6 '5\'11" (180cm)' : height
+   7 '71.0" (180cm)': reach
+   8 'Featherweight' : weightclass
+   9 '145.0 lbs': last weigh-in
+     'Astra Fight Team'
+     'September 09, 2023 in UFC'
+     '$0 USD'
+     'Telêmaco Borba, Paraná, Brazil' 
+     
+     2025-08-10 new query result structure
+     0 name
+     1 nickname
+     2 record
+     3 streak
+     4 
+    
+     
+    """
+    height_pattern = re.compile(r"(\d)'(\d{1,2})\"\s+\(\d{3}cm\)")
+    dob_pattern = re.compile(r"(\d{4})\s+(\w{3})\s+(\d{1,2})")
+    reach_pattern = re.compile(r"((\d{2}\.\d+)|(\d{2}))\"\s+\(\d{3}cm\)")
+
+    print(data)
+    # height_string = data[6]
+    #3 height values if both feet'inch" and cm are present
+    #1 height value if only cm is present
+    fighterData['height'] = 0
+    fighterData['reach'] = 0
+    fighterData['date_of_birth'] = 'N/A'
+    fighterData['weight_class'] = WeightClass.LIGHTWEIGHT
+    for d in data:
+        weight_class = d.replace(" ","_").lower()
+        height_match = re.search(height_pattern,d)#try feet'inch"
+        reach_match = re.search(reach_pattern,d)
+        dob_match = re.search(dob_pattern,d)
+        # height_inches = 0
+        # if len(height_match) == 1:
+        #     height_inches = math.floor(int(height_match[0]) / 2.54)
+        # if len(height_match) > 1:
+        #     height_inches = int(height_match[0])*12 + int(height_match[1])
+        if height_match:
+            feet, inches = map(int, height_match.groups())
+            height_inches = feet * 12 + inches
+            fighterData['height'] = height_inches
+        elif reach_match:
+            reach_val = float(reach_match.group(1))
+            reach_inches = int(round(reach_val))
+            fighterData['reach'] = reach_inches
+        elif weight_class != 'n/a' and  weight_class in WeightClass:
+            fighterData['weight_class'] = weight_class.upper()#first lower to query then upper to reference wtf
+        elif dob_match:
+            print('dob_string', d)
+            dob = datetime.strptime(d, "%Y %b %d").date()
+            fighterData['date_of_birth'] = dob
+
+def scrapeFighter(source: str):
+    soup = BeautifulSoup(source,'html.parser')
+    
+    fighterNameRecord = soup.find_all('div',class_='leading-tight')
+    nameElement,recordElement = fighterNameRecord
+    full_name = normalizeString(nameElement.text.strip())
+
+    record = recordElement.text.strip().split('-')
+    # print(record)
+    wins = int(record[0])
+    losses = int(record[1])
+    draws = int(record[2])
+    
+    names = list(map(lambda x: x.lower(),full_name.split(' ')))
+    name_index = "-".join(names)
+    print('parsing => ',full_name,name_index)
+
+    first_name = names[0]
+    last_name = " ".join(names[1:])#full_name.split(' ')[-1]
+
+    fighterData = {}
+    fighterData['first_name'] = first_name
+    fighterData['last_name'] = last_name
+    fighterData['wins'] = wins
+    fighterData['losses'] = losses
+    fighterData['draws'] = draws
+    fighterData['name_index'] = name_index
+    
+    fighterDetails = soup.find('div',id='standardDetails')
+    scrapeFighterDetails(str(fighterDetails),fighterData)
+    return fighterData
+
 def startCrawlerProcess(spider: scrapy.Spider):
     if spider == None:
         raise ValueError("Spider cannot be None")
@@ -176,6 +292,15 @@ class MatchUpSpider(scrapy.Spider):
             'matchups':matchups
         })
 
+class FighterDataSpider(scrapy.Spider):
+    name="fighterDataSpider"
+    start_urls = []
+    results = []
+
+    def parse(self,response: scrapy.http.HtmlResponse):
+        fighterData = scrapeFighter(response.text)
+        self.results.append(fighterData)
+
 def FightEventSpiderProcess(q: multiprocessing.Queue):
     print("FightEventSpiderProcess starting...")
     startCrawlerProcess(EventLinkSpider)
@@ -184,10 +309,15 @@ def FightEventSpiderProcess(q: multiprocessing.Queue):
 
 def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
     print("MatchUpSpiderProcess starting...")
-    
     MatchUpSpider.start_urls.append(eventLink)
     startCrawlerProcess(MatchUpSpider)
     q.put([item for item in MatchUpSpider.results])
+
+def FighterDataSpiderProcess(fighterLink: str, q: multiprocessing.Queue):
+    print("FighterDataSpiderProcess starting...")
+    FighterDataSpider.start_urls.append(fighterLink)
+    startCrawlerProcess(FighterDataSpider)
+    q.put([item for item in FighterDataSpider.results])
 
 def launchScrapyProcess(spiderProcessFunc,**kwargs):
     p = Process(target=spiderProcessFunc,kwargs=kwargs)
