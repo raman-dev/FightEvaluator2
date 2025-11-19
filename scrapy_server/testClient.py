@@ -132,8 +132,28 @@ def runTestClient():
             choice = commandMap[int(userin)]
 
             print(ServerCommands[choice])
+            data = {}
+            match ServerCommands[choice]:
+                case ServerCommands.SERVER_STATE:
+                    data = {}
+                case ServerCommands.FETCH_EVENT_LATEST:
+                    data = {}
+                case ServerCommands.FETCH_FIGHTER:
+                    data = {
+                        'link':'https://www.tapology.com/fightcenter/fighters/32797-belal-muhammad'
+                    }
+                case ServerCommands.FETCH_FIGHTER_MULTI:
+                    data = {
+                        'links':[
+                            {'matchup-index':0,'link':'https://www.tapology.com/fightcenter/fighters/115752-arman-tsarukyan'},
+                            {'matchup-index':1,'link':'https://www.tapology.com/fightcenter/fighters/171377-ian-garry'}
+                        ]
+                    }
+                case ServerCommands.KILL_SERVER:
+                    data = {}
+            
             try:
-                response = client.send_command(ServerCommands[choice],data={})
+                response = client.send_command(ServerCommands[choice],data=data)
                 rprint(f"[bold green]Server response: [/bold green]\n [cyan]{response}")
             except TimeoutError as te:
                 rprint(f"[bold red]Client Timed Out. No response from server within {DEFAULT_CLIENT_TIMEOUT_SECONDS} seconds.[/bold red]")
