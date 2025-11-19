@@ -121,7 +121,7 @@ class Server:
     # ------------------------------------------------------------------
 
 
-    def checkDataIsAvailable(self,filename: str):
+    def isFightEventDataAvailable(self,filename: str):
         filePath = Path(filename)
         #check if file exists
         if filePath.is_file():
@@ -221,7 +221,7 @@ class Server:
 
         """
         #check file exists
-        if self.checkDataIsAvailable(self.fightEventFileName):
+        if self.isFightEventDataAvailable(self.fightEventFileName):
             return self.getDataFromFile(self.fightEventFileName)
         else:
             #file does not exist start worker thread to fetch data
@@ -242,12 +242,25 @@ class Server:
         }
 
     def handle_fetch_fighter(self, msg) -> dict:
-        # link = msg.get("fighter_link")
-        return {
-            "result": "FETCH_FIGHTER",
-            # "fighter_link": link,
-            "data": f"Mock fighter data for fighter_link"
-        }
+        if self.state == ServerStates.BUSY:
+            return {
+                "result": ServerCommands.FETCH_FIGHTER.value,
+                "state": ServerStates.BUSY.value
+            }
+        data = msg['data']
+        link = data["link"]
+
+        """
+            fetch fighter data from link
+            how to handle this 
+            
+        """
+
+        # return {
+        #     "result": "FETCH_FIGHTER",
+        #     # "fighter_link": link,
+        #     "data": f"Mock fighter data for fighter_link"
+        # }
 
     def handle_fetch_fighter_multi(self, msg) -> dict:
         # links = msg.get("fighter_links", [])
