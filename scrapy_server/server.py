@@ -45,11 +45,14 @@ class Server:
         }
 
         self.state = ServerStates.IDLE
+        self.working_on = None
         self.running = False
         
         self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
         self.data_q = Queue()#thread safe queue for data from worker to server
         self.workerThread = None
+
+        self.cache = {}
     def start(self):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
@@ -81,6 +84,7 @@ class Server:
             message = self.socket.recv_pyobj()
             rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
 
+            self.process_data_q()
             response = self.process_message(message)
             self.socket.send_pyobj(response)
 
@@ -100,6 +104,48 @@ class Server:
     def __exit__(self, exc_type, exc_value, traceback):
         self.stop()
 
+    
+    def process_data_q(self):
+        #process data in the q before processing new messages
+        if not self.data_q.empty():
+            print("data q non empty")
+            data = self.data_q.get()
+            #add to in memory cache
+
+            match self.working_on:
+                case ServerCommands.FETCH_EVENT_LATEST:
+                    self.cache[ServerCommands.FETCH_EVENT_LATEST] = data
+
+                    with open(self.fightEventFileName,"w",encoding="utf-8") as file:
+                        json.dump(data,file,indent=4,default=str)
+                    
+                    """
+                     fight-event-data.json
+                        title:
+                        date:
+                        link: 
+                        matchups: [
+                            {
+                                fighter_a
+                                fighter_b
+                                fighter_a_link
+                                fighter_b_link
+                                weightclass
+                                round
+                                isprelim
+                            }
+                        ]
+
+                    """
+                case ServerCommands.FETCH_FIGHTER:
+                    self.cache[ServerCommands.FETCH_FIGHTER] = data
+
+                case ServerCommands.FETCH_FIGHTER_MULTI:
+                    self.cache[ServerCommands.FETCH_FIGHTER_MULTI] = data
+            self.working_on = None
+            if self.workerThread != None:
+                self.workerThread = None
+            self.state = ServerStates.IDLE
     def process_message(self, message: dict):
         """Validate and route the command."""
         if not isinstance(message, dict) or "command" not in message:
@@ -156,26 +202,10 @@ class Server:
 
     def handle_fetch_event(self, msg) -> dict: 
         if self.state == ServerStates.BUSY:
-            #check q for data 
-            if self.data_q.empty():
-                #return its busy working
-                return {
-                    "result":ServerCommands.FETCH_EVENT_LATEST.value,
-                    "state" : ServerStates.BUSY.value,
-                }
-            #non empty queue 
-            #grab data and write to file 
-            data = self.data_q.get()
-
-            with open(self.fightEventFileName,"w",encoding="utf-8") as file:
-                json.dump(data,file,indent=4,default=str)
-            
-            self.state = ServerStates.IDLE
-            self.workerThread.join()
-            self.workerThread = None
+            #return its busy working
             return {
                 "result":ServerCommands.FETCH_EVENT_LATEST.value,
-                "data" : data
+                "state" : ServerStates.BUSY.value,
             }
         #do the work in a background thread
         """
@@ -183,22 +213,6 @@ class Server:
             scrapy worker correctly returns data
 
             data is written to json file
-
-            fight-event-data.json
-                title:
-                date:
-                link: 
-                matchups: [
-                    {
-                        fighter_a
-                        fighter_b
-                        fighter_a_link
-                        fighter_b_link
-                        weightclass
-                        round
-                        isprelim
-                    }
-                ]
 
             data is available on a thread 
             client queries for event
@@ -225,21 +239,16 @@ class Server:
             return self.getDataFromFile(self.fightEventFileName)
         else:
             #file does not exist start worker thread to fetch data
-            if self.workerThread == None or not self.workerThread.is_alive():
-                self.state = ServerStates.BUSY
-                self.workerThread = threading.Thread(
-                    target=scrapy_worker.runScrapyFetchEvent,
-                    args=[self.data_q]
-                    )
-                self.workerThread.start()
-                return {
-                    "result": ServerCommands.FETCH_EVENT_LATEST.value,
-                    "data" : "Server starting scraper workers..."
-                }
-        return {
-            "result": ServerCommands.FETCH_EVENT_LATEST.value,
-            "data": f"Should not reach here check if server is operating correctly"
-        }
+            # if self.workerThread == None or not self.workerThread.is_alive():
+            self.startWorker(
+                ServerCommands.FETCH_FIGHTER,
+                workerFunc=scrapy_worker.runScrapyFetchEvent,
+                workerArgs=[self.data_q])
+
+            return {
+                "result": ServerCommands.FETCH_EVENT_LATEST.value,
+                "data" : "Server starting scraper workers..."
+            }
 
     def handle_fetch_fighter(self, msg) -> dict:
         if self.state == ServerStates.BUSY:
@@ -247,28 +256,69 @@ class Server:
                 "result": ServerCommands.FETCH_FIGHTER.value,
                 "state": ServerStates.BUSY.value
             }
+        
+        #check cache for data
+        #return last fighter fetch, could be wrong not my issue
+        if ServerCommands.FETCH_FIGHTER in self.cache:
+            return self.cache.pop(ServerCommands.FETCH_FIGHTER)
+        
         data = msg['data']
         link = data["link"]
 
-        """
-            fetch fighter data from link
-            how to handle this 
-            
-        """
-
-        # return {
-        #     "result": "FETCH_FIGHTER",
-        #     # "fighter_link": link,
-        #     "data": f"Mock fighter data for fighter_link"
-        # }
+        # if self.workerThread == None or not self.workerThread.is_alive():
+        self.startWorker(
+            serverCommand=ServerCommands.FETCH_FIGHTER,
+            workerFunc=scrapy_worker.runScrapyFetchFighter,
+            workerArgs=[self.data_q,link]
+        )
+        return {
+            "result": ServerCommands.FETCH_EVENT_LATEST.value,
+            "data" : "Server starting scraper workers..."
+        }
 
     def handle_fetch_fighter_multi(self, msg) -> dict:
-        # links = msg.get("fighter_links", [])
+        if self.state == ServerStates.BUSY:
+            return {
+                "result" : ServerCommands.FETCH_FIGHTER_MULTI.value,
+                "state" : ServerStates.BUSY.value
+            }
+
+        #not busy idle check if in cache
+        if ServerCommands.FETCH_FIGHTER_MULTI in self.cache:
+            return self.cache.pop(ServerCommands.FETCH_FIGHTER_MULTI)
+
+
+        data = msg['data']
+        links = data['links']
+        # print(links)
+        """
+            contains a list in this form -> [
+                matchup-index:int
+                link:str
+
+                matchup-index:int
+                link:str
+                ...
+            ]
+        """
+        self.startWorker(
+            serverCommand=ServerCommands.FETCH_FIGHTER_MULTI,
+            workerFunc=scrapy_worker.runScrapyFetchFighterMulti,
+            workerArgs=[self.data_q,links]
+        )
         return {
-            "result": "FETCH_FIGHTER_MULTI",
-            # "requested": links,
-            "data": "Fetching data for multiple fighters"
+            "result": ServerCommands.FETCH_FIGHTER_MULTI.value,
+            "data" : "Server starting scraper workers..."
         }
+
+    def startWorker(self,serverCommand: ServerCommands, workerFunc, workerArgs: list):
+        self.state = ServerStates.BUSY
+        self.working_on = serverCommand
+        self.workerThread = threading.Thread(
+            target=workerFunc,
+            args=workerArgs
+            )
+        self.workerThread.start()
 
     def handle_kill_server(self, msg) -> dict:
         self.running = False

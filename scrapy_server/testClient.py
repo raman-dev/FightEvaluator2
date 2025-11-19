@@ -114,6 +114,7 @@ def inputLoop(socket):
 def runTestClient():
     with Client(serverPort=PORT) as client:
         # breakLoop = False
+        print_menu()
         while True:
             userin = input("Select an option: ").strip()
             if userin != "q" and userin != "m" and not userin.isnumeric():
