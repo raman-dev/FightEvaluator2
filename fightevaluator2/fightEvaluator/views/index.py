@@ -136,6 +136,10 @@ def scrapyThreadTestEndpoint(request):
     return JsonResponse({"state":"scrapy thread running"})
 #thread launches scrapy process
 #and waits for it to complete
+def ScrapyControlThreadFunction2():
+    # with Client()
+    pass
+
 def ScrapyControlThreadFunction():
     #this function is launched when the newest event has not been fetched or created
     """
