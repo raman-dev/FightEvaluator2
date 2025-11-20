@@ -381,6 +381,7 @@ def runScrapyFetchEvent(result_q: queue.Queue):
     t.start()
     t.join()#block until done
     matchupResults = ipc_q.get()[0]
+    fightEventData['title'] = matchupResults['title']
     matchups = matchupResults['matchups']
     for m in matchups:
     #     #create index key from name

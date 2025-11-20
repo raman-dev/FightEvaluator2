@@ -17,6 +17,7 @@ from ..models import Fighter,FightEvent,MatchUp,FightOutcome,Prediction,Event,Fi
 from ..forms import FightEventForm,MatchUpFormMF
 from .prediction import calculate_stats
 
+import time
 import json
 import datetime
 import re
@@ -40,13 +41,14 @@ globalCounter = 0
 
 from ..scrapy_server.commands import ServerCommands
 from ..scrapy_server import scraper_client
+from rich import print as rprint
 
-
+PORT = 42069
 scrapyThread = None
 def scrapyThreadTestEndpoint(request):
     global scrapyThread
     if scrapyThread == None or not scrapyThread.is_alive():
-        scrapyThread = Thread(target=ScrapyControlThreadFunction)
+        scrapyThread = Thread(target=ScrapyControlThreadFunction2)
         scrapyThread.start()
         return JsonResponse({"state":"scrapy thread started"})
     return JsonResponse({"state":"scrapy thread running"})
@@ -57,10 +59,79 @@ def ScrapyControlThreadFunction2():
         start a client 
             tell the server what to do
     """
-    with scraper_client.Client() as client:
-        # client.send_command(ServerCommands.FETCH_EVENT_LATEST)
-        
-        pass
+    MAX_RETRIES = 15
+    attempts = 0
+    with scraper_client.Client(serverPort=PORT) as client:
+        while attempts < MAX_RETRIES:
+            try: 
+                response = client.send_command(ServerCommands.SERVER_STATE)
+                rprint(f"[bold cyan]Server Response:[/bold  cyan] {response}")
+
+                response = client.send_command(ServerCommands.FETCH_EVENT_LATEST)
+                # rprint(f"[bold cyan]Server Response:[/bold  cyan] {response}")
+                fightEventData = response['event']
+                matchups = response['matchups']
+                fightEventForm = FightEventForm(fightEventData)
+                fightEvent = None
+                if fightEventForm.is_valid():
+                    fightEvent = fightEventForm.save()
+                # fef.link = fightEventData['link']
+                # fef.date= datetime.strptime(fightEventData['date'],"%Y-%m-%d").date()
+                # fef.title = fightEventData['']
+                """
+                     event:
+                        link 
+                        date
+                        title
+                    matchups: 
+                        0
+                            fighters_raw
+                                0: name 
+                                   link
+                                1: name
+                                   link
+                            weight_class
+                            rounds
+                            isprelim
+
+                        1   fighters_raw
+                                0: name
+                                   link
+                                1: name
+                                   link
+                            weight_class
+                            rounds
+                            isprelim
+                     {
+                        'event': {
+                            'link': 'https://www.tapology.com/fightcenter/events/130635-ufc-fight-night',
+                            'date': '2025-11-22'
+                            'title' : title
+                        },
+                        'matchups': [
+                            {
+                            'fighters_raw': [
+                                {
+                                'name': 'arman tsarukyan',
+                                'link': 'https://www.tapology.com/fightcenter/fighters/115752-arman-tsarukyan'
+                                },
+                                {
+                                'name': 'dan hooker',
+                                'link': 'https://www.tapology.com/fightcenter/fighters/18854-daniel-hooker'
+                                }
+                            ],
+                            'weight_class': 155,
+                            'rounds': 5,
+                            'isprelim': False
+                            },
+                        ]
+                    }
+                """
+            except TimeoutError as te:
+                rprint(f"[bold red]Client timed out[/bold red] [red]communicating with scraper server[/red]")
+                # break#break out of retry loop
+            attempts += 1
+            time.sleep(3)#every 3 seconds 
     
 
 def ScrapyControlThreadFunction():

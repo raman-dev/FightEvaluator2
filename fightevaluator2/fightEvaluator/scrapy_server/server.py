@@ -2,6 +2,7 @@
 import zmq
 import threading 
 import json
+import os
 
 from queue import Queue
 from rich import print as rprint
@@ -49,6 +50,11 @@ class Server:
         self.running = False
         
         self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
+        
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(script_dir, f"{self.fightEventFileName}")
+        
+        self.fightEventFileNameAbs = file_path
         self.data_q = Queue()#thread safe queue for data from worker to server
         self.workerThread = None
 
@@ -111,12 +117,13 @@ class Server:
             print("data q non empty")
             data = self.data_q.get()
             #add to in memory cache
-
+            rprint(f"Processing data from worker thread for [bold magenta]command: {self.working_on}[/bold magenta]")
             match self.working_on:
                 case ServerCommands.FETCH_EVENT_LATEST:
+
                     self.cache[ServerCommands.FETCH_EVENT_LATEST] = data
 
-                    with open(self.fightEventFileName,"w",encoding="utf-8") as file:
+                    with open(self.fightEventFileNameAbs,"w",encoding="utf-8") as file:
                         json.dump(data,file,indent=4,default=str)
                     
                     """
@@ -144,6 +151,7 @@ class Server:
                     self.cache[ServerCommands.FETCH_FIGHTER_MULTI] = data
             self.working_on = None
             if self.workerThread != None:
+                self.workerThread.join()
                 self.workerThread = None
             self.state = ServerStates.IDLE
     def process_message(self, message: dict):
@@ -167,28 +175,31 @@ class Server:
     # ------------------------------------------------------------------
 
 
-    def isFightEventDataAvailable(self,filename: str):
-        filePath = Path(filename)
+    def isFightEventDataAvailable(self,abs_filepath: str):
+        filePath = Path(abs_filepath)
+        # rprint(f"Checking for fight event data file at [bold magenta]<{filePath}>[/bold magenta]\n{filename}")
         #check if file exists
         if filePath.is_file():
             #if exists check if is stale
             isStale = False
             with open(filePath,"r",encoding="utf-8") as file:
                 data = json.load(file)
-                date_str = data['event']['date']
                 eventDate = datetime.strptime(data['event']['date'],"%Y-%m-%d")
                 today = datetime.today()
+                # rprint('date diff => ',today,eventDate)
                 #eventDate is in the past
                 if eventDate < today:
                     isStale = True
             #if stale date not available if not stale date is available
+            rprint(f"Fight event data file found. Stale: [bold magenta]{isStale}[/bold magenta]")
             return not isStale 
+        rprint(f"Fight event [bold magenta]data file not found.[/bold magenta]")
         return False
 
-    def getDataFromFile(self,filename: str):
+    def getDataFromFile(self,abs_filepath: str):
         data = {}
         try:
-            with open(filename,"r",encoding="utf-8") as file:
+            with open(abs_filepath,"r",encoding="utf-8") as file:
                 data = json.load(file)
         except OSError as e:
             print("Error opening fight event data file.",e)
@@ -235,13 +246,14 @@ class Server:
 
         """
         #check file exists
-        if self.isFightEventDataAvailable(self.fightEventFileName):
-            return self.getDataFromFile(self.fightEventFileName)
+        if self.isFightEventDataAvailable(abs_filepath=self.fightEventFileNameAbs):
+            return self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
         else:
+            rprint(f"Fight event [bold magenta]data not available or stale[/bold magenta], starting scraper worker thread...")
             #file does not exist start worker thread to fetch data
             # if self.workerThread == None or not self.workerThread.is_alive():
             self.startWorker(
-                ServerCommands.FETCH_FIGHTER,
+                ServerCommands.FETCH_EVENT_LATEST,
                 workerFunc=scrapy_worker.runScrapyFetchEvent,
                 workerArgs=[self.data_q])
 
