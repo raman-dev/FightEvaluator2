@@ -1,0 +1,1 @@
+start "Scrapy Server" py fightevaluator2\fightEvaluator\scrapy_server\server.py

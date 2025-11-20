@@ -38,93 +38,9 @@ from scrapy.crawler import CrawlerProcess
 WorkerThread = None
 globalCounter = 0
 
-class EventLinkSpider(scrapy.Spider):
-    name = "eventLinkSpider"
-    start_urls = [
-        EVENTS_URL2
-    ]
-    results = []
+from ..scrapy_server.commands import ServerCommands
+from ..scrapy_server import scraper_client
 
-    def parse(self, response: scrapy.http.HtmlResponse):
-        self.results.append(eventLinkParse(response.text))
-
-    def eventLinkParse(source: str):
-        domain = "https://www.tapology.com"
-        from bs4 import BeautifulSoup
-        soup = BeautifulSoup(source, 'html.parser')
-        table = soup.find('table',class_='fcLeaderboard')
-        # print(table.tbody)
-        today = datetime.now().date()
-        rows = table.findAll('tr')
-        result = {'link':'','date':None}
-        for i,row in enumerate(rows):
-            if i == 0:
-                continue
-            data = row.findAll('td')
-            #get href value from data object
-            data_event_title = data[0].a.text.strip()
-            #skip non fight nights and non ppvs
-            if re.search(r'(UFC\s+([0-9]+))|UFC\s+Fight\s+Night',data_event_title) == None:
-                # print(data_event_title,'not a ufc event')
-                continue
-            data_link = data[0].a['href']
-            #get date from data object
-            data_date = datetime.strptime(data[2].text.strip(),"%Y.%m.%d").date()
-            #compare today and date when the distance from today and date increases break loop
-            print(data_event_title,data_date)
-            if data_date < today:
-                break
-            result['link'] = domain + data_link
-            result['date'] = data_date
-        # print(result)
-        return result
-
-class MatchUpSpider(scrapy.Spider):
-    name="matchupSpider"
-    start_urls= []
-    results = []
-
-    def parse(self, response: scrapy.http.HtmlResponse):
-        title = response.css('h2::text').get()
-        # matchups = scrapeMatchups(response.text)
-        # self.results.append({
-        #     'title':title,
-        #     'matchups':matchups
-        # })
-
-def startCrawlerProcess(spider: scrapy.Spider):
-    if spider == None:
-        raise ValueError("Spider cannot be None")
-    process = CrawlerProcess(
-        settings={
-            "DOWNLOAD_DELAY": 10, #Delay between requests
-            "LOG_LEVEL": "ERROR" 
-        }
-    )
-
-    process.crawl(spider)
-    process.start()
-    return spider.results
-
-def FightEventSpiderProcess(q: multiprocessing.Queue):
-    return startCrawlerProcess(EventLinkSpider)
-    # q.put([item for item  in EventLinkSpider.results])
-    
-def MatchUpSpiderProcess(eventLink: str,q: multiprocessing.Queue):
-    MatchUpSpider.start_urls.append(eventLink)
-    startCrawlerProcess(MatchUpSpider)
-
-    q.put([item for item in MatchUpSpider.results])
-
-def launchScrapyProcess(spiderProcessFunc,**kwargs):
-    # multiprocessing.set_start_method('spawn')
-    p = multiprocessing.Process(target=spiderProcessFunc,kwargs=kwargs)
-    p.start()
-    """
-        do not join here py3 docs say not to join a process 
-        that has used a queue to pass data until the data has been read
-    """
-    p.join()
 
 scrapyThread = None
 def scrapyThreadTestEndpoint(request):
@@ -137,8 +53,15 @@ def scrapyThreadTestEndpoint(request):
 #thread launches scrapy process
 #and waits for it to complete
 def ScrapyControlThreadFunction2():
-    # with Client()
-    pass
+    """
+        start a client 
+            tell the server what to do
+    """
+    with scraper_client.Client() as client:
+        # client.send_command(ServerCommands.FETCH_EVENT_LATEST)
+        
+        pass
+    
 
 def ScrapyControlThreadFunction():
     #this function is launched when the newest event has not been fetched or created
@@ -380,6 +303,7 @@ def matchupDictWithName(matchup: MatchUp):
 def index_endpoint(request):
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
 
+
     global WorkerThread
     if WorkerThread == None and fightEventDataState.updating:
         #invalid state start worker 
@@ -407,7 +331,6 @@ def index_endpoint(request):
 
 @require_GET
 def index(request):
-
     return redirect("/136")
     #purpose of index
     global WorkerThread

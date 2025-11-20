@@ -1,4 +1,4 @@
-from commands import ServerCommands
+from .commands import ServerCommands
 import zmq
 
 DEFAULT_CLIENT_TIMEOUT_SECONDS = 15
