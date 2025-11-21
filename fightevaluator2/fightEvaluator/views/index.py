@@ -27,7 +27,6 @@ from .. import scraper
 from ..scraper import eventLinkParse,EVENTS_URL2
 from ..scraper2 import scrapeMatchups
 
-from ..scraper3 import printProcessInfo
 from threading import Thread
 import multiprocessing
 from datetime import datetime
@@ -90,7 +89,7 @@ def ScrapyControlThreadFunction2():
     """
     # attempts = 0
     with scraper_client.Client(serverPort=PORT) as client:
-
+        #response = fetcher.nextEvent()
         response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_LATEST)
         fighterData = response['data']
         
@@ -105,8 +104,6 @@ def ScrapyControlThreadFunction2():
             # fightEvent = fightEventForm.save()
             rprint("[bold cyan]Event Valid[/bold cyan]")
             
-        breakOuter = False
-
         for matchupData in matchupsRaw:
             rprint("")
             matchup = {
@@ -132,7 +129,8 @@ def ScrapyControlThreadFunction2():
                 if not fighterObj:            
                     fighterObj = Fighter.objects.filter(query_a).first()
                     if fighterObj == None:
-                        print(fighterObj if fighterObj else "No fighter object found")
+                        rprint("No fighter object found")
+                        # response = fetcher.fetchFighter(link=fighter['link'])
                         response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighter['link']})
                         if response:
                             fighterData = response['data']
@@ -288,12 +286,11 @@ def matchupDictWithName(matchup: MatchUp):
 def index_endpoint(request):
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
 
-
-    global WorkerThread
-    if WorkerThread == None and fightEventDataState.updating:
+    global scrapyThread
+    if scrapyThread == None and fightEventDataState.updating:
         #invalid state start worker 
-        WorkerThread = Thread(target=WorkerThreadControlFunction)
-        WorkerThread.start()
+        scrapyThread = Thread(target=ScrapyControlThreadFunction2)
+        scrapyThread.start()
     #in an invalid state
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
         return JsonResponse({'available':False,"message":'currently updating'})
@@ -317,7 +314,7 @@ def index_endpoint(request):
 @require_GET
 def index(request):
     #purpose of index
-    global WorkerThread
+    global scrapyThread
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
     
     #event is stale if the latest event has a date before today
@@ -331,9 +328,9 @@ def index(request):
         print('EVENT IS STALE OR EMPTY')
         #compare current date and next event date
         fightEventDataState.updating=True
-        if WorkerThread == None or not WorkerThread.is_alive():
-            WorkerThread = Thread(target=WorkerThreadControlFunction)
-            WorkerThread.start()
+        if scrapyThread == None or not scrapyThread.is_alive():
+            scrapyThread = Thread(target=ScrapyControlThreadFunction2)
+            scrapyThread.start()
             #create new
         else:
             print('Currently updating from site.....')
