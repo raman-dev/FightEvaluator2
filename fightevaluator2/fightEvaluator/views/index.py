@@ -13,8 +13,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 
 
-from ..models import Fighter,FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat
-from ..forms import FightEventForm,MatchUpFormMF
+from ..models import Assessment,Fighter,FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat,WeightClass
+from ..forms import FightEventForm,MatchUpFormMF,FighterForm
 from .prediction import calculate_stats
 
 import time
@@ -38,9 +38,12 @@ from scrapy.crawler import CrawlerProcess
 
 WorkerThread = None
 globalCounter = 0
+MAX_RETRIES = 15
+RETRY_DELAY_S = 3
 
-from ..scrapy_server.commands import ServerCommands
+from ..scrapy_server.commands import ServerCommands,ServerStates
 from ..scrapy_server import scraper_client
+
 from rich import print as rprint
 
 PORT = 42069
@@ -52,107 +55,10 @@ def scrapyThreadTestEndpoint(request):
         scrapyThread.start()
         return JsonResponse({"state":"scrapy thread started"})
     return JsonResponse({"state":"scrapy thread running"})
+
 #thread launches scrapy process
 #and waits for it to complete
 def ScrapyControlThreadFunction2():
-    """
-        start a client 
-            tell the server what to do
-    """
-    MAX_RETRIES = 1
-    attempts = 0
-    with scraper_client.Client(serverPort=PORT) as client:
-        while attempts < MAX_RETRIES:
-            try: 
-                response = client.send_command(ServerCommands.SERVER_STATE)
-                rprint(f"[bold cyan]Server Response:[/bold  cyan] {response}")
-
-                response = client.send_command(ServerCommands.FETCH_EVENT_LATEST)
-                # rprint(f"[bold cyan]Server Response:[/bold  cyan] {response}")
-                fightEventData = response['event']
-                matchups = response['matchups']
-                fightEventForm = FightEventForm(fightEventData)
-                fightEvent = None
-                if fightEventForm.is_valid():
-                    # fightEvent = fightEventForm.save()
-                    rprint("[bold cyan]Event Valid[/bold cyan]")
-                for matchup in matchups:
-                    rprint("------------------")
-                    for i,fighter in enumerate(matchup['fighters_raw']):
-                        #check if fighter is in database
-                        name = fighter['name']
-                        names = list(map(lambda x: x.lower(), name.split(' ')))
-                        name_index = "-".join(names)#search using this
-                        first_name = names[0]#try only first name
-                        last_name = names[-1]#last name may include middle name
-                        if len(name) > 1:
-                            last_name = " ".join(names[1:])
-
-                        rprint("\t",first_name,last_name,name_index)
-
-                        first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
-                        query_a = first_name_and_last_name_contains
-                        fighterObj = Fighter.objects.filter(name_index=name_index).first()
-                        if not fighterObj:            
-                            fighterObj = Fighter.objects.filter(query_a).first()
-                        print(fighterObj if fighterObj else "No fighter object found")
-                """
-                     event:
-                        link 
-                        date
-                        title
-                    matchups: 
-                        0
-                            fighters_raw
-                                0: name 
-                                   link
-                                1: name
-                                   link
-                            weight_class
-                            rounds
-                            isprelim
-
-                        1   fighters_raw
-                                0: name
-                                   link
-                                1: name
-                                   link
-                            weight_class
-                            rounds
-                            isprelim
-                     {
-                        'event': {
-                            'link': 'https://www.tapology.com/fightcenter/events/130635-ufc-fight-night',
-                            'date': '2025-11-22'
-                            'title' : title
-                        },
-                        'matchups': [
-                            {
-                            'fighters_raw': [
-                                {
-                                'name': 'arman tsarukyan',
-                                'link': 'https://www.tapology.com/fightcenter/fighters/115752-arman-tsarukyan'
-                                },
-                                {
-                                'name': 'dan hooker',
-                                'link': 'https://www.tapology.com/fightcenter/fighters/18854-daniel-hooker'
-                                }
-                            ],
-                            'weight_class': 155,
-                            'rounds': 5,
-                            'isprelim': False
-                            },
-                        ]
-                    }
-                """
-            except TimeoutError as te:
-                rprint(f"[bold red]Client timed out[/bold red] [red]communicating with scraper server[/red]")
-                # break#break out of retry loop
-            attempts += 1
-            time.sleep(3)#every 3 seconds 
-    
-
-def ScrapyControlThreadFunction():
     #this function is launched when the newest event has not been fetched or created
     """
         do what here
@@ -182,129 +88,119 @@ def ScrapyControlThreadFunction():
 
         MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
     """
-    #get event
-    p = multiprocessing.Process(
-        target=printProcessInfo,
-        kwargs={'sleep':2},
-        daemon=True
-    )
-    p.start()
-    p.join()
-    # q = multiprocessing.Queue()
-    # launchScrapyProcess(FightEventSpiderProcess,kwargs={'q':q})
+    # attempts = 0
+    with scraper_client.Client(serverPort=PORT) as client:
 
-    # eventResultList = []
-    # with concurrent.futures.ProcessPoolExecutor() as executor:
-    #     eventResultFuture = executor.submit(startCrawlerProcess,EventLinkSpider)
-    #     eventResultList = eventResultFuture.result()
-    # eventDataResultList = q.get()#wait for a result
-    # fightEventData = eventResultList[0]
-
-    # # launchScrapyProcess(MatchUpSpiderProcess,kwargs={'eventLink':fightEventData['link'],'q':q})
-    # # matchupsDataResultList = q.get()#wait for a result
-    # matchupsResultList = []
-    # with concurrent.futures.ProcessPoolExecutor() as executor:
-    #     MatchUpSpider.start_urls.append(fightEventData['link'])
-    #     matchupResultFuture = executor.submit(startCrawlerProcess,MatchUpSpider)
-    #     matchupsResultList = matchupResultFuture.result()
-    # matchupsData = matchupsResultList[0]
-
-    # fightEventData['title'] = matchupsData['title']
-    # matchups = matchupsData['matchups']
-    #matchups returned in this format
-    """
-        fighters_raw
-            0 
-                name
-                link
-            1
-                name 
-                link
-        weight_class
-        rounds
-        isprelim
-
-        matchup construction from raw data
-
-        matchupRaw
-            isprelim
-            rounds
-            weight_class
+        response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_LATEST)
+        fighterData = response['data']
         
-            fighter_a:obj or None if missing
-            fighter_b:obj or None if missing
-
-            fighter_a_link: str
-            fighter_b_link: str
-        matchupFighter404Queue
-            matchupRawIndex,fighter_a,link
-            matchupRawIndex,fighter_b,link
-            ...
-        for each matchup item
-            check if db has each fighter
-            if fighter_a and fighter_b in db
-            we can construct a matchup
-
-            if fighter_a not in db
-
-
-    """
-    # matchupsRaw = []
-    # matchupFighter404Q = []
-    # for i,m in enumerate(matchups):
-    #     #create index key from name
-    #     currMatchup = { 'isprelim':m['isprelim'], 'rounds':m['rounds'],'weight_class':m['weight_class']}
-    #     for j,fighterData in enumerate(m['fighters_raw']):
-    #         name,link = fighterData.values()
-    #         names = [x.lower() for x in name.split(' ')]
-    #         name_index = "-".join(names)
-    #         first_name = names[0]
-    #         last_name = ""
-    #         if len(names) > 1:
-    #             last_name = names[-1]
-
-    #         #try name index
-    #         fighterObj = Fighter.objects.filter(name_index=name_index).first()
-    #         if not fighterObj:
-    #             #try a first name last name query
-    #             first_name_and_last_name_contains = Q(first_name=first_name) & Q(last_name__contains=last_name)
-    #             fighterObj = Fighter.objects.filter(first_name_and_last_name_contains).first()
-    #         key  = 'fighter_a' if i == 0 else 'fighter_b'
-    #         currMatchup[key] = fighterObj
-    #         if fighterObj == None:
-    #             currMatchup[key + '_link'] = link
-
-    #     if currMatchup['fighter_a'] == None:
-    #         matchupFighter404Q.append(currMatchup['fighter_a_link'])
-    #     if currMatchup['fighter_b'] == None:
-    #         matchupFighter404Q.append(currMatchup['fighter_b_link'])
+        fightEventData = fighterData['event']
+        matchupsRaw = fighterData['matchups']
+        matchups = []
+        rprint(matchupsRaw)
         
-    #     matchupsRaw.append(currMatchup)
-    # for m in matchupsRaw:
-    #     print(m)
-    # for m in matchupFighter404Q:
-    #     print(m)
-    # if len(matchupFighter404Q) != 0:
-    #     pass
-    # with concurrent.futures.ProcessPoolExecutor() as executor:
-    #     #scrape tapology website for upcoming event
-    #     #return the link data for the event
-    #     eventFetchFuture = executor.submit(startCrawlerProcess,(EventLinkSpider))
-    #     eventDataResultList = eventFetchFuture.result()#returns a list of results
-    #     #now visit the event link and grab all matchup data
-    #     #validate with 
-    #     fightEventData = eventDataResultList[0]
-        
-    #     MatchUpSpider.start_urls.append(fightEventData['link'])
-    #     matchupsDataFuture = executor.submit(startCrawlerProcess,(MatchUpSpider))
-    #     matchupsDataResultList = matchupsDataFuture.result()
-        
-    #     matchupsData = matchupsDataResultList[0]
-
-    #     fightEventData['title'] = matchupsData['title']
-    # pass
-
+        fightEventForm = FightEventForm(fightEventData)
+        fightEvent = None
+        if fightEventForm.is_valid():
+            # fightEvent = fightEventForm.save()
+            rprint("[bold cyan]Event Valid[/bold cyan]")
             
+        breakOuter = False
+
+        for matchupData in matchupsRaw:
+            rprint("")
+            matchup = {
+                'weight_class':scraper.poundsToWeightClass(matchupData['weight_class']),
+                'rounds':matchupData['rounds'],
+                'isprelim':matchupData['isprelim']
+            }
+            for i,fighter in enumerate(matchupData['fighters_raw']):
+                #check if fighter is in database
+                name = fighter['name']
+                names = list(map(lambda x: x.lower(), name.split(' ')))
+                name_index = "-".join(names)#search using this
+                first_name = names[0]#try only first name
+                last_name = names[-1]#last name may include middle name
+                if len(name) > 1:
+                    last_name = " ".join(names[1:])
+
+                rprint("\t",first_name,last_name,name_index)
+
+                first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
+                query_a = first_name_and_last_name_contains
+                fighterObj = Fighter.objects.filter(name_index=name_index).first()
+                if not fighterObj:            
+                    fighterObj = Fighter.objects.filter(query_a).first()
+                    if fighterObj == None:
+                        print(fighterObj if fighterObj else "No fighter object found")
+                        response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighter['link']})
+                        if response:
+                            fighterData = response['data']
+                            rprint(fighterData)
+                            
+                            fighterData['data_api_link'] = fighter['link']
+                            
+                            if fighterData['date_of_birth'] == 'N/A':
+                                fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
+                            
+                            weight_class = WeightClass[fighterData['weight_class']]
+                            fighterData['weight_class'] = weight_class
+                            fighterForm = FighterForm(fighterData)#validate fighter data
+                            
+                            if fighterForm.is_valid():
+                                fighterObj = fighterForm.save()
+
+                                rprint('Valid fighter',fighterObj)
+                                assessment = Assessment(fighter=fighterObj)
+                                assessment.save()
+                                
+                                fighterObj.assessment = assessment
+                                # fighterObj.save()
+                            else:
+                                rprint(fighterForm.errors)
+                                break
+                        time.sleep(10)#need to sleep before fetching again if we have to
+                
+                if i == 0:
+                    matchup['fighter_a'] = fighterObj
+                else:
+                    matchup['fighter_b'] = fighterObj
+            matchups.append(matchup) 
+            rprint(matchup)
+        
+        fightEvent = fightEventForm.save()
+        for m in matchups:
+            m['event'] = fightEvent
+            m['scheduled'] = fightEvent.date
+            mf = MatchUpFormMF(m)
+            if mf.is_valid():
+                mf.save()
+        """     
+                event:
+                link 
+                date
+                title
+            matchups: 
+                0
+                    fighters_raw
+                        0: name 
+                            link
+                        1: name
+                            link
+                    weight_class
+                    rounds
+                    isprelim
+
+                1   fighters_raw
+                        0: name
+                            link
+                        1: name
+                            link
+                    weight_class
+                    rounds
+                    isprelim
+                {
+        """ 
 """
 
      client          django-server                            scraper-server
@@ -420,7 +316,6 @@ def index_endpoint(request):
 
 @require_GET
 def index(request):
-    return redirect("/136")
     #purpose of index
     global WorkerThread
     fightEventDataState = FightEventDataState.objects.select_for_update().first()

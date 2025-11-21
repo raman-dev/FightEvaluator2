@@ -70,8 +70,9 @@ urlpatterns = [
     path('vue/predictions/all',views.getPredictions,name='vue-all-predictions'),
     path('vue/predictions/stats',views.getStatsJson,name='vue-prediction-stats'),
 
+    #*NOTE TESTING ENDPOINTS ONLY
     # path('scrapy-test',views.scrapy_test,name='scrapy-test'),
-    path ('scrapy-start',views.scrapy_start,name='scrapy-start'),
-    path('scrapy-start-thread',views.scrapyThreadTestEndpoint,name='scrapy-start-thread'),
-    path('zmq-start-client',views.zmq_client_test,name='zmq-client-test')
+    # path ('scrapy-start',views.scrapy_start,name='scrapy-start'),
+    # path('scrapy-start-thread',views.scrapyThreadTestEndpoint,name='scrapy-start-thread'),
+    # path('zmq-start-client',views.zmq_client_test,name='zmq-client-test')
 ]

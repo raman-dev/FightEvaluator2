@@ -7,7 +7,7 @@ import os
 from queue import Queue
 from rich import print as rprint
 from enum import Enum
-from commands import ServerCommands
+from commands import ServerCommands,ServerStates
 from pathlib import Path
 from datetime import datetime
 
@@ -15,21 +15,6 @@ from datetime import datetime
 import scrapy_worker
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
-    
-class ServerStates(Enum):
-    IDLE = "IDLE"
-    BUSY = "BUSY"
-    SHUTTING_DOWN = "SHUTTING_DOWN"
-    """
-    
-        what does the server do?
-        - listen for commands from clients
-        - respond to commands
-        - do work in the background 
-        - maintain state
-    """
-
-#do the work of scraping and parsing
 
 class Server:
     def __init__(self,serverPort: int,timeoutSeconds: int = DEFAULT_SERVER_TIMEOUT_S):
@@ -203,7 +188,7 @@ class Server:
                 data = json.load(file)
         except OSError as e:
             print("Error opening fight event data file.",e)
-        return data 
+        return data
        
     def handle_server_state(self, msg) -> dict:
         return {
@@ -247,7 +232,11 @@ class Server:
         """
         #check file exists
         if self.isFightEventDataAvailable(abs_filepath=self.fightEventFileNameAbs):
-            return self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
+            return {
+                'result':ServerCommands.FETCH_EVENT_LATEST.value,
+                'state':self.state.value,
+                'data' :self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
+            }
         else:
             rprint(f"Fight event [bold magenta]data not available or stale[/bold magenta], starting scraper worker thread...")
             #file does not exist start worker thread to fetch data
@@ -259,6 +248,7 @@ class Server:
 
             return {
                 "result": ServerCommands.FETCH_EVENT_LATEST.value,
+                "state": self.state.value,
                 "data" : "Server starting scraper workers..."
             }
 
@@ -266,13 +256,17 @@ class Server:
         if self.state == ServerStates.BUSY:
             return {
                 "result": ServerCommands.FETCH_FIGHTER.value,
-                "state": ServerStates.BUSY.value
+                "state": self.state.value
             }
         
         #check cache for data
         #return last fighter fetch, could be wrong not my issue
         if ServerCommands.FETCH_FIGHTER in self.cache:
-            return self.cache.pop(ServerCommands.FETCH_FIGHTER)
+            return {
+                'result':ServerCommands.FETCH_FIGHTER.value,
+                'state':self.state.value,
+                'data':self.cache.pop(ServerCommands.FETCH_FIGHTER)
+            }
         
         data = msg['data']
         link = data["link"]
@@ -284,7 +278,8 @@ class Server:
             workerArgs=[self.data_q,link]
         )
         return {
-            "result": ServerCommands.FETCH_EVENT_LATEST.value,
+            "result": ServerCommands.FETCH_FIGHTER.value,
+            "state":self.state.value,
             "data" : "Server starting scraper workers..."
         }
 

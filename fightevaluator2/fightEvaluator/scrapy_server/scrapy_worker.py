@@ -340,7 +340,7 @@ def runScrapyFetchFighter(result_q: queue.Queue,link: str):
 
     result = ipc_q.get()[0]
 
-    result_q.put({'data':result})
+    result_q.put(result)
 
 
 def runScrapyFetchFighterMulti(result_q: queue.Queue,linkList: list):

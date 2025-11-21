@@ -17,3 +17,19 @@ class ServerCommands(Enum):
     FETCH_FIGHTER = "FETCH_FIGHTER"
     FETCH_FIGHTER_MULTI = "FETCH_FIGHTER_MULTI"
     KILL_SERVER = "KILL_SERVER"
+
+
+class ServerStates(Enum):
+    IDLE = "IDLE"
+    BUSY = "BUSY"
+    SHUTTING_DOWN = "SHUTTING_DOWN"
+    """
+    
+        what does the server do?
+        - listen for commands from clients
+        - respond to commands
+        - do work in the background 
+        - maintain state
+    """
+
+#do the work of scraping and parsing

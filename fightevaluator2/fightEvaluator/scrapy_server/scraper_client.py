@@ -1,5 +1,7 @@
-from .commands import ServerCommands
+from .commands import ServerCommands,ServerStates
 import zmq
+from rich import print as rprint
+import time
 
 DEFAULT_CLIENT_TIMEOUT_SECONDS = 15
 #NOTE ZMQ request socket wrapper
@@ -9,11 +11,15 @@ class Client:
          - send commands to server
          - receive responses from server
     """
-    def __init__(self,serverPort: int,serverAddress: str = "localhost",clientTimeoutSeconds: int =DEFAULT_CLIENT_TIMEOUT_SECONDS):
+    def __init__(self,serverPort: int,
+                 serverAddress: str = "localhost",
+                 clientTimeoutSeconds: int =DEFAULT_CLIENT_TIMEOUT_SECONDS,maxRetries: int=15,retryDelaySeconds: int=3):
         self.port = serverPort
         self.address = serverAddress
         self.context = None
         self.clientTimeoutSeconds = clientTimeoutSeconds
+        self.MAX_RETRIES = maxRetries
+        self.RETRY_DELAY_S = retryDelaySeconds
 
     def connect(self):
         self.context = zmq.Context()
@@ -55,6 +61,21 @@ class Client:
             return response
         
         raise TimeoutError("Client socket timed out, server did not send timely response")
+    
+    def sendCommandRetryLoop(self,command: ServerCommands,data: dict = {}):
+        attempts = 0
+        while attempts < self.MAX_RETRIES:
+            try: 
+                response = self.send_command(command,data)
+                if response['state'] != ServerStates.BUSY.value:
+                    return response
+                attempts += 1
+                time.sleep(self.RETRY_DELAY_S)
+            except TimeoutError as te:
+                rprint("[bold red]Client timed out.[/bold red] Check server")
+                break
+        rprint("[bold cyan] Client MAX_RETRIES reached![/bold cyan]")
+        return None
 
     def timeout(self,seconds):
         return seconds * 1000

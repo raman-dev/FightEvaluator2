@@ -1,7 +1,7 @@
 import zmq
 from enum import Enum
 from scraper_client import Client,DEFAULT_CLIENT_TIMEOUT_SECONDS
-from .commands import ServerCommands
+from .commands import ServerCommands,ServerStates
 # import json
 #read config file for port number
 PORT = 42069
