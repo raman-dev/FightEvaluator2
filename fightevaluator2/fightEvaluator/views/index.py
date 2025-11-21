@@ -59,7 +59,7 @@ def ScrapyControlThreadFunction2():
         start a client 
             tell the server what to do
     """
-    MAX_RETRIES = 15
+    MAX_RETRIES = 1
     attempts = 0
     with scraper_client.Client(serverPort=PORT) as client:
         while attempts < MAX_RETRIES:
@@ -74,10 +74,28 @@ def ScrapyControlThreadFunction2():
                 fightEventForm = FightEventForm(fightEventData)
                 fightEvent = None
                 if fightEventForm.is_valid():
-                    fightEvent = fightEventForm.save()
-                # fef.link = fightEventData['link']
-                # fef.date= datetime.strptime(fightEventData['date'],"%Y-%m-%d").date()
-                # fef.title = fightEventData['']
+                    # fightEvent = fightEventForm.save()
+                    rprint("[bold cyan]Event Valid[/bold cyan]")
+                for matchup in matchups:
+                    rprint("------------------")
+                    for i,fighter in enumerate(matchup['fighters_raw']):
+                        #check if fighter is in database
+                        name = fighter['name']
+                        names = list(map(lambda x: x.lower(), name.split(' ')))
+                        name_index = "-".join(names)#search using this
+                        first_name = names[0]#try only first name
+                        last_name = names[-1]#last name may include middle name
+                        if len(name) > 1:
+                            last_name = " ".join(names[1:])
+
+                        rprint("\t",first_name,last_name,name_index)
+
+                        first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
+                        query_a = first_name_and_last_name_contains
+                        fighterObj = Fighter.objects.filter(name_index=name_index).first()
+                        if not fighterObj:            
+                            fighterObj = Fighter.objects.filter(query_a).first()
+                        print(fighterObj if fighterObj else "No fighter object found")
                 """
                      event:
                         link 

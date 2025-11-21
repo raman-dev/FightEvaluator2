@@ -191,7 +191,7 @@ class Server:
                 if eventDate < today:
                     isStale = True
             #if stale date not available if not stale date is available
-            rprint(f"Fight event data file found. Stale: [bold magenta]{isStale}[/bold magenta]")
+            rprint(f"Fight event data file found. Data is: [bold magenta]{'Stale' if isStale else 'Valid'}[/bold magenta]")
             return not isStale 
         rprint(f"Fight event [bold magenta]data file not found.[/bold magenta]")
         return False
