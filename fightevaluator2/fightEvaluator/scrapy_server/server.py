@@ -345,7 +345,9 @@ class ZmqRepServer:
 
     # ------------------------------------------------------------------
 
-
+class ScraperServer(ZmqRepServer):
+    def handle_message(self, message):
+        return super().handle_message(message)
 
 def timeout(seconds=DEFAULT_SERVER_TIMEOUT_S):
     return seconds * 1000
