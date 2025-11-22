@@ -16,7 +16,7 @@ import scrapy_worker
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
 
-class Server:
+class ZmqRepServer:
     def __init__(self,serverPort: int,timeoutSeconds: int = DEFAULT_SERVER_TIMEOUT_S):
         self.port = serverPort
         self.timeout = timeoutSeconds
@@ -73,13 +73,24 @@ class Server:
                 break
 
             message = self.socket.recv_pyobj()
-            rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
+            self.handle_message(message)
+            # rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
 
-            self.process_data_q()
-            response = self.process_message(message)
-            self.socket.send_pyobj(response)
+            # self.process_data_q()
+            # response = self.process_message(message)
+            # self.socket.send_pyobj(response)
 
         self.state = ServerStates.SHUTTING_DOWN
+
+    def handle_message(self,message):
+        rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
+        self.process_data_q()
+        response = self.process_message(message)
+        self.send_response(response)
+        
+    
+    def send_response(self,message):
+        self.socket.send_pyobj(message)
 
     def stop(self):
         self.poller.unregister(self.socket)
@@ -139,6 +150,7 @@ class Server:
                 self.workerThread.join()
                 self.workerThread = None
             self.state = ServerStates.IDLE
+    
     def process_message(self, message: dict):
         """Validate and route the command."""
         if not isinstance(message, dict) or "command" not in message:
@@ -371,7 +383,7 @@ def server_test():
             poller.unregister(socket)
 
 def run_server():
-    with Server(serverPort=42069) as server:
+    with ZmqRepServer(serverPort=42069) as server:
         server.run()
 
 if __name__ == "__main__":

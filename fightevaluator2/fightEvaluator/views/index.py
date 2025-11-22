@@ -77,6 +77,13 @@ def ScrapyControlThreadFunction2():
 
             complete
         assume runs uninterrupted
+
+        ScraperClient extends Client
+            
+            getNextEvent() -> dict: 
+
+            getFighter(link: str)
+
     """
     # with transaction.atomic():
     """
@@ -88,7 +95,7 @@ def ScrapyControlThreadFunction2():
         MUST CREATE A NEW PROCESS FOR EACH TIME I WANT TO USE SCRAPY
     """
     # attempts = 0
-    with scraper_client.Client(serverPort=PORT) as client:
+    with scraper_client.ZmqReqClient(serverPort=PORT) as client:
         #response = fetcher.nextEvent()
         response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_LATEST)
         fighterData = response['data']

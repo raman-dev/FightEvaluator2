@@ -1,6 +1,6 @@
 import zmq
 from enum import Enum
-from scraper_client import Client,DEFAULT_CLIENT_TIMEOUT_SECONDS
+from scraper_client import ZmqReqClient,DEFAULT_CLIENT_TIMEOUT_SECONDS
 from .commands import ServerCommands,ServerStates
 # import json
 #read config file for port number
@@ -112,7 +112,7 @@ def inputLoop(socket):
             break
 
 def runTestClient():
-    with Client(serverPort=PORT) as client:
+    with ZmqReqClient(serverPort=PORT) as client:
         # breakLoop = False
         print_menu()
         while True:
