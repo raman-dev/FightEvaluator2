@@ -114,6 +114,18 @@ class ZmqRepServer:
     # ------------------------------------------------------------------
 
 class ScraperServer(ZmqRepServer):
+    
+    class ServerResponse:
+        @staticmethod
+        def build(command: ServerCommands,state: ServerStates,data: dict = None):
+            response =  {
+                "result":command.value,
+                "state" : state.value,
+            }
+            if data != None:
+                response['data'] = data
+            
+            return response
 
     def __init__(self, serverPort, timeoutSeconds = DEFAULT_SERVER_TIMEOUT_S):
         super().__init__(serverPort, timeoutSeconds)
@@ -160,27 +172,24 @@ class ScraperServer(ZmqRepServer):
         command = message['command']
         data = message['data']
 
-        response = {
-            "result":ServerCommands.SERVER_STATE.value,
-            "state":self.state.value
-        }
+        response = {}
 
         match ServerCommands[command]:
             case ServerCommands.SERVER_STATE:
-                response = {
-                    "result": ServerCommands.SERVER_STATE.value,
-                    "state": self.state.value
-                }
+                response = self.ServerResponse.build(ServerCommands.SERVER_STATE,self.state)
             case ServerCommands.FETCH_EVENT_LATEST:
                 response = self.handle_fetch_event(data)
+            case ServerCommands.FETCH_EVENT_RESULTS:
+                response = self.handle_fetch_event_results(data)
             case ServerCommands.FETCH_FIGHTER: 
                 response = self.handle_fetch_fighter(data)
             case ServerCommands.FETCH_FIGHTER_MULTI: 
-                # self.handle_fetch_fighter_multi
+                # response = self.handle_fetch_fighter_multi(data)
+                #untested
                 pass
             case ServerCommands.KILL_SERVER:
                 self.running = False
-                response = {"result": "KILL_SERVER", "status": "Server shutting down"}
+                response = self.ServerResponse.build(ServerCommands.KILL_SERVER,self.state, {"status": "Server shutting down"})
         super().send_response(response)
 
     def process_data_q(self):
@@ -191,6 +200,8 @@ class ScraperServer(ZmqRepServer):
             #add to in memory cache
             rprint(f"Processing data from worker thread for [bold magenta]command: {self.working_on}[/bold magenta]")
             match self.working_on:
+                case ServerCommands.FETCH_EVENT_RESULTS:
+                    self.cache[ServerCommands.FETCH_EVENT_RESULTS] = data
                 case ServerCommands.FETCH_EVENT_LATEST:
 
                     self.cache[ServerCommands.FETCH_EVENT_LATEST] = data
@@ -227,21 +238,32 @@ class ScraperServer(ZmqRepServer):
                 self.workerThread = None
             self.state = ServerStates.IDLE
     
+    def handle_fetch_event_results(self,data: dict) -> dict:
+        if self.state == ServerStates.BUSY:
+            return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state)
+        #not busy meaning we can perform the work
+        #check if in cache
+        
+        if ServerCommands.FETCH_EVENT_RESULTS in self.cache:
+            return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state,self.cache.pop(ServerCommands.FETCH_EVENT_RESULTS))
+            
+        #not in cache and server not busy
+        self.startWorker(
+                ServerCommands.FETCH_EVENT_RESULTS,
+                workerFunc=scrapy_worker.runScrapyFetchResults,
+                workerArgs=[self.data_q])
+        
+        return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state,{"message":"Starting scrapy server"})
+
     def handle_fetch_fighter(self, data:dict) -> dict:
         if self.state == ServerStates.BUSY:
-            return {
-                "result": ServerCommands.FETCH_FIGHTER.value,
-                "state": self.state.value
-            }
+            return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state)
         
         #check cache for data
         #return last fighter fetch, could be wrong not my issue
         if ServerCommands.FETCH_FIGHTER in self.cache:
-            return {
-                'result':ServerCommands.FETCH_FIGHTER.value,
-                'state':self.state.value,
-                'data':self.cache.pop(ServerCommands.FETCH_FIGHTER)
-            }
+            return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,
+                self.cache.pop(ServerCommands.FETCH_FIGHTER))
         
         link = data["link"]
 
@@ -252,26 +274,15 @@ class ScraperServer(ZmqRepServer):
             workerArgs=[self.data_q,link]
         )
 
-        return {
-            "result": ServerCommands.FETCH_FIGHTER.value,
-            "state":self.state.value,
-            "data" : "Server starting scraper workers..."
-        }
+        return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,{"message" : "Server starting scraper workers..."})
 
     def handle_fetch_event(self, data: dict = {}) -> dict: 
         if self.state == ServerStates.BUSY:
             #return its busy working
-            return {
-                "result": ServerCommands.FETCH_EVENT_LATEST.value,
-                "state" : ServerStates.BUSY.value,
-            }
+            return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST,self.state)
        
         #check file exists
-        response = {
-            "result": ServerCommands.FETCH_EVENT_LATEST.value,
-            "state": self.state.value,
-            "data" : "Server starting scraper workers..."
-        }
+        
         if not self.isFightEventDataAvailable(abs_filepath=self.fightEventFileNameAbs):
             rprint(f"Fight event [bold magenta]data not available or stale[/bold magenta], starting scraper worker thread...")
             #file does not exist start worker thread to fetch data
@@ -280,16 +291,14 @@ class ScraperServer(ZmqRepServer):
                 ServerCommands.FETCH_EVENT_LATEST,
                 workerFunc=scrapy_worker.runScrapyFetchEvent,
                 workerArgs=[self.data_q])
-        else:
-            response['data'] = self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
-        return response
+            return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST,self.state,{"message":"Server starting scraper workers..."})
+        
+        return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST, self.state, self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs))
+        
     
     def handle_fetch_fighter_multi(self, data: dict={}) -> dict:
         if self.state == ServerStates.BUSY:
-            return {
-                "result" : ServerCommands.FETCH_FIGHTER_MULTI.value,
-                "state" : ServerStates.BUSY.value
-            }
+            return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER_MULTI,self.state)
 
         #not busy idle check if in cache
         if ServerCommands.FETCH_FIGHTER_MULTI in self.cache:
@@ -312,10 +321,7 @@ class ScraperServer(ZmqRepServer):
             workerFunc=scrapy_worker.runScrapyFetchFighterMulti,
             workerArgs=[self.data_q,links]
         )
-        return {
-            "result": ServerCommands.FETCH_FIGHTER_MULTI.value,
-            "data" : "Server starting scraper workers..."
-        }
+        return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER_MULTI,self.state,{"message":"Starting scrapy workers..."})
 
 
     def startWorker(self,serverCommand: ServerCommands, workerFunc, workerArgs: list):

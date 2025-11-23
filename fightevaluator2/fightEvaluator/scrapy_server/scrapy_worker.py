@@ -394,4 +394,6 @@ def runScrapyFetchEvent(result_q: queue.Queue):
         'event':fightEventData,
         'matchups': matchups
     })
-    
+
+def runScrapyFetchResults(result_q: queue.Queue):
+    result_q.put({'mock':'data'})
