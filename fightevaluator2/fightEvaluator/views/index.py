@@ -206,6 +206,12 @@ def ScrapyControlThreadFunction2():
                     isprelim
                 {
         """ 
+
+    fightEventDataState = FightEventDataState.objects.select_for_update().first()
+    fightEventDataState.staleOrEmpty = False
+    fightEventDataState.updating = False
+    fightEventDataState.date = datetime.today().date()
+    fightEventDataState.save()
 """
 
      client          django-server                            scraper-server
@@ -253,29 +259,7 @@ def ScrapyControlThreadFunction2():
                         
 
 """
-def WorkerThreadControlFunction():
-    
-    print('WorkerThread running....')
-    fightEventData = scraper.getUpcomingFightEvent()
-    fightEventForm = FightEventForm(fightEventData['eventData'])
-    if not fightEventForm.is_valid():
-        return JsonResponse({'fightEventForm':'FUCKED','error':fightEventForm.errors})
-    nextEvent = fightEventForm.save()
-    for matchup in fightEventData['matchups']:
-            matchup['event'] = nextEvent
-            # print(matchup)
-            matchup['scheduled'] = nextEvent.date
-            # print(matchup)
-            matchupForm = MatchUpFormMF(matchup)
-            if matchupForm.is_valid():#save all that are valid 
-                # return JsonResponse({'MatchUpFormMF':'FUCKED','error':matchupForm.errors})
-                matchupForm.save()
-    fightEventDataState = FightEventDataState.objects.select_for_update().first()
-    fightEventDataState.staleOrEmpty = False
-    fightEventDataState.updating = False
-    fightEventDataState.date = datetime.today().date()
-    fightEventDataState.save()
-    print('WorkerThread complete....')
+
 
 def matchupDictWithName(matchup: MatchUp):
     

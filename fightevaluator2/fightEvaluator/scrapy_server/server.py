@@ -65,7 +65,6 @@ class ZmqRepServer:
 
     def handle_message(self,message):
         rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
-        self.process_data_q()
         response = self.process_message(message)
         self.send_response(response)
     
@@ -129,6 +128,35 @@ class ScraperServer(ZmqRepServer):
         self.workerThread = None
 
     def handle_message(self, message):
+
+        #process data in the q before moving forward
+        """
+
+            scrapy worker correctly returns data
+
+            data is written to json file
+
+            data is available on a thread 
+            client queries for event
+                if busy response busy
+                if idle get event
+                    if event-file dne or event-file.date is in the past:
+                        fetch new event
+                    else:
+                        event is yet to come return file data
+                
+
+            server thread
+            worker thread
+               write data to file
+               write state to queue
+            on receive command
+                read state from queue
+                update server state 
+                respond to client if worker complete and data available       
+
+        """
+        self.process_data_q()
         command = message['command']
         data = message['data']
 
@@ -237,33 +265,7 @@ class ScraperServer(ZmqRepServer):
                 "result": ServerCommands.FETCH_EVENT_LATEST.value,
                 "state" : ServerStates.BUSY.value,
             }
-        #do the work in a background thread
-        """
-
-            scrapy worker correctly returns data
-
-            data is written to json file
-
-            data is available on a thread 
-            client queries for event
-                if busy response busy
-                if idle get event
-                    if event-file dne or event-file.date is in the past:
-                        fetch new event
-                    else:
-                        event is yet to come return file data
-                
-
-            server thread
-            worker thread
-               write data to file
-               write state to queue
-            on receive command
-                read state from queue
-                update server state 
-                respond to client if worker complete and data available       
-
-        """
+       
         #check file exists
         response = {
             "result": ServerCommands.FETCH_EVENT_LATEST.value,
@@ -278,8 +280,8 @@ class ScraperServer(ZmqRepServer):
                 ServerCommands.FETCH_EVENT_LATEST,
                 workerFunc=scrapy_worker.runScrapyFetchEvent,
                 workerArgs=[self.data_q])
-
-        response['data'] = self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
+        else:
+            response['data'] = self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
         return response
     
     def handle_fetch_fighter_multi(self, data: dict={}) -> dict:
@@ -334,8 +336,8 @@ class ScraperServer(ZmqRepServer):
             isStale = False
             with open(filePath,"r",encoding="utf-8") as file:
                 data = json.load(file)
-                eventDate = datetime.strptime(data['event']['date'],"%Y-%m-%d")
-                today = datetime.today()
+                eventDate = datetime.strptime(data['event']['date'],"%Y-%m-%d").date()
+                today = datetime.today().date()
                 # rprint('date diff => ',today,eventDate)
                 #eventDate is in the past
                 if eventDate < today:
