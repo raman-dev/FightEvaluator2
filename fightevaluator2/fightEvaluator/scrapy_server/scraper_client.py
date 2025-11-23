@@ -1,11 +1,11 @@
-from .commands import ServerCommands,ServerStates
+from commands import ServerCommands,ServerStates
 import zmq
 from rich import print as rprint
 import time
 
 from django.db import models
-from ..models import  WeightClass,Assessment
-from ..forms import FighterForm
+# from ..models import  WeightClass,Assessment
+# from ..forms import FighterForm
 
 DEFAULT_CLIENT_TIMEOUT_SECONDS = 15
 #NOTE ZMQ request socket wrapper
@@ -91,36 +91,36 @@ class ZmqReqClient:
     def __exit__(self, exc_type, exc_value, traceback):
         self.disconnect()
 
-class ScraperClient(ZmqReqClient):
+# class ScraperClient(ZmqReqClient):
     
-    def getNextEvent() -> dict:
-        pass
+#     def getNextEvent() -> dict:
+#         pass
 
-    def getFighter(link: str,fighterData: dict) -> dict:
-        # response = fetcher.fetchFighter(link=fighter['link'])
-        response = super.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':link})
-        fighterObj = None
-        if response:
-            fighterData = response['data']
-            rprint(fighterData)
+#     def getFighter(link: str,fighterData: dict) -> dict:
+#         # response = fetcher.fetchFighter(link=fighter['link'])
+#         response = super.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':link})
+#         fighterObj = None
+#         if response:
+#             fighterData = response['data']
+#             rprint(fighterData)
             
-            fighterData['data_api_link'] = link
+#             fighterData['data_api_link'] = link
             
-            if fighterData['date_of_birth'] == 'N/A':
-                fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
+#             if fighterData['date_of_birth'] == 'N/A':
+#                 fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
             
-            weight_class = WeightClass[fighterData['weight_class']]
-            fighterData['weight_class'] = weight_class
-            fighterForm = FighterForm(fighterData)#validate fighter data
+#             weight_class = WeightClass[fighterData['weight_class']]
+#             fighterData['weight_class'] = weight_class
+#             fighterForm = FighterForm(fighterData)#validate fighter data
             
-            if fighterForm.is_valid():
-                fighterObj = fighterForm.save()
+#             if fighterForm.is_valid():
+#                 fighterObj = fighterForm.save()
 
-                rprint('Valid fighter',fighterObj)
-                assessment = Assessment(fighter=fighterObj)
-                assessment.save()
+#                 rprint('Valid fighter',fighterObj)
+#                 assessment = Assessment(fighter=fighterObj)
+#                 assessment.save()
                 
-                fighterObj.assessment = assessment
-            else:
-                rprint(fighterForm.errors)
-        return fighterObj
+#                 fighterObj.assessment = assessment
+#             else:
+#                 rprint(fighterForm.errors)
+#         return fighterObj

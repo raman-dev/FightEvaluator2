@@ -24,24 +24,11 @@ class ZmqRepServer:
         # Create a command router
         self.command_handlers = {
             ServerCommands.SERVER_STATE: self.handle_server_state,
-            ServerCommands.FETCH_EVENT_LATEST: self.handle_fetch_event,
-            ServerCommands.FETCH_FIGHTER: self.handle_fetch_fighter,
-            ServerCommands.FETCH_FIGHTER_MULTI: self.handle_fetch_fighter_multi,
-            ServerCommands.KILL_SERVER: self.handle_kill_server,
+            ServerCommands.KILL_SERVER: self.handle_kill_server
         }
 
         self.state = ServerStates.IDLE
-        self.working_on = None
         self.running = False
-        
-        self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
-        
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(script_dir, f"{self.fightEventFileName}")
-        
-        self.fightEventFileNameAbs = file_path
-        self.data_q = Queue()#thread safe queue for data from worker to server
-        self.workerThread = None
 
         self.cache = {}
     def start(self):
@@ -53,7 +40,6 @@ class ZmqRepServer:
         self.poller = zmq.Poller()
         self.poller.register(self.socket, zmq.POLLIN)
 
-
     def timeout(self,seconds):
         return seconds * 1000
 
@@ -61,8 +47,7 @@ class ZmqRepServer:
         self.running = True
         rprint(f"[bold green]Server running on port {self.port}[/bold green]")
         #Keyboard interrupt doesn't work when poller.poll is called
-        #if you want to use keyboard interrupts
-        #need to run server in background thread 
+        #if you want to use keyboard interrupts need to run server in background thread 
         #and allow user to stop from main thread
         while self.running:
             events = self.poller.poll(timeout(DEFAULT_SERVER_TIMEOUT_S))
@@ -73,12 +58,8 @@ class ZmqRepServer:
                 break
 
             message = self.socket.recv_pyobj()
+            rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
             self.handle_message(message)
-            # rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
-
-            # self.process_data_q()
-            # response = self.process_message(message)
-            # self.socket.send_pyobj(response)
 
         self.state = ServerStates.SHUTTING_DOWN
 
@@ -87,7 +68,6 @@ class ZmqRepServer:
         self.process_data_q()
         response = self.process_message(message)
         self.send_response(response)
-        
     
     def send_response(self,message):
         self.socket.send_pyobj(message)
@@ -106,7 +86,75 @@ class ZmqRepServer:
     def __exit__(self, exc_type, exc_value, traceback):
         self.stop()
 
-    
+    def process_message(self, message: dict):
+        """Validate and route the command."""
+        if not isinstance(message, dict) or "command" not in message:
+            return {"error": "Invalid message format"}
+
+        try:
+            cmd = ServerCommands(message["command"])
+        except ValueError:
+            return {"error": f"Unknown command: {message['command']}"}
+
+        handler = self.command_handlers.get(cmd)
+        if handler is None:
+            return {"error": f"Invalid command/Unsupported command {cmd.value}"}
+
+        return handler(message)
+
+    def handle_server_state(self, msg) -> dict:
+        return {
+            "result": "SERVER_STATE",
+            "state": self.state.value
+        }
+
+    def handle_kill_server(self, msg) -> dict:
+        self.running = False
+        return {"result": "KILL_SERVER", "status": "Server shutting down"}
+
+    # ------------------------------------------------------------------
+
+class ScraperServer(ZmqRepServer):
+
+    def __init__(self, serverPort, timeoutSeconds = DEFAULT_SERVER_TIMEOUT_S):
+        super().__init__(serverPort, timeoutSeconds)
+        
+        self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
+        
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(script_dir, f"{self.fightEventFileName}")
+        
+        self.fightEventFileNameAbs = file_path
+        self.data_q = Queue()#thread safe queue for data from worker to server
+        self.workerThread = None
+
+    def handle_message(self, message):
+        command = message['command']
+        data = message['data']
+
+        response = {
+            "result":ServerCommands.SERVER_STATE.value,
+            "state":self.state.value
+        }
+
+        match ServerCommands[command]:
+            case ServerCommands.SERVER_STATE:
+                response = {
+                    "result": ServerCommands.SERVER_STATE.value,
+                    "state": self.state.value
+                }
+            case ServerCommands.FETCH_EVENT_LATEST:
+                response = self.handle_fetch_event(data)
+            case ServerCommands.FETCH_FIGHTER: 
+                response = self.handle_fetch_fighter(data)
+            case ServerCommands.FETCH_FIGHTER_MULTI: 
+                # self.handle_fetch_fighter_multi
+                pass
+            case ServerCommands.KILL_SERVER:
+                self.running = False
+                response = {"result": "KILL_SERVER", "status": "Server shutting down"}
+        super().send_response(response)
+
     def process_data_q(self):
         #process data in the q before processing new messages
         if not self.data_q.empty():
@@ -151,68 +199,42 @@ class ZmqRepServer:
                 self.workerThread = None
             self.state = ServerStates.IDLE
     
-    def process_message(self, message: dict):
-        """Validate and route the command."""
-        if not isinstance(message, dict) or "command" not in message:
-            return {"error": "Invalid message format"}
+    def handle_fetch_fighter(self, data:dict) -> dict:
+        if self.state == ServerStates.BUSY:
+            return {
+                "result": ServerCommands.FETCH_FIGHTER.value,
+                "state": self.state.value
+            }
+        
+        #check cache for data
+        #return last fighter fetch, could be wrong not my issue
+        if ServerCommands.FETCH_FIGHTER in self.cache:
+            return {
+                'result':ServerCommands.FETCH_FIGHTER.value,
+                'state':self.state.value,
+                'data':self.cache.pop(ServerCommands.FETCH_FIGHTER)
+            }
+        
+        link = data["link"]
 
-        try:
-            cmd = ServerCommands(message["command"])
-        except ValueError:
-            return {"error": f"Unknown command: {message['command']}"}
+        # if self.workerThread == None or not self.workerThread.is_alive():
+        self.startWorker(
+            serverCommand=ServerCommands.FETCH_FIGHTER,
+            workerFunc=scrapy_worker.runScrapyFetchFighter,
+            workerArgs=[self.data_q,link]
+        )
 
-        handler = self.command_handlers.get(cmd)
-        if handler is None:
-            return {"error": f"Invalid command/Unsupported command {cmd.value}"}
-
-        return handler(message)
-
-    # ------------------------------------------------------------------
-    # HANDLERS
-    # ------------------------------------------------------------------
-
-
-    def isFightEventDataAvailable(self,abs_filepath: str):
-        filePath = Path(abs_filepath)
-        # rprint(f"Checking for fight event data file at [bold magenta]<{filePath}>[/bold magenta]\n{filename}")
-        #check if file exists
-        if filePath.is_file():
-            #if exists check if is stale
-            isStale = False
-            with open(filePath,"r",encoding="utf-8") as file:
-                data = json.load(file)
-                eventDate = datetime.strptime(data['event']['date'],"%Y-%m-%d")
-                today = datetime.today()
-                # rprint('date diff => ',today,eventDate)
-                #eventDate is in the past
-                if eventDate < today:
-                    isStale = True
-            #if stale date not available if not stale date is available
-            rprint(f"Fight event data file found. Data is: [bold magenta]{'Stale' if isStale else 'Valid'}[/bold magenta]")
-            return not isStale 
-        rprint(f"Fight event [bold magenta]data file not found.[/bold magenta]")
-        return False
-
-    def getDataFromFile(self,abs_filepath: str):
-        data = {}
-        try:
-            with open(abs_filepath,"r",encoding="utf-8") as file:
-                data = json.load(file)
-        except OSError as e:
-            print("Error opening fight event data file.",e)
-        return data
-       
-    def handle_server_state(self, msg) -> dict:
         return {
-            "result": "SERVER_STATE",
-            "state": self.state.value
+            "result": ServerCommands.FETCH_FIGHTER.value,
+            "state":self.state.value,
+            "data" : "Server starting scraper workers..."
         }
 
-    def handle_fetch_event(self, msg) -> dict: 
+    def handle_fetch_event(self, data: dict = {}) -> dict: 
         if self.state == ServerStates.BUSY:
             #return its busy working
             return {
-                "result":ServerCommands.FETCH_EVENT_LATEST.value,
+                "result": ServerCommands.FETCH_EVENT_LATEST.value,
                 "state" : ServerStates.BUSY.value,
             }
         #do the work in a background thread
@@ -243,13 +265,12 @@ class ZmqRepServer:
 
         """
         #check file exists
-        if self.isFightEventDataAvailable(abs_filepath=self.fightEventFileNameAbs):
-            return {
-                'result':ServerCommands.FETCH_EVENT_LATEST.value,
-                'state':self.state.value,
-                'data' :self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
-            }
-        else:
+        response = {
+            "result": ServerCommands.FETCH_EVENT_LATEST.value,
+            "state": self.state.value,
+            "data" : "Server starting scraper workers..."
+        }
+        if not self.isFightEventDataAvailable(abs_filepath=self.fightEventFileNameAbs):
             rprint(f"Fight event [bold magenta]data not available or stale[/bold magenta], starting scraper worker thread...")
             #file does not exist start worker thread to fetch data
             # if self.workerThread == None or not self.workerThread.is_alive():
@@ -258,44 +279,10 @@ class ZmqRepServer:
                 workerFunc=scrapy_worker.runScrapyFetchEvent,
                 workerArgs=[self.data_q])
 
-            return {
-                "result": ServerCommands.FETCH_EVENT_LATEST.value,
-                "state": self.state.value,
-                "data" : "Server starting scraper workers..."
-            }
-
-    def handle_fetch_fighter(self, msg) -> dict:
-        if self.state == ServerStates.BUSY:
-            return {
-                "result": ServerCommands.FETCH_FIGHTER.value,
-                "state": self.state.value
-            }
-        
-        #check cache for data
-        #return last fighter fetch, could be wrong not my issue
-        if ServerCommands.FETCH_FIGHTER in self.cache:
-            return {
-                'result':ServerCommands.FETCH_FIGHTER.value,
-                'state':self.state.value,
-                'data':self.cache.pop(ServerCommands.FETCH_FIGHTER)
-            }
-        
-        data = msg['data']
-        link = data["link"]
-
-        # if self.workerThread == None or not self.workerThread.is_alive():
-        self.startWorker(
-            serverCommand=ServerCommands.FETCH_FIGHTER,
-            workerFunc=scrapy_worker.runScrapyFetchFighter,
-            workerArgs=[self.data_q,link]
-        )
-        return {
-            "result": ServerCommands.FETCH_FIGHTER.value,
-            "state":self.state.value,
-            "data" : "Server starting scraper workers..."
-        }
-
-    def handle_fetch_fighter_multi(self, msg) -> dict:
+        response['data'] = self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs)
+        return response
+    
+    def handle_fetch_fighter_multi(self, data: dict={}) -> dict:
         if self.state == ServerStates.BUSY:
             return {
                 "result" : ServerCommands.FETCH_FIGHTER_MULTI.value,
@@ -306,8 +293,6 @@ class ZmqRepServer:
         if ServerCommands.FETCH_FIGHTER_MULTI in self.cache:
             return self.cache.pop(ServerCommands.FETCH_FIGHTER_MULTI)
 
-
-        data = msg['data']
         links = data['links']
         # print(links)
         """
@@ -330,6 +315,7 @@ class ZmqRepServer:
             "data" : "Server starting scraper workers..."
         }
 
+
     def startWorker(self,serverCommand: ServerCommands, workerFunc, workerArgs: list):
         self.state = ServerStates.BUSY
         self.working_on = serverCommand
@@ -339,15 +325,35 @@ class ZmqRepServer:
             )
         self.workerThread.start()
 
-    def handle_kill_server(self, msg) -> dict:
-        self.running = False
-        return {"result": "KILL_SERVER", "status": "Server shutting down"}
+    def isFightEventDataAvailable(self,abs_filepath: str):
+        filePath = Path(abs_filepath)
+        # rprint(f"Checking for fight event data file at [bold magenta]<{filePath}>[/bold magenta]\n{filename}")
+        #check if file exists
+        if filePath.is_file():
+            #if exists check if is stale
+            isStale = False
+            with open(filePath,"r",encoding="utf-8") as file:
+                data = json.load(file)
+                eventDate = datetime.strptime(data['event']['date'],"%Y-%m-%d")
+                today = datetime.today()
+                # rprint('date diff => ',today,eventDate)
+                #eventDate is in the past
+                if eventDate < today:
+                    isStale = True
+            #if stale date not available if not stale date is available
+            rprint(f"Fight event data file found. Data is: [bold magenta]{'Stale' if isStale else 'Valid'}[/bold magenta]")
+            return not isStale 
+        rprint(f"Fight event [bold magenta]data file not found.[/bold magenta]")
+        return False
 
-    # ------------------------------------------------------------------
-
-class ScraperServer(ZmqRepServer):
-    def handle_message(self, message):
-        return super().handle_message(message)
+    def getDataFromFile(self,abs_filepath: str):
+        data = {}
+        try:
+            with open(abs_filepath,"r",encoding="utf-8") as file:
+                data = json.load(file)
+        except OSError as e:
+            print("Error opening fight event data file.",e)
+        return data
 
 def timeout(seconds=DEFAULT_SERVER_TIMEOUT_S):
     return seconds * 1000
@@ -385,7 +391,7 @@ def server_test():
             poller.unregister(socket)
 
 def run_server():
-    with ZmqRepServer(serverPort=42069) as server:
+    with ScraperServer(serverPort=42069) as server:
         server.run()
 
 if __name__ == "__main__":
