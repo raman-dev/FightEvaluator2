@@ -50,14 +50,14 @@ scrapyThread = None
 def scrapyThreadTestEndpoint(request):
     global scrapyThread
     if scrapyThread == None or not scrapyThread.is_alive():
-        scrapyThread = Thread(target=ScrapyControlThreadFunction2)
+        scrapyThread = Thread(target=ScrapyFightEventControlThreadFunction)
         scrapyThread.start()
         return JsonResponse({"state":"scrapy thread started"})
     return JsonResponse({"state":"scrapy thread running"})
 
 #thread launches scrapy process
 #and waits for it to complete
-def ScrapyControlThreadFunction2():
+def ScrapyFightEventControlThreadFunction():
     #this function is launched when the newest event has not been fetched or created
     """
         do what here
@@ -212,8 +212,14 @@ def ScrapyControlThreadFunction2():
     fightEventDataState.updating = False
     fightEventDataState.date = datetime.today().date()
     fightEventDataState.save()
-"""
 
+def ScrapyEventResultsThreadControlFunction(fightEvent: FightEvent):
+    with scraper_client.ZmqReqClient(serverPort=PORT) as client:
+        response = client.sendCommandRetryLoop(ServerCommands.FETCH_EVENT_RESULTS,{'link':fightEvent.link})
+        if response:
+            data = response['data']
+    
+"""
      client          django-server                            scraper-server
         get index------>
                         check has event
@@ -256,13 +262,9 @@ def ScrapyControlThreadFunction2():
                             create fighter models for fetched fighters
                         create matchup models for every matchup
                         mark event data state as not stale/updating
-                        
-
 """
 
-
 def matchupDictWithName(matchup: MatchUp):
-    
     name_a = matchup.fighter_a.name_unmod
     name_b = matchup.fighter_b.name_unmod
     
@@ -280,7 +282,7 @@ def index_endpoint(request):
     global scrapyThread
     if scrapyThread == None and fightEventDataState.updating:
         #invalid state start worker 
-        scrapyThread = Thread(target=ScrapyControlThreadFunction2)
+        scrapyThread = Thread(target=ScrapyFightEventControlThreadFunction)
         scrapyThread.start()
     #in an invalid state
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
@@ -320,7 +322,7 @@ def index(request):
         #compare current date and next event date
         fightEventDataState.updating=True
         if scrapyThread == None or not scrapyThread.is_alive():
-            scrapyThread = Thread(target=ScrapyControlThreadFunction2)
+            scrapyThread = Thread(target=ScrapyFightEventControlThreadFunction)
             scrapyThread.start()
             #create new
         else:

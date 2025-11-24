@@ -139,6 +139,10 @@ def runTestClient():
                     data = {}
                 case ServerCommands.FETCH_EVENT_LATEST:
                     data = {}
+                case ServerCommands.FETCH_EVENT_RESULTS:
+                    data = {
+                        'link':"https://www.tapology.com/fightcenter/events/130635-ufc-fight-night"
+                    }
                 case ServerCommands.FETCH_FIGHTER:
                     data = {
                         'link':'https://www.tapology.com/fightcenter/fighters/32797-belal-muhammad'

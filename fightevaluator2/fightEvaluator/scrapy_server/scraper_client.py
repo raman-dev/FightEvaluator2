@@ -17,9 +17,7 @@ class ZmqReqClient:
          - send commands to server
          - receive responses from server
     """
-    def __init__(self,serverPort: int,
-                 serverAddress: str = "localhost",
-                 clientTimeoutSeconds: int =DEFAULT_CLIENT_TIMEOUT_SECONDS,maxRetries: int=15,retryDelaySeconds: int=3):
+    def __init__(self,serverPort: int, serverAddress: str = "localhost", clientTimeoutSeconds: int = DEFAULT_CLIENT_TIMEOUT_SECONDS,maxRetries: int=15,retryDelaySeconds: int=3):
         self.port = serverPort
         self.address = serverAddress
         self.context = None

@@ -246,12 +246,13 @@ class ScraperServer(ZmqRepServer):
         
         if ServerCommands.FETCH_EVENT_RESULTS in self.cache:
             return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state,self.cache.pop(ServerCommands.FETCH_EVENT_RESULTS))
-            
+
+        link = data['link']    
         #not in cache and server not busy
         self.startWorker(
                 ServerCommands.FETCH_EVENT_RESULTS,
                 workerFunc=scrapy_worker.runScrapyFetchResults,
-                workerArgs=[self.data_q])
+                workerArgs=[self.data_q,link])
         
         return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state,{"message":"Starting scrapy server"})
 
@@ -295,7 +296,6 @@ class ScraperServer(ZmqRepServer):
         
         return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST, self.state, self.getDataFromFile(abs_filepath=self.fightEventFileNameAbs))
         
-    
     def handle_fetch_fighter_multi(self, data: dict={}) -> dict:
         if self.state == ServerStates.BUSY:
             return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER_MULTI,self.state)
