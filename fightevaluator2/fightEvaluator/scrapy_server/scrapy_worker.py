@@ -171,7 +171,7 @@ class EventResultsSpider(scrapy.Spider):
     start_urls = []
     results = []
 
-    def parse(self, response: scrapy.http.HtmlResponse):
+    def parse(self, response: HtmlResponse):
         result = self.scrapeResults(response.text)
         self.results.append(result)
     
