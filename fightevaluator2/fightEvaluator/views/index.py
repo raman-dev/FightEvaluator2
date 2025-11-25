@@ -511,13 +511,13 @@ def update_stats(request):
 @require_GET
 def getFightEventResults2(request,eventId):
     # fightEvent = get_object_or_404(FightEvent,id=eventId)
-    fightEvent = FightEvent.objects.select_for_update().filter(id=eventId).first()
-    if fightEvent == None:
+    if not FightEvent.objects.filter(id=eventId).exists():
         return JsonResponse({"Error":"Event does not exist"})
     #do not try and get event results if the event is in the future
     #or if the it is not the atleast 2:00 am the day after the event
     # if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
     #     return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
+    fightEvent = FightEvent.objects.filter(pk=eventId).first()
     """
         check if results available if available return results
         if not available
@@ -525,10 +525,28 @@ def getFightEventResults2(request,eventId):
                 start it 
             else:
                 return them 
+        
+        get request->
+
+            fetcher 
+                started : true | false
+                running : true | false
+            
+            check is fetcher.started 
+                if fetcher.started
+                    if fetcher.running
+                        return busy working
+                    else:
+                        fetcher in an incorrect state
+        django says to always use db for state
+        
+        FetchResultThreadState
+            started: False
+            running: False
+        
     """
 
     # matchupResults = {}
-    
     if not fightEvent.hasResults:
         global scrapyFightEventThread
     
