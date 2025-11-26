@@ -1,39 +1,29 @@
 from django.views.decorators.http import require_GET
 from django.views.decorators.cache import cache_page
 
-from django.shortcuts import render,get_object_or_404,redirect
+from django.shortcuts import render,get_object_or_404
 from django.forms.models import model_to_dict
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse
 
 from django.views.generic import ListView,DetailView
 from django.utils.decorators import method_decorator
 
 from django.db import transaction,OperationalError
-from django.core.exceptions import ValidationError
 from django.db.models import Q
 
 
-from ..models import Assessment,Fighter,FightEvent,MatchUp,FightOutcome,Prediction,Event,FightEventDataState,EventStat,WeightClass
+from ..models import *
 from ..forms import FightEventForm,MatchUpFormMF,FighterForm
 from .prediction import calculate_stats
 
 import time
-import json
 import datetime
-import re
 
 from .. import scraper
 
-from ..scraper import eventLinkParse,EVENTS_URL2
-from ..scraper2 import scrapeMatchups
-
 from threading import Thread
-import multiprocessing
 from datetime import datetime
-import concurrent
 # from ..scraper import getUpcomingFightEvent
-import scrapy
-from scrapy.crawler import CrawlerProcess
 
 WorkerThread = None
 globalCounter = 0
