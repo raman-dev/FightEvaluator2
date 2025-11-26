@@ -49,67 +49,9 @@ PORT = 42069
 scrapyFightEventThread = None
 scrapyEventResultsThread = None
 
-@require_GET
-def lockedRowAccess(request):
-    """
-    
-        concurrent reading is always safe
-        when writing
-        wrap in transaction.atomic()
-            then use select for update
-    
-    """
-    """
-    Will throw an OperationalError because the database is locked
-    f = Fighter.objects.select_for_update().filter(id=1).first()
-    f.losses += 1
-    f.save()
-
-    locking works with sqlite
-    """
-    with transaction.atomic():
-        # f = Fighter.objects.select_for_update().filter(id=1).first()
-        # f = Fighter.objects.select_for_update(nowait=True).filter(id=1).first()
-        qset = Fighter.objects.select_for_update().filter(id=1)
-        # if f != None:
-        # f.losses += 1
-        try: 
-            # f.save()
-            for f in qset:
-                # f.losses += 1
-                # f.save()
-                rprint(f.wins)
-            return JsonResponse({"msg":model_to_dict(f)})
-        except OperationalError as e:
-            rprint("Database is locked try again later")
-            return JsonResponse({"msg":"Database is locked try again later"})
-        # else:
-        #     return JsonResponse({"msg":"Object is None"})
-
-    return JsonResponse({"msg":"wtf!"})#unreachable
-
-
-def lockRow(lockTime: int=30):
-    with transaction.atomic():
-        f = Fighter.objects.select_for_update().filter(id=1).first()
-        rprint(model_to_dict(f))
-        f.wins += 1
-        f.save()
-        time.sleep(lockTime)
-        rprint("ROW_LOCK_THREAD_COMPLETE!")
-
-@require_GET
-def lockTestRow(request):
-    #lock a row in a seperate thread
-    lockTime = 45
-    t = Thread(target=lockRow,args=[],kwargs={'lockTime':lockTime})
-    t.start()
-
-    return JsonResponse({"msg":f"Trying to lock fighter.1 for {lockTime}s"})
-
 #thread launches scrapy process
 #and waits for it to complete
-def ScrapyFightEventControlThreadFunction():
+def ScrapyFightEventControlFunction():
     #this function is launched when the newest event has not been fetched or created
     """
         do what here
@@ -265,7 +207,7 @@ def ScrapyFightEventControlThreadFunction():
     fightEventDataState.date = datetime.today().date()
     fightEventDataState.save()
 
-def ScrapyEventResultsThreadControlFunction(eventId: int):
+def ScrapyEventResultsControlFunction(eventId: int):
     with transaction.atomic():
         fightEvent = FightEvent.objects.select_for_update().filter(id=eventId).first()
         # response = None python3 only has function scope inner and outer and global scope
@@ -399,7 +341,7 @@ def index_endpoint(request):
     global scrapyFightEventThread
     if scrapyFightEventThread == None and fightEventDataState.updating:
         #invalid state start worker 
-        scrapyFightEventThread = Thread(target=ScrapyFightEventControlThreadFunction)
+        scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
         scrapyFightEventThread.start()
     #in an invalid state
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
@@ -439,7 +381,7 @@ def index(request):
         #compare current date and next event date
         fightEventDataState.updating=True
         if scrapyFightEventThread == None or not scrapyFightEventThread.is_alive():
-            scrapyFightEventThread = Thread(target=ScrapyFightEventControlThreadFunction)
+            scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
             scrapyFightEventThread.start()
             #create new
         else:
@@ -580,7 +522,7 @@ def getFightEventResults2(request,eventId):
 
         #scrapyEventResultsThread is none or not alive
         #invalid state start worker 
-        scrapyFightEventThread = Thread(target=ScrapyEventResultsThreadControlFunction,args=[],kwargs={'eventId':fightEvent.id})
+        scrapyFightEventThread = Thread(target=ScrapyEventResultsControlFunction,args=[],kwargs={'eventId':fightEvent.id})
         scrapyFightEventThread.start()
         return JsonResponse({"message":"Will now start fetching results..."})
       
@@ -609,6 +551,65 @@ def event_predictions(request,eventId):
             predictions.append(prediction)
     
     return render(request,"fightEvaluator/event_predictions.html",{'predictions':predictions,'event':event})
+
+
+@require_GET
+def lockedRowAccess(request):
+    """
+    
+        concurrent reading is always safe
+        when writing
+        wrap in transaction.atomic()
+            then use select for update
+    
+    """
+    """
+    Will throw an OperationalError because the database is locked
+    f = Fighter.objects.select_for_update().filter(id=1).first()
+    f.losses += 1
+    f.save()
+
+    locking works with sqlite
+    """
+    with transaction.atomic():
+        # f = Fighter.objects.select_for_update().filter(id=1).first()
+        # f = Fighter.objects.select_for_update(nowait=True).filter(id=1).first()
+        qset = Fighter.objects.select_for_update().filter(id=1)
+        # if f != None:
+        # f.losses += 1
+        try: 
+            # f.save()
+            for f in qset:
+                # f.losses += 1
+                # f.save()
+                rprint(f.wins)
+            return JsonResponse({"msg":model_to_dict(f)})
+        except OperationalError as e:
+            rprint("Database is locked try again later")
+            return JsonResponse({"msg":"Database is locked try again later"})
+        # else:
+        #     return JsonResponse({"msg":"Object is None"})
+
+    return JsonResponse({"msg":"wtf!"})#unreachable
+
+def lockRow(lockTime: int=30):
+    with transaction.atomic():
+        f = Fighter.objects.select_for_update().filter(id=1).first()
+        rprint(model_to_dict(f))
+        f.wins += 1
+        f.save()
+        time.sleep(lockTime)
+        rprint("ROW_LOCK_THREAD_COMPLETE!")
+
+@require_GET
+def lockTestRow(request):
+    #lock a row in a seperate thread
+    lockTime = 45
+    t = Thread(target=lockRow,args=[],kwargs={'lockTime':lockTime})
+    t.start()
+
+    return JsonResponse({"msg":f"Trying to lock fighter.1 for {lockTime}s"})
+
 
 def polling_index(request):
     return render(request,"fightEvaluator/polling-index.html",{})
