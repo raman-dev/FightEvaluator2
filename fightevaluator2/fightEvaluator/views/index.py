@@ -8,7 +8,7 @@ from django.http import JsonResponse,HttpResponse
 from django.views.generic import ListView,DetailView
 from django.utils.decorators import method_decorator
 
-from django.db import transaction
+from django.db import transaction,OperationalError
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 
@@ -49,13 +49,63 @@ PORT = 42069
 scrapyFightEventThread = None
 scrapyEventResultsThread = None
 
-def scrapyThreadTestEndpoint(request):
-    global scrapyFightEventThread
-    if scrapyFightEventThread == None or not scrapyFightEventThread.is_alive():
-        scrapyFightEventThread = Thread(target=ScrapyFightEventControlThreadFunction)
-        scrapyFightEventThread.start()
-        return JsonResponse({"state":"scrapy thread started"})
-    return JsonResponse({"state":"scrapy thread running"})
+@require_GET
+def lockedRowAccess(request):
+    """
+    
+        concurrent reading is always safe
+        when writing
+        wrap in transaction.atomic()
+            then use select for update
+    
+    """
+    """
+    Will throw an OperationalError because the database is locked
+    f = Fighter.objects.select_for_update().filter(id=1).first()
+    f.losses += 1
+    f.save()
+
+    locking works with sqlite
+    """
+    with transaction.atomic():
+        # f = Fighter.objects.select_for_update().filter(id=1).first()
+        # f = Fighter.objects.select_for_update(nowait=True).filter(id=1).first()
+        qset = Fighter.objects.select_for_update().filter(id=1)
+        # if f != None:
+        # f.losses += 1
+        try: 
+            # f.save()
+            for f in qset:
+                # f.losses += 1
+                # f.save()
+                rprint(f.wins)
+            return JsonResponse({"msg":model_to_dict(f)})
+        except OperationalError as e:
+            rprint("Database is locked try again later")
+            return JsonResponse({"msg":"Database is locked try again later"})
+        # else:
+        #     return JsonResponse({"msg":"Object is None"})
+
+    return JsonResponse({"msg":"wtf!"})#unreachable
+
+
+def lockRow(lockTime: int=30):
+    with transaction.atomic():
+        f = Fighter.objects.select_for_update().filter(id=1).first()
+        rprint(model_to_dict(f))
+        f.wins += 1
+        f.save()
+        time.sleep(lockTime)
+        rprint("ROW_LOCK_THREAD_COMPLETE!")
+
+@require_GET
+def lockTestRow(request):
+    #lock a row in a seperate thread
+    lockTime = 45
+    t = Thread(target=lockRow,args=[],kwargs={'lockTime':lockTime})
+    t.start()
+
+    return JsonResponse({"msg":f"Trying to lock fighter.1 for {lockTime}s"})
 
 #thread launches scrapy process
 #and waits for it to complete
@@ -216,15 +266,18 @@ def ScrapyFightEventControlThreadFunction():
     fightEventDataState.save()
 
 def ScrapyEventResultsThreadControlFunction(eventId: int):
-    
-    fightEvent = FightEvent.objects.select_for_update().filter(id=eventId).first()
-
-    with scraper_client.ZmqReqClient(serverPort=PORT) as client:
-        response = client.sendCommandRetryLoop(ServerCommands.FETCH_EVENT_RESULTS,{'link':fightEvent.link})
+    with transaction.atomic():
+        fightEvent = FightEvent.objects.select_for_update().filter(id=eventId).first()
+        # response = None python3 only has function scope inner and outer and global scope
+        #block scoping isn't a thing
+        #however don't do this kind of bad practice, too implicit to the language 
+        response = None
+        with scraper_client.ZmqReqClient(serverPort=PORT) as client:
+            response = client.sendCommandRetryLoop(ServerCommands.FETCH_EVENT_RESULTS,{'link':fightEvent.link})
         if response:
             matchupResults = response['data']
             print(matchupResults)
-            matchups = MatchUp.objects.filter(event=fightEvent)
+            matchups = MatchUp.objects.select_for_update().filter(event=fightEvent)
             nameMatchUpMap = {}
             for m in matchups:
                 if m.fighter_a.name_unmod not in nameMatchUpMap:
@@ -515,91 +568,22 @@ def getFightEventResults2(request,eventId):
         return JsonResponse({"Error":"Event does not exist"})
     #do not try and get event results if the event is in the future
     #or if the it is not the atleast 2:00 am the day after the event
-    # if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
-    #     return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
     fightEvent = FightEvent.objects.filter(pk=eventId).first()
-    """
-
-        
-        records exist
-        dont exist
-        
-        records dont exist
-            check if background working on records
-        
-    """
-
-    # matchupResults = {}
-    if not fightEvent.hasResults:
-        global scrapyFightEventThread
     
+    if fightEvent.date > datetime.today().date() or datetime.now().hour < 2:
+        return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
+    if not fightEvent.hasResults:#reading concurrently is always valid
+        #until the concurrent write has happened the old value will always be available
+        global scrapyFightEventThread
         if scrapyEventResultsThread != None and scrapyEventResultsThread.is_alive():
             return JsonResponse({"message":"Currently fetching results..."})
 
         #scrapyEventResultsThread is none or not alive
         #invalid state start worker 
-        scrapyFightEventThread = Thread(target=ScrapyFightEventControlThreadFunction,args=[],kwargs={'eventId':fightEvent.id})
+        scrapyFightEventThread = Thread(target=ScrapyEventResultsThreadControlFunction,args=[],kwargs={'eventId':fightEvent.id})
         scrapyFightEventThread.start()
         return JsonResponse({"message":"Will now start fetching results..."})
-        # matchupResults = scraper.getFightEventResults2(fightEvent.link)
-        # print(matchupResults)
-        # nameMatchUpMap = {}
-        # for m in matchups:
-        #     if m.fighter_a.name_unmod not in nameMatchUpMap:
-        #         nameMatchUpMap[m.fighter_a.name_unmod] = m
-        #         nameMatchUpMap[m.fighter_b.name_unmod] = m
-        # for mr in matchupResults:
-        #     #find corresponding matchup from matchups
-        #     fighters = mr['fighters']
-        #     method = mr['method']
-        #     final_round = mr['final_round']
-        #     time = mr['time']
-
-        #     matchup = None
-        #     fa,fb = fighters
-        #     if fa['name'] in nameMatchUpMap:
-        #         matchup = nameMatchUpMap[fa['name']]
-        #     elif fb['name'] in nameMatchUpMap:
-        #         matchup = nameMatchUpMap[fb['name']]
-        #     else:
-        #         continue#skip this fight outcome
-        #     #replace spaces with underscores
-        #     method = method.replace(" ","_")
-        #     matchup.outcome = FightOutcome()
-        #     matchup.outcome.method = FightOutcome.Outcomes[method.upper()]
-        #     matchup.outcome.time = time
-        #     matchup.outcome.final_round = int(final_round)
-            
-
-        #     winnerName = None
-        #     winner = None
-        #     if fa['isWinner'] == True:
-        #         winnerName = fa['name']
-        #     elif fb['isWinner'] == True:
-        #         winnerName = fb['name']
-            
-        #     #update winner/loser win/loss count
-        #     if winnerName:
-        #         #fighter_a is winner
-        #         winner = matchup.fighter_a
-        #         loser = matchup.fighter_b
-        #         #fighter_b is winner
-        #         if winnerName != matchup.fighter_a.name_unmod:
-        #             winner = matchup.fighter_b
-        #             loser = matchup.fighter_a
-                
-        #         winner.wins = winner.wins + 1
-        #         loser.losses = loser.losses + 1
-                
-        #         winner.save()
-        #         loser.save()
-
-        #     matchup.outcome.winner = winner
-        #     matchup.outcome.save()
-        #     matchup.save()
-        #     fightOutcomes.append(model_to_dict(matchup.outcome))
-        # fightEvent.hasResults = True
-        # fightEvent.save()
+      
     else:
         fightOutcomes = []
         matchups = MatchUp.objects.filter(event=fightEvent)

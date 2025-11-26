@@ -70,7 +70,12 @@ urlpatterns = [
     path('vue/predictions/all',views.getPredictions,name='vue-all-predictions'),
     path('vue/predictions/stats',views.getStatsJson,name='vue-prediction-stats'),
 
-    #*NOTE TESTING ENDPOINTS ONLY
+    #*NOTE TESTING ENDPOINTS ONLY;
+    #concurrent read write testing
+    # path('try-locked-row',views.lockedRowAccess),
+    # path('lock-row',views.lockTestRow),
+
+    #ipc testing
     # path('scrapy-test',views.scrapy_test,name='scrapy-test'),
     # path ('scrapy-start',views.scrapy_start,name='scrapy-start'),
     # path('scrapy-start-thread',views.scrapyThreadTestEndpoint,name='scrapy-start-thread'),
