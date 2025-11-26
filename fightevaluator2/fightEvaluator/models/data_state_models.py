@@ -11,3 +11,10 @@ class FightEventDataState(models.Model):
      updating = models.BooleanField(default=False)
      date = models.DateField(default=None,blank=True,null=True)
 
+"""
+     NOTE 
+          create a results complete record when you are
+          fetching and creating an object
+
+          django main thread receives signal and then process result
+"""

@@ -519,30 +519,13 @@ def getFightEventResults2(request,eventId):
     #     return JsonResponse({'fightOutcomes':[],'error':'Results not available yet'})
     fightEvent = FightEvent.objects.filter(pk=eventId).first()
     """
-        check if results available if available return results
-        if not available
-            if resultThread not running or is none
-                start it 
-            else:
-                return them 
-        
-        get request->
 
-            fetcher 
-                started : true | false
-                running : true | false
-            
-            check is fetcher.started 
-                if fetcher.started
-                    if fetcher.running
-                        return busy working
-                    else:
-                        fetcher in an incorrect state
-        django says to always use db for state
         
-        FetchResultThreadState
-            started: False
-            running: False
+        records exist
+        dont exist
+        
+        records dont exist
+            check if background working on records
         
     """
 
