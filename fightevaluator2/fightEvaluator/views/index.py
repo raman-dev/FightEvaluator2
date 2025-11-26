@@ -11,7 +11,6 @@ from django.utils.decorators import method_decorator
 from django.db import transaction,OperationalError
 from django.db.models import Q
 
-
 from ..models import *
 from ..forms import FightEventForm,MatchUpFormMF,FighterForm
 from .prediction import calculate_stats
@@ -30,7 +29,7 @@ globalCounter = 0
 MAX_RETRIES = 15
 RETRY_DELAY_S = 3
 
-from ..scrapy_server.commands import ServerCommands,ServerStates
+from ..scrapy_server.commands import ServerCommands
 from ..scrapy_server import scraper_client
 
 from rich import print as rprint
