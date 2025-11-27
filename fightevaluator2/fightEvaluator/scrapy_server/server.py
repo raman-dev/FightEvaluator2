@@ -367,38 +367,6 @@ class ScraperServer(ZmqRepServer):
 def timeout(seconds=DEFAULT_SERVER_TIMEOUT_S):
     return seconds * 1000
 
-def server_test():
-    with zmq.Context() as context:
-        with context.socket(zmq.REP) as socket:
-            
-            socket.setsockopt(zmq.LINGER, 0)#don't block when trying to close
-            socket.bind("tcp://*:42069")
-            poller = zmq.Poller()
-            poller.register(socket, zmq.POLLIN)
-
-            while True:
-                events = poller.poll(timeout(DEFAULT_SERVER_TIMEOUT_S))
-                
-                if events == []:
-                    #no events
-                    rprint(f"[bold red]No requests within {DEFAULT_SERVER_TIMEOUT_S} seconds.[/bold red]")
-                    break
-                else:
-                    #message available 
-                    message = socket.recv_pyobj()
-                    rprint(f"Received message: {message}")
-
-                    if message['action'] == 'kill':
-                        #kill server 
-                        socket.send_pyobj({
-                            'server':'server closing...'
-                        })
-                        break
-                    socket.send_pyobj({
-                        'server':'hello from server! I got your message'
-                    })
-            poller.unregister(socket)
-
 def run_server():
     with ScraperServer(serverPort=42069) as server:
         server.run()
