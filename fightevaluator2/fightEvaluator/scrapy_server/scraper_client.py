@@ -78,7 +78,8 @@ class ZmqReqClient:
             except TimeoutError as te:
                 rprint("[bold red]Client timed out.[/bold red] Check server")
                 break
-        rprint("[bold cyan] Client MAX_RETRIES reached![/bold cyan]")
+        if attempts >= self.MAX_RETRIES:
+            rprint("[bold cyan] Client MAX_RETRIES reached![/bold cyan]")
         return None
 
     def timeout(self,seconds):
