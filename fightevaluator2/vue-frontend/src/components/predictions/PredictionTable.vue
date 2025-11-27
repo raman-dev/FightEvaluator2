@@ -28,65 +28,72 @@ const likelihoodLabelMap = inject('likelihoodLabelMap');
 </script>
 
 <template>
-    <div class="nav nav-pills" id="yearTabs" role="tablist">
-        <template v-for="(year, index) in Object.keys(eventPredictionsByYearMonth)" :key="index">
-            <button class="nav-link" :class="{ 'active': index == 0 }" :id="'nav-' + year + '-tab'" data-bs-toggle="tab"
-                :data-bs-target="'#' + year + '-tab-pane'" type="button" role="tab" :aria-controls="'nav-' + year"
-                aria-selected="true">
-                <h5 class="m-0">{{ year }}</h5>
-            </button>
-        </template>
-    </div>
-    <div v-for="(data, eventIndex) in eventPredictions" :key="eventIndex" class="prediction-table row flex-column">
-        <div
-            class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
-            <p class="m-0">{{ abbreviatedDateFormat(data.event.date) }}</p>
-            <p class="m-0 text-end">{{ data.event.title }}</p>
+    
+    <div class="wrapper">
+        <div class="nav nav-pills" id="yearTabs" role="tablist">
+            <template v-for="(year, index) in Object.keys(eventPredictionsByYearMonth)" :key="index">
+                <button class="nav-link" 
+                    :class="{ 'active': index == 0 }" 
+                    :id="'nav-' + year + '-tab'" 
+                    data-bs-toggle="tab"
+                    :data-bs-target="'#' + year + '-tab-pane'" 
+                    type="button" role="tab" :aria-controls="'nav-' + year"
+                    aria-selected="true">
+                    <h5 class="m-0">{{ year }}</h5>
+                </button>
+            </template>
         </div>
+        <div v-for="(data, eventIndex) in eventPredictions" :key="eventIndex" class="prediction-table row flex-column">
+            <div
+                class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
+                <p class="m-0">{{ abbreviatedDateFormat(data.event.date) }}</p>
+                <p class="m-0 text-end">{{ data.event.title }}</p>
+            </div>
 
-        <ul class="mx-auto my-0 px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
-            <li>
-                <div class="table-header row" data-key-count="0">
-                    <div class="col col-4 column-label">
-                        <p>MatchUp</p>
+            <ul class="mx-auto my-0 px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
+                <li>
+                    <div class="table-header row" data-key-count="0">
+                        <div class="col col-4 column-label">
+                            <p>MatchUp</p>
+                        </div>
+                        <div class="col col-4 column-label">
+                            <p>Prediction</p>
+                        </div>
+                        <div class="col col-1 column-label">
+                            <p>Result</p>
+                        </div>
+                        <div class="col col-3 column-label">
+                            <p>Likelihood</p>
+                        </div>
                     </div>
-                    <div class="col col-4 column-label">
-                        <p>Prediction</p>
-                    </div>
-                    <div class="col col-1 column-label">
-                        <p>Result</p>
-                    </div>
-                    <div class="col col-3 column-label">
-                        <p>Likelihood</p>
-                    </div>
-                </div>
-            </li>
+                </li>
 
-            <li v-for="(prediction, index) in data.predictions" :key="index" tabindex="index" class="data-row my-2"
-                :data-prediction="prediction.type" :data-result="prediction.isCorrect"
-                :data-likelihood="prediction.likelihood" :data-event="prediction.matchup">
-                <div class="row">
-                    <div class="col col-4 d-flex align-items-center">{{ prediction.matchup }}</div>
-                    <div class="col col-4 d-flex align-items-center">{{ prediction.type_label }}</div>
-                    <div class="col col-1 data-result d-flex align-items-center">
-                        <p class="mx-auto" :class="resultClass(prediction.correct)">
-                            {{ resultText(prediction.correct) }}
-                        </p>
+                <li v-for="(prediction, index) in data.predictions" :key="index" tabindex="index" class="data-row my-2"
+                    :data-prediction="prediction.type" :data-result="prediction.isCorrect"
+                    :data-likelihood="prediction.likelihood" :data-event="prediction.matchup">
+                    <div class="row">
+                        <div class="col col-4 d-flex align-items-center">{{ prediction.matchup }}</div>
+                        <div class="col col-4 d-flex align-items-center">{{ prediction.type_label }}</div>
+                        <div class="col col-1 data-result d-flex align-items-center">
+                            <p class="mx-auto" :class="resultClass(prediction.correct)">
+                                {{ resultText(prediction.correct) }}
+                            </p>
+                        </div>
+                        <div class="col col-3 d-flex align-items-center justify-content-end likelihood">
+                            <p class="confidence" :class="'likely-' + prediction.likelihood">
+                                {{ likelihoodLabelMap[prediction.likelihood] }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="col col-3 d-flex align-items-center justify-content-end likelihood">
-                        <p class="confidence" :class="'likely-' + prediction.likelihood">
-                            {{ likelihoodLabelMap[prediction.likelihood] }}
-                        </p>
-                    </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
 
-        <!-- <div v-if="!predictions.event.hasResults"
-            class="fetch-results-wrapper mx-auto d-flex align-items-center justify-content-end col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
-            <p class="m-0">Results Available!</p>
-            <button class="m-0 btn btn-primary">Fetch</button>
-        </div> -->
+            <!-- <div v-if="!predictions.event.hasResults"
+                class="fetch-results-wrapper mx-auto d-flex align-items-center justify-content-end col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
+                <p class="m-0">Results Available!</p>
+                <button class="m-0 btn btn-primary">Fetch</button>
+            </div> -->
+        </div>
     </div>
 </template>
 
