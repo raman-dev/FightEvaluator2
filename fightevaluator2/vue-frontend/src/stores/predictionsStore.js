@@ -27,13 +27,13 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
     }
 
     async function getPredictions() {
-        // server.get_predictions(onReceivePredictions);
-        onReceivePredictions(samplePredictionsAll)
+        server.get_predictions(onReceivePredictions);
+        // onReceivePredictions(samplePredictionsAll);
     }
 
     async function getStats() {
-        // server.get_stats(onReceiveStats);
-        onReceiveStats(sampleStats);
+        server.get_stats(onReceiveStats);
+        // onReceiveStats(sampleStats);
     }
 
     function groupPredictionsByYearMonth(data) {

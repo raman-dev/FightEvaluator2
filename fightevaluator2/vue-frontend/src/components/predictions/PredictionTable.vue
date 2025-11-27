@@ -1,6 +1,7 @@
 <script setup>
-import { inject } from 'vue';
-defineProps({
+
+import { inject,onMounted,ref } from 'vue';
+const props = defineProps({
     eventPredictions: {
         type: Object,
         required: true
@@ -11,6 +12,9 @@ defineProps({
         type: Object
     }
 });
+
+const minYear = ref(9999);
+const maxYear = ref(-9999);
 
 const abbreviatedDateFormat = inject('abbreviatedDateFormat');
 
@@ -27,26 +31,35 @@ const resultText = (isCorrect) => {
 
 const likelihoodLabelMap = inject('likelihoodLabelMap');
 
-function toListOrderedByKey(object){
-    //convert to a list ordered by the key
+function toOrderedKeyList(object) {
     const result = [];
-    for (const entry of Object.entries(object)) {
-        result.push(entry);
+    for (const key of Object.keys(object)) {
+        result.push(key)
     }
-    result.sort((a,b) =>{
-        const [key_a,val_a] = a;
-        const [key_b,val_b] = b;
+    result.sort((a,b) => {
         return b - a;
     })
     return result;
 }
+
+
+onMounted(()=>{
+    
+    for (const year in props.eventPredictionsByYearMonth) {
+        // const element = props.eventPredictionsByYearMonth[year];
+        minYear.value = Math.min(minYear.value,parseInt(year));
+        maxYear.value = Math.max(maxYear.value,parseInt(year));
+    }
+    console.log(minYear.value,maxYear.value);
+    
+});
 </script>
 
 <template>
-
     <div class="wrapper">
+
         <div class="nav nav-pills border" id="yearTabs" role="tablist">
-            <template v-for="(year, index) in Object.keys(eventPredictionsByYearMonth)" :key="index">
+            <template v-for="(year, index) in toOrderedKeyList(eventPredictionsByYearMonth)" :key="index">
                 <button class="nav-link" :class="{ 'active': index == 0 }" :id="'nav-' + year + '-tab'"
                     data-bs-toggle="tab" :data-bs-target="'#' + year + '-tab-pane'" type="button" role="tab"
                     :aria-controls="'nav-' + year" aria-selected="true">
@@ -55,8 +68,10 @@ function toListOrderedByKey(object){
             </template>
         </div>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade" :class="{ active: index === 0, show: index === 0 }" :id="year + '-tab-pane'"
-                :tabindex="index" role="tabpanel" v-for="(monthMap, year, index) in eventPredictionsByYearMonth" :key="index">
+            <div class="tab-pane fade" 
+                :class="{ active: index === 0, show: index === 0 }" 
+                :id="year + '-tab-pane'" :tabindex="index" role="tabpanel" 
+                v-for="(monthMap, year, index) in eventPredictionsByYearMonth" :key="index">
                 <!--
                     year:
                         monthNum:
@@ -65,9 +80,9 @@ function toListOrderedByKey(object){
                     
                             need to order the data on your own
                 -->
-                <div class="border" v-for="(monthEventArray, monthNum, mindex) in monthMap" :key="mindex">
+                <div class="border" v-for="(monthNum, mindex) in toOrderedKeyList(monthMap)" :key="mindex">
                     
-                    <div v-for="(data, eventIndex) in monthEventArray" :key="monthNum"
+                    <div v-for="(data, eventIndex) in monthMap[monthNum]" :key="monthNum"
                         class="prediction-table row flex-column">
                         <div
                             class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
