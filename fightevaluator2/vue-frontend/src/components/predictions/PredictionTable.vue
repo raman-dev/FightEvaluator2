@@ -26,6 +26,20 @@ const resultText = (isCorrect) => {
 };
 
 const likelihoodLabelMap = inject('likelihoodLabelMap');
+
+function toListOrderedByKey(object){
+    //convert to a list ordered by the key
+    const result = [];
+    for (const entry of Object.entries(object)) {
+        result.push(entry);
+    }
+    result.sort((a,b) =>{
+        const [key_a,val_a] = a;
+        const [key_b,val_b] = b;
+        return b - a;
+    })
+    return result;
+}
 </script>
 
 <template>
