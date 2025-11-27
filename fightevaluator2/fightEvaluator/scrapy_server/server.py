@@ -59,14 +59,19 @@ class ZmqRepServer:
 
             message = self.socket.recv_pyobj()
             rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
-            self.handle_message(message)
+            validationResult = self.is_valid(message)
+            if "error" not in validationResult:
+                self.handle_message(message)
+            else:
+                self.send_response(validationResult)
+
 
         self.state = ServerStates.SHUTTING_DOWN
 
     def handle_message(self,message):
         rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
-        response = self.process_message(message)
-        self.send_response(response)
+        # response = self.process_message(message)
+        self.send_response({"result":message['command'],"data":f"You sent {message}"})
     
     def send_response(self,message):
         self.socket.send_pyobj(message)
@@ -85,7 +90,7 @@ class ZmqRepServer:
     def __exit__(self, exc_type, exc_value, traceback):
         self.stop()
 
-    def process_message(self, message: dict):
+    def is_valid(self, message: dict):
         """Validate and route the command."""
         if not isinstance(message, dict) or "command" not in message:
             return {"error": "Invalid message format"}
@@ -95,11 +100,7 @@ class ZmqRepServer:
         except ValueError:
             return {"error": f"Unknown command: {message['command']}"}
 
-        handler = self.command_handlers.get(cmd)
-        if handler is None:
-            return {"error": f"Invalid command/Unsupported command {cmd.value}"}
-
-        return handler(message)
+        return {"message":"valid"}
 
     def handle_server_state(self, msg) -> dict:
         return {
