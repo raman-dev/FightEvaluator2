@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
     <div class="wrapper d-flex flex-column mx-auto col col-md-12 col-lg-10 col-xl-8 col-xxl-6 align-items-center">
-        <div class="d-flex w-100 nav nav-pills border" id="yearTabs" role="tablist">
+        <div class="d-flex w-100 nav nav-pills" id="yearTabs" role="tablist">
             <template v-for="(year, index) in toOrderedKeyList(eventPredictionsByYearMonth)" :key="index">
                 <button class="nav-link" :class="{ 'active': index == 0 }" :id="'nav-' + year + '-tab'"
                     data-bs-toggle="tab" :data-bs-target="'#' + year + '-tab-pane'" type="button" role="tab"
@@ -67,7 +67,7 @@ onMounted(() => {
                 </button>
             </template>
         </div>
-        <div class="tab-content d-flex w-100" id="myTabContent">
+        <div class="tab-content d-flex w-100 px-2" id="myTabContent">
             <div class="tab-pane fade w-100" :class="{ active: index === 0, show: index === 0 }"
                 :id="year + '-tab-pane'" :tabindex="index" role="tabpanel"
                 v-for="(monthMap, year, index) in eventPredictionsByYearMonth" :key="index">
@@ -80,66 +80,18 @@ onMounted(() => {
                             need to order the data on your own
                 -->
                 <div class="tables-container" v-for="(monthNum, mindex) in toOrderedKeyList(monthMap)" :key="mindex">
-
-                    <div v-for="(data, eventIndex) in monthMap[monthNum]" :key="monthNum"
-                        class="prediction-table row flex-column">
-                        <!-- <div
-                            class="mx-auto event-name col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6 d-flex justify-content-between">
-                            <p class="m-0">{{ abbreviatedDateFormat(data.event.date) }}</p>
-                            <p class="m-0 text-end">{{ data.event.title }}</p>
-                        </div>
-
-                        <ul class="mx-auto my-0 px-2 col col-sm-12 col-md-10 col-lg-9 col-xl-7 col-xxl-6">
-                            <li>
-                                <div class="table-header row" data-key-count="0">
-                                    <div class="col col-4 column-label">
-                                        <p>MatchUp</p>
-                                    </div>
-                                    <div class="col col-4 column-label">
-                                        <p>Prediction</p>
-                                    </div>
-                                    <div class="col col-1 column-label">
-                                        <p>Result</p>
-                                    </div>
-                                    <div class="col col-3 column-label">
-                                        <p>Likelihood</p>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li v-for="(prediction, index) in data.predictions" :key="index" tabindex="index"
-                                class="data-row my-2" :data-prediction="prediction.type"
-                                :data-result="prediction.isCorrect" :data-likelihood="prediction.likelihood"
-                                :data-event="prediction.matchup">
-                                <div class="row">
-                                    <div class="col col-4 d-flex align-items-center">{{ prediction.matchup }}</div>
-                                    <div class="col col-4 d-flex align-items-center">{{ prediction.type_label }}</div>
-                                    <div class="col col-1 data-result d-flex align-items-center">
-                                        <p class="mx-auto" :class="resultClass(prediction.correct)">
-                                            {{ resultText(prediction.correct) }}
-                                        </p>
-                                    </div>
-                                    <div class="col col-3 d-flex align-items-center justify-content-end likelihood">
-                                        <p class="confidence" :class="'likely-' + prediction.likelihood">
-                                            {{ likelihoodLabelMap[prediction.likelihood] }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul> -->
-                        <!-- <div
-                            class="mx-auto event-name col d-flex justify-content-between">
-                            <p class="m-0">{{ abbreviatedDateFormat(data.event.date) }}</p>
-                            <p class="m-0 text-end">{{ data.event.title }}</p>
-                        </div> -->
-
-                        <table class="">
+                    <div class="prediction-table row flex-column" v-for="(data, eventIndex) in monthMap[monthNum]" :key="monthNum" >
+                        <table>
                             <thead>
                                 <tr >
                                     <td><span>matchup</span></td>
                                     <td><span>prediction</span></td>
                                     <td><span>result</span></td>
-                                    <td><span>likelihood</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            <span>likelihood</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -148,8 +100,8 @@ onMounted(() => {
                                     <td><span>{{ prediction.type_label }}</span></td>
                                     <td><span class="data-result" :class="resultClass(prediction.correct)">{{resultText(prediction.correct) }}</span></td>
                                     <td>
-                                        <div class="d-flex w-100">
-                                            <span class="likelihood w-100" :class="'likely-' + prediction.likelihood">
+                                        <div class="d-flex w-100 justify-content-end">
+                                            <span class="likelihood" :class="'likely-' + prediction.likelihood">
                                                 {{ likelihoodLabelMap[prediction.likelihood] }}
                                             </span>
                                         </div>
@@ -157,39 +109,13 @@ onMounted(() => {
                                 </tr>
                             </tbody>
                             <caption>
-                                <div class="d-flex w-100 justify-content-between">
+                                <div class="d-flex w-100 justify-content-between px-1">
                                     <p class="m-0">{{ abbreviatedDateFormat(data.event.date) }}</p>
                                     <p class="m-0 text-end">{{ data.event.title }}</p>
                                 </div>
 
                             </caption>
                         </table>
-
-                        <ul class="mx-auto my-1">
-                            <li v-for="(prediction, index) in data.predictions" :key="index" tabindex="index"
-                                class="data-row my-2" :data-prediction="prediction.type"
-                                :data-result="prediction.isCorrect" :data-likelihood="prediction.likelihood"
-                                :data-event="prediction.matchup">
-                                <div class="prediction-content">
-                                    <div class="col">
-                                        <span>{{ prediction.matchup }}</span>
-                                    </div>
-                                    <div class="col">
-                                        {{ prediction.type_label }}
-                                    </div>
-                                    <div class="col data-result">
-                                        <p class="mx-auto" :class="resultClass(prediction.correct)">
-                                            {{ resultText(prediction.correct) }}
-                                        </p>
-                                    </div>
-                                    <div class="col likelihood">
-                                        <p class="confidence" :class="'likely-' + prediction.likelihood">
-                                            {{ likelihoodLabelMap[prediction.likelihood] }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -201,50 +127,80 @@ onMounted(() => {
 
 <style scoped lang="scss">
 // $body-bg-dark: #00ff00;
-
-.prediction-table table {
+.nav-link {
+    color: white !important;
+}
+.prediction-table{
     background-color: #12161A !important;
-    text-transform: capitalize;
-
-    td {
-        padding-top: 0.5rem;
-        padding-bottom: 0.3rem;
-        padding-left: 0.3rem;
-        padding-right: 0.3rem;
-    }
-
-    caption {
-        caption-side: top;
-    }
-
-    tbody {
-        tr{
-            border: 1px solid lavender;
-            border-radius: 0.4rem;
-        }
-        .data-result,.likelihood {
-            font-family: PoppinsSemiBold;
-            border-radius: 0.2rem;
-
-            text-align: center;
-            color: black;
+    padding-bottom: 0.6rem;
+    table {
+        
+        font-size: 0.95rem;
+        text-transform: capitalize;
+        border-collapse: separate;
+        border-spacing: 0rem 0.4rem;
+        td {
+            padding-top: 0.5rem;
+            padding-bottom: 0.3rem;
+            padding-left: 0.3rem;
+            padding-right: 0.3rem;
         }
 
-        .data-result{
-            display: block;
-            width: 6ch !important;
+        caption {
+            caption-side: top;
+            color: lavender;
         }
 
-        .data-correct {
-            background-color: #00ff00;
-        }
+        tbody {
+            padding-bottom: 0.6rem;
+            tr td:first-child{
+                // border-top: 1px solid lavender;
+                // border-left: 1px solid lavender;
+                border: 1px solid lavender;
+                border-top-left-radius: 0.5rem;
+                border-bottom-left-radius: 0.5rem;
+                border-right: none;
+            }
+            tr td:last-child{
+                border: 1px solid lavender;
+                border-top-right-radius: 0.5rem;
+                border-bottom-right-radius: 0.5rem;
+                border-left: none;
+            }
 
-        .data-incorrect {
-            background-color: #dc3545;
-        }
+            tr td{
+                border-top: 1px solid lavender;
+                border-bottom: 1px solid lavender;
+            }
+            .data-result,.likelihood {
+                font-family: PoppinsSemiBold;
+                border-radius: 0.2rem;
 
-        .data-tbd {
-            background-color: slategrey;
+                text-align: center;
+                color: black;
+            }
+
+            .likelihood{
+                padding-left: 1ch;
+                padding-right: 1ch;
+            }
+
+            .data-result{
+                display: block;
+                width: 6ch !important;
+            }
+
+            .data-correct {
+                background-color: #00ff00;
+            }
+
+            .data-incorrect {
+                background-color: #dc3545;
+            }
+
+            .data-tbd {
+                background-color: slategrey;
+            }
         }
     }
 }
@@ -303,7 +259,8 @@ onMounted(() => {
         background-color: #12161A;
     }
 
-    margin-bottom: 1rem;
+    margin-top: 1.6rem;
+    margin-bottom: 1.6rem;
 }
 
 .confidence {
@@ -317,85 +274,5 @@ onMounted(() => {
     margin: 0px;
 }
 
-ul {
-    padding: 0px;
-    padding-bottom: 0.8rem;
-    list-style: none;
 
-    li {
-        margin: 0.2rem;
-        padding: 0.4rem
-    }
-
-    li.data-row {
-        border: 1px solid lavender;
-        border-radius: 0.4rem;
-
-        .col {
-            text-transform: capitalize;
-        }
-    }
-
-    .data-result {
-        p {
-            font-family: PoppinsSemiBold;
-            border-radius: 0.2rem;
-            margin: 0px;
-
-            width: 6ch;
-            text-align: center;
-            color: black;
-        }
-
-        p.data-correct {
-            background-color: #00ff00;
-        }
-
-        p.data-incorrect {
-            background-color: #dc3545;
-        }
-
-        p.data-tbd {
-            background-color: slategrey;
-        }
-    }
-
-    .column-label {
-        padding: 0.2rem;
-        display: flex;
-
-        p {
-            margin: 0px;
-        }
-
-        justify-content: center;
-        align-items: center;
-
-        .icon {
-            color: #313539; //set fill="currentColor"
-        }
-    }
-
-
-    .column-label:hover {
-        cursor: pointer;
-        background-color: #414549;
-    }
-
-    .column-label.sort-by {
-        background-color: #111519;
-
-        .icon {
-            color: #818589; //set fill="currentColor"
-        }
-    }
-
-    .column-label[data-sort="dec"] {
-
-        //flip icon upside down
-        .icon {
-            transform: rotateZ(180deg);
-        }
-    }
-}
 </style>
