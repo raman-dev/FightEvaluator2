@@ -13,9 +13,6 @@ const props = defineProps({
     }
 });
 
-const minYear = ref(9999);
-const maxYear = ref(-9999);
-
 const abbreviatedDateFormat = inject('abbreviatedDateFormat');
 const isMobile = ref(false);
 
@@ -43,17 +40,6 @@ function toOrderedKeyList(object) {
     return result;
 }
 
-
-onMounted(() => {
-
-    for (const year in props.eventPredictionsByYearMonth) {
-        // const element = props.eventPredictionsByYearMonth[year];
-        minYear.value = Math.min(minYear.value, parseInt(year));
-        maxYear.value = Math.max(maxYear.value, parseInt(year));
-    }
-    console.log(minYear.value, maxYear.value);
-
-});
 </script>
 
 <template>
@@ -68,7 +54,7 @@ onMounted(() => {
             </template>
         </div>
         <div class="tab-content d-flex w-100 px-2" id="myTabContent">
-            <div class="tab-pane fade w-100" :class="{ active: index === 0, show: index === 0 }"
+            <div class="tab-pane fade w-100" :class="{ active: index === Object.keys(eventPredictionsByYearMonth).length - 1, show: index === Object.keys(eventPredictionsByYearMonth).length - 1 }"
                 :id="year + '-tab-pane'" :tabindex="index" role="tabpanel"
                 v-for="(monthMap, year, index) in eventPredictionsByYearMonth" :key="index">
                 <!--
@@ -140,10 +126,7 @@ onMounted(() => {
         border-collapse: separate;
         border-spacing: 0rem 0.4rem;
         td {
-            padding-top: 0.5rem;
-            padding-bottom: 0.3rem;
-            padding-left: 0.3rem;
-            padding-right: 0.3rem;
+            padding:0.6rem;
         }
 
         caption {
