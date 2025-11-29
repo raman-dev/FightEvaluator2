@@ -29,8 +29,8 @@ function dobToAge(dobString) {
  */
 function abbreviatedDateFormat(dateString) {
   // Parse the input string as a Date object
-  const date = new Date(dateString);
-
+  const date = new Date(dateString + "T00:00:00");
+  // console.log(dateString,date);
   // Array of abbreviated month names
   const months = ["Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", 
                   "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];

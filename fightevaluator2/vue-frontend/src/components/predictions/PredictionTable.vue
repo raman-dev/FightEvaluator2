@@ -45,7 +45,7 @@ function toOrderedKeyList(object) {
 
 <template>
     <div class="wrapper d-flex flex-column mx-auto col col-md-12 col-lg-10 col-xl-8 col-xxl-6 align-items-center">
-        <div class="d-flex w-100 nav nav-pills" id="yearTabs" role="tablist">
+        <div class="d-flex w-100 nav nav-pills mb-3" id="yearTabs" role="tablist">
             <template v-for="(year, index) in toOrderedKeyList(eventPredictionsByYearMonth)" :key="index">
                 <button class="nav-link" :class="{ 'active': index == 0 }" :id="'nav-' + year + '-tab'"
                     data-bs-toggle="tab" :data-bs-target="'#' + year + '-tab-pane'" type="button" role="tab"
@@ -67,7 +67,7 @@ function toOrderedKeyList(object) {
                             need to order the data on your own
                 -->
                 <div class="tables-container border mb-4" v-for="(monthNum, mindex) in toOrderedKeyList(monthMap)" :key="mindex">
-                    <h3 class="">{{ numToMonthName(monthNum) }}</h3>
+                    <h3 class="mt-2">{{ numToMonthName(monthNum) }}</h3>
                     <div class="prediction-table row flex-column" v-for="(data, eventIndex) in monthMap[monthNum]" :key="monthNum" >
                         <table>
                             <thead>
@@ -117,6 +117,11 @@ function toOrderedKeyList(object) {
 // $body-bg-dark: #00ff00;
 .nav-link {
     color: white !important;
+}
+
+.tables-container{
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
 }
 .prediction-table{
     background-color: #12161A !important;
@@ -240,10 +245,6 @@ function toOrderedKeyList(object) {
 }
 
 .prediction-table {
-    ul {
-        background-color: #12161A;
-    }
-
     margin-top: 1.6rem;
     margin-bottom: 1.6rem;
 }
