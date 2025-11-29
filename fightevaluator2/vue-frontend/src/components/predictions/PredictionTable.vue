@@ -14,6 +14,7 @@ const props = defineProps({
 });
 
 const abbreviatedDateFormat = inject('abbreviatedDateFormat');
+const numToMonthName = inject('numToMonthName');
 const isMobile = ref(false);
 
 const resultClass = (isCorrect) => {
@@ -65,7 +66,8 @@ function toOrderedKeyList(object) {
                     
                             need to order the data on your own
                 -->
-                <div class="tables-container" v-for="(monthNum, mindex) in toOrderedKeyList(monthMap)" :key="mindex">
+                <div class="tables-container border mb-4" v-for="(monthNum, mindex) in toOrderedKeyList(monthMap)" :key="mindex">
+                    <h3 class="">{{ numToMonthName(monthNum) }}</h3>
                     <div class="prediction-table row flex-column" v-for="(data, eventIndex) in monthMap[monthNum]" :key="monthNum" >
                         <table>
                             <thead>

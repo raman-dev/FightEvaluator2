@@ -54,6 +54,22 @@ function inchesToFeetStr(inches) {
     return `${Math.floor(inches / 12)}'${inches % 12}`;
 }
 
+function numToMonthName(month) {
+  const monthIndex = Number(month) - 1; // convert to number & zero-based index
+
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Validate index is within range
+  if (monthIndex < 0 || monthIndex > 11 || isNaN(monthIndex)) {
+    return null; // or throw an error
+  }
+
+  return months[monthIndex];
+}
+
 export default {
   install: (app,options) => {
     
@@ -62,5 +78,6 @@ export default {
     app.provide('inchesToFeetStr',inchesToFeetStr);
     app.provide('toPercent',toPercent);
     app.provide('abbreviatedDateFormat',abbreviatedDateFormat);
+    app.provide('numToMonthName',numToMonthName);
   }
 }
