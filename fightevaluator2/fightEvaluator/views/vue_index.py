@@ -16,7 +16,7 @@ import json
 PAGE_CACHE_DURATION = 60 * 2
 
 @require_GET
-def vueIndex(request):
+def vueIndex(request,**kwargs):
     """
     Render the Vue.js index page.
     """
