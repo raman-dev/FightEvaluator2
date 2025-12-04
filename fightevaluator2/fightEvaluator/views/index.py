@@ -138,6 +138,10 @@ def ScrapyFightEventControlFunction():
                                 else:
                                     rprint(fighterForm.errors)
                                     break
+                            else:
+                                rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
+                                time.sleep(10)
+                                continue #ignore this matchup
                             time.sleep(10)#need to sleep before fetching again if we have to
                     
                     if i == 0:
