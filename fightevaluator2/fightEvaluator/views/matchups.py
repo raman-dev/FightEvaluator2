@@ -168,16 +168,6 @@ def updateMatchUpEventLikelihood(request):
 def makePrediction(request,matchupId):
     pass
 
-@require_http_methods(["PUT"])
-def makePick(request,matchupId):
-    """
-        get matchup object
-        input -> model field
-
-        key,value -> model field 
-    """
-    matchup = get_object_or_404(id=matchupId)
-    pass
 
 
 @require_http_methods(["PUT"])
@@ -202,6 +192,7 @@ def updateMatchUpEventPrediction(request):
         fighter = None
         if fighterId != 0:
             fighter = Fighter.objects.get(id=fighterId)
+        #fighter can be none since some events are non fighter related
         eventLikelihood = EventLikelihood.objects.filter(matchup=matchup,eventType=eventType,fighter=fighter).first()
         
         currentPrediction = Prediction.objects.filter(matchup=matchup).first()

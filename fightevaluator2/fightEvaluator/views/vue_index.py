@@ -341,19 +341,74 @@ def makePick(request,matchupId):
         
     if pickQSet.exists():
         pick = pickQSet[0]
+        #instance fills in fields that are not present in data
+        #if fields are present but are none it will replace the none
+        #values even if that is the affect we want
         pickForm = PickForm(data=inputBody,instance=pick)
     else:
         pickForm = PickForm(data=inputBody)
+    
+    
     if pickForm.data['event'] == None:
         if pickQSet.exists():
+            #delete legacy pick
+            # legacy_pick = Prediction.objects.filter(matchup=pick.matchup).first()
+            # if legacy_pick:
+            #     legacy_pick.delete()
             pick.delete()
             return JsonResponse({'pick':{'event':None,'fighter':None}})
+    #TODO fix updateing form fighter does not become null when it should 
+    #on non fighter related events
     if pickForm.is_valid():
-        print(pickForm.cleaned_data)
-        if pick == None:
-            pick = pickForm.save()
-        pick.event = pickForm.cleaned_data['event']
-        pick.save()
+        print('PICK_FORM => ',pickForm.cleaned_data)
+        # if pick == None:
+        pick = pickForm.save()
+
+        # pick.event = pickForm.cleaned_data['event']
+        # pick.save()
+
+        print(pick)
+        # create_legacy_pick(pick)
         return JsonResponse({'pick':model_to_dict(pick)})
     print(pickForm.errors)
     return JsonResponse({'error':'error in data'})
+
+
+def create_legacy_pick(pick: Pick):
+    #create a pick using the old system
+    #old system is going to require what
+    p = Prediction.objects.filter(matchup=pick.matchup).first()
+    """
+        old system works as such 
+        in order make a pick we create 
+        an eventlikelihood object of the same event
+        it may or may not exist already
+
+    """
+    if not p:
+        #no old prediction
+        #create the eventlikelihood object
+        #create the prediction
+        e = EventLikelihood()
+
+        e.matchup = pick.matchup
+        e.likelihood = Likelihood.NEUTRAL
+        e.fighter = pick.fighter
+        e.event = pick.event
+
+        if pick.prediction:
+            prediction = pick.prediction
+            e.justification = prediction.justification
+            e.likelihood = prediction.likelihood
+            e.fighter = prediction.fighter
+        # e.save()
+
+        old_p = Prediction()
+        old_p.matchup = pick.matchup
+        old_p.prediction = e
+        print(e)
+        print(old_p)
+    else:
+        #has old prediction
+        pass
+    

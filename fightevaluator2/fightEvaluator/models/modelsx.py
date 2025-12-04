@@ -231,7 +231,10 @@ class Pick(models.Model):
 
     def __str__(self):
         #return what event is predicted and the likelihood
-        return f'{self.event} | {self.matchup}' 
+        fightStr = ""
+        if self.fighter != None:
+             fightStr = f"|fighter: {self.fighter.name}"
+        return f'{self.event} | {self.matchup} {fightStr}' 
 
 #only 1 prediction per matchup
 class Prediction(models.Model):
