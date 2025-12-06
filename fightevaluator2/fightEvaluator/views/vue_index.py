@@ -337,18 +337,10 @@ def makePick(request,matchupId):
     print('make pick => ',inputBody)
     pick = None
     pickQSet = Pick.objects.filter(matchup=matchup)
-    # pickForm = None
-    
-    #always replace 
-    if pickQSet.exists():
-        pick = pickQSet[0]
-        #instance fills in fields that are not present in data
-        #if fields are present but are none it will replace the none
-        #values even if that is the affect we want
-        pick.delete()
     pickForm = PickForm(data=inputBody)
     
-    
+    if 'event' not in pickForm.data:
+        return JsonResponse({'error':'Error in data'})
     if pickForm.data['event'] == None:
         if pickQSet.exists():
             #delete legacy pick
@@ -360,6 +352,13 @@ def makePick(request,matchupId):
         return JsonResponse({'msg':'no pick to delete'})
 
     if pickForm.is_valid():
+        #always replace 
+        if pickQSet.exists():
+            pick = pickQSet[0]
+            #instance fills in fields that are not present in data
+            #if fields are present but are none it will replace the none
+            #values even if that is the affect we want
+            pick.delete()
         pick = pickForm.save()
         print(pick)
         # create_legacy_pick(pick)
