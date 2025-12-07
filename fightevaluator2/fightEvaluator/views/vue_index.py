@@ -337,31 +337,36 @@ def makePick(request,matchupId):
     print('make pick => ',inputBody)
     pick = None
     pickQSet = Pick.objects.filter(matchup=matchup)
-    pickForm = PickForm(data=inputBody)
+
+    if pickQSet.exists():
+        pickForm = PickForm(data=inputBody,instance=pickQSet[0])
+    else:
+        pickForm = PickForm(data=inputBody)
     
     if 'event' not in pickForm.data:
         return JsonResponse({'error':'Error in data'})
+    
     if pickForm.data['event'] == None:
         if pickQSet.exists():
             #delete legacy pick
+            pick = pickQSet[0]
             # legacy_pick = Prediction.objects.filter(matchup=pick.matchup).first()
             # if legacy_pick:
             #     legacy_pick.delete()
             pick.delete()
             return JsonResponse({'pick':{'event':None,'fighter':None}})
         return JsonResponse({'msg':'no pick to delete'})
-
+    
+    #is_valid returns false if model has unique=True on foreign key so
+    #even if i am trying to replace delete is necessary
     if pickForm.is_valid():
         #always replace 
-        if pickQSet.exists():
-            pick = pickQSet[0]
-            #instance fills in fields that are not present in data
-            #if fields are present but are none it will replace the none
-            #values even if that is the affect we want
-            pick.delete()
         pick = pickForm.save()
+        if pickForm.cleaned_data['event'] != Event.WIN:
+            pick.fighter = None
+            pick.save()
         print(pick)
-        # create_legacy_pick(pick)
+        create_legacy_pick(pick)
         return JsonResponse({'pick':model_to_dict(pick)})
     print(pickForm.errors)
     return JsonResponse({'error':'error in data'})
