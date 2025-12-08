@@ -22,6 +22,7 @@ class Server {
       MAKE_PICK : '/vue/matchups/pick',
       MAKE_PREDICTION:'/vue/analysis/make-prediction',
       GET_PREDICTIONS:'/vue/predictions/all',
+      GET_PICKS: '/vue/picks/all',
       GET_STATS :'/vue/predictions/stats',
     }
 
@@ -70,6 +71,10 @@ class Server {
 
     static async get_stats(callback){
       Server.get(Server.URLS.GET_STATS,callback);
+    }
+
+    static async get_picks(callback) {
+      Server.get(Server.URLS.GET_PICKS,callback);
     }
 
     static async get_predictions (callback){

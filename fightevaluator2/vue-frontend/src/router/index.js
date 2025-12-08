@@ -34,6 +34,7 @@ const router = createRouter({
             path:'/v-assessment/:fighterId', name:'assessment',
             component: AssessmentView
         },
+        // Prediction route is now added in src/main.js to enable pre-loading data
         // {
         //     path:'/v-predictions',name:'predictions',
         //     component: PredictionsView, 

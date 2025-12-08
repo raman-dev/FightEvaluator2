@@ -22,6 +22,7 @@ const { stats,eventPredictions,eventPredictionsByYearMonth  } = storeToRefs(pred
 
 <template>
   <div class="prediction-table-container container-fluid py-2">
+    <!-- <h2>okay working update on refresh</h2> -->
     <PredictionStats :stats="stats" />
     <PredictionTable 
     :eventPredictions="eventPredictions"

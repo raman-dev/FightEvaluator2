@@ -104,6 +104,10 @@ def getPredictions(request):
 
     return JsonResponse({'predictions':predictions})
 
+@require_GET
+def getPicks(request):
+    return JsonResponse({'picks':[]})
+
 def publishResults(request):
     #using matchup results determine if predictions are correct
     #for every prediction grab the corresponding fightResult if it exists
