@@ -210,9 +210,10 @@ class Prediction2(models.Model):
           ]
 
      def __str__(self):
+          fighterStr = ""
           if self.fighter != None:
-               return self.fighter.name +" " + str(self.event) + " => " + self.get_likelihood_display()
-          return str(self.event) + "|" + self.get_likelihood_display()
+               fighterStr = self.fighter.name + "| "
+          return fighterStr + f"{str(self.event)} | {self.get_likelihood_display()} | {self.matchup.title()} | {self.matchup.event.title}"
      
      def predictionDisplay(self):
           if self.fighter != None:
