@@ -9,7 +9,7 @@ import { onBeforeRouteUpdate } from "vue-router";
 
 
 const predictionsStore = usePredictionsStore();
-const { stats,eventPredictions,eventPredictionsByYearMonth  } = storeToRefs(predictionsStore);
+const { stats,eventPredictions,eventPredictionsByYearMonth,eventPicks,eventPicksByYearMonth  } = storeToRefs(predictionsStore);
 
 //only for parameter changes
 // onBeforeRouteUpdate((to, from) => {
@@ -27,6 +27,8 @@ const { stats,eventPredictions,eventPredictionsByYearMonth  } = storeToRefs(pred
     <PredictionTable 
     :eventPredictions="eventPredictions"
     :eventPredictionsByYearMonth="eventPredictionsByYearMonth"
+    :eventPicks="eventPicks"
+    :eventPicksByYearMonth="eventPicksByYearMonth"
     />
   </div>
 </template>

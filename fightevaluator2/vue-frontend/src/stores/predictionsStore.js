@@ -10,6 +10,10 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
     const sampleStats = {"general": [{"id": 1, "name": "total", "label": "Overall", "type": "general", "ratio": 0.7046153846153846, "count": 229, "total": 325}], "fight_outcome": [{"id": 4, "name": "ROUNDS_GEQ_ONE_AND_HALF", "label": "Fight Lasts More Than 1.5 Rounds", "type": "fight_outcome", "ratio": 0.8142857142857143, "count": 57, "total": 70}, {"id": 2, "name": "WIN", "label": "Fighter Wins", "type": "fight_outcome", "ratio": 0.7025641025641025, "count": 137, "total": 195}, {"id": 3, "name": "DOES_NOT_GO_THE_DISTANCE", "label": "Fight Does Not Go The Distance", "type": "fight_outcome", "ratio": 0.5833333333333334, "count": 35, "total": 60}]};
     const eventPredictions = ref([]);
     const eventPredictionsByYearMonth = ref({});
+
+    const eventPicks = ref([]);
+    const eventPicksByYearMonth = ref({});
+
     const stats = ref({});
 
     function onReceivePredictions(data) {
@@ -17,6 +21,13 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
         eventPredictionsByYearMonth.value = groupPredictionsByYearMonth(data);
         eventPredictions.value = data.predictions;
         console.log ("Grouped predictions by year/month:", eventPredictionsByYearMonth.value);
+    }
+
+    function onReceivePicks(data){
+        console.log("Received picks:", data.picks);
+        eventPicksByYearMonth.value = groupPicksByYearMonth(data);
+        eventPicks.value = data.picks;
+        console.log ("Grouped selected predictions by year/month:", eventPicksByYearMonth.value);
     }
 
     function onReceiveStats(data) {
@@ -28,12 +39,33 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
 
     async function getPredictions() {
         server.get_predictions(onReceivePredictions);
+        server.get_picks(onReceivePicks);
         // onReceivePredictions(samplePredictionsAll);
     }
 
     async function getStats() {
         server.get_stats(onReceiveStats);
         // onReceiveStats(sampleStats);
+    }
+
+    function groupPicksByYearMonth(data){
+        const grouped = {};
+
+        for (const entry of data.picks) {
+            const dateStr = entry.event.date; // "2025-10-18"
+            const [year, month] = dateStr.split('-'); // ["2025", "10"]
+
+            // Initialize year if missing
+            if (!grouped[year]) grouped[year] = {};
+
+            // Initialize month if missing
+            if (!grouped[year][month]) grouped[year][month] = [];
+
+            // Add entry
+            grouped[year][month].push(entry);
+        }
+
+        return grouped;
     }
 
     function groupPredictionsByYearMonth(data) {
@@ -60,6 +92,8 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
         // predictions,
         eventPredictions,
         eventPredictionsByYearMonth,
+        eventPicks,
+        eventPicksByYearMonth,
         stats,
         getStats,
         getPredictions

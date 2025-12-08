@@ -10,6 +10,15 @@ const props = defineProps({
     eventPredictionsByYearMonth: {
         required: true,
         type: Object
+    },
+    eventPicks: {
+        type: Object,
+        required: true
+    },
+
+    eventPicksByYearMonth: {
+        required: true,
+        type: Object
     }
 });
 
@@ -46,7 +55,7 @@ function toOrderedKeyList(object) {
 <template>
     <div class="wrapper d-flex flex-column mx-auto col col-md-12 col-lg-10 col-xl-8 col-xxl-6 align-items-center">
         <div class="d-flex w-100 nav nav-pills mb-3" id="yearTabs" role="tablist">
-            <template v-for="(year, index) in toOrderedKeyList(eventPredictionsByYearMonth)" :key="index">
+            <template v-for="(year, index) in toOrderedKeyList(eventPicksByYearMonth)" :key="index">
                 <button class="nav-link" :class="{ 'active': index == 0 }" :id="'nav-' + year + '-tab'"
                     data-bs-toggle="tab" :data-bs-target="'#' + year + '-tab-pane'" type="button" role="tab"
                     :aria-controls="'nav-' + year" aria-selected="true">
@@ -55,9 +64,9 @@ function toOrderedKeyList(object) {
             </template>
         </div>
         <div class="tab-content d-flex w-100 px-2" id="myTabContent">
-            <div class="tab-pane fade w-100" :class="{ active: index === Object.keys(eventPredictionsByYearMonth).length - 1, show: index === Object.keys(eventPredictionsByYearMonth).length - 1 }"
+            <div class="tab-pane fade w-100" :class="{ active: index === Object.keys(eventPicksByYearMonth).length - 1, show: index === Object.keys(eventPicksByYearMonth).length - 1 }"
                 :id="year + '-tab-pane'" :tabindex="index" role="tabpanel"
-                v-for="(monthMap, year, index) in eventPredictionsByYearMonth" :key="index">
+                v-for="(monthMap, year, index) in eventPicksByYearMonth" :key="index">
                 <!--
                     year:
                         monthNum:
@@ -83,7 +92,7 @@ function toOrderedKeyList(object) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(prediction, index) in data.predictions">
+                                <tr v-for="(prediction, index) in data.picks">
                                     <td><span>{{ prediction.matchup }}</span></td>
                                     <td><span>{{ prediction.type_label }}</span></td>
                                     <td><span class="data-result" :class="resultClass(prediction.correct)">{{resultText(prediction.correct) }}</span></td>

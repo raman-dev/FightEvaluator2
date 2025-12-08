@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.db.models import Avg,Count,Q,Sum
 from django.views.decorators.cache import cache_page
 
-from ..models import FightEvent,FightOutcome,Prediction,Event,Likelihood,Stat,EventStat,MonthlyEventStats
+from ..models import FightEvent,FightOutcome,Prediction,Pick,Event,Stat,EventStat,MonthlyEventStats,Likelihood
 from rich import print as rprint
 
 from datetime import datetime
@@ -106,7 +106,27 @@ def getPredictions(request):
 
 @require_GET
 def getPicks(request):
-    return JsonResponse({'picks':[]})
+
+    picks = []
+    events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
+    data = Pick.objects.all()
+    # eventsByYearMonth = {}
+    for fightEvent in events:
+        #grab predictions for this event
+        preds = data.filter(matchup__event=fightEvent)
+        if preds.exists():#atleast 1 prediction for this event
+             picks.append({
+                 'event':model_to_dict(fightEvent),
+                 'picks': [ {
+                     'matchup':p.matchup.title(),
+                     'type':p.event,
+                     'type_label': Event[p.event].label,
+                     'likelihood':p.prediction.likelihood if p.prediction else Likelihood.NOT_PREDICTED,
+                     'fighter': p.prediction.fighter.name if p.prediction and p.prediction.fighter else None,
+                     'correct':p.isCorrect
+                 } for p in preds]
+            })
+    return JsonResponse({'picks':picks})
 
 def publishResults(request):
     #using matchup results determine if predictions are correct
