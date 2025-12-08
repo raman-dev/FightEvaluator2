@@ -15,7 +15,17 @@ import NotesSection from '@/components/analysis/NotesSection.vue';
 const matchupDetailStore = useMatchupDetailStore();
 // const matchupStore = useMatchupStore();
 const { matchupId } = defineProps(['matchupId'])
-const { matchup,fighter_a,fighter_b,standardEvents,predictions,pick,attribComparison, fighter_a_notes,fighter_b_notes } = storeToRefs(matchupDetailStore);
+const { 
+    matchup,
+    fighter_a,
+    fighter_b,
+    standardEvents,
+    predictions,
+    pick,
+    attribComparison, 
+    fighter_a_notes,
+    fighter_b_notes 
+} = storeToRefs(matchupDetailStore);
 
 const replaceUnderscoreSpace = inject('replaceUnderscoreSpace');
 

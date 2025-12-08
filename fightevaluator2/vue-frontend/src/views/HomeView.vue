@@ -53,7 +53,6 @@ onBeforeRouteLeave((to,from) => {
     console.log ('HomeView.onBeforeRouteLeave.to.params',to.params);
     console.log('HomeView.onBeforeRouteLeave.to',to);
     if (to.name === 'analyze'){
-        console.log('analyze yo',to.params.matchupId);
         matchupDetailStore.fetchMatchupDetails(to.params.matchupId);
     }
 });

@@ -39,11 +39,11 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     }
     if ('fighter_a_notes' in matchupComparison) {
       fighter_a_notes.value = matchupComparison['fighter_a_notes'];
-      console.log('fighter_a_notes',fighter_a_notes.value);
+      // console.log('fighter_a_notes',fighter_a_notes.value);
     }
     if ('fighter_b_notes' in matchupComparison) {
       fighter_b_notes.value = matchupComparison['fighter_b_notes'];
-      console.log('fighter_b_notes',fighter_b_notes.value);
+      // console.log('fighter_b_notes',fighter_b_notes.value);
       
     }
 

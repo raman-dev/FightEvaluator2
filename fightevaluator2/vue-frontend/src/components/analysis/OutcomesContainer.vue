@@ -16,7 +16,7 @@ const matchupDetailStore = useMatchupDetailStore();
 const { predictions } = storeToRefs(matchupDetailStore);
 
 onMounted(()=>{
-  console.log ('predictions',props.predictions.WIN);
+  // console.log ('predictions',props.predictions.WIN);
 });
 
 watch (predictions, (newVal,oldVal)=>{
@@ -54,7 +54,7 @@ watch (predictions, (newVal,oldVal)=>{
             :matchup="matchup"
             :label="event.name"
             v-model:likelihood="predictions[event.value].likelihood"
-            v-model:justifcation="predictions[event.value].justification"
+            v-model:justification="predictions[event.value].justification"
             >
           </OutcomeCard>  
         </template>

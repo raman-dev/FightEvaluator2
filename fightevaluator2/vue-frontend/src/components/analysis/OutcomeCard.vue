@@ -1,9 +1,11 @@
 
 <script setup>
-import { onMounted, ref,watch } from "vue";
+import { onMounted, ref,useTemplateRef,watch } from "vue";
 import ConfidenceSelector from "./ConfidenceSelector.vue";
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 
+
+const DEFAULT_JUSTIFICATION = "Justification Statements and Conclusions";
 const props = defineProps({
     event: { type: String, required: true }, // { name, label }
     fighter: { type: Object, required: false },
@@ -22,12 +24,14 @@ const serverLikelihood = defineModel("likelihood", {
 const serverJustification = defineModel("justification", {
     type: String,
     required: false,
-    default: "Justification Statements and Conclusions",
+    default: DEFAULT_JUSTIFICATION,
 });
+
+const textAreaRef = useTemplateRef('textAreaRef');
 
 const selectorLikelihood = ref(3);
 const showConfidenceList = ref(false);
-const justification = ref("Justification Statements and Conclusions");
+const justification = ref(DEFAULT_JUSTIFICATION);
 const changed = ref(false);
 
 const justificationRef = ref('justificationRef');
@@ -45,9 +49,9 @@ function onChangeLikelihood(val) {
 function updateJustification(e) {
     justification.value = e.target.innerText;
 
-    console.log ('justification.value',justification.value);
-    console.log ('serverJustification.value',serverJustification.value);
-    console.log('\n');
+    // console.log ('justification.value',justification.value);
+    // console.log ('serverJustification.value',serverJustification.value);
+    // console.log('\n');
     changed.value = justification.value !== serverJustification.value;
     autoResize(e.target);
 }
@@ -81,6 +85,11 @@ onMounted(() => {
     selectorLikelihood.value = serverLikelihood.value;
     if (serverJustification.value.length > 0){
         justification.value = serverJustification.value;
+        //resize textarea to fit content
+        setTimeout(()=>{
+            autoResize(textAreaRef.value);
+            // console.log ("onMounted.autoResize!");
+        },300);
     }
     
 });
@@ -145,7 +154,7 @@ t();
                             @input="updateJustification" this line resets cursor to start
                             and removes ctrl z ability
                         -->
-                        <textarea class="editor" @input="updateJustification">{{ justification }}</textarea>
+                        <textarea class="editor" @input="updateJustification" ref="textAreaRef">{{ justification }}</textarea>
                     </div>
                 </div>
             </div>
