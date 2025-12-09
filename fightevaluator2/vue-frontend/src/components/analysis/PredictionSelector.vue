@@ -15,6 +15,7 @@ const props = defineProps({
   serverPredictions : {type: Object, default: () => {}}
 });
 
+// const serverPick = computed(() => props._serverPick);
 
 // local state
 const selectorPick = ref(defaultPickValue());
@@ -39,7 +40,6 @@ const likelihoodText = computed(() => {
 const { pickOutcome } = useMatchupDetailStore();//functions can be destructured from stores
 
 onMounted(()=>{
-  // console.log('serverPick:',newVal,oldVal);
     const {event,fighter} = props.serverPick;
     selectorPick.value.event = event;
     if (event === 'WIN'){

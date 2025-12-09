@@ -16,15 +16,6 @@ const prelimMatchups = ref(null);
 
 onMounted(() => {
     console.log("MainContent mounted");
-    // fetch('/vue-next-event')
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         fetchResult.value = data;
-    //         console.log("Matchups data fetched:", fetchResult.value.mainCardMatchups);
-    //     })
-    //     .catch(error => {
-    //         console.error("Error fetching data:", error);
-    // });
     mainCardMatchups.value = sampleFetchResult.mainCardMatchups;
     prelimMatchups.value = sampleFetchResult.prelimMatchups;
     watchlist.value = [];

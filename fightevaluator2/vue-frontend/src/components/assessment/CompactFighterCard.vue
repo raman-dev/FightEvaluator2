@@ -2,7 +2,8 @@
 
 import { inject } from 'vue';
 
-const props = defineProps(['fighter'])
+defineProps(['fighter'])
+
 const inchesToFeetStr = inject('inchesToFeetStr');
 const dobToAge= inject('dobToAge');
 
@@ -80,6 +81,7 @@ const dobToAge= inject('dobToAge');
         align-items: center;
         justify-content: start;
         margin: 0.5rem;
+        flex-wrap: wrap;
     }
 
     .name {
@@ -103,6 +105,9 @@ const dobToAge= inject('dobToAge');
         h6,
         p {
             margin: 0px;
+        }
+        p {
+            word-break: keep-all;
         }
     }
 }

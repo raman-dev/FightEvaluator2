@@ -23,10 +23,12 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
   const fighter_b_notes = ref([]);
 
   function onReceiveMatchupAnalysis(matchupComparison) {
+    console.log('onReceiveMatchupAnalysis',matchupComparison)
     matchup.value = matchupComparison['matchup']
     fighter_a.value = matchupComparison['fighter_a'];
     fighter_b.value = matchupComparison['fighter_b'];
     standardEvents.value = matchupComparison['standardEvents'];
+    
     if ('pick' in matchupComparison) {
       pick.value = matchupComparison['pick'];
     }

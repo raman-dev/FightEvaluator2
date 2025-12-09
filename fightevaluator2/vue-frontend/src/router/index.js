@@ -10,18 +10,19 @@ const router = createRouter({
     history: createWebHistory(),
     routes:[//route objects
         {
-            path:'/v-events/:eventId', name:'event-specific',
-            component: HomeView
+            path:'/',
+            // redirect:'/v-assessment/3604'
+            redirect:'/v-index'
         },
         {
             path:'/v-index',name:'home',
             component : HomeView
         },
         {
-            path:'/',
-            redirect:'/v-assessment/3604'
-            // redirect:'/v-index'
+            path:'/v-events/:eventId', name:'event-specific',
+            component: HomeView
         },
+        
         {
             path:'/v-events', name:'events',
             component: AllEventsView
