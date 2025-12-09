@@ -74,7 +74,7 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     */
   }
 
-  function pickOutcome(outcome) {
+  function selectOutcome(outcome) {
     
     const data = {event:outcome.event};
     if (outcome.event !== null){
@@ -112,7 +112,7 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     standardEvents,
     attribComparison,
     fighter_a_notes, 
-    fighter_b_notes, pickOutcome, fetchMatchupDetails, updateOutcomePrediction 
+    fighter_b_notes, selectOutcome, fetchMatchupDetails, updateOutcomePrediction 
   };
 
 });

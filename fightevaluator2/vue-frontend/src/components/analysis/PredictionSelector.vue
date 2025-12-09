@@ -2,8 +2,9 @@
 <script>function defaultPickValue (){ return {event:null,fighter:null};} </script>
 <script setup>
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted,watch } from "vue";
 import PredictionSelectOption from "@/components/analysis/PredictionSelectOption.vue"
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   result: { type: Boolean, default: false },
@@ -11,7 +12,7 @@ const props = defineProps({
   matchup: { type: Object, default: () => ({ fighter_a: {}, fighter_b: {} }) },
   fighter_a: { type: Object, default: () => ({ last_name: "" }) },
   fighter_b: { type: Object, default: () => ({ last_name: "" }) },
-  serverPick : { type: Object, default: defaultPickValue() },
+  // serverPick : { type: Object, default: defaultPickValue() },
   serverPredictions : {type: Object, default: () => {}}
 });
 
@@ -37,31 +38,45 @@ const likelihoodText = computed(() => {
     }
     return `${props.serverPredictions[selectorPick.value.event].label}`;
   });
-const { pickOutcome } = useMatchupDetailStore();//functions can be destructured from stores
+
+const { selectOutcome } = useMatchupDetailStore();//functions can be destructured from stores
+
+const { pick: serverPick } = storeToRefs(useMatchupDetailStore());
 
 onMounted(()=>{
-    const {event,fighter} = props.serverPick;
+    const {event,fighter} = serverPick;
     selectorPick.value.event = event;
+    console.log("onMounted PredictionSelector, serverPick:", serverPick);
     if (event === 'WIN'){
       //need fighter Id
       selectorPick.value.fighter = fighter;
     }
 });
 
+watch(serverPick, (newPick,oldPick)=>{
+  console.log('PredictionSelector.serverPick changed:', newPick,oldPick);
+  selectorPick.value.event = newPick.event;
+  if (newPick.event === 'WIN'){
+    selectorPick.value.fighter = newPick.fighter;
+  } else {
+    selectorPick.value.fighter = null;
+  }
+});
+
 
 function savePrediction() {
   console.log("Saving prediction:", selectorPick.value);
-  pickOutcome(selectorPick.value);
+  selectOutcome(selectorPick.value);
 }
 
 function isPickSame(){
     
-    if (selectorPick.value.event !== props.serverPick.event){
+    if (selectorPick.value.event !== serverPick.event){
       return false;
     }
 
     if (selectorPick.value.event === 'WIN'){
-      return selectorPick.value.fighter === props.serverPick.fighter;
+      return selectorPick.value.fighter === serverPick.fighter;
     }
 
     return true;

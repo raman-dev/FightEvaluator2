@@ -1,5 +1,5 @@
 <script setup>
-import { inject,ref } from 'vue';
+import { inject,ref,watch } from 'vue';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
 import { storeToRefs } from 'pinia';
 import { onBeforeRouteUpdate } from 'vue-router';
@@ -31,6 +31,10 @@ const replaceUnderscoreSpace = inject('replaceUnderscoreSpace');
 
 onBeforeRouteUpdate((a,b)=>{
   console.log('AnalysisView.onBeforeRouteUpdate',a,b);
+});
+
+watch(pick, (newPick,oldPick)=>{
+  console.log('AnalysisView.pick changed:', newPick,oldPick);
 });
 
 
