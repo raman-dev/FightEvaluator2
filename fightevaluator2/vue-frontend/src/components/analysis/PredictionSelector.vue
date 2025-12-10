@@ -1,5 +1,5 @@
 
-<script>function defaultPickValue (){ return {event:null,fighter:null};} </script>
+<!-- <script>function defaultPickValue (){ return {event:null,fighter:null};} </script> -->
 <script setup>
 import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 import { ref, computed, onMounted,watch } from "vue";
@@ -12,41 +12,50 @@ const props = defineProps({
   matchup: { type: Object, default: () => ({ fighter_a: {}, fighter_b: {} }) },
 });
 
-
+function defaultPickValue()  { 
+  return {event: null, fighter: null} ;
+}
 // local state
 const selectorPick = ref(defaultPickValue());
 
-const likelihood = computed (() => {
-  if (selectorPick.value.event === null) return 0;
-  const event = selectorPick.value.event;
-  if (event === 'WIN'){
-    return  serverPredictions[event][selectorPick.value.fighter].likelihood;
+const likelihood = computed(() => {
+  //get the likelihood for the selectorPick
+  const  {event,fighter} = selectorPick.value;
+  if (event === null) {
+    return 0;
   }
-  return  serverPredictions[event].likelihood;
+  //fighter is always an id 
+  const serverEventPrediction = serverPredictions.value[event];
+  if (event === 'WIN'){
+    return serverEventPrediction[fighter].likelihood;
+  }
+  return serverEventPrediction.likelihood;
 });
-
 // derived text for likelihood (you can extend styling/logic here)
 const likelihoodText = computed(() => {
-    if (selectorPick.value.event === null) return `Likelihood`;
-    if (selectorPick.value.event === 'WIN'){
-      return `${serverPredictions[selectorPick.value.event][selectorPick.value.fighter].label}` ;
+    const  {event,fighter} = selectorPick.value;
+    if (event === null) {
+        return `Likelihood`;
     }
-    return `${serverPredictions[selectorPick.value.event].label}`;
-  });
+    const serverEventPrediction = serverPredictions.value[event];
+    if (event === 'WIN'){
+      return `${serverEventPrediction[fighter].label}` ;
+    }
+    return `${serverEventPrediction.label}`;
+});
 
-const { selectOutcome } = useMatchupDetailStore();//functions can be destructured from stores
-
+const matchupDetailStore = useMatchupDetailStore();
+const { selectOutcome } = matchupDetailStore;//functions can be destructured from stores
 const { 
   fighter_a,
   fighter_b,
   predictions: serverPredictions,
   pick: serverPick,
-} = storeToRefs(useMatchupDetailStore());
+} = storeToRefs(matchupDetailStore);
 
 onMounted(()=>{
-    const {event,fighter} = serverPick;
+    const { event, fighter } = serverPick.value;
     selectorPick.value.event = event;
-    console.log("onMounted PredictionSelector, serverPick:", serverPick);
     if (event === 'WIN'){
       //need fighter Id
       selectorPick.value.fighter = fighter;
@@ -54,7 +63,7 @@ onMounted(()=>{
 });
 
 watch(serverPick, (newPick,oldPick)=>{
-  console.log('PredictionSelector.serverPick changed:', newPick,oldPick);
+  // console.log('PredictionSelector.serverPick changed:', newPick,oldPick);
   selectorPick.value.event = newPick.event;
   if (newPick.event === 'WIN'){
     selectorPick.value.fighter = newPick.fighter;
@@ -82,6 +91,7 @@ function isPickSame(){
     return true;
 }
 
+
 </script>
 
 <template>
@@ -97,7 +107,7 @@ function isPickSame(){
       </template>
     </div>
 
-    <div class="prediction-selector" data-outcome-prediction-id="0" :data-prediction="selectorPick">
+    <div class="prediction-selector" data-outcome-prediction-id="0" >
       <div class="title-container d-flex justify-content-between">
         <h3>Pick Outcome</h3>
         <button class="save-prediction-btn btn btn-primary" 

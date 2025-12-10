@@ -46,7 +46,6 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     if ('fighter_b_notes' in matchupComparison) {
       fighter_b_notes.value = matchupComparison['fighter_b_notes'];
       // console.log('fighter_b_notes',fighter_b_notes.value);
-      
     }
 
   }

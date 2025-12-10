@@ -15,7 +15,8 @@ const { activeMatchup } = storeToRefs(useMatchupStore());
 defineProps({
     tableName: {
         type: String,
-        required: true
+        required: false,
+        default: null,
     }
 });
 
