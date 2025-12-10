@@ -54,10 +54,7 @@ watch(pick, (newPick,oldPick)=>{
         </div>
        <PredictionSelector 
         :standardEvents="standardEvents" 
-        :fighter_a="fighter_a"
-        :fighter_b="fighter_b"
-        :serverPredictions="predictions"
-        :serverPick="pick" >
+        :serverPredictions="predictions">
 
        </PredictionSelector>
 

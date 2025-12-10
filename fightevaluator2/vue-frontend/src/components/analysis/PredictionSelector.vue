@@ -10,9 +10,6 @@ const props = defineProps({
   result: { type: Boolean, default: false },
   standardEvents: { type: Array, default: () => [] }, // [{ name, label, fighter_id }]
   matchup: { type: Object, default: () => ({ fighter_a: {}, fighter_b: {} }) },
-  fighter_a: { type: Object, default: () => ({ last_name: "" }) },
-  fighter_b: { type: Object, default: () => ({ last_name: "" }) },
-  // serverPick : { type: Object, default: defaultPickValue() },
   serverPredictions : {type: Object, default: () => {}}
 });
 
@@ -41,7 +38,10 @@ const likelihoodText = computed(() => {
 
 const { selectOutcome } = useMatchupDetailStore();//functions can be destructured from stores
 
-const { pick: serverPick } = storeToRefs(useMatchupDetailStore());
+const { 
+  fighter_a,
+  fighter_b,
+  pick: serverPick } = storeToRefs(useMatchupDetailStore());
 
 onMounted(()=>{
     const {event,fighter} = serverPick;
