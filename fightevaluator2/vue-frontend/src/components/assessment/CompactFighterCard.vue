@@ -1,11 +1,13 @@
 <script setup>
 
-import { inject } from 'vue';
+import { inject,computed } from 'vue';
 
-defineProps(['fighter'])
+const props = defineProps(['fighter']);
 
 const inchesToFeetStr = inject('inchesToFeetStr');
 const dobToAge= inject('dobToAge');
+
+const f = computed(() => props.fighter);
 
 </script>
 
@@ -13,9 +15,10 @@ const dobToAge= inject('dobToAge');
     <div class="fighter-info m-1" >
         <div class="fighter-info-wrapper ">
             <div class="name">
-                <h5>
+                <h5 v-if="f !== null && f !== undefined && 'id' in f">
                     <RouterLink :to="{ name:'assessment', params: {fighterId:fighter.id}}"> {{fighter.first_name }} {{ fighter.last_name }}</RouterLink>
                 </h5>
+                
             </div>
             <div class="d-flex">
                 <img :src="fighter.img_link ? fighter.img_link : '/static/fightEvaluator/media/sample_150.png'" alt="">

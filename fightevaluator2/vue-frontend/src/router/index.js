@@ -4,7 +4,6 @@ import HomeView from "@/views/HomeView.vue";
 import AllEventsView from "@/views/AllEventsView.vue";
 import AnalysisView from "@/views/AnalysisView.vue";
 import AssessmentView from "@/views/AssessmentView.vue";
-import PredictionsView from "@/views/PredictionsView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
