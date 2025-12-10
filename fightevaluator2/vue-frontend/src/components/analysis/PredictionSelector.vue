@@ -80,12 +80,12 @@ function savePrediction() {
 
 function isPickSame(){
     
-    if (selectorPick.value.event !== serverPick.event){
+    if (selectorPick.value.event !== serverPick.value.event){
       return false;
     }
 
     if (selectorPick.value.event === 'WIN'){
-      return selectorPick.value.fighter === serverPick.fighter;
+      return selectorPick.value.fighter === serverPick.value.fighter;
     }
 
     return true;
