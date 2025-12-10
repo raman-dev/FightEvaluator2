@@ -6,14 +6,15 @@ import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 
 const props = defineProps({
   standardEvents: Array,
-  fighter_a: Object,
-  fighter_b: Object,
-  matchup: Object,
-  predictions: Object,
 });
 
 const matchupDetailStore = useMatchupDetailStore();
-const { predictions } = storeToRefs(matchupDetailStore);
+const { 
+  predictions,
+  matchup,
+  fighter_a,
+  fighter_b
+} = storeToRefs(matchupDetailStore);
 
 onMounted(()=>{
   // console.log ('predictions',props.predictions.WIN);
@@ -35,16 +36,16 @@ watch (predictions, (newVal,oldVal)=>{
             :event="event.value"
             :fighter="fighter_a"
             :matchup="matchup"
-            v-model:likelihood="predictions[event.value][props.fighter_a.id].likelihood"
-            v-model:justification="predictions[event.value][props.fighter_a.id].justification"
+            v-model:likelihood="predictions[event.value][fighter_a.id].likelihood"
+            v-model:justification="predictions[event.value][fighter_a.id].justification"
             >
           </OutcomeCard>  
           <OutcomeCard
             :event="event.value"
             :fighter="fighter_b"
             :matchup="matchup"
-            v-model:likelihood="predictions[event.value][props.fighter_b.id].likelihood"
-            v-model:justification="predictions[event.value][props.fighter_b.id].justification"
+            v-model:likelihood="predictions[event.value][fighter_b.id].likelihood"
+            v-model:justification="predictions[event.value][fighter_b.id].justification"
             >
           </OutcomeCard>  
         </template>

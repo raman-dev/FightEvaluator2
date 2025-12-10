@@ -20,8 +20,6 @@ const {
     fighter_a,
     fighter_b,
     standardEvents,
-    predictions,
-    pick,
     attribComparison, 
     fighter_a_notes,
     fighter_b_notes 
@@ -33,9 +31,6 @@ onBeforeRouteUpdate((a,b)=>{
   console.log('AnalysisView.onBeforeRouteUpdate',a,b);
 });
 
-watch(pick, (newPick,oldPick)=>{
-  console.log('AnalysisView.pick changed:', newPick,oldPick);
-});
 
 
 </script>
@@ -53,24 +48,20 @@ watch(pick, (newPick,oldPick)=>{
             </div>
         </div>
        <PredictionSelector 
-        :standardEvents="standardEvents" 
-        :serverPredictions="predictions">
-
+        :standardEvents="standardEvents" >
        </PredictionSelector>
 
-       <OutcomesContainer 
-          :standardEvents="standardEvents" 
-          :fighter_a="fighter_a" 
-          :fighter_b="fighter_b" 
-          :matchup="matchup"
-          :predictions="predictions"
-          >
-       </OutcomesContainer>
+       <OutcomesContainer :standardEvents="standardEvents"></OutcomesContainer>
 
        <div class="content-grid">
-          <NotesSection :fighter="fighter_a" :notes="fighter_a_notes"> </NotesSection>
+          <NotesSection 
+            :fighter_name="`${fighter_a.first_name} ${fighter_a.last_name}`" 
+            :notes="fighter_a_notes"> </NotesSection>
           <AttribCompareTable :attribComparison="attribComparison"></AttribCompareTable>
-          <NotesSection :fighter="fighter_b" :notes="fighter_b_notes"> </NotesSection>
+          <NotesSection 
+            :fighter_name="`${fighter_b.first_name} ${fighter_b.last_name}`" 
+            :notes="fighter_b_notes"> 
+          </NotesSection>
        </div>
 
     </div>

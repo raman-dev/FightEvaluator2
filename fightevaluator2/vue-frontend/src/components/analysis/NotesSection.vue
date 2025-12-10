@@ -2,10 +2,9 @@
 import NoteItem from "./NoteItem.vue"
 
 defineProps({
-  fighter: {
-    type: Object,
+  fighter_name: {
+    type: String,
     required: true
-    // expected: { first_name: string, last_name: string }
   },
   notes: {
     type: Array,
@@ -21,7 +20,7 @@ defineProps({
       <div class="title-wrapper d-flex justify-content-between">
 
         <h4 class="fighter-name">
-          {{ fighter.first_name }} {{ fighter.last_name }}
+          {{ fighter_name }}
         </h4>
         <h4> Notes</h4>
       </div>

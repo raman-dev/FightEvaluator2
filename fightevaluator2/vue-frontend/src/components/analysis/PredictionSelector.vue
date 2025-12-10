@@ -10,10 +10,8 @@ const props = defineProps({
   result: { type: Boolean, default: false },
   standardEvents: { type: Array, default: () => [] }, // [{ name, label, fighter_id }]
   matchup: { type: Object, default: () => ({ fighter_a: {}, fighter_b: {} }) },
-  serverPredictions : {type: Object, default: () => {}}
 });
 
-// const serverPick = computed(() => props._serverPick);
 
 // local state
 const selectorPick = ref(defaultPickValue());
@@ -22,18 +20,18 @@ const likelihood = computed (() => {
   if (selectorPick.value.event === null) return 0;
   const event = selectorPick.value.event;
   if (event === 'WIN'){
-    return  props.serverPredictions[event][selectorPick.value.fighter].likelihood;
+    return  serverPredictions[event][selectorPick.value.fighter].likelihood;
   }
-  return  props.serverPredictions[event].likelihood;
+  return  serverPredictions[event].likelihood;
 });
 
 // derived text for likelihood (you can extend styling/logic here)
 const likelihoodText = computed(() => {
     if (selectorPick.value.event === null) return `Likelihood`;
     if (selectorPick.value.event === 'WIN'){
-      return `${props.serverPredictions[selectorPick.value.event][selectorPick.value.fighter].label}` ;
+      return `${serverPredictions[selectorPick.value.event][selectorPick.value.fighter].label}` ;
     }
-    return `${props.serverPredictions[selectorPick.value.event].label}`;
+    return `${serverPredictions[selectorPick.value.event].label}`;
   });
 
 const { selectOutcome } = useMatchupDetailStore();//functions can be destructured from stores
@@ -41,7 +39,9 @@ const { selectOutcome } = useMatchupDetailStore();//functions can be destructure
 const { 
   fighter_a,
   fighter_b,
-  pick: serverPick } = storeToRefs(useMatchupDetailStore());
+  predictions: serverPredictions,
+  pick: serverPick,
+} = storeToRefs(useMatchupDetailStore());
 
 onMounted(()=>{
     const {event,fighter} = serverPick;
