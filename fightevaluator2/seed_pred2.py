@@ -23,12 +23,18 @@ def create_picks():
     print("Creating Pick objects from Prediction objects")
     with transaction.atomic():
         for p in Prediction.objects.all():
-                #copy p.prediction.event to p.event
-            pred2 = Prediction2.objects.get(matchup=p.matchup,event=p.prediction.event,fighter=p.prediction.fighter)
+            #copy p.prediction.event to p.event
+            matchup = p.matchup
+            event = p.prediction.event
+            fighter = p.prediction.fighter
+            pred2 = Prediction2.objects.get(matchup=matchup,event=event,fighter=fighter)
             pick = Pick(
-                event=pred2.event,
-                matchup=p.matchup,
                 prediction=pred2,
+                #from prediction2
+                event=event,
+                matchup=matchup,
+                fighter=fighter,
+                #from prediction
                 isGamble=p.isGamble,
                 isCorrect=p.isCorrect
             )
