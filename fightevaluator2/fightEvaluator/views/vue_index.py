@@ -362,6 +362,11 @@ def makePick(request,matchupId):
         if pickForm.cleaned_data['event'] != Event.WIN:
             pick.fighter = None
             pick.save()
+        #check if has prediction2 
+        prediction2QSet = Prediction2.objects.filter(matchup=matchup,event=pick.event)
+        if prediction2QSet.exists():
+            pick.prediction = prediction2QSet[0]
+            pick.save()
         print(pick)
         return JsonResponse({'pick':model_to_dict(pick)})
     print(pickForm.errors)

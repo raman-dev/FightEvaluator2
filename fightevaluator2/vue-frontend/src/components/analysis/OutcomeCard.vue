@@ -47,12 +47,16 @@ function onChangeLikelihood(val) {
 }
 
 function updateJustification(e) {
-    justification.value = e.target.innerText;
-
+    justification.value = e.target.value;
+    // console.log(e.target);
+    // console.log('textArea => ',e.target.value);
+    
     // console.log ('justification.value',justification.value);
     // console.log ('serverJustification.value',serverJustification.value);
     // console.log('\n');
+
     changed.value = justification.value !== serverJustification.value;
+    
     autoResize(e.target);
 }
 

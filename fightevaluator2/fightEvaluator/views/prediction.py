@@ -107,26 +107,28 @@ def getPredictions(request):
 @require_GET
 def getPicks(request):
 
-    picks = []
+    results = []
     events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
     data = Pick.objects.all()
     # eventsByYearMonth = {}
     for fightEvent in events:
-        #grab predictions for this event
-        preds = data.filter(matchup__event=fightEvent)
-        if preds.exists():#atleast 1 prediction for this event
-             picks.append({
-                 'event':model_to_dict(fightEvent),
-                 'picks': [ {
-                     'matchup':p.matchup.title(),
-                     'type':p.event,
-                     'type_label': Event[p.event].label,
-                     'likelihood':p.prediction.likelihood if p.prediction else Likelihood.NOT_PREDICTED,
-                     'fighter': p.prediction.fighter.name if p.prediction and p.prediction.fighter else None,
-                     'correct':p.isCorrect
-                 } for p in preds]
-            })
-    return JsonResponse({'picks':picks})
+        #grab picks for this event
+        picks = data.filter(matchup__event=fightEvent)
+        if picks.exists():#atleast 1 prediction for this event
+            eventPicks = {'event':model_to_dict(fightEvent),'picks':[]}
+            for p in picks:
+                prediction = p.prediction
+                eventPicks['picks'].append({
+                    'matchup':p.matchup.title(),
+                    'type':p.event,
+                    'type_label': Event[p.event].label,
+                    'likelihood':prediction.likelihood if prediction else Likelihood.NOT_PREDICTED,
+                    'fighter': prediction.fighter.name if prediction and prediction.fighter else None,
+                    'correct':p.isCorrect
+                })
+            results.append(eventPicks)
+                 
+    return JsonResponse({'picks':results})
 
 def publishResults(request):
     #using matchup results determine if predictions are correct
