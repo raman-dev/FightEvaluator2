@@ -9,6 +9,7 @@ import PredictionSelector from '@/components/analysis/PredictionSelector.vue';
 import OutcomesContainer from '@/components/analysis/OutcomesContainer.vue';
 import AttribCompareTable from '@/components/analysis/AttribCompareTable.vue';
 import NotesSection from '@/components/analysis/NotesSection.vue';
+import AnalysisCompleteCheckBox from '@/components/analysis/AnalysisCompleteCheckBox.vue';
 
 
 
@@ -50,7 +51,7 @@ onBeforeRouteUpdate((a,b)=>{
        <PredictionSelector 
         :standardEvents="standardEvents" >
        </PredictionSelector>
-
+       <AnalysisCompleteCheckBox></AnalysisCompleteCheckBox>
        <OutcomesContainer :standardEvents="standardEvents"></OutcomesContainer>
 
        <div class="content-grid">

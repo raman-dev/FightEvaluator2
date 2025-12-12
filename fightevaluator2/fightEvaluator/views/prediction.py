@@ -56,7 +56,6 @@ def predictions(request):
         'stats':getStats()
         })
 
-
 @cache_page(PREDICTIONS_CACHE_DURATION)  # Cache the view for 15 minutes
 @require_GET
 def getPredictions(request):
@@ -104,9 +103,9 @@ def getPredictions(request):
 
     return JsonResponse({'predictions':predictions})
 
+@cache_page(PREDICTIONS_CACHE_DURATION)
 @require_GET
 def getPicks(request):
-
     results = []
     events = FightEvent.objects.all().order_by('-date')# prepend negative to get reverse ordering
     data = Pick.objects.all()

@@ -101,7 +101,7 @@ def aggregateAndParseEventMatchups(event: FightEvent):
     result['prelimMatchups'] = prelimJSON
     return JsonResponse(result)
 
-# @cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
+@cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
 def vueFightEvent(request):
     #return the next fight event
@@ -245,6 +245,7 @@ def makePrediction(request,matchupId):
     
     return JsonResponse({'error':prediction2Form.errors})
 
+@cache_page(PAGE_CACHE_DURATION // 2)#half standard duration
 @require_GET
 def get_matchup_comparison(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
