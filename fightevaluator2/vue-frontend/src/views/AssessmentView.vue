@@ -11,10 +11,6 @@ import { onMounted, ref, provide } from 'vue';
 import { useRoute } from 'vue-router';
 
 
-/*
-    
-*/
-
 const assessmentStore = useAssessmentStore();
 const activeNote = ref(null);
 

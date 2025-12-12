@@ -112,7 +112,7 @@ def analysis_complete(request,matchupId):
     matchup.analysisComplete = data['complete']
     matchup.save()
 
-    return JsonResponse(model_to_dict(matchup))
+    return JsonResponse({'matchup':matchup.id,'analysisComplete':matchup.analysisComplete})
 
 @require_http_methods(["PATCH"])
 def toggle_watchlist(request,matchupId):

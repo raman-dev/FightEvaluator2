@@ -114,7 +114,7 @@ def vueFightEvent(request):
     return JsonResponse({'No Event Upcoming':None})
 
 
-@cache_page(PAGE_CACHE_DURATION)
+# @cache_page(PAGE_CACHE_DURATION)
 @require_GET
 def vueAssessment(request,fighterId):
     
@@ -132,7 +132,8 @@ def vueAssessment(request,fighterId):
     noteQ = Note.objects.filter(assessment=assessment)
     if noteQ.exists():
         notes = [ {'data':note.data,'createdAt':note.createdAt,'id':note.id} for note in noteQ ]
-    
+        notes.sort(key=lambda x:x['createdAt'],reverse=True)
+
     nextMatchup = MatchUp.objects.filter(Q(fighter_a=fighter) | Q(fighter_b=fighter)).order_by('event__date').last()
     
     matchupInfo = None

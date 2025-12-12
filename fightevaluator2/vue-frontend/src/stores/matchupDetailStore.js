@@ -50,6 +50,13 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
 
   }
 
+  function toggleAnalysisComplete(analysisCompleteStatus) {
+    const newStatus = !matchup.value.analysisComplete;
+    server.toggle_matchup_analysis_complete(matchup.value.id, analysisCompleteStatus, (data) => {
+      matchup.value.analysisComplete = data.analysisComplete;
+    });
+  }
+
   function fetchMatchupDetails(matchupId) {
     console.log (`fetchMatchupDetails.${matchupId}`);
     server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
@@ -111,7 +118,7 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
     standardEvents,
     attribComparison,
     fighter_a_notes, 
-    fighter_b_notes, selectOutcome, fetchMatchupDetails, updateOutcomePrediction 
+    fighter_b_notes, selectOutcome, fetchMatchupDetails, updateOutcomePrediction, toggleAnalysisComplete
   };
 
 });

@@ -23,10 +23,11 @@ const props = defineProps({
 
 // helpers
 const removeScores = inject('replaceUnderscoreSpace');
+const inchesToFeetStr = inject('inchesToFeetStr');
 
 const formatHeight = (val) => {
     if (!val) return "N/A";
-    return val;
+    return inchesToFeetStr(val);
 };
 
 const dobToAge = inject('dobToAge');

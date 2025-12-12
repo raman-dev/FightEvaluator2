@@ -4,12 +4,18 @@ import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
 import { storeToRefs } from 'pinia';
 
 
-const { matchup } = storeToRefs(useMatchupDetailStore());
+const matchupDetailStore = useMatchupDetailStore();
+const { toggleAnalysisComplete } = matchupDetailStore;
+const { matchup } = storeToRefs(matchupDetailStore);
 const analysisComplete = ref(false);
 
 
 watch (matchup,(newMatchupVal,oldMatchupVal) => {
     analysisComplete.value = newMatchupVal.analysisComplete;
+});
+
+watch (analysisComplete,(newVal,oldVal) => {
+    toggleAnalysisComplete(newVal);
 });
 
 </script>

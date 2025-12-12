@@ -6,6 +6,7 @@ class Server {
       UPDATE_FIGHTER :'/fighters/update-fighter2/',
       SEARCH_FIGHTERS : '/fighters/search/?search=',
 
+      MATCHUP_ROOT : '/matchup',
       CREATE_MATCHUP : '/matchup/create-matchup',
       UPDATE_MATCHUP:'/matchup/update-matchup/',
       DELETE_MATCHUP:'/matchup/delete-matchup/',
@@ -29,6 +30,16 @@ class Server {
     //provide
     static headers = {
 
+    }
+
+    static async toggle_matchup_analysis_complete(matchupId,analysisCompleteStatus,callback){
+      //send patch request
+      fetch(Server.URLS.MATCHUP_ROOT + `/${matchupId}/analysis-complete`,{
+        method:'PATCH',
+        headers:Server.headers,
+        body: JSON.stringify({complete:analysisCompleteStatus})
+      }).then((response) => response.json())
+        .then((data) => callback(data));
     }
     
     static async toggle_watchlist(matchupId,callback){
