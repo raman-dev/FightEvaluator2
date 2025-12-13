@@ -1,15 +1,17 @@
 <script setup>
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import Note from './Note.vue';
 
 const notes = defineModel('notes');
+const noteListTemplateRef = useTemplateRef('notesListRef');
+
 </script>
 
 <template>
     <div class="notes-list align-self-center mt-4">
-        <ul v-if="notes.length > 0">
-            <template v-for="note,index in notes" :key="index">
+        <ul v-if="notes.length > 0" ref="notesListRef">
+            <template v-for="note,index in notes" :key="note.createdAt">
                 <Note v-model:note="notes[index]" ></Note>
             </template>
         </ul>

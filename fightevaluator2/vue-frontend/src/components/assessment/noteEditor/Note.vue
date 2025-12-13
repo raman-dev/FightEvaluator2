@@ -32,10 +32,26 @@ watch (activeNote,(newNote,oldNote) => {
     }
 })
 
+function formatDateShort(dateTimeString) {
+  const date = new Date(dateTimeString);
+
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const year = date.getUTCFullYear();
+  const month = months[date.getUTCMonth()];
+  const day = date.getUTCDate();
+
+  return `${year} ${month} ${day}`;
+}
+
 </script>
 
 <template>
-    <li class="note" :class="{'active':active}" :tabindex="100" @click="onClickNote">
+    <li class="note" :class="{'active':active}" :tabindex="100" @click="onClickNote" :data-timestamp="note.createdAt">
+        <span class="timestamp">{{ formatDateShort(note.createdAt) }}</span>
         <p>{{ note.data }}</p>
     </li>
 </template>
@@ -47,6 +63,7 @@ watch (activeNote,(newNote,oldNote) => {
     border-radius: 0.6rem;
     list-style: None;
     display: flex;
+    flex-direction: column;
     padding: 1rem;
     margin: 1rem;
 
@@ -56,6 +73,13 @@ watch (activeNote,(newNote,oldNote) => {
         min-width: 32ch;
         max-width: 100%;
         margin: 0px;
+    }
+
+    .timestamp{
+        opacity: 0.7;
+        font-size: 0.75rem;
+        text-align: end;
+        margin-bottom: 0.15rem;
     }
 }
 
