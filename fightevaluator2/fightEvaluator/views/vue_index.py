@@ -37,7 +37,7 @@ def vueAllEvents(request):
     events = []
     eventQuerySet = FightEvent.objects.all()
 
-    for year in range(2023,2026):
+    for year in range(2023,2027):
         yearSet = eventQuerySet.filter(date__year=year)
         months = []
         for month in range(0,13):

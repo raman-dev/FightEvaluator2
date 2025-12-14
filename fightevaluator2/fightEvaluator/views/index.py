@@ -438,9 +438,31 @@ def verifyPrediction(matchups):
     es.predictions = 0
     for matchup in matchups:
         prediction = Prediction.objects.filter(matchup=matchup).first()
-        if prediction:
-            
+        pick = Pick.objects.filter(matchup=matchup).first()
+        incremented = False
+        if pick:
             es.predictions += 1
+            incremented = True
+
+            outcome = matchup.outcome
+            pick.isCorrect = False
+            match pick.event:
+                case Event.DOES_NOT_GO_THE_DISTANCE:
+                    pick.isCorrect = outcome.method != FightOutcome.Outcomes.DECISION
+                case Event.ROUNDS_GEQ_ONE_AND_HALF:
+                    if outcome.final_round > 2:
+                        pick.isCorrect = True
+                    elif outcome.final_round == 2:
+                        seconds = 30
+                        minutes,actual_seconds = outcome.time.split(":")
+                        pick.isCorrect = int(minutes) > 2 or (int(minutes) == 2 and int(actual_seconds) >= seconds)
+                case Event.WIN:
+                    pick.isCorrect = outcome.winner != None and pick.fighter == outcome.winner
+            pick.save()
+
+        if prediction:
+            if not incremented:
+                es.predictions += 1
             outcome = matchup.outcome
             print(outcome,'predictions => ',prediction)
             #if prediction has a fighter then it is a winner determination
@@ -473,12 +495,13 @@ def verifyPrediction(matchups):
 
             """
 
-            if prediction.isCorrect:
+            if (prediction and prediction.isCorrect) or (pick and pick.isCorrect):
                 es.correct += 1
     es.save()
     calculate_stats()
 
 def update_stats(request):
+    # verifyPrediction(MatchUp.objects.filter(event__id=144))
     calculate_stats()
     return JsonResponse({"ok":"true"})
 
@@ -530,7 +553,6 @@ def event_predictions(request,eventId):
             predictions.append(prediction)
     
     return render(request,"fightEvaluator/event_predictions.html",{'predictions':predictions,'event':event})
-
 
 
 def lockedRowRepeat(lockTime):

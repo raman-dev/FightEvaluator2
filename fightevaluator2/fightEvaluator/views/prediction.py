@@ -204,12 +204,20 @@ def calculate_stats():
         stat = outcomeStatObjs.filter(name=event_name).first()
         if stat:
             #how many predictions of this type
-            result = Prediction.objects.aggregate(
+            predictionResult = Prediction.objects.aggregate(
                 total=Count('isCorrect',filter=Q(prediction__event=Event[event_name])),
                 correct=Count('isCorrect',filter=Q(prediction__event=Event[event_name],isCorrect=True))
             )
-            stat.total = result['total']
-            stat.count = result['correct']
+            pickResult = Pick.objects.aggregate(
+                total=Count('isCorrect',filter=Q(event=Event[event_name])),
+                correct=Count('isCorrect',filter=Q(event=Event[event_name],isCorrect=True))
+            )
+
+            aggrTotal = predictionResult
+            if pickResult['total'] > predictionResult['total']:
+                aggrTotal = pickResult
+            stat.total = aggrTotal['total']
+            stat.count = aggrTotal['correct']
             stat.ratio = stat.count/stat.total
             stat.save()
             # print(stat)
@@ -219,8 +227,15 @@ def calculate_stats():
         total=Count('isCorrect'),
         count = Count('isCorrect',filter=Q(isCorrect=True))
         )
-    all.total = aggr['total']
-    all.count = aggr['count']
+    aggrPicks = Pick.objects.aggregate(
+        total=Count('isCorrect'),
+        count = Count('isCorrect',filter=Q(isCorrect=True))
+    )
+    counts = aggr
+    if aggrPicks['total'] > aggr['total']:
+        counts = aggrPicks
+    all.total = counts['total']
+    all.count = counts['count']
     all.ratio = all.count/all.total
     all.save()
 
