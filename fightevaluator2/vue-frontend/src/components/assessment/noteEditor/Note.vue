@@ -65,6 +65,7 @@ function formatDateShort(dateTimeString) {
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    padding-top: 0.6rem;
     margin: 1rem;
 
     p {
@@ -79,7 +80,7 @@ function formatDateShort(dateTimeString) {
         opacity: 0.7;
         font-size: 0.75rem;
         text-align: end;
-        margin-bottom: 0.15rem;
+        margin-bottom: 0.25rem;
     }
 }
 
