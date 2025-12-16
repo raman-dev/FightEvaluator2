@@ -20,14 +20,13 @@ defineProps({
       <div class="title-wrapper d-flex justify-content-between">
 
         <h4 class="fighter-name">
-          {{ fighter_name }}
+          {{ fighter_name }} 
         </h4>
         <h4> Notes</h4>
       </div>
       <ul class="notes">
         <NoteItem v-if="notes.length === 0" text="No notes taken" :empty="true" />
-        <NoteItem v-for="(note, index) in notes" :key="index" :text="note.data" :tag="note.tag" />
-        
+        <NoteItem v-for="(note, index) in notes" :key="index" :text="note.data" :tag="note.tag" :createdAt="note.createdAt"  />
       </ul>
     </div>
   </div>

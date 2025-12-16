@@ -70,6 +70,21 @@ function numToMonthName(month) {
   return months[monthIndex];
 }
 
+function formatDateShort(dateTimeString) {
+  const date = new Date(dateTimeString);
+
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const year = date.getUTCFullYear();
+  const month = months[date.getUTCMonth()];
+  const day = date.getUTCDate();
+
+  return `${year} ${month} ${day}`;
+}
+
 export default {
   install: (app,options) => {
     
@@ -79,5 +94,6 @@ export default {
     app.provide('toPercent',toPercent);
     app.provide('abbreviatedDateFormat',abbreviatedDateFormat);
     app.provide('numToMonthName',numToMonthName);
+    app.provide('formatDateShort',formatDateShort);
   }
 }

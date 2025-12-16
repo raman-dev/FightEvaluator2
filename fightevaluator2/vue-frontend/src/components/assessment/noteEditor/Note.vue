@@ -6,6 +6,8 @@ const note = defineModel('note');
 const activeNote = inject('activeNote');
 const active = ref(false);
 
+const formatDateShort = inject('formatDateShort');
+
 function onClickNote(){
     // console.log ('Clicked Note',note.value.data);
     if (activeNote.value == null){
@@ -32,20 +34,7 @@ watch (activeNote,(newNote,oldNote) => {
     }
 })
 
-function formatDateShort(dateTimeString) {
-  const date = new Date(dateTimeString);
 
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ];
-
-  const year = date.getUTCFullYear();
-  const month = months[date.getUTCMonth()];
-  const day = date.getUTCDate();
-
-  return `${year} ${month} ${day}`;
-}
 
 </script>
 
