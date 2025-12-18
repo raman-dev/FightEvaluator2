@@ -11,9 +11,13 @@ from django.views.decorators.cache import cache_page
 from datetime import datetime
 from ..models import *
 from ..forms import *
+
+from .scrapy_view2 import ScrapyFightEventControlFunction
 import json
 
+from threading import Thread
 PAGE_CACHE_DURATION = 60 * 2
+scrapyFightEventThread = None
 
 @require_GET
 def vueIndex(request,**kwargs):
@@ -27,9 +31,12 @@ def vueIndex(request,**kwargs):
 def get_event(request,eventId):
     resultSet = FightEvent.objects.filter(pk=eventId)
     if not resultSet:
-        return JsonResponse({'No such event':None})
+        return JsonResponse({'No such event':None,'available':False})
     event = resultSet[0]
-    return aggregateAndParseEventMatchups(event)
+    result = aggregateAndParseEventMatchups(event)
+    result['available'] = True
+    result['message'] = 'data is available'
+    return JsonResponse(result)
 
 @cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
@@ -99,19 +106,39 @@ def aggregateAndParseEventMatchups(event: FightEvent):
 
     result['mainCardMatchups'] = mainCardJSON
     result['prelimMatchups'] = prelimJSON
-    return JsonResponse(result)
+    return result
 
 @cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
 def vueFightEvent(request):
-    #return the next fight event
     #get current day date
     current_date = datetime.now().date()
     #from FightEvent model, get the first event that is after or on the current date
     event = FightEvent.objects.filter(date__gte=current_date).order_by('date').first()
+    fightEventDataState = FightEventDataState.objects.select_for_update().first()
+
+    if fightEventDataState.staleOrEmpty == False and (event == None or event.date < current_date):
+        fightEventDataState.staleOrEmpty = True
+        fightEventDataState.save()
+
+    if fightEventDataState.staleOrEmpty:
+        global scrapyFightEventThread
+        #means was updating then interrupted 
+        if scrapyFightEventThread == None and fightEventDataState.updating or not fightEventDataState.updating:
+            #invalid state start worker 
+            scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
+            scrapyFightEventThread.start()
+    
+    if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
+        return JsonResponse({'available':False,"message":'currently updating'})
+    
     if event:
-        return aggregateAndParseEventMatchups(event)
-    return JsonResponse({'No Event Upcoming':None})
+        result = aggregateAndParseEventMatchups(event)
+        result['available'] = True
+        result['message'] = 'data is available'
+        return JsonResponse(result)
+    
+    return JsonResponse({'available':False,"message":'currently updating'})
 
 
 # @cache_page(PAGE_CACHE_DURATION)
@@ -254,14 +281,14 @@ def get_matchup_comparison(request,matchupId):
     fighter_b = matchup.fighter_b
     pick = None
     pickQSet = Pick.objects.filter(matchup=matchup)
-    predictionQSet = Prediction.objects.filter(matchup=matchup)
+    # predictionQSet = Prediction.objects.filter(matchup=matchup)
     standardEvents = [
             {'name':Event.WIN.label,'value':Event.WIN},
             {'name':Event.ROUNDS_GEQ_ONE_AND_HALF.label,'value':Event.ROUNDS_GEQ_ONE_AND_HALF},
             { 'name':Event.DOES_NOT_GO_THE_DISTANCE.label,'value': Event.DOES_NOT_GO_THE_DISTANCE}
     ]
 
-    eventLikelihoodsQSet = EventLikelihood.objects.filter(matchup=matchup)
+    # eventLikelihoodsQSet = EventLikelihood.objects.filter(matchup=matchup)
     prediction2QSet = Prediction2.objects.filter(matchup=matchup)
     # predictionsMap = getPredictionsMap(eventLikelihoodsQSet,standardEvents,matchup)
     predictionsMap2 = getPredictionsMap(prediction2QSet,standardEvents,matchup)
@@ -287,7 +314,7 @@ def get_matchup_comparison(request,matchupId):
         'fighter_b_notes': [ model_to_dict(n) | {'createdAt':n.createdAt} for n in Note.objects.filter(assessment=Assessment.objects.get(fighter=matchup.fighter_b)).order_by('-createdAt')],
         'standardEvents': standardEvents,
         'predictions': predictionsMap2,
-        'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
+        # 'prediction': model_to_dict(predictionQSet.first()) if predictionQSet.exists() else {},
         'pick': model_to_dict(pick) if pick else {'event':None,'fighter':None},
         'attribComparison' : attribComparison
     }

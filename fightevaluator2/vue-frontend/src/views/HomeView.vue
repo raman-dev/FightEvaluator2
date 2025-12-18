@@ -40,9 +40,24 @@ watch(route, (newData, oldData) => {
     if ('eventId' in newData.params) {
         //load id specific event data
         matchupStore.fetchEvent(newData.params.eventId);
+        matchupStore.pollEvent(newData.params.eventId);
     } else {
-        matchupStore.fetchEvent();//normal next event
+        // matchupStore.fetchEvent();//normal next event
+        matchupStore.pollEvent();
     }
+    /*
+    
+        navigate
+            /v-index 
+                start polling --->  server
+                            <---------|isHasEvent return
+                                      |start fetching event if doesn't exist
+                            <---------|return currently fetching event
+
+
+            /v-index/:eventId
+                don't poll, load specific event
+    */
 }, { immediate: true });
 
 

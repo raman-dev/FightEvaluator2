@@ -320,11 +320,13 @@ def matchupDictWithName(matchup: MatchUp):
 def index_endpoint(request):
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
 
-    global scrapyFightEventThread
-    if scrapyFightEventThread == None and fightEventDataState.updating:
-        #invalid state start worker 
-        scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
-        scrapyFightEventThread.start()
+    if fightEventDataState.staleOrEmpty:
+        global scrapyFightEventThread
+        #means was updating then interrupted 
+        if scrapyFightEventThread == None and fightEventDataState.updating or not fightEventDataState.updating:
+            #invalid state start worker 
+            scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
+            scrapyFightEventThread.start()
     #in an invalid state
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
         return JsonResponse({'available':False,"message":'currently updating'})

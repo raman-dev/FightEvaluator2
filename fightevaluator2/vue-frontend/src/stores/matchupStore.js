@@ -1,6 +1,7 @@
 import { ref, inject } from 'vue'
 import { defineStore } from 'pinia'
 import server from '../plugins/server.js'
+import { useIntervalFn, useTimeoutPoll } from '@vueuse/core'
 
 export const useMatchupStore = defineStore('matchup', () => {
   //3 tables
@@ -17,10 +18,21 @@ export const useMatchupStore = defineStore('matchup', () => {
   const defaultActiveMatchup = { table: null, id: -1, matchup: null };
   const activeMatchup = ref(defaultActiveMatchup);
 
+  const poller = ref (null);
+
   function onReceiveEvent(eventData) {
+    
+    if (eventData.available === false){
+      console.log("No event data available");
+      return;
+    }
+    if (poller.value !== null){
+      poller.value.pause();
+      poller.value = null;
+    }
     console.log("Received event data: ", eventData.event.id);
     //do what populate event and matchups 
-
+    
     event.value = {};
     mainCard.value = {};
     prelims.value = {};
@@ -134,6 +146,27 @@ export const useMatchupStore = defineStore('matchup', () => {
     }
   }
 
+  async function fetchEvent2(eventId){
+    if (eventId === undefined || eventId === null) {
+      console.log('fetching next event');
+      server.get_next_event(onReceiveEvent);
+    }
+    else{
+      console.log('fetching event-specific', eventId);
+      server.get_event(eventId, onReceiveEvent);
+    }
+  }
+
+  async function pollEvent(eventId){
+    fetchEvent2(eventId);
+    //doesn't run immediately even with option {immediate:true}
+    const { isActive, pause, resume } = useTimeoutPoll(fetchEvent2.bind({},eventId),3000);
+
+    poller.value = {isActive, pause, resume};
+    poller.value['count'] = 0;
+
+  }
+
   function getMatchup(matchupId) {
     //return matchup data if in maincard or prelims
     // console.log(`getMatchup.${matchupId}`);
@@ -214,7 +247,8 @@ export const useMatchupStore = defineStore('matchup', () => {
     toggleWatchList,
     createMatchup,
     updateMatchup,
-    deleteMatchup
+    deleteMatchup,
+    pollEvent
   }
 
 })

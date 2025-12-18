@@ -10,8 +10,8 @@ const router = createRouter({
     routes:[//route objects
         {
             path:'/',
-            redirect:'/v-matchup/1470'
-            // redirect:'/v-index'
+            // redirect:'/v-matchup/1470'
+            redirect:'/v-index'
         },
         {
             path:'/v-index',name:'home',
