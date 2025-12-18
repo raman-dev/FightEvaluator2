@@ -17,6 +17,7 @@ import json
 
 from threading import Thread
 PAGE_CACHE_DURATION = 60 * 2
+NEXT_EVENT_CACHE_DURATION = 15
 scrapyFightEventThread = None
 
 @require_GET
@@ -28,7 +29,7 @@ def vueIndex(request,**kwargs):
 
 @cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
-def get_event(request,eventId):
+def vueGetEventById(request,eventId):
     resultSet = FightEvent.objects.filter(pk=eventId)
     if not resultSet:
         return JsonResponse({'No such event':None,'available':False})
@@ -108,16 +109,16 @@ def aggregateAndParseEventMatchups(event: FightEvent):
     result['prelimMatchups'] = prelimJSON
     return result
 
-@cache_page(PAGE_CACHE_DURATION)#only cache this since it does not change often
+@cache_page(NEXT_EVENT_CACHE_DURATION)#only cache this since it does not change often
 @require_GET
-def vueFightEvent(request):
+def vueNextFightEvent(request):
     #get current day date
     current_date = datetime.now().date()
     #from FightEvent model, get the first event that is after or on the current date
     event = FightEvent.objects.filter(date__gte=current_date).order_by('date').first()
     fightEventDataState = FightEventDataState.objects.select_for_update().first()
-
-    if fightEventDataState.staleOrEmpty == False and (event == None or event.date < current_date):
+    # print(event,f'staleOrEmpty => {fightEventDataState.staleOrEmpty}')
+    if fightEventDataState.staleOrEmpty == False and event == None:
         fightEventDataState.staleOrEmpty = True
         fightEventDataState.save()
 
@@ -141,7 +142,7 @@ def vueFightEvent(request):
     return JsonResponse({'available':False,"message":'currently updating'})
 
 
-# @cache_page(PAGE_CACHE_DURATION)
+@cache_page(PAGE_CACHE_DURATION // 2)
 @require_GET
 def vueAssessment(request,fighterId):
     
@@ -177,8 +178,6 @@ def vueAssessment(request,fighterId):
     }
     return JsonResponse(data)
 
-# def getPredictionsMap2(predictions,standardEvents,matchup):
-#     pass
 
 def getPredictionsMap(predictions,standardEvents,matchup):
     """

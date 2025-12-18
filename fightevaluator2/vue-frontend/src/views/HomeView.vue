@@ -39,7 +39,7 @@ watch(route, (newData, oldData) => {
     console.log(newData.params, oldData);
     if ('eventId' in newData.params) {
         //load id specific event data
-        matchupStore.fetchEvent(newData.params.eventId);
+        // matchupStore.fetchEvent(newData.params.eventId);
         matchupStore.pollEvent(newData.params.eventId);
     } else {
         // matchupStore.fetchEvent();//normal next event

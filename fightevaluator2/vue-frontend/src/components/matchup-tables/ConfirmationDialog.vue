@@ -52,7 +52,7 @@ function deleteMatchup() {
   justify-content: center;
   align-items: center;
 
-  background-color: hsla(0, 0, 10%, 0.75);
+  background-color: hsla(0, 0%, 10%, 0.75);
 
   .dialog-container{
     border:2px solid #dc3545;

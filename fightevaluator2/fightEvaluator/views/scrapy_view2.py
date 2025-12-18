@@ -162,5 +162,5 @@ def ScrapyFightEventControlFunction():
             """ 
         fightEventDataState.staleOrEmpty = False
         fightEventDataState.updating = False
-        fightEventDataState.date = datetime.today().date()
+        # fightEventDataState.date = datetime.today().date()
         fightEventDataState.save()
