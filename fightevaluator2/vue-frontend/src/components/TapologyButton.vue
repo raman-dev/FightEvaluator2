@@ -90,3 +90,8 @@ function openLink(url) {
   </button>
 
 </template>
+<style lang="scss" scoped>
+  button{
+    height: max-content;
+  }
+</style>

@@ -1,10 +1,10 @@
 <script setup>
 
 import { ref, watch } from 'vue';
-import { useMatchupStore } from '@/stores/matchupStore.js'; 
+import { useMatchupStore } from '@/stores/matchupStore.js';
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute  } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
 
 import TapologyButton from '@/components/TapologyButton.vue';
@@ -31,7 +31,7 @@ const matchupActionMenuStore = useMatchupActionMenuStore();
 const matchupDetailStore = useMatchupDetailStore();
 
 const { event, mainCard, prelims, watchlist } = storeToRefs(matchupStore);
-const { menuPosition,menuOpen } = storeToRefs(matchupActionMenuStore)
+const { menuPosition, menuOpen } = storeToRefs(matchupActionMenuStore)
 
 
 watch(route, (newData, oldData) => {
@@ -61,13 +61,13 @@ watch(route, (newData, oldData) => {
 }, { immediate: true });
 
 
-onBeforeRouteLeave((to,from) => {
-    console.log('HomeView.onBeforeRouteLeave',to.fullPath,from.fullPath);
+onBeforeRouteLeave((to, from) => {
+    console.log('HomeView.onBeforeRouteLeave', to.fullPath, from.fullPath);
     menuOpen.value = false;//close incase open
-    
-    console.log ('HomeView.onBeforeRouteLeave.to.params',to.params);
-    console.log('HomeView.onBeforeRouteLeave.to',to);
-    if (to.name === 'analyze'){
+
+    console.log('HomeView.onBeforeRouteLeave.to.params', to.params);
+    console.log('HomeView.onBeforeRouteLeave.to', to);
+    if (to.name === 'analyze') {
         matchupDetailStore.fetchMatchupDetails(to.params.matchupId);
     }
 });
@@ -77,7 +77,7 @@ function showMatchupEditor(emptyEditor) {
     matchUpEditorOpen.value = true;
 }
 
-function onClickEdit(){
+function onClickEdit() {
     inEditMode.value = true;
     showMatchupEditor();
     menuOpen.value = false;
@@ -89,9 +89,37 @@ function onClickDelete() {
     console.log('onClickDelete called');
 }
 
-function closeEditor(){
+function closeEditor() {
     matchUpEditorOpen.value = false;
     inEditMode.value = false;
+}
+
+function resultsAvailable(eventDateString){
+    
+    console.log(eventDateString);
+    //get current time of 
+    const today = new Date();
+    const eventDate = new Date(eventDateString);
+    const nextDay = new Date(eventDate);
+    const MIN_HOURS_ELAPSED = 8;
+    nextDay.setDate(eventDate.getDate() + 1);
+    
+    //same day so event is not over results not ready
+    if (nextDay.getDate() > today.getDate()){
+        return false;
+    }
+    //it is the next day or later
+    //make sure time is atleast passed threshold
+    const[time, ampm] = today.toLocaleTimeString().split(" ");
+    let hour = parseInt(time.split(":")[0]);
+    // console.log (eventDate);
+    // console.log (today,hour);
+    if (ampm === "PM" || hour >= MIN_HOURS_ELAPSED){
+        console.log('Event Results Should Be Available!');
+        return true;
+    }
+
+    return false;
 }
 
 </script>
@@ -99,11 +127,19 @@ function closeEditor(){
 
     <div class="container-fluid main-container" @mousemove="showGuides">
         <div class="title-container d-flex justify-content-between">
-            <h3>
-                {{ event.title }}
-            </h3>
-            
-            <TapologyButton :link="event.link"><h2>test</h2></TapologyButton>
+            <div class="">
+                <h3>
+                    {{ event.title }}
+                </h3>
+                <div v-if="event.date !== undefined && resultsAvailable(event.date)">
+                    <button class="btn btn-success">Fetch Results</button>
+                </div>
+            </div>
+
+
+            <TapologyButton :link="event.link">
+                <h2>test</h2>
+            </TapologyButton>
         </div>
 
         <div class="tables-wrapper">
@@ -115,7 +151,7 @@ function closeEditor(){
                     <h6>No matchups in watchlist.</h6>
                 </div>
             </template>
-            
+
             <div class="table-grid">
                 <Table table-name="MainCard" :columns=standardColumns :matchups="mainCard"
                     @request-new-match-up="showMatchupEditor(true)"></Table>
@@ -125,15 +161,17 @@ function closeEditor(){
         </div>
 
         <ConfirmationDialog v-model:open="confirmationDialogOpen"> </ConfirmationDialog>
-        <MatchUpEditor v-model:open="matchUpEditorOpen" v-model:inEditMode="inEditMode" @editor-close="closeEditor"></MatchUpEditor>
-        <MatchUpActionMenu v-model:menu-position="menuPosition" @edit-matchup="onClickEdit" @delete-matchup="onClickDelete"></MatchUpActionMenu>
+        <MatchUpEditor v-model:open="matchUpEditorOpen" v-model:inEditMode="inEditMode" @editor-close="closeEditor">
+        </MatchUpEditor>
+        <MatchUpActionMenu v-model:menu-position="menuPosition" @edit-matchup="onClickEdit"
+            @delete-matchup="onClickDelete">
+        </MatchUpActionMenu>
     </div>
 
 </template>
 
 <style scoped lang="scss">
-
-.empty-watchlist-notification{
+.empty-watchlist-notification {
     border: 1px solid lavender !important;
     border-radius: 0.4rem;
     width: fit-content;
@@ -147,17 +185,18 @@ function closeEditor(){
     }
 }
 
-.tables-wrapper, .title-container{
-  margin: auto;
-  max-width: 57%;  
+.tables-wrapper,
+.title-container {
+    margin: auto;
+    max-width: 57%;
 }
 
-.title-container{
-  margin:auto;
-  width: 100%;
-//   margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
-  padding: 0rem;
+.title-container {
+    margin: auto;
+    width: 100%;
+    //   margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    padding: 0rem;
 }
 
 .tables-wrapper {
@@ -178,27 +217,33 @@ function closeEditor(){
 }
 
 @media (max-width: 924px) {
-  .table-grid{
+    .table-grid {
         grid-template-columns: 1fr !important;
-    } 
+    }
 }
 
 @media (max-width: 1280px) {
-    .tables-wrapper, .title-container{
-      max-width: 85%;
+
+    .tables-wrapper,
+    .title-container {
+        max-width: 85%;
     }
 }
 
 @media (max-width: 1024px) {
-  .tables-wrapper, .title-container{
-    max-width: 100%;
-  }
+
+    .tables-wrapper,
+    .title-container {
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
-  .tables-wrapper, .title-container{
-      max-width: 100%;
-   }
+
+    .tables-wrapper,
+    .title-container {
+        max-width: 100%;
+    }
 }
 
 .empty-watchlist-notification {
