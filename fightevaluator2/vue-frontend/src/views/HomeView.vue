@@ -131,7 +131,7 @@ function resultsAvailable(eventDateString){
                 <h3>
                     {{ event.title }}
                 </h3>
-                <div v-if="event.date !== undefined && resultsAvailable(event.date)">
+                <div v-if="event.date !== undefined && event.hasResults != true && resultsAvailable(event.date)">
                     <button class="btn btn-success">Fetch Results</button>
                 </div>
             </div>
