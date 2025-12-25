@@ -103,17 +103,19 @@ function resultsAvailable(eventDateString){
     const nextDay = new Date(eventDate);
     const MIN_HOURS_ELAPSED = 8;
     nextDay.setDate(eventDate.getDate() + 1);
+    console.log(nextDay);
     
     //same day so event is not over results not ready
-    if (nextDay.getDate() > today.getDate()){
+    if (nextDay > today){
         return false;
     }
+    
     //it is the next day or later
     //make sure time is atleast passed threshold
     const[time, ampm] = today.toLocaleTimeString().split(" ");
     let hour = parseInt(time.split(":")[0]);
-    // console.log (eventDate);
-    // console.log (today,hour);
+    console.log (eventDate);
+    console.log (today,hour);
     if (ampm === "PM" || hour >= MIN_HOURS_ELAPSED){
         console.log('Event Results Should Be Available!');
         return true;

@@ -61,10 +61,10 @@ watch(nextMatchup, (newVal,oldVal) => {
             <div class="content-wrapper">
                 <div class="card-content">
                     <div class="card-header">
-                        <h2 class="fighter-name">
+                        <h3 class="fighter-name">
                             <span id="first_name">{{ fighter.first_name }}</span>&nbsp;
-                            <span id="last_name">{{ fighter.last_name }}</span>
-                        </h2>
+                            <span id="last_name">{{ fighter.last_name }}</span>&nbsp;
+                        </h3>
                         <div class="info-wrapper">
                             <p class="fighter-weight" id="weight_class">
                                 {{ removeScores(fighter.weight_class) }}
