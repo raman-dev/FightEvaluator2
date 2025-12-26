@@ -41,11 +41,12 @@ const title = 'Fight Evaluator';
 <style lang="scss">
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.1s ease;
+    transition: all 0.16s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
+    transform: translateY(2px);
     opacity: 0;
 }
 
