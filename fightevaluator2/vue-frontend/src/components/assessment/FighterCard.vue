@@ -157,7 +157,7 @@ $borderRadius: 0.5rem;
     display: flex;
     align-items: center;
     border-radius: $borderRadius;
-    border: 1px solid $cardBorderColor;
+    border: 2px solid $cardBorderColor;
     padding: 1rem;
 
     .img-wrapper {
