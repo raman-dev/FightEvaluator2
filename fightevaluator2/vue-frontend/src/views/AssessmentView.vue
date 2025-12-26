@@ -48,27 +48,28 @@ function onAttributeChange(changes) {
 
 
 <template>
-    <div class="content-container">
-        <FighterCard 
-            v-model:fighter="assessmentStore.fighter"
-            v-model:nextMatchup="assessmentStore.nextMatchup"
-            @edit-click="onClickFighterEdit">
-        </FighterCard>
-        <div class="grid-container">
-            <FighterAttributeListEditor @attribute-change="onAttributeChange"></FighterAttributeListEditor>
-            <div class="fighter-notes list-group-item d-flex flex-column">
-                <NotesEditor v-model:activeNote="activeNote"></NotesEditor>
-                <NotesList :notes="assessmentStore.notes" v-model:activeNote="activeNote"></NotesList>
+    <div class="transition-wrapper-root">
+        <div class="content-container">
+            <FighterCard 
+                v-model:fighter="assessmentStore.fighter"
+                v-model:nextMatchup="assessmentStore.nextMatchup"
+                @edit-click="onClickFighterEdit">
+            </FighterCard>
+            <div class="grid-container">
+                <FighterAttributeListEditor @attribute-change="onAttributeChange"></FighterAttributeListEditor>
+                <div class="fighter-notes list-group-item d-flex flex-column">
+                    <NotesEditor v-model:activeNote="activeNote"></NotesEditor>
+                    <NotesList :notes="assessmentStore.notes" v-model:activeNote="activeNote"></NotesList>
+                </div>
             </div>
+            
         </div>
-        
+        <FighterEditor 
+            v-model:showModal="showModal" 
+            :fighterServer="assessmentStore.fighter"
+            @update-fighter="onFighterEditorSave">
+        </FighterEditor>
     </div>
-    <FighterEditor 
-        v-model:showModal="showModal" 
-        :fighterServer="assessmentStore.fighter"
-        @update-fighter="onFighterEditorSave">
-    </FighterEditor>
-    
 </template>
 
 <style lang="scss" scoped>

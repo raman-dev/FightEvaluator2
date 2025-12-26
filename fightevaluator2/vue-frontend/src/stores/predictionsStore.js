@@ -17,21 +17,21 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
     const stats = ref({});
 
     function onReceivePredictions(data) {
-        console.log("Received predictions:", data.predictions);
+        // console.log("Received predictions:", data.predictions);
         eventPredictionsByYearMonth.value = groupPredictionsByYearMonth(data);
         eventPredictions.value = data.predictions;
-        console.log ("Grouped predictions by year/month:", eventPredictionsByYearMonth.value);
+        // console.log ("Grouped predictions by year/month:", eventPredictionsByYearMonth.value);
     }
 
     function onReceivePicks(data){
-        console.log("Received picks:", data.picks);
+        // console.log("Received picks:", data.picks);
         eventPicksByYearMonth.value = groupPicksByYearMonth(data);
         eventPicks.value = data.picks;
-        console.log ("Grouped selected predictions by year/month:", eventPicksByYearMonth.value);
+        // console.log ("Grouped selected predictions by year/month:", eventPicksByYearMonth.value);
     }
 
     function onReceiveStats(data) {
-        console.log("Received stats:", data);
+        // console.log("Received stats:", data);
         for (const [key, value] of Object.entries(data)) {
             stats.value[key] = value;
         }

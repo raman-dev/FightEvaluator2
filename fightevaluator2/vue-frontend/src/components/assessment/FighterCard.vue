@@ -160,7 +160,7 @@ $borderRadius: 0.5rem;
     border: 2px solid $cardBorderColor;
     padding: 1rem;
 
-    .img-wrapper {
+    .img-wrapper { 
         display: flex;
         flex-direction: column;
         justify-content: center;

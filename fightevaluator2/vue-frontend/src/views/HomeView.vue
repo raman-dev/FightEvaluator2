@@ -96,14 +96,14 @@ function closeEditor() {
 
 function resultsAvailable(eventDateString){
     
-    console.log(eventDateString);
+    // console.log(eventDateString);
     //get current time of 
     const today = new Date();
     const eventDate = new Date(eventDateString);
     const nextDay = new Date(eventDate);
     const MIN_HOURS_ELAPSED = 8;
     nextDay.setDate(eventDate.getDate() + 1);
-    console.log(nextDay);
+    // console.log(nextDay);
     
     //same day so event is not over results not ready
     if (nextDay > today){
@@ -114,8 +114,8 @@ function resultsAvailable(eventDateString){
     //make sure time is atleast passed threshold
     const[time, ampm] = today.toLocaleTimeString().split(" ");
     let hour = parseInt(time.split(":")[0]);
-    console.log (eventDate);
-    console.log (today,hour);
+    // console.log (eventDate);
+    // console.log (today,hour);
     if (ampm === "PM" || hour >= MIN_HOURS_ELAPSED){
         console.log('Event Results Should Be Available!');
         return true;
