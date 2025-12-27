@@ -17,7 +17,7 @@ import json
 
 from threading import Thread
 PAGE_CACHE_DURATION = 60 * 2
-NEXT_EVENT_CACHE_DURATION = 15
+NEXT_EVENT_CACHE_DURATION = 10
 scrapyFightEventThread = None
 
 @require_GET
