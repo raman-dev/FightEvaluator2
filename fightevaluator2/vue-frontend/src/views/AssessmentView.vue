@@ -101,6 +101,10 @@ $btnBorderRadius: 0.6rem;
     border-radius: 0.5rem !important;
 }
 
+.transition-wrapper-root {
+    overflow-y: auto;
+}
+
 .content-container{
   margin: auto;
   width: 72%;

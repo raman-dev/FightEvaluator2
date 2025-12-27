@@ -36,7 +36,7 @@ onBeforeRouteUpdate((a,b)=>{
 
 </script>
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid main-content-container">
         <h3 class="text-center text-capitalize">{{ replaceUnderscoreSpace(matchup.weight_class) }} | {{ matchup.rounds }} rounds</h3>
         <div class="matchup-container justify-content-center">
             <!--contains information about each fighter including fighter img-->
@@ -69,6 +69,9 @@ onBeforeRouteUpdate((a,b)=>{
 </template>
 
 <style lang="scss">
+.main-content-container {
+    overflow-y: auto;
+}
 
 /*data-polarity color variables*/
 $positiveBg: #0d6efd; 

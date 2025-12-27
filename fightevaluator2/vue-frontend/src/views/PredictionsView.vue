@@ -32,5 +32,10 @@ const { stats,eventPredictions,eventPredictionsByYearMonth,eventPicks,eventPicks
     />
   </div>
 </template>
+<style lang="scss" scoped>
+  .prediction-table-container{
+    overflow-y: auto;
+  }
+</style>
 
 
