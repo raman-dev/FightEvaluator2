@@ -132,6 +132,11 @@ function onEnter(menuContainer){
     
 </template>
 <style lang="scss" scoped>
+
+$menuBorderRadius : 0.34rem;
+$menuBorderColor : #ffff77;
+$menuBorderWidth : 2px;
+
 .matchup-actions-menu-container {
     position: absolute;
     top: 0%;
@@ -145,8 +150,8 @@ function onEnter(menuContainer){
         background-color: #111519;
         box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 
-        border: 1px solid gray;
-        border-radius: 0.6rem;
+        border: $menuBorderWidth solid $menuBorderColor;
+        border-radius: $menuBorderRadius;
         overflow: hidden;
 
 

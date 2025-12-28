@@ -49,6 +49,9 @@ const f = computed(() => props.fighter);
 </template>
 
 <style lang="scss" scoped>
+
+$cardBorderRadius: 0.7rem;
+
 .fighter-info.win {
     outline-color: #00FF00;
 }
@@ -59,7 +62,7 @@ const f = computed(() => props.fighter);
 
 .fighter-info {
     padding: 0.76rem;
-    border-radius: 1rem;
+    border-radius: $cardBorderRadius;
     background-color: #12161A;
     outline: 3px solid transparent;
     outline-offset: 1px;

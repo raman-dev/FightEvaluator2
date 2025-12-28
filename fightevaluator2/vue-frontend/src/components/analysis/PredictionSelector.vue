@@ -147,6 +147,9 @@ function isPickSame(){
 </template>
 
 <style scoped lang="scss">
+
+$selectorBorderRadius: 0.6rem;
+
 .prediction-result-container {
   display: flex;
   flex-direction: column;
@@ -159,7 +162,7 @@ function isPickSame(){
 
   .prediction-selector {
     background-color: #12161A;
-    border-radius: 0.8rem;
+    border-radius: $selectorBorderRadius;
     outline: 3px solid transparent;
     outline-offset: 1px;
 
