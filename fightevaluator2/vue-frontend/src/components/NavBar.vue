@@ -1,11 +1,15 @@
 <script setup>
-import { useTemplateRef } from 'vue';
+import { onMounted, useTemplateRef,watch  } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 
 const props = defineProps(['links','navTitle'])
 
 const navbarTogglerRef = useTemplateRef('navbarToggler');
 const navbarCollapseRef = useTemplateRef('navbarCollapse');
+
+const router = useRouter();
+const route = useRoute();
 
 
 function onNavbarLinkClick(){
@@ -15,6 +19,12 @@ function onNavbarLinkClick(){
         navbarToggler.click();
     }
 }
+
+watch(route,(newVal,oldVal) =>{
+    console.log('watchRoute',newVal.fullPath,oldVal.fullPath);
+    
+})
+
 
 </script>
 
@@ -32,7 +42,8 @@ function onNavbarLinkClick(){
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
                     <li class="nav-item" v-for="linkObj in links">
                         <!-- <a class="nav-link" href="#">{{ linkObj.name }}</a> -->
-                        <RouterLink @click="onNavbarLinkClick" class="nav-link" :to=linkObj.path> {{ linkObj.name }}</RouterLink>
+                        <RouterLink @click="onNavbarLinkClick" class="nav-link" active-class="active" :to=linkObj.path> {{ linkObj.name }}</RouterLink>
+                        <div class="active-underline"></div>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -48,4 +59,21 @@ function onNavbarLinkClick(){
     .nav-item .nav-link{
         text-transform: capitalize;
     }
+    
+    .nav-item{
+        width: 100%;
+        a{
+            padding-bottom: 0px;
+        }
+        .nav-item-wrapper{
+            max-width: fit-content;
+        }
+        //style the sibling immediatly after nav-link.active
+        .nav-link.active + .active-underline{
+            background-color: whitesmoke;
+            height: 1px;
+            width: 100%;
+        }
+    }
+
 </style>

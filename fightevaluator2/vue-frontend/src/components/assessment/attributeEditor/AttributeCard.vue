@@ -229,6 +229,9 @@ $borderRadius: 0.5rem;
 
     .button-container {
       display: flex;
+      button {
+        transition: all 0.15s !important;
+      }
     }
   }
 
@@ -240,7 +243,7 @@ $borderRadius: 0.5rem;
     overflow: hidden;
 
     //keep for any visual state changes
-    transition: all 0.3s cubic-bezier(.58, -0.02, .19, .85);
+    transition: all 0.2s cubic-bezier(.58, -0.02, .19, .85);
   }
 
   .card-footer {
