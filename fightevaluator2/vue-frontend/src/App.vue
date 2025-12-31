@@ -24,6 +24,7 @@ const links = [
 
 const title = 'Fight Evaluator';
 
+
 </script>
 
 <template>
