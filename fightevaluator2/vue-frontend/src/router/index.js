@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import AllEventsView from "@/views/AllEventsView.vue";
 import AnalysisView from "@/views/AnalysisView.vue";
 import AssessmentView from "@/views/AssessmentView.vue";
+import ProfitView from "@/views/ProfitView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -34,6 +35,10 @@ const router = createRouter({
             path:'/v-assessment/:fighterId', name:'assessment',
             component: AssessmentView
         },
+        {
+            path:'/v-profit',name:'profit',
+            component: ProfitView,
+        }
         // Prediction route is now added in src/main.js to enable pre-loading data
         // {
         //     path:'/v-predictions',name:'predictions',
