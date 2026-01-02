@@ -10,10 +10,6 @@ const navbarTogglerRef = useTemplateRef('navbarToggler');
 const navbarCollapseRef = useTemplateRef('navbarCollapse');
 const linkUlTemplateRef = useTemplateRef('linksUlRef');
 
-// const router = useRouter();
-// const route = useRoute();
-
-
 function onNavbarLinkClick() {
     const navbarToggler = navbarTogglerRef.value;
     const navbarCollapse = navbarCollapseRef.value;
@@ -22,29 +18,14 @@ function onNavbarLinkClick() {
     }
 }
 
-// watch(route, (newVal, oldVal) => {
-//     console.log('watchRoute', newVal.fullPath, oldVal.fullPath);
-// })
-
 const isLarge = useMediaQuery('(min-width: 992px)');
-
-watch(isLarge, (isNowLarge, _) => {
-    console.log(`isNowLarge=${isNowLarge}`);
-
-    if (isNowLarge === false) {
-        //the navbar has collapsed
-        //center the nav link texts
-        const ul = linkUlTemplateRef.value;
-        ul.querySelectorAll('li').forEach((li) => {
-            const linkTag = li.querySelector('a');
-            const underline = li.querySelector('.active-underline');
-            
-            // console.log(linkTag,underline);
-            
-            // underline.style.maxWidth=`${linkTag.clientWidth}px`;
-        });
+function onNavItemClick(event){
+    if ((!isLarge.value)){
+        //click on descendant nav-item
+        const li = event.currentTarget;
+        li.querySelector("a").click();
     }
-});
+}
 
 </script>
 
@@ -60,7 +41,7 @@ watch(isLarge, (isNowLarge, _) => {
             <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="navbarCollapse">
                 <!--implement current link status-->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" ref="linksUlRef">
-                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }">
+                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }" @click="onNavItemClick">
                         <!-- <a class="nav-link" href="#">{{ linkObj.name }}</a> -->
                         
                         <template v-if="isLarge">
@@ -68,7 +49,7 @@ watch(isLarge, (isNowLarge, _) => {
                             {{ linkObj.name }}</RouterLink>
                             <div class="active-underline"></div>
                         </template>
-                        <div v-if="!isLarge" class="nav-item">
+                        <div v-if="!isLarge" class="nav-link-wrapper">
                             <RouterLink @click="onNavbarLinkClick" class="nav-link" active-class="active" :to=linkObj.path>
                             {{ linkObj.name }}</RouterLink>
                             <div class="active-underline"></div>
@@ -91,9 +72,9 @@ watch(isLarge, (isNowLarge, _) => {
 
 .nav-item {
     width: 100%;
-
+    padding: 0.5rem;
     a {
-        padding-bottom: 0px;
+        padding: 0px !important;
     }
 
     .nav-item-wrapper {
@@ -101,7 +82,7 @@ watch(isLarge, (isNowLarge, _) => {
     }
 
     //style the sibling immediatly after nav-link.active
-    .nav-link.active+.active-underline {
+    .nav-link.active + .active-underline {
         background-color: whitesmoke;
         height: 1px;
         width: 100%;
@@ -110,9 +91,11 @@ watch(isLarge, (isNowLarge, _) => {
 .nav-item.nav-collapsed{
     &:hover{
         cursor: pointer;
-        background-color: #00ffff44;
+        a {
+            color: rgba(255, 255, 255, .8) !important; 
+        }
     }
-    div {
+    .nav-link-wrapper {
         width: fit-content;
     }
 }
