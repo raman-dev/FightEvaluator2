@@ -18,6 +18,46 @@ function onNavbarLinkClick() {
     }
 }
 
+function onNavItemMouseEnter(event){
+    const li = event.currentTarget;
+    /*
+        when mouse hovers over link that is active link
+        do nothing
+        when mouse hover over link that is not active link
+        expand underline already done in css
+        also shrink active link underline
+
+    */
+   //check if current nav-item is active
+    const activeLink = li.querySelector("a.active");
+    if (activeLink === null){
+        //not active link 
+        //shrink active link underline
+        const linksUl = linkUlTemplateRef.value;
+        const activeUnderlineSibling = linksUl.querySelector("li .nav-link.active");
+        // if (activeUnderlineSibling){
+            const activeUnderlineDiv = activeUnderlineSibling.nextElementSibling;
+            activeUnderlineDiv.style.width = "0%";
+        // }
+    }
+}
+
+function onNavItemMouseOut(event){
+    const li = event.currentTarget;
+    //if exit is not active link then restore active link underline
+    const activeLink = li.querySelector("a.active");
+    if (activeLink === null){
+        //not active link 
+        //restore active link underline
+        const linksUl = linkUlTemplateRef.value;
+        const activeUnderlineSibling = linksUl.querySelector("li .nav-link.active");
+        // if (activeUnderlineSibling){
+            const activeUnderlineDiv = activeUnderlineSibling.nextElementSibling;
+            activeUnderlineDiv.style.width = "100%";
+        // }
+    }
+}
+
 const isLarge = useMediaQuery('(min-width: 992px)');
 function onNavItemClick(event){
     if ((!isLarge.value)){
@@ -41,7 +81,7 @@ function onNavItemClick(event){
             <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="navbarCollapse">
                 <!--implement current link status-->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" ref="linksUlRef">
-                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }" @click="onNavItemClick">
+                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }" @click="onNavItemClick" @mouseenter="onNavItemMouseEnter" @mouseout="onNavItemMouseOut">
                         <!-- <a class="nav-link" href="#">{{ linkObj.name }}</a> -->
                         
                         <template v-if="isLarge">
@@ -66,6 +106,14 @@ function onNavItemClick(event){
 </template>
 
 <style lang="scss">
+
+.nav-item-active{
+    .active-underline{
+        width: 100%;
+        height: 1px;
+    }
+}
+
 .nav-item .nav-link {
     text-transform: capitalize;
 }
@@ -86,28 +134,33 @@ function onNavItemClick(event){
         background-color: whitesmoke;
         transition: all 0.2s ease-in-out;
         width: 0%;
+        height: 1px;
     }
     //style the sibling immediatly after nav-link.active
     .nav-link.active + .active-underline {
         height: 1px;
         width: 100%;
     }
+    //when hovered over nav-item
+    &:hover{
+        .active-underline {
+            width: 100% !important;
+        }
+    }
 }
+
 .nav-item.nav-collapsed{
     &:hover{
         cursor: pointer;
         a {
             color: rgba(255, 255, 255, .8) !important; 
         }
-
-        .nav-link-wrapper .active-underline {
-            width: 100% !important;
-        }
-        
     }
     .nav-link-wrapper {
         width: fit-content;
     }
 }
+
+
 
 </style>
