@@ -71,6 +71,7 @@ function onNavItemClick(event){
 }
 
 .nav-item {
+    display: block;
     width: 100%;
     padding: 0.5rem;
     a {
@@ -80,10 +81,14 @@ function onNavItemClick(event){
     .nav-item-wrapper {
         max-width: fit-content;
     }
-
+    //not going to work because because width is relative or some shit
+    .active-underline{
+        background-color: whitesmoke;
+        transition: all 0.2s ease-in-out;
+        width: 0%;
+    }
     //style the sibling immediatly after nav-link.active
     .nav-link.active + .active-underline {
-        background-color: whitesmoke;
         height: 1px;
         width: 100%;
     }
@@ -94,6 +99,11 @@ function onNavItemClick(event){
         a {
             color: rgba(255, 255, 255, .8) !important; 
         }
+
+        .nav-link-wrapper .active-underline {
+            width: 100% !important;
+        }
+        
     }
     .nav-link-wrapper {
         width: fit-content;
