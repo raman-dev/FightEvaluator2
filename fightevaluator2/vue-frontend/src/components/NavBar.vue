@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, useTemplateRef, watch } from 'vue';
+import { onMounted, useTemplateRef, watch,ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useMediaQuery } from '@vueuse/core';
 
@@ -9,17 +9,8 @@ const props = defineProps(['links', 'navTitle'])
 const navbarTogglerRef = useTemplateRef('navbarToggler');
 const navbarCollapseRef = useTemplateRef('navbarCollapse');
 const linkUlTemplateRef = useTemplateRef('linksUlRef');
-const underlineClass = 'underline-expanded';
+const underlineClass = ref('underline-expanded');
 const route = useRoute();
-
-watch(() => route.fullPath,(a,b) => {
-    // console.log(a.path,b.path);
-    console.log('watch.route.fullPath',a,b);
-    
-    const activeLink = linkUlTemplateRef.value.querySelector('li a.active');
-    console.log(activeLink);
-    
-});
 
 function onNavbarLinkClick() {
     const navbarToggler = navbarTogglerRef.value;
@@ -46,15 +37,15 @@ function onNavItemMouseEnter(event){
         //not active link 
         //shrink active link underline
         const linksUl = linkUlTemplateRef.value;
-        const activeUnderlineNavItem = linksUl.querySelector(`.${underlineClass}`);
+        const activeUnderlineNavItem = linksUl.querySelector(`.${underlineClass.value}`);
         if (activeUnderlineNavItem !== null){
             // console.log(activeUnderlineNavItem);
             
-            activeUnderlineNavItem.classList.remove(underlineClass);
+            activeUnderlineNavItem.classList.remove(underlineClass.value);
         }
     }
     //underline currently hovered nav-item
-    li.classList.add(underlineClass);
+    li.classList.add(underlineClass.value);
 }
 
 function onNavItemMouseLeave(event){
@@ -63,7 +54,7 @@ function onNavItemMouseLeave(event){
     const activeLink = li.querySelector("a.active");
     event.stopPropagation();
     if (activeLink === null){
-        li.classList.remove(underlineClass);
+        li.classList.remove(underlineClass.value);
         //not active link 
         //restore active link underline
         const linksUl = linkUlTemplateRef.value;
@@ -76,7 +67,7 @@ function onNavItemMouseLeave(event){
             if (liParent.tagName !== 'LI'){
                 liParent = liParent.parentElement;
             }
-            liParent.classList.add(underlineClass);
+            liParent.classList.add(underlineClass.value);
         }
     }
 }
@@ -104,9 +95,11 @@ function onNavItemClick(event){
             <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="navbarCollapse">
                 <!--implement current link status-->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" ref="linksUlRef">
-                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }" @click="onNavItemClick" @mouseenter="onNavItemMouseEnter" @mouseleave="onNavItemMouseLeave">
-                        <!-- <a class="nav-link" href="#">{{ linkObj.name }}</a> -->
-                        
+                    <li class="nav-item" v-for="linkObj in links" 
+                    :class="{ 'nav-collapsed': !isLarge, [underlineClass]: linkObj.path === $route.path }" 
+                    @click="onNavItemClick" 
+                    @mouseenter="onNavItemMouseEnter" 
+                    @mouseleave="onNavItemMouseLeave">
                         <template v-if="isLarge">
                             <RouterLink @click="onNavbarLinkClick" class="nav-link" active-class="active" :to=linkObj.path>
                               {{ linkObj.name }}
