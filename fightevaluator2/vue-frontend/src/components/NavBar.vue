@@ -20,6 +20,7 @@ function onNavbarLinkClick() {
 
 function onNavItemMouseEnter(event){
     const li = event.currentTarget;
+    event.stopPropagation();
     /*
         when mouse hovers over link that is active link
         do nothing
@@ -42,10 +43,11 @@ function onNavItemMouseEnter(event){
     }
 }
 
-function onNavItemMouseOut(event){
+function onNavItemMouseLeave(event){
     const li = event.currentTarget;
     //if exit is not active link then restore active link underline
     const activeLink = li.querySelector("a.active");
+    event.stopPropagation();
     if (activeLink === null){
         //not active link 
         //restore active link underline
@@ -81,7 +83,7 @@ function onNavItemClick(event){
             <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="navbarCollapse">
                 <!--implement current link status-->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" ref="linksUlRef">
-                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }" @click="onNavItemClick" @mouseenter="onNavItemMouseEnter" @mouseout="onNavItemMouseOut">
+                    <li class="nav-item" v-for="linkObj in links" :class="{ 'nav-collapsed': !isLarge }" @click="onNavItemClick" @mouseenter="onNavItemMouseEnter" @mouseleave="onNavItemMouseLeave">
                         <!-- <a class="nav-link" href="#">{{ linkObj.name }}</a> -->
                         
                         <template v-if="isLarge">
