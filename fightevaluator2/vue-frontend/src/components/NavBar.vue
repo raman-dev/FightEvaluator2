@@ -9,6 +9,17 @@ const props = defineProps(['links', 'navTitle'])
 const navbarTogglerRef = useTemplateRef('navbarToggler');
 const navbarCollapseRef = useTemplateRef('navbarCollapse');
 const linkUlTemplateRef = useTemplateRef('linksUlRef');
+const underlineClass = 'underline-expanded';
+const route = useRoute();
+
+watch(() => route.fullPath,(a,b) => {
+    // console.log(a.path,b.path);
+    console.log('watch.route.fullPath',a,b);
+    
+    const activeLink = linkUlTemplateRef.value.querySelector('li a.active');
+    console.log(activeLink);
+    
+});
 
 function onNavbarLinkClick() {
     const navbarToggler = navbarTogglerRef.value;
@@ -35,12 +46,15 @@ function onNavItemMouseEnter(event){
         //not active link 
         //shrink active link underline
         const linksUl = linkUlTemplateRef.value;
-        const activeUnderlineSibling = linksUl.querySelector("li .nav-link.active");
-        // if (activeUnderlineSibling){
-            const activeUnderlineDiv = activeUnderlineSibling.nextElementSibling;
-            activeUnderlineDiv.style.width = "0%";
-        // }
+        const activeUnderlineNavItem = linksUl.querySelector(`.${underlineClass}`);
+        if (activeUnderlineNavItem !== null){
+            // console.log(activeUnderlineNavItem);
+            
+            activeUnderlineNavItem.classList.remove(underlineClass);
+        }
     }
+    //underline currently hovered nav-item
+    li.classList.add(underlineClass);
 }
 
 function onNavItemMouseLeave(event){
@@ -49,14 +63,21 @@ function onNavItemMouseLeave(event){
     const activeLink = li.querySelector("a.active");
     event.stopPropagation();
     if (activeLink === null){
+        li.classList.remove(underlineClass);
         //not active link 
         //restore active link underline
         const linksUl = linkUlTemplateRef.value;
-        const activeUnderlineSibling = linksUl.querySelector("li .nav-link.active");
-        // if (activeUnderlineSibling){
-            const activeUnderlineDiv = activeUnderlineSibling.nextElementSibling;
-            activeUnderlineDiv.style.width = "100%";
-        // }
+        const activeLink = linksUl.querySelector("li.nav-item a.active");
+        if (activeLink !== null){
+            //find li parent 
+            // console.log(activeLink);
+            
+            let liParent = activeLink.parentElement;
+            if (liParent.tagName !== 'LI'){
+                liParent = liParent.parentElement;
+            }
+            liParent.classList.add(underlineClass);
+        }
     }
 }
 
@@ -88,7 +109,8 @@ function onNavItemClick(event){
                         
                         <template v-if="isLarge">
                             <RouterLink @click="onNavbarLinkClick" class="nav-link" active-class="active" :to=linkObj.path>
-                            {{ linkObj.name }}</RouterLink>
+                              {{ linkObj.name }}
+                            </RouterLink>
                             <div class="active-underline"></div>
                         </template>
                         <div v-if="!isLarge" class="nav-link-wrapper">
@@ -109,21 +131,15 @@ function onNavItemClick(event){
 
 <style lang="scss">
 
-.nav-item-active{
-    .active-underline{
-        width: 100%;
-        height: 1px;
-    }
-}
-
-.nav-item .nav-link {
-    text-transform: capitalize;
-}
-
 .nav-item {
     display: block;
     width: 100%;
     padding: 0.5rem;
+
+    .nav-link {
+        text-transform: capitalize;
+    }
+
     a {
         padding: 0px !important;
     }
@@ -138,26 +154,29 @@ function onNavItemClick(event){
         width: 0%;
         height: 1px;
     }
+    
     //style the sibling immediatly after nav-link.active
-    .nav-link.active + .active-underline {
-        height: 1px;
-        width: 100%;
-    }
+    // .nav-link.active + .active-underline {
+    //     height: 1px;
+    //     width: 100%;
+    // }
+
     //when hovered over nav-item
     &:hover{
-        .active-underline {
-            width: 100% !important;
-        }
+        cursor: pointer;
+    }
+}
+
+.nav-item.underline-expanded{
+    .active-underline{
+        width: 100% !important;
+    }
+    a {
+        color: rgba(255, 255, 255, .8) !important; 
     }
 }
 
 .nav-item.nav-collapsed{
-    &:hover{
-        cursor: pointer;
-        a {
-            color: rgba(255, 255, 255, .8) !important; 
-        }
-    }
     .nav-link-wrapper {
         width: fit-content;
     }
