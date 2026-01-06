@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { useMatchupStore } from '@/stores/matchupStore.js';
 import { storeToRefs } from 'pinia';
 import { useMatchupActionMenuStore } from '@/stores/matchupActionMenuStore';
@@ -31,7 +31,9 @@ const matchupActionMenuStore = useMatchupActionMenuStore();
 const matchupDetailStore = useMatchupDetailStore();
 
 const { event, mainCard, prelims, watchlist } = storeToRefs(matchupStore);
-const { menuPosition, menuOpen } = storeToRefs(matchupActionMenuStore)
+const { menuPosition, menuOpen } = storeToRefs(matchupActionMenuStore);
+
+const readableDate = inject('abbreviatedDateFormat');
 
 
 watch(route, (newData, oldData) => {
@@ -133,6 +135,7 @@ function resultsAvailable(eventDateString){
                 <h3>
                     {{ event.title }}
                 </h3>
+                <p>{{ readableDate(event.date) }}</p>
                 <div v-if="event.date !== undefined && event.hasResults != true && resultsAvailable(event.date)">
                     <button class="btn btn-success">Fetch Results</button>
                 </div>

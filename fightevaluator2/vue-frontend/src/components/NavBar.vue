@@ -39,8 +39,6 @@ function onNavItemMouseEnter(event){
         const linksUl = linkUlTemplateRef.value;
         const activeUnderlineNavItem = linksUl.querySelector(`.${underlineClass.value}`);
         if (activeUnderlineNavItem !== null){
-            // console.log(activeUnderlineNavItem);
-            
             activeUnderlineNavItem.classList.remove(underlineClass.value);
         }
     }
