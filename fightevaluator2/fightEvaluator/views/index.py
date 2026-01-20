@@ -1,7 +1,7 @@
 from django.views.decorators.http import require_GET
 from django.views.decorators.cache import cache_page
 
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 
@@ -349,6 +349,8 @@ def index_endpoint(request):
 @require_GET
 def index(request):
     #purpose of index
+    #don't use this permamnently
+    return redirect("vue-index",preserve_request=True)
     global scrapyFightEventThread
 
     with transaction.atomic():
