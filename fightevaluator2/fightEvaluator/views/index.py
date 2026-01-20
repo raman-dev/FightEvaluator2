@@ -350,7 +350,7 @@ def index_endpoint(request):
 def index(request):
     #purpose of index
     #don't use this permamnently
-    return redirect("vue-index",preserve_request=True)
+    # return redirect("vue-index",preserve_request=True)
     global scrapyFightEventThread
 
     with transaction.atomic():

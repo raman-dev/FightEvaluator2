@@ -7,7 +7,8 @@ urlpatterns = [
     # path('', views.FightEventDetailView.as_view(), name='index'),
     # path('test-data',views.get_some_data,name='test-data-ting'),
     # path('cache-test',views.cacheTest,name='cache-test'), working with memcache
-    path('', views.index, name='index'),
+    # path('', views.index, name='index'),
+    path('',views.vueIndex,name='old-index-redirect'),
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
     # path('mf-test',views.modelformfactory_test)
 
