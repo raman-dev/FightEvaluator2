@@ -20,6 +20,8 @@ PAGE_CACHE_DURATION = 60 * 2
 NEXT_EVENT_CACHE_DURATION = 10
 scrapyFightEventThread = None
 
+from rich import print as rprint
+
 @require_GET
 def vueIndex(request,**kwargs):
     """
@@ -125,8 +127,15 @@ def vueNextFightEvent(request):
     if fightEventDataState.staleOrEmpty:
         global scrapyFightEventThread
         #means was updating then interrupted 
-        if scrapyFightEventThread == None and fightEventDataState.updating or not fightEventDataState.updating:
+        if scrapyFightEventThread == None or not fightEventDataState.updating:
             #invalid state start worker 
+            rprint("Starting scrapyEventThread")
+            fightEventDataState.updating = True
+            fightEventDataState.save()
+
+            if scrapyFightEventThread != None:
+                scrapyFightEventThread.join()
+                scrapyFightEventThread = None
             scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
             scrapyFightEventThread.start()
     

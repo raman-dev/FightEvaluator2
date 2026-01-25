@@ -43,8 +43,6 @@ def ScrapyFightEventControlFunction():
     # attempts = 0
     with transaction.atomic():
         fightEventDataState = FightEventDataState.objects.select_for_update().first()
-        fightEventDataState.updating=True
-        fightEventDataState.save()
         with scraper_client.ZmqReqClient(serverPort=PORT) as client:
             #response = fetcher.nextEvent()
             response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_LATEST)
