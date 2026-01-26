@@ -1,0 +1,1 @@
+python fightevaluator2\fightEvaluator\scrapy_server\parser.py
