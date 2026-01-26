@@ -1,6 +1,6 @@
-# from .commands import ServerCommands,ServerStates
+from .commands import ServerCommands,ServerStates
 #uncomment when useing testClient
-from commands import ServerCommands,ServerStates 
+# from commands import ServerCommands,ServerStates 
 import zmq
 from rich import print as rprint
 import time
