@@ -223,17 +223,12 @@ def calculate_stats():
             # print(stat)
     
     all = Stat.objects.get(type='general')
-    aggr = Prediction.objects.aggregate(
-        total=Count('isCorrect'),
-        count = Count('isCorrect',filter=Q(isCorrect=True))
-        )
     aggrPicks = Pick.objects.aggregate(
         total=Count('isCorrect'),
         count = Count('isCorrect',filter=Q(isCorrect=True))
     )
-    counts = aggr
-    if aggrPicks['total'] > aggr['total']:
-        counts = aggrPicks
+    counts = aggrPicks
+
     all.total = counts['total']
     all.count = counts['count']
     all.ratio = all.count/all.total
