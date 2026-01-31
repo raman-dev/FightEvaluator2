@@ -17,6 +17,8 @@ import json
 
 from threading import Thread
 PAGE_CACHE_DURATION = 60 * 2
+ASSESSMENT_CACHE_DURATION = 60
+MATCHUP_COMPARISON_CACHE_DURATION = 60
 NEXT_EVENT_CACHE_DURATION = 10
 scrapyFightEventThread = None
 
@@ -151,7 +153,7 @@ def vueNextFightEvent(request):
     return JsonResponse({'available':False,"message":'currently updating'})
 
 
-@cache_page(PAGE_CACHE_DURATION // 2)
+@cache_page(ASSESSMENT_CACHE_DURATION)
 @require_GET
 def vueAssessment(request,fighterId):
     
@@ -281,7 +283,7 @@ def makePrediction(request,matchupId):
     
     return JsonResponse({'error':prediction2Form.errors})
 
-@cache_page(PAGE_CACHE_DURATION // 2)#half standard duration
+@cache_page(MATCHUP_COMPARISON_CACHE_DURATION)#half standard duration
 @require_GET
 def get_matchup_comparison(request,matchupId):
     matchup = get_object_or_404(MatchUp,id=matchupId)
