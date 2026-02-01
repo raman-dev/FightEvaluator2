@@ -1,1 +1,2 @@
-python fightevaluator2\fightEvaluator\scrapy_server\parser.py
+cd fightevaluator2\fightEvaluator\scrapy_server
+python parser.py
