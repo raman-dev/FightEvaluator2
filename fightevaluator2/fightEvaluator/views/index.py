@@ -501,8 +501,8 @@ def verifyPrediction(matchups):
 
             """
 
-            if (prediction and prediction.isCorrect) or (pick and pick.isCorrect):
-                es.correct += 1
+        if (prediction and prediction.isCorrect) or (pick and pick.isCorrect):
+            es.correct += 1
     es.save()
     calculate_stats()
 

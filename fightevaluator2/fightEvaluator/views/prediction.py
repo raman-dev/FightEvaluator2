@@ -277,6 +277,8 @@ def collect_monthly_stats(year=None, month=None):
         },
     )
 
+    rprint(monthly_stats,created)
+
     return monthly_stats, created
 
 def stats(request): 
