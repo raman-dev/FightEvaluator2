@@ -204,18 +204,18 @@ def calculate_stats():
         stat = outcomeStatObjs.filter(name=event_name).first()
         if stat:
             #how many predictions of this type
-            predictionResult = Prediction.objects.aggregate(
-                total=Count('isCorrect',filter=Q(prediction__event=Event[event_name])),
-                correct=Count('isCorrect',filter=Q(prediction__event=Event[event_name],isCorrect=True))
-            )
+            # predictionResult = Prediction.objects.aggregate(
+            #     total=Count('isCorrect',filter=Q(prediction__event=Event[event_name])),
+            #     correct=Count('isCorrect',filter=Q(prediction__event=Event[event_name],isCorrect=True))
+            # )
             pickResult = Pick.objects.aggregate(
                 total=Count('isCorrect',filter=Q(event=Event[event_name])),
                 correct=Count('isCorrect',filter=Q(event=Event[event_name],isCorrect=True))
             )
 
-            aggrTotal = predictionResult
-            if pickResult['total'] > predictionResult['total']:
-                aggrTotal = pickResult
+            aggrTotal = pickResult#predictionResult
+            # if pickResult['total'] > predictionResult['total']:
+            #     aggrTotal = pickResult
             stat.total = aggrTotal['total']
             stat.count = aggrTotal['correct']
             stat.ratio = stat.count/stat.total

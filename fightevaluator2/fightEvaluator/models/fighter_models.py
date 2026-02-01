@@ -159,9 +159,9 @@ class MonthlyEventStats(models.Model):
 
     @property
     def accuracy(self):
-        ratio = self.correct/self.predictions
         if self.predictions == 0:
             return "0%"
+        ratio = self.correct/self.predictions
         return str(round(100 * ratio,2)) + "%"
 
     class Meta:

@@ -16,7 +16,6 @@ def normalizeString(string):
         .lower()
     )
 
-
 def scrapeFighterNameAndLink(element, result_only=False):
     fighterPQ = pq(element)
 
@@ -147,16 +146,20 @@ def scrapeResults(source):
         # li is of type lxml.html.HtmlElement
         # dataBoutWrapper = pq(li)("div[data-bout-wrapper]").children()[0]
         dataBoutWrapper = pq(li)("div[data-bout-wrapper]:first")
-        rprint(pq(dataBoutWrapper).outerHtml())
+        
         children = pq(dataBoutWrapper).children()
-        # rprint(pq(children).outerHtml())
-        return []
-        methodDataParent, resultDataParent, _ = children
+        # rprint(f"num children => {len(children)}")
+        methodDataParent = children[0] 
+        resultDataParent = children[1]
+        
         methods = []
         for span in pq(methodDataParent)("span"):
             methods.append(pq(span).text())
-
+        # rprint(f"methods => {methods}")
+        if len(methods) == 0:
+            continue
         _, method, roundTimes = methods
+
         fighter_a, _, fighter_b = pq(resultDataParent).children()
 
         x = scrapeFighterNameAndLink(fighter_a, result_only=True)
