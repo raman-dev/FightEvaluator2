@@ -97,15 +97,15 @@ function percentToColor(percentStr) {
                                 <h4 class="date-title">{{ monthNumberToString(monthEvents.month) }}</h4>
                                 <div class="monthly-stats-container d-flex"
                                     v-if="Object.keys(monthEvents.monthlyStats).length > 0">
-                                    <div class="stat" :style="{'color':'black','background-color':percentToColor(monthEvents.monthlyStats.accuracy)}">
-                                        <strong>{{ monthEvents.monthlyStats.accuracy }} Accurracy</strong>
-                                    </div>
-                                    <div class="stat">
-                                        {{ monthEvents.monthlyStats.correct }} Correct
-                                    </div>
-                                    <div class="stat">
-                                        {{ monthEvents.monthlyStats.predictions }} Predictions
-                                    </div>
+                                        <div class="stat" :style="{'color':'black','background-color':percentToColor(monthEvents.monthlyStats.accuracy)}" v-if="monthEvents.monthlyStats.events > 0">
+                                            <strong>{{ monthEvents.monthlyStats.accuracy }} Accurracy</strong>
+                                        </div>
+                                        <div class="stat">
+                                            {{ monthEvents.monthlyStats.correct }} Correct
+                                        </div>
+                                        <div class="stat">
+                                            {{ monthEvents.monthlyStats.predictions }} Predictions
+                                        </div>
                                     <div class="stat">
                                         {{ monthEvents.monthlyStats.events }} Events
                                     </div>
