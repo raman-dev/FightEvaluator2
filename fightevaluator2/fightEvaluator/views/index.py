@@ -507,7 +507,7 @@ def verifyPrediction(matchups):
     calculate_stats()
 
 def update_stats(request):
-    # verifyPrediction(MatchUp.objects.filter(event__id=144))
+    # verifyPrediction(MatchUp.objects.filter(event__id=152))
     calculate_stats()
     return JsonResponse({"ok":"true"})
 
