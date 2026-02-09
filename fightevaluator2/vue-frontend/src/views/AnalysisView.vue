@@ -1,5 +1,5 @@
 <script setup>
-import { inject,ref,watch } from 'vue';
+import { inject,onMounted,ref,watch } from 'vue';
 import { useMatchupDetailStore } from '@/stores/matchupDetailStore';
 import { storeToRefs } from 'pinia';
 import { onBeforeRouteUpdate } from 'vue-router';
@@ -25,6 +25,11 @@ const {
     fighter_a_notes,
     fighter_b_notes 
 } = storeToRefs(matchupDetailStore);
+
+onMounted(() => {
+  console.log("AnalyisView.onMounted");
+  
+})
 
 const replaceUnderscoreSpace = inject('replaceUnderscoreSpace');
 

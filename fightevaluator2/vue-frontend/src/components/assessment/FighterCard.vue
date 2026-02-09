@@ -1,10 +1,13 @@
 <script setup>
+import { useMatchupDetailStore } from "@/stores/matchupDetailStore";
 import TapologyButton from "../TapologyButton.vue";
 import { watch,inject } from "vue";
 
 // fighter comes from v-model
 const fighter = defineModel("fighter", { type: Object, required: true });
 const nextMatchup = defineModel("nextMatchup", { type: Object, required: false });
+
+const { fetchMatchupDetails } = useMatchupDetailStore();
 //
 
 const emit = defineEmits(['editClick']);
@@ -33,8 +36,11 @@ const formatHeight = (val) => {
 const dobToAge = inject('dobToAge');
 
 watch(nextMatchup, (newVal,oldVal) => {
-    console.log("FighterCard.nextMatchup:", newVal);
+    // console.log("FighterCard.nextMatchup:", newVal);
+    //matchupDetail store needs to update here
+    fetchMatchupDetails(newVal.id);//update matchup details if difff from current matchup detail
 });
+
 
 
 </script>

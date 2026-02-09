@@ -58,8 +58,10 @@ export const useMatchupDetailStore = defineStore('matchupDetail', () => {
   }
 
   function fetchMatchupDetails(matchupId) {
-    console.log (`fetchMatchupDetails.${matchupId}`);
-    server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
+    if (!('id' in matchup) ||  matchup.id !== matchupId){
+      console.log (`fetchMatchupDetails.${matchupId}`);
+      server.get_matchup_analysis(matchupId,onReceiveMatchupAnalysis);
+    }
     // onReceiveMatchupAnalysis(sampleFetchResult);
   }
 
