@@ -89,7 +89,7 @@ export const useMatchupStore = defineStore('matchup', () => {
     }
 
     //reset activeMatchup
-    activeMatchup.value = defaultActiveMatchup;
+    activeMatchup.value = structuredClone(defaultActiveMatchup);
   }
 
   function toggleWatchList() {
@@ -229,6 +229,7 @@ export const useMatchupStore = defineStore('matchup', () => {
     if (matchupId in watchlist.value){
       delete watchlist.value[matchupId];
     }
+    activeMatchup.value = structuredClone(defaultActiveMatchup);
   }
 
   function deleteMatchup(matchupId){
