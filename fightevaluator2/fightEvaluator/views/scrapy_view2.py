@@ -1,9 +1,10 @@
 from datetime import datetime
 import time
 
-from .. import scraper
 from ..forms import MatchUpFormMF, FightEventForm, FighterForm
 from ..models import Fighter, Assessment, FightEventDataState, WeightClass
+
+from ..scraper2 import poundsToWeightClass
 
 from ..scrapy_server.commands import ServerCommands
 from ..scrapy_server import scraper_client
@@ -62,7 +63,7 @@ def ScrapyFightEventControlFunction():
             for matchupData in matchupsRaw:
                 rprint("")
                 matchup = {
-                    'weight_class':scraper.poundsToWeightClass(matchupData['weight_class']),
+                    'weight_class':poundsToWeightClass(matchupData['weight_class']),
                     'rounds':matchupData['rounds'],
                     'isprelim':matchupData['isprelim']
                 }

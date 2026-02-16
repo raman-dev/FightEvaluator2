@@ -18,8 +18,6 @@ from .prediction import calculate_stats
 import time
 import datetime
 
-from .. import scraper
-
 from threading import Thread
 from datetime import datetime
 # from ..scraper import getUpcomingFightEvent
