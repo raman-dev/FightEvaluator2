@@ -12,7 +12,6 @@ from django.db import transaction,OperationalError
 from django.db.models import Q
 
 from ..models import *
-from ..forms import FightEventForm,MatchUpFormMF,FighterForm
 from .prediction import calculate_stats
 
 import time
