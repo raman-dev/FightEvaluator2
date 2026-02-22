@@ -38,7 +38,7 @@ export const usePredictionsStore = defineStore('predictionsStore', () => {
     }
 
     async function getPredictions() {
-        server.get_predictions(onReceivePredictions);
+        // server.get_predictions(onReceivePredictions);
         server.get_picks(onReceivePicks);
         // onReceivePredictions(samplePredictionsAll);
     }

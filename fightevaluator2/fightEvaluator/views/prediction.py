@@ -12,7 +12,7 @@ from rich import print as rprint
 from datetime import datetime
 
 CACHE_DURATION = 60 * 2
-PREDICTIONS_CACHE_DURATION = 60 * 15
+PREDICTIONS_CACHE_DURATION = 0#60 * 15
 
 @cache_page(CACHE_DURATION)  # Cache the view for 2 mins
 @require_GET
