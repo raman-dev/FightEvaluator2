@@ -29,7 +29,6 @@ const title = 'Fight Evaluator';
 
 <template>
     <NavBar :links="links" :nav-title="title"></NavBar>
-    <!-- <MainContent></MainContent> -->
 
     <RouterView v-slot="{ Component, route }">
         <Transition name="fade" mode="out-in">
