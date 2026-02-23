@@ -25,6 +25,8 @@ class Server {
       GET_PREDICTIONS:'/vue/predictions/all',
       GET_PICKS: '/vue/picks/all',
       GET_STATS :'/vue/predictions/stats',
+
+      GET_EVENT_LIKELIHOODS :'/vue/event/likelihoods'
     }
 
     //provide
@@ -78,6 +80,12 @@ class Server {
       })
       .then((response) => response.json())
       .then((data) => callback(data));
+    }
+
+    static async get_event_likelihoods(eventId,callback){
+      console.log("get_event_likelihoods!");
+      
+      Server.get(Server.URLS.GET_EVENT_LIKELIHOODS+`/${eventId}`,callback);
     }
 
     static async get_stats(callback){
@@ -206,6 +214,8 @@ class Server {
     // }
 
     static async get(url,callback){
+      console.log(`fetching from ${url}`);
+      
       fetch(url)
         .then(response => response.json())
         .then((data) => {

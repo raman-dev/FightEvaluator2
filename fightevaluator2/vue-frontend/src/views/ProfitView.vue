@@ -1,24 +1,41 @@
 <script setup>
+import { useEventLikelihoodStore } from '@/stores/eventLikelihoodStore';
+import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
+const eventLikelihoodStore = useEventLikelihoodStore()
+const { fightEvent,eventLikelihoods,eventTypes } = storeToRefs(eventLikelihoodStore);
+const { fetchEventLikelihoods } = eventLikelihoodStore;
+
 
 onMounted(() => {
-    console.log('profitView.route:',route);
+    //if no eventid we get empty string
+    fetchEventLikelihoods(route.params.eventId);
 })
 
 </script>
 <template>
-    <h1>Profit</h1>
-    <table>
-        <!--
-            table of what?
-        -->
-        <thead></thead>
-        <tbody>
-            <!--have what here-->
-        </tbody>
-    </table>
+    <div class="main-container container">
+        <h1>Profit</h1>
+        <table class="table table-bordered">
+            <!--
+                table of what?
+            -->
+            <thead>
+                <tr>
+                    <th v-for="data in eventTypes">
+                        {{ data.label }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--have what here-->
+                <tr v-for="value in source"></tr>
+            </tbody>
+        </table>
+    </div>
+    
 </template>

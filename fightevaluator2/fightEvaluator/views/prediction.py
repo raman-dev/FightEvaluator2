@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.db.models import Avg,Count,Q,Sum
 from django.views.decorators.cache import cache_page
 
-from ..models import FightEvent,FightOutcome,Prediction,Pick,Event,Stat,EventStat,MonthlyEventStats,Likelihood
+from ..models import FightEvent,FightOutcome,Prediction,Pick,Event,Stat,EventStat,MonthlyEventStats,Likelihood, Prediction2
 from rich import print as rprint
 
 from datetime import datetime
@@ -102,6 +102,28 @@ def getPredictions(request):
             })
 
     return JsonResponse({'predictions':predictions})
+
+
+@require_GET
+def getEventLikelihoods(request,eventId=-1):
+    event = None
+    if eventId == -1:
+        event = FightEvent.objects.order_by("-date").first()
+    else:
+        event = FightEvent.objects.filter(id=eventId).first()
+        if event == None:
+            return JsonResponse({'data':None,'message':f'Event with id:{eventId} does not exist'})
+    
+    qset = Prediction2.objects.filter(matchup__event=event)
+    likelihoods = [ model_to_dict(p) for p in qset ]
+    events = []
+    for x in [Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]:
+        events.append({'type':x,'label':x.label})
+        
+    return JsonResponse({'data': {
+        'fightEvent':model_to_dict(event),
+        'eventLikelihoods': likelihoods,
+        'eventTypes':events}})
 
 @cache_page(PREDICTIONS_CACHE_DURATION)
 @require_GET
