@@ -36,7 +36,7 @@ const router = createRouter({
             component: AssessmentView
         },
         {
-            path:'/v-profit',name:'profit',
+            path:'/v-profit/:eventId?',name:'profit',
             component: ProfitView,
         }
         // Prediction route is now added in src/main.js to enable pre-loading data

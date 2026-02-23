@@ -1,20 +1,17 @@
 <script setup>
-import { useMatchupStore } from '@/stores/matchupStore';
-import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
-
 const route = useRoute();
-const { event } = storeToRefs(useMatchupStore());
+
 
 onMounted(() => {
-    console.log(route);
+    console.log('profitView.route:',route);
 })
 
 </script>
 <template>
-    <h1>Profit, {{ event.id }}</h1>
+    <h1>Profit</h1>
     <table>
         <!--
             table of what?

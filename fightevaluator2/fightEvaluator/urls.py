@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from . import views
 
 
@@ -63,6 +63,8 @@ urlpatterns = [
     path('v-index',views.vueIndex,name='vue-index'),
     path('v-predictions',views.vueIndex,name="vue-predictions"),
     path('v-events',views.vueIndex,name="vue-events"),
+    path('v-profit/',views.vueIndex,name="vue-profit"),
+    re_path(r'v-profit/\d{3}',views.vueIndex,name="vue-profit-event"),#catch eventId if provided
 
     #vue data endpoints
     path('vue/next-event',views.vueNextFightEvent, name='vue-next-event'),
