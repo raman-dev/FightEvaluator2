@@ -60,4 +60,31 @@ table thead{
         text-align: center;
     }
 }
+
+.main-container {
+    margin: auto;
+    max-width: 85%;
+}
+
+// @media (max-width: 1280px) {
+//     .main-container {
+//         max-width: 85%;
+//     }
+// }
+
+@media (max-width: 1024px) {
+
+    
+    .main-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    
+    .main-container {
+        max-width: 100%;
+    }
+}
 </style>

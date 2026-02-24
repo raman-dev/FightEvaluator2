@@ -6,15 +6,45 @@ const props = defineProps({ matchupData: { type: Object, default: {} } })
 
 const expandRow = ref(false);
 
+const expandedOnClick = ref(false);
+const expandTimer = ref (null);
+const ON_HOVER_EXPAND_DELAY = 500; // Delay in milliseconds before expanding on hover
+
 function toggleRow() {
     console.log("toggleRow: ",expandRow.value,!expandRow.value);
-    
+    if (expandedOnClick.value == false && expandRow.value == true) {
+        // If the row is currently expanded due to hover and the user clicks, we want to keep it expanded but mark it as expanded due to click
+        expandedOnClick.value = true;
+        return; // Exit the function to prevent toggling the state again
+        
+    }
+    expandedOnClick.value = !expandedOnClick.value;
     expandRow.value = !expandRow.value;
     
 }
+
+function mouseEnterRow() {
+    console.log("mouseEnterRow: ",expandRow.value);
+    if (!expandRow.value && !expandedOnClick.value) {
+        expandTimer.value = setTimeout(() => {
+            expandRow.value = true;
+        }, ON_HOVER_EXPAND_DELAY); // Adjust the delay as needed
+    }
+}
+
+function mouseLeaveRow() {
+    console.log("mouseLeaveRow: ",expandRow.value);
+    if (!expandedOnClick.value && (expandTimer.value !== null || expandTimer.value !== undefined)) {
+        clearTimeout(expandTimer.value);
+        expandTimer.value = null;
+        
+        expandRow.value = false; // Collapse the row immediately only if it was expanded due to hover
+    }
+}
+
 </script>
 <template>
-    <tr @click="toggleRow">
+    <tr @click="toggleRow" @mouseenter="mouseEnterRow" @mouseleave="mouseLeaveRow" :class="{'row-expanded-click':expandedOnClick}">
         <th>
             {{ matchupData.title }}
         </th>
@@ -61,5 +91,9 @@ function toggleRow() {
 <style scoped lang="scss">
 tr:hover{
     cursor: pointer;
+}
+
+tr.row-expanded-click{
+    outline: 2px solid slateblue;
 }
 </style>
