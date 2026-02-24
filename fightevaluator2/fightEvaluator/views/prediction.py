@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.db.models import Avg,Count,Q,Sum
 from django.views.decorators.cache import cache_page
 
-from ..models import FightEvent,FightOutcome,Prediction,Pick,Event,Stat,EventStat,MonthlyEventStats,Likelihood, Prediction2
+from ..models import MatchUp,FightEvent,FightOutcome,Prediction,Pick,Event,Stat,EventStat,MonthlyEventStats,Likelihood, Prediction2
 from rich import print as rprint
 
 from datetime import datetime
@@ -114,8 +114,27 @@ def getEventLikelihoods(request,eventId=-1):
         if event == None:
             return JsonResponse({'data':None,'message':f'Event with id:{eventId} does not exist'})
     
-    qset = Prediction2.objects.filter(matchup__event=event)
-    likelihoods = [ model_to_dict(p) for p in qset ]
+    # qset = Prediction2.objects.filter(matchup__event=event)
+    #create list of dicts with matchup key and list of likelihoods for each event type
+    likelihoods = []
+    for matchup in MatchUp.objects.filter(event=event,inWatchList=True):
+        matchupLikelihoods = Prediction2.objects.filter(matchup=matchup)
+        likelihoodEventTypeMap = {}
+        for m in matchupLikelihoods:
+            if m.event == Event.WIN:
+                #two predictions for this event type, one for each fighter, so we want to nest the fighter info inside the event type
+                if not m.event in likelihoodEventTypeMap:
+                    likelihoodEventTypeMap[m.event] = []
+                
+                likelihoodEventTypeMap[m.event].append(model_to_dict(m) | {'fighter': {'id':m.fighter.id,'name':m.fighter.name,'first_name':m.fighter.first_name,'last_name':m.fighter.last_name}})
+            else:
+                likelihoodEventTypeMap[m.event] =  model_to_dict(m) | {'fighter': None}
+                    
+        likelihoods.append({
+            'matchup': matchup.id,
+            'title': matchup.title(),
+            'likelihoods': likelihoodEventTypeMap
+        })
     events = []
     for x in [Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]:
         events.append({'type':x,'label':x.label})
