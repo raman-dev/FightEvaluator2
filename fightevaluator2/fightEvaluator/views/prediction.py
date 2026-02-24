@@ -140,7 +140,7 @@ def getPredictions2(request,eventId=-1):
                     haveKey = "fighter_a"
                     missing = fighter_b
                     missingKey = "fighter_b"
-                    if curr.fighter.id != fighter_a.id:
+                    if curr.fighter.id != fighter_a['id']:
                         missing = fighter_a
                         missingKey = "fighter_a"
                         have = fighter_b
@@ -156,9 +156,18 @@ def getPredictions2(request,eventId=-1):
                         {'fighter_b':fighter_b,'likelihood':Likelihood.NOT_PREDICTED,'justification':""}]
                 else:
                     a,b = qset
+                    likelihood_a = a.likelihood
+                    likelihood_b = b.likelihood
+                    jusitification_a = a.justification
+                    jusitification_b = b.justification
+                    if a.fighter.id != fighter_a['id']:
+                        likelihood_a,likelihood_b = likelihood_b,likelihood_a
+                        jusitification_a,jusitification_b = jusitification_b,jusitification_a
+                    
                     data = [
-                        {'fighter_a':fighter_a,'likelihood':a.likelihood,'justification':a.justification},
-                        {'fighter_b':fighter_b,'likelihood':b.likelihood,'justification':b.justification}]
+                        {'fighter_a':fighter_a,'likelihood':likelihood_a,'justification':jusitification_a},
+                        {'fighter_b':fighter_b,'likelihood':likelihood_b,'justification':jusitification_b}
+                    ]
             else:
                 l = qset.first()
                 if l == None:

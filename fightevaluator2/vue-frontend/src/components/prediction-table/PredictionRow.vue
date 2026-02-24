@@ -1,11 +1,20 @@
 <script setup>
 import PredictionCell from './PredictionCell.vue';
-
+import { ref } from 'vue';
 
 const props = defineProps({ matchupData: { type: Object, default: {} } })
+
+const expandRow = ref(false);
+
+function toggleRow() {
+    console.log("toggleRow: ",expandRow.value,!expandRow.value);
+    
+    expandRow.value = !expandRow.value;
+    
+}
 </script>
 <template>
-    <tr>
+    <tr @click="toggleRow">
         <th>
             {{ matchupData.title }}
         </th>
@@ -39,11 +48,11 @@ const props = defineProps({ matchupData: { type: Object, default: {} } })
                     -->
         <template v-for="value, key in matchupData.likelihoods">
             <template v-if="key === 'WIN'">
-                <PredictionCell :event-type="key" :fighter-name="value[0].fighter_a.name" :likelihood="value[0].likelihood" :justification="value[0].justification"></PredictionCell>
-                <PredictionCell :event-type="key" :fighter-name="value[1].fighter_b.name"  :likelihood="value[1].likelihood" :justification="value[1].justification"></PredictionCell>
+                <PredictionCell :show-justification="expandRow" :event-type="key" :fighter-name="value[0].fighter_a.name" :likelihood="value[0].likelihood" :justification="value[0].justification"></PredictionCell>
+                <PredictionCell :show-justification="expandRow" :event-type="key" :fighter-name="value[1].fighter_b.name"  :likelihood="value[1].likelihood" :justification="value[1].justification"></PredictionCell>
             </template>
             <template v-else>
-                <PredictionCell :likelihood="value.likelihood" :justification="value.justification"></PredictionCell>
+                <PredictionCell :show-justification="expandRow" :likelihood="value.likelihood" :justification="value.justification"></PredictionCell>
             </template>
         </template>
     </tr>

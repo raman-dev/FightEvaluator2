@@ -19,7 +19,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <div class="main-container container">
+    <div class="main-container container-fluid">
         <h1>Profit</h1>
         <table class="table table-bordered table-hover">
             <!--

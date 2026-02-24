@@ -4,7 +4,8 @@ const props = defineProps({
     eventType: {default:"",type: String},
     fighterName: {default:"",type: String},
     likelihood: {default: 0,type: Number},
-    justification: {default:"",type:String}
+    justification: {default:"",type:String},
+    showJustification: {default: false, type: Boolean}
 });
 
 const likelihoodLabelMap = inject('likelihoodLabelMap');
@@ -16,12 +17,12 @@ const likelihoodLabelMap = inject('likelihoodLabelMap');
         <div class="fighter-name" v-if="eventType === 'WIN'">
             {{ fighterName }}
         </div>
-        <div class="justification d-none">{{ justification.slice(1) }}</div>
+        <div class="justification" :class="{'d-none':showJustification == false}">{{ justification.slice(1) }}</div>
     </td>
 </template>
 <style lang="scss" scoped>
 td {
-    text-align: center;
+    max-width: 20ch;
 }
 .likelihood{
     color: black;
@@ -32,6 +33,9 @@ td {
     font-family: PoppinsSemiBold;
 
     max-width: 20ch;
+}
+.fighter-name{
+    text-align: center;
 }
 
 .justification{
