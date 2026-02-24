@@ -1,4 +1,5 @@
 <script setup>
+import PredictionRow from '@/components/prediction-table/PredictionRow.vue';
 import { useEventLikelihoodStore } from '@/stores/eventLikelihoodStore';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
@@ -27,34 +28,36 @@ onMounted(() => {
             <thead>
                 <tr>
                     <th>MatchUp</th>
-                    <th v-for="data in eventTypes">
-                        {{ data.label }}
-                    </th>
+                    <template v-for="data in eventTypes" >
+                        <template v-if="data.type !== 'WIN'">
+                            <th>{{ data.label }}</th>
+                        </template>
+                        <template v-else>
+                            <th>Win A</th>
+                            <th>Win B</th>
+                        </template>
+                    </template>
                 </tr>
             </thead>
             <tbody>
                 <!--have what here-->
-                <tr v-for="data in eventLikelihoods" :key="data.matchup">
-                    <th>
-                        {{ data.title }}
-                    </th>
-                    <!--
-                        for every type in eventType
-                        check data if type is in data
-                         if it is then render td with value
-                            else render td with 0
-                    -->
-                    <td v-for="eventType in eventTypes" :key="eventType.type">
-                        <div v-if="eventType.type in data.likelihoods && eventType['type'] !== 'WIN'">
-                            <div>{{ data.likelihoods[eventType.type].likelihood }}</div>
-                            <div class="justification">
-                                {{ data.likelihoods[eventType.type].justification }}
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                <template v-for="data in eventLikelihoods">
+                    <PredictionRow :matchup-data="data"></PredictionRow>
+                </template>
             </tbody>
         </table>
     </div>
     
 </template>
+
+<style lang="scss" scoped>
+table {
+    font-size: 14px;
+}
+table thead{
+    th{
+        max-width: 20ch;
+        text-align: center;
+    }
+}
+</style>

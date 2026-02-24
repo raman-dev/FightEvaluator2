@@ -105,42 +105,77 @@ def getPredictions(request):
 
 
 @require_GET
-def getEventLikelihoods(request,eventId=-1):
-    event = None
+def getPredictions2(request,eventId=-1):
+    fightEvent = None
     if eventId == -1:
-        event = FightEvent.objects.order_by("-date").first()
+        fightEvent = FightEvent.objects.order_by("-date").first()
     else:
-        event = FightEvent.objects.filter(id=eventId).first()
-        if event == None:
+        fightEvent = FightEvent.objects.filter(id=eventId).first()
+        if fightEvent == None:
             return JsonResponse({'data':None,'message':f'Event with id:{eventId} does not exist'})
     
     # qset = Prediction2.objects.filter(matchup__event=event)
     #create list of dicts with matchup key and list of likelihoods for each event type
     likelihoods = []
-    for matchup in MatchUp.objects.filter(event=event,inWatchList=True):
-        matchupLikelihoods = Prediction2.objects.filter(matchup=matchup)
-        likelihoodEventTypeMap = {}
-        for m in matchupLikelihoods:
-            if m.event == Event.WIN:
-                #two predictions for this event type, one for each fighter, so we want to nest the fighter info inside the event type
-                if not m.event in likelihoodEventTypeMap:
-                    likelihoodEventTypeMap[m.event] = []
-                
-                likelihoodEventTypeMap[m.event].append(model_to_dict(m) | {'fighter': {'id':m.fighter.id,'name':m.fighter.name,'first_name':m.fighter.first_name,'last_name':m.fighter.last_name}})
-            else:
-                likelihoodEventTypeMap[m.event] =  model_to_dict(m) | {'fighter': None}
+    outcomeEvents = [Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]
+    events = []
+    for x in outcomeEvents:
+        events.append({'type':x,'label':x.label})
+    for matchup in MatchUp.objects.filter(event=fightEvent,inWatchList=True):
+        # ml = []   
+        mlm = {}
+        # rprint(matchup.title())
+        # rprint("--------------------------")
+        for e in outcomeEvents:
+            qset = Prediction2.objects.filter(matchup=matchup,event=e)
+            eventMap = {}
+            data = None
+            if e == Event.WIN:
+                fighter_a = matchup.fighter_a.getDataMini()
+                fighter_b = matchup.fighter_b.getDataMini()
+                if len(qset) == 1:
+                    #create placeholder data for this
+                    curr = qset.first()
+                    have = fighter_a
+                    haveKey = "fighter_a"
+                    missing = fighter_b
+                    missingKey = "fighter_b"
+                    if curr.fighter.id != fighter_a.id:
+                        missing = fighter_a
+                        missingKey = "fighter_a"
+                        have = fighter_b
+                        haveKey = "fighter_b"
                     
+                    data = [
+                        {haveKey:have,'likelihood':curr.likelihood,'justification':curr.justification},
+                        {missingKey:missing,'likelihood':Likelihood.NOT_PREDICTED,'justification':""}]
+                    
+                elif len(qset) == 0:
+                    data = [
+                        {'fighter_a':fighter_a,'likelihood':Likelihood.NOT_PREDICTED,'justification':""},
+                        {'fighter_b':fighter_b,'likelihood':Likelihood.NOT_PREDICTED,'justification':""}]
+                else:
+                    a,b = qset
+                    data = [
+                        {'fighter_a':fighter_a,'likelihood':a.likelihood,'justification':a.justification},
+                        {'fighter_b':fighter_b,'likelihood':b.likelihood,'justification':b.justification}]
+            else:
+                l = qset.first()
+                if l == None:
+                    data = {'likelihood':Likelihood.NOT_PREDICTED,'justification':""}
+                else:
+                    data = {'likelihood':l.likelihood,'justification':l.justification}
+            # ml.append(eventMap)
+            mlm[e] = data
         likelihoods.append({
             'matchup': matchup.id,
             'title': matchup.title(),
-            'likelihoods': likelihoodEventTypeMap
+            'likelihoods':mlm
         })
-    events = []
-    for x in [Event.WIN,Event.ROUNDS_GEQ_ONE_AND_HALF,Event.DOES_NOT_GO_THE_DISTANCE]:
-        events.append({'type':x,'label':x.label})
+    
         
     return JsonResponse({'data': {
-        'fightEvent':model_to_dict(event),
+        'fightEvent':model_to_dict(fightEvent),
         'eventLikelihoods': likelihoods,
         'eventTypes':events}})
 

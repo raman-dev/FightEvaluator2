@@ -96,7 +96,12 @@ class Fighter(models.Model):
     def __save__(self,**kwargs):
         self.name_index = self.first_name + '-'+self.last_name
         super.save(**kwargs)
-        
+
+    def getDataMini(self):
+        return {
+            'id':self.id,
+            'name':self.name
+        }        
 
     @property
     def record(self):

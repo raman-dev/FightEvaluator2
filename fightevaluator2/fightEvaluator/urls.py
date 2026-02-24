@@ -77,8 +77,8 @@ urlpatterns = [
     path('vue/predictions/all',views.getPredictions,name='vue-all-predictions'),
     path('vue/picks/all',views.getPicks,name='vue-all-picks'),
     path('vue/predictions/stats',views.getStatsJson,name='vue-prediction-stats'),
-    path('vue/event/likelihoods/<int:eventId>',views.getEventLikelihoods,name='vue-event-likelihoods'),
-    path('vue/event/likelihoods/',views.getEventLikelihoods,name='vue-event-likelihoods-no-id'),
+    path('vue/event/likelihoods/<int:eventId>',views.getPredictions2,name='vue-event-likelihoods'),
+    path('vue/event/likelihoods/',views.getPredictions2,name='vue-event-likelihoods-no-id'),
 
     #*NOTE TESTING ENDPOINTS ONLY;
     #concurrent read write testing
