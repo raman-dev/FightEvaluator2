@@ -44,7 +44,7 @@ function mouseLeaveRow() {
 
 </script>
 <template>
-    <tr @click="toggleRow" @mouseenter="mouseEnterRow" @mouseleave="mouseLeaveRow" :class="{'row-expanded-click':expandedOnClick}">
+    <tr @click="toggleRow" :class="{'row-expanded-click':expandedOnClick}">
         <th>
             {{ matchupData.title }}
         </th>

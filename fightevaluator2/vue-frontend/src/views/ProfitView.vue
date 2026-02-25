@@ -54,10 +54,12 @@ onMounted(() => {
 table {
     font-size: 14px;
 }
+
 table thead{
     th{
         max-width: 20ch;
         text-align: center;
+        padding: 0.3rem !important;
     }
 }
 
