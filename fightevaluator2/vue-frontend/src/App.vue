@@ -30,11 +30,15 @@ const title = 'Fight Evaluator';
 <template>
     <NavBar :links="links" :nav-title="title"></NavBar>
 
-    <RouterView v-slot="{ Component, route }">
-        <Transition name="fade" mode="out-in">
-            <component :is="Component" :key="route.path" />
-        </Transition>
-    </RouterView>
+    <!-- <div class="xcontent-wrapper"> -->
+        <RouterView v-slot="{ Component, route }">
+            <Transition name="fade" mode="out-in">
+                <component :is="Component" :key="route.path" />
+            </Transition>
+        </RouterView>
+    <!-- </div> -->
+
+
     <!-- <RouterView></RouterView> -->
 </template>
 
@@ -71,5 +75,14 @@ body {
     margin: 0rem;
     overflow: auto;
     overflow-y: hidden;
+
+    // .xcontent-wrapper{
+    //     height: 100%;
+    //     width: 100%;
+    //     overflow: auto;
+    // }
+    // .xcontent-wrapper > :first-child{
+    //     padding-top: 0.5rem;
+    // }
 }
 </style>

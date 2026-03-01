@@ -82,7 +82,7 @@ function onNavItemClick(event) {
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <RouterLink class="navbar-brand" :to="{ name: 'home' }">{{ navTitle }}</RouterLink>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" ref="navbarToggler"
