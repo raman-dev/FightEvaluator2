@@ -319,7 +319,7 @@ def calculate_stats():
     all.ratio = all.count/all.total
     all.save()
 
-    collect_monthly_stats()
+    collect_monthly_stats(2026,2)
     # print(all)
 
 def collect_monthly_stats(year=None, month=None):
