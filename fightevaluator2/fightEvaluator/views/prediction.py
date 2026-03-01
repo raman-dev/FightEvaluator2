@@ -259,7 +259,7 @@ def getStatsJson(request):
     fight_outcome = [model_to_dict(s) for s in stats['fight_outcome']]
     return JsonResponse({'general': general,'fight_outcome':fight_outcome})
 
-def calculate_stats():
+def calculate_stats(year=None,month=None):
     """
         
         stats <---changes when a prediction object then has a corresponding outcome object
@@ -319,7 +319,7 @@ def calculate_stats():
     all.ratio = all.count/all.total
     all.save()
 
-    collect_monthly_stats()
+    collect_monthly_stats(year,month)
     # print(all)
 
 def collect_monthly_stats(year=None, month=None):

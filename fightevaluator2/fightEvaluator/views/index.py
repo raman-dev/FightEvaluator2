@@ -352,9 +352,9 @@ def verifyPrediction(matchups):
     es.save()
     calculate_stats()
 
-def update_stats(request):
+def update_stats(request,year=None,month=None):
     # verifyPrediction(MatchUp.objects.filter(event__id=152))
-    calculate_stats()
+    calculate_stats(year,month)
     return JsonResponse({"ok":"true"})
 
 @require_GET

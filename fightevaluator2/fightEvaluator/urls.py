@@ -57,6 +57,7 @@ urlpatterns = [
     path('matchup/update-event-prediction/',views.updateMatchUpEventPrediction,name='update_event_prediction'),#not working
     path('polling-index',views.polling_index,name='polling-test-sht'),
     path('polling-test',views.polling_end,name='polling-test-sht'),
+    path('stat-update/<int:year>/<int:month>',views.update_stats,name='force-stat-update-specific'),
     path('stat-update',views.update_stats,name='force-stat-update'),
 
     #send the base html and vuejs app will handle the routing from there
