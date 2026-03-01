@@ -84,5 +84,9 @@ body {
     // .xcontent-wrapper > :first-child{
     //     padding-top: 0.5rem;
     // }
+
+    .main-container{
+        padding-top: 0.5rem;
+    }
 }
 </style>

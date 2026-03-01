@@ -129,7 +129,7 @@ function resultsAvailable(eventDateString){
 </script>
 <template>
 
-    <div class="container-fluid main-container" @mousemove="showGuides">
+    <div class="main-container container-fluid" @mousemove="showGuides">
         <div class="title-container d-flex justify-content-between">
             <div class="">
                 <h3>

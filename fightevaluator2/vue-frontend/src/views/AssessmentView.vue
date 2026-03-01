@@ -48,7 +48,7 @@ function onAttributeChange(changes) {
 
 
 <template>
-    <div class="transition-wrapper-root">
+    <div class="main-container transition-wrapper-root">
         <div class="content-container">
             <FighterCard 
                 v-model:fighter="assessmentStore.fighter"

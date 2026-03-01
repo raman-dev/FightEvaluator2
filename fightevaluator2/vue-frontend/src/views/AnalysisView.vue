@@ -41,7 +41,7 @@ onBeforeRouteUpdate((a,b)=>{
 
 </script>
 <template>
-    <div class="container-fluid main-content-container">
+    <div class="container-fluid main-content-container main-container">
         <h3 class="text-center text-capitalize">{{ replaceUnderscoreSpace(matchup.weight_class) }} | {{ matchup.rounds }} rounds</h3>
         <div class="matchup-container justify-content-center">
             <!--contains information about each fighter including fighter img-->
