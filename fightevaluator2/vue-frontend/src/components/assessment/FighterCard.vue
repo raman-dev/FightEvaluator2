@@ -207,7 +207,7 @@ $borderRadius: 0.5rem;
         background-color: $cardColor;
 
         // margin-left: 0.8rem;
-        padding: 1.2rem;
+        padding: 1rem;
 
         .button-container {
             display: flex;
