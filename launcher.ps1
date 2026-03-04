@@ -18,14 +18,8 @@
 #     scraper-test-client 
 #         no options
 
-enum {
-    server,
-    scraper,
-    scraperTestClient
-}
 
-param (
-    [string]server,
-    [string]scraper,
-    [string]scraperTestClient,
-)
+param ($server)
+
+write-host $args
+write-host $server
