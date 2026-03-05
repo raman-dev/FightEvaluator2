@@ -18,8 +18,15 @@
 #     scraper-test-client 
 #         no options
 
+<#
+    script.ps1 -param0 value arg0 arg1 -param1 value
+    powershell filters args into positional args array
+    and key words with values into parameters
 
-param ($server)
+    if switch is arguements will be used as positional parameters
+#>
+
+param ($run,$port)
 
 write-host $args
-write-host $server
+write-host $run,$port
