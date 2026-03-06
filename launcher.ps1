@@ -28,19 +28,27 @@
 
 param (
     [string]$service,
-    [int]$port,
-    [string]$withScraper,
+    [int]$port=8080,
+    [switch]$withScraper,
     [switch]$launchBrowser
 )
 
+function RunWebServer {
+    param (
+        [int]$port,
+        [switch]$startWithBrowser
+    )
+    write-host "Starting Web-Server"
+    if ($startWithBrowser){
+        write-host "Launching Chrome"
+        start chrome "http://localhost:$port"
+    }
+    pipenv run pwsh "run-server.ps1"
+}
+
 switch ($service){
     "web-server" {
-        write-host "Starting Web-Server"
-        if ($launchBrowser){
-            write-host "Launching Chrome"
-            start chrome "http://localhost:8080"
-        }
-        pipenv run pwsh "run-server.ps1"
+        RunWebServer -port $port -startWithBrowser:$launchBrowser
     }
     "scraper" {
         write-host "Starting Scraper"
