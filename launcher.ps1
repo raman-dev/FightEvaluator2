@@ -30,15 +30,13 @@ param (
     [string]$service,
     [int]$port,
     [string]$withScraper,
-    [string]$launchBrowser="false"
+    [switch]$launchBrowser
 )
-
-$launchBrowser = $launchBrowser.ToLower()
 
 switch ($service){
     "web-server" {
         write-host "Starting Web-Server"
-        if ($launchBrowser -eq "true"){
+        if ($launchBrowser){
             write-host "Launching Chrome"
             start chrome "http://localhost:8080"
         }
