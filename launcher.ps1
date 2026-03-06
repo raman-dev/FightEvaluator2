@@ -26,7 +26,30 @@
     if switch is arguements will be used as positional parameters
 #>
 
-param ($run,$port)
+param (
+    [string]$service,
+    [int]$port,
+    [string]$withScraper,
+    [string]$launchBrowser="false"
+)
 
-write-host $args
-write-host $run,$port
+$launchBrowser = $launchBrowser.ToLower()
+
+switch ($service){
+    "web-server" {
+        write-host "Starting Web-Server"
+        if ($launchBrowser -eq "true"){
+            write-host "Launching Chrome"
+            start chrome "http://localhost:8080"
+        }
+        pipenv run pwsh "run-server.ps1"
+    }
+    "scraper" {
+        write-host "Starting Scraper"
+        # this is batch file so i can rename new process window
+        pipenv run "run-scraper.bat" 
+    }
+    "scraper-test-client"{
+        write-host "starting scraper-test-client"
+    }
+}
