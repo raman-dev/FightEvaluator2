@@ -1,4 +1,5 @@
 import scrapy
+from scrapy import signals
 from scrapy.http import HtmlResponse
 from scrapy.crawler import CrawlerProcess
 from parser import eventLinkParse, scrapeFighterNameAndLink, scrapeMatchups, normalizeString, scrapeResults
@@ -29,13 +30,27 @@ def startCrawlerProcess(spider: scrapy.Spider):
     process = CrawlerProcess(
         settings={
             "DOWNLOAD_DELAY": SPIDER_DOWNLOAD_DELAY_S, #Delay between requests
-            "LOG_LEVEL": "ERROR" 
+            # "LOG_LEVEL": "DEBUG", use this if scrapy itself didnt give correct response
+            "LOG_LEVEL":"ERROR",
+            "USER_AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
         }
     )
 
-    process.crawl(spider)
+    def spiderOpenReciever(spider):
+        print(f"{spider.name} spider started")
+    def spiderClosedReceiver(spider):
+        print(f"{spider} spider closed")
+
+    crawler = process.create_crawler(spider)
+    crawler.signals.connect(spiderOpenReciever,signal=signals.spider_opened)
+    crawler.signals.connect(spiderClosedReceiver,signal=signals.spider_closed)
+    process.crawl(crawler)
+    # print("starting crawler process")
     process.start()
     process.join()
+    
+
+    # print("waiting for process")
     return spider.results
 
 class EventLinkSpider(scrapy.Spider):
@@ -46,6 +61,7 @@ class EventLinkSpider(scrapy.Spider):
     results = []
 
     def parse(self, response: scrapy.http.HtmlResponse):
+        # print(response.text)
         self.results.append(eventLinkParse(response.text))
 
 class EventResultsSpider(scrapy.Spider):
@@ -327,7 +343,7 @@ def runScrapyFetchEvent(result_q: queue.Queue):
     #keys can only be missing if and only if function has default values in signature
     t.start()
     t.join()#block until done
-
+    time.sleep(5)
     results = ipc_q.get()
     fightEventData = results[0]
 
