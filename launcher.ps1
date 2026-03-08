@@ -64,7 +64,9 @@ switch ($service){
         RunScaper
     }
     "scraper-test-client"{
-        write-host "starting scraper-test-client"
+        write-host "starting scrapy-test-client"
+        pipenv run pwsh "run-scrapy-test-client.ps1"
+
     }
     default {
         write-host "options [web-server,scraper,scraper-test-client]"
