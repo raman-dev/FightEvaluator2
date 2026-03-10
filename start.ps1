@@ -1,2 +1,1 @@
-./launcher scraper
-./launcher web-server -launchBrowser true
+./launcher web-server -launchBrowser -withScraper
