@@ -5,6 +5,7 @@ class Server {
       
       UPDATE_FIGHTER :'/fighters/update-fighter2/',
       SEARCH_FIGHTERS : '/fighters/search/?search=',
+      SEARCH_FIGHT_EVENTS: '/events/search/?search=',
 
       MATCHUP_ROOT : '/matchup',
       CREATE_MATCHUP : '/matchup/create-matchup',

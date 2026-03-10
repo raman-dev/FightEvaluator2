@@ -1,6 +1,6 @@
 <script setup>
 import PredictionRow from '@/components/prediction-table/PredictionRow.vue';
-import SearchBar from '@/components/SearchBar.vue';
+import SearchBox from '@/components/SearchBox.vue';
 import { useEventLikelihoodStore } from '@/stores/eventLikelihoodStore';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
@@ -22,8 +22,8 @@ onMounted(() => {
 <template>
     <div class="main-container container-fluid">
         <div class="title-container d-flex justify-content-between">
-            <h1>Profit</h1>
-            <SearchBar></SearchBar>
+            <h2 class="my-0">Profit</h2>
+            <SearchBox></SearchBox>
         </div>
         
         <table class="table table-bordered table-hover">
