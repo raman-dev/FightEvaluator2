@@ -3,7 +3,7 @@ import PredictionRow from '@/components/prediction-table/PredictionRow.vue';
 import SearchBox from '@/components/SearchBox.vue';
 import { useEventLikelihoodStore } from '@/stores/eventLikelihoodStore';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted,ref,watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -12,18 +12,28 @@ const eventLikelihoodStore = useEventLikelihoodStore()
 const { fightEvent,eventLikelihoods,eventTypes } = storeToRefs(eventLikelihoodStore);
 const { fetchEventLikelihoods } = eventLikelihoodStore;
 
+const searchBoxInput = ref('');
+const searchResults = ref([]);
 
 onMounted(() => {
     //if no eventid we get empty string
     fetchEventLikelihoods(route.params.eventId);
 })
 
+watch (searchBoxInput, (inputValue,_) => {
+    const queryString = inputValue.trim();
+    if (queryString.length == 0){
+            return;
+        }
+    console.log(`searchBoxInput: ${queryString}`);
+});
+
 </script>
 <template>
     <div class="main-container container-fluid">
         <div class="title-container d-flex justify-content-between">
             <h2 class="my-0">Profit</h2>
-            <SearchBox></SearchBox>
+            <SearchBox v-model:result-list="searchResults" v-model:search-box-input="searchBoxInput"></SearchBox>
         </div>
         
         <table class="table table-bordered table-hover">

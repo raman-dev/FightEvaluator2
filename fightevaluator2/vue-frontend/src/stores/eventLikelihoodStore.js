@@ -5,6 +5,8 @@ export const useEventLikelihoodStore = defineStore("eventLikelihood",()=>{
     const fightEvent = ref({});
     const eventTypes = ref([]);
     const eventLikelihoods = ref([]);
+    
+    const suggestionList = ref([]);
 
     const server = inject('server');
 
