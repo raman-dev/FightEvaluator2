@@ -1,1 +1,1 @@
-./launcher web-server -launchBrowser -withScraper
+./launcher web-server -launchBrowser -withScraperpull
