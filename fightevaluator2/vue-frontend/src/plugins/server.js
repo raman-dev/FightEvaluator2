@@ -5,7 +5,7 @@ class Server {
       
       UPDATE_FIGHTER :'/fighters/update-fighter2/',
       SEARCH_FIGHTERS : '/fighters/search/?search=',
-      SEARCH_FIGHT_EVENTS: '/events/search/?search=',
+      SEARCH_FIGHT_EVENTS: '/events/search/',
 
       MATCHUP_ROOT : '/matchup',
       CREATE_MATCHUP : '/matchup/create-matchup',
@@ -33,6 +33,12 @@ class Server {
     //provide
     static headers = {
 
+    }
+
+    static async search_events(callback,query_string){
+      fetch(Server.URLS.SEARCH_FIGHT_EVENTS + `${query_string}`)
+      .then(response => response.json())
+      .then(callback);
     }
 
     static async toggle_matchup_analysis_complete(matchupId,analysisCompleteStatus,callback){
@@ -155,6 +161,8 @@ class Server {
         callback(data);//
       });
     }
+
+    
 
     static async search_fighters(callback,query_string){
       fetch(Server.URLS.SEARCH_FIGHTERS + `${query_string}`)

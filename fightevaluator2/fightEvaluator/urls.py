@@ -25,6 +25,7 @@ urlpatterns = [
     # path('focusTest',views.focusTest, name='focusTest'),
     # path('events/results/<int:eventId>',views.getFightEventResults, name='results'),
     path('events/results/<int:eventId>',views.getFightEventResults2, name='results'),
+    re_path(r'events/search/(?P<query>([A-Z]|[a-z]|[0-9]|\-)*)',views.fightEventSearch,name='fight-event-search'),
 
     # path('<int:eventId>',views.indexById,name='indexById'),
     path('<int:pk>',views.FightEventDetailView.as_view(),name='indexById_2'),

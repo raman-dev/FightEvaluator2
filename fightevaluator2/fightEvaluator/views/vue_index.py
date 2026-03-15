@@ -20,6 +20,8 @@ PAGE_CACHE_DURATION = 60 * 2
 ASSESSMENT_CACHE_DURATION = 60
 MATCHUP_COMPARISON_CACHE_DURATION = 60
 NEXT_EVENT_CACHE_DURATION = 10
+FIGHT_EVENT_SEARCH_CACHE_DURATION = 10
+
 scrapyFightEventThread = None
 
 from rich import print as rprint
@@ -412,4 +414,11 @@ def makePick(request,matchupId):
     return JsonResponse({'error':'error in data'})
 
 
+@cache_page(FIGHT_EVENT_SEARCH_CACHE_DURATION)
+@require_GET
+def fightEventSearch(request,query):
+    rprint(f'searched for {query}')
+    search = query.replace("-"," ")
+    results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(title__icontains=search)[:5]]
+    return JsonResponse({'search':search,'result':results})
     

@@ -3,7 +3,7 @@ import PredictionRow from '@/components/prediction-table/PredictionRow.vue';
 import SearchBox from '@/components/SearchBox.vue';
 import { useEventLikelihoodStore } from '@/stores/eventLikelihoodStore';
 import { storeToRefs } from 'pinia';
-import { onMounted,ref,watch } from 'vue';
+import { onMounted,ref,watch,inject } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -14,18 +14,25 @@ const { fetchEventLikelihoods } = eventLikelihoodStore;
 
 const searchBoxInput = ref('');
 const searchResults = ref([]);
+const server = inject('server');
 
 onMounted(() => {
     //if no eventid we get empty string
     fetchEventLikelihoods(route.params.eventId);
 })
 
+function onReceiveFightEventSearchResults(results){
+    console.log(results);
+    searchResults.value = results.result;
+}
+
 watch (searchBoxInput, (inputValue,_) => {
-    const queryString = inputValue.trim();
+    const queryString = inputValue.trim().replaceAll(" ","-");
     if (queryString.length == 0){
             return;
-        }
-    console.log(`searchBoxInput: ${queryString}`);
+    }
+    // console.log(`searchBoxInput: ${queryString}`);
+    server.search_events(onReceiveFightEventSearchResults,queryString)
 });
 
 </script>
