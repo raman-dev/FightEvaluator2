@@ -1,38 +1,62 @@
 <script setup>
-import { ref,defineModel } from 'vue';
+import { ref, defineModel } from 'vue';
 
-const searchBoxInput = defineModel('searchBoxInput',{
+const searchBoxInput = defineModel('searchBoxInput', {
     default: '',
     required: false,
 });
 
-const resultList = defineModel('resultList',{
+const resultList = defineModel('resultList', {
     default: [],
     required: false,
 });
 
 
+const emits = defineEmits(['selectResult'])
+
+function onClickSearchResult(searchResult) {
+    //clear 
+    resultList.value = [];
+    emits("selectResult", searchResult);
+}
+
+
 </script>
 <template>
-    <div class="wrapper border">
+    <div class="wrapper">
         <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search-box" v-model="searchBoxInput">
-            <button class="btn btn-outline-success" type="submit" @click.prevent="submit" >Search</button>
+            <div class="input-group">
+                <input class="form-control" type="search"
+                aria-label="Search" id="search-box" 
+                
+                v-model="searchBoxInput" 
+                @blur="$emit('inputBoxDefocus')" />
+                <button  class="btn btn-outline-danger" type="button" @click.prevent="submit">Clear</button>
+            </div>
         </form>
         <div class="result-list">
             <ul class="list-group hover">
-                  <li v-for="result in resultList" :key="result.id" class="list-group-item list-group-item-action">
+                <li v-for="(result, index) in resultList" :key="result.id" class="list-group-item list-group-item-action"
+                    @click="onClickSearchResult(resultList[index])">
                     {{ result.title }}
-                  </li>
+                </li>
             </ul>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
-    .wrapper{
-        form {
-            margin: 0px;
+.wrapper {
+    form {
+        margin: 0px;
+    }
+
+    .result-list {
+        ul {
+            li:hover {
+                cursor: pointer;
+            }
         }
     }
+}
 </style>

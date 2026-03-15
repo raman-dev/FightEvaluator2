@@ -22,14 +22,26 @@ onMounted(() => {
 })
 
 function onReceiveFightEventSearchResults(results){
-    console.log(results);
+    // console.log(results);
     searchResults.value = results.result;
+}
+
+function onFightEventSelect(fightEvent) {
+    // console.log(`selected => ${fightEventId}`);
+    //update the page 
+    fetchEventLikelihoods(fightEvent.id);
+}
+
+function onClickOutOfSearchBox() {
+    console.log("onClickOutOfSearchBox");
+    // searchBoxInput.value ="";
 }
 
 watch (searchBoxInput, (inputValue,_) => {
     const queryString = inputValue.trim().replaceAll(" ","-");
     if (queryString.length == 0){
-            return;
+        onReceiveFightEventSearchResults({result:[]});
+        return;
     }
     // console.log(`searchBoxInput: ${queryString}`);
     server.search_events(onReceiveFightEventSearchResults,queryString)
@@ -40,7 +52,11 @@ watch (searchBoxInput, (inputValue,_) => {
     <div class="main-container container-fluid">
         <div class="title-container d-flex justify-content-between">
             <h2 class="my-0">Profit</h2>
-            <SearchBox v-model:result-list="searchResults" v-model:search-box-input="searchBoxInput"></SearchBox>
+            <SearchBox 
+                v-model:result-list="searchResults" 
+                v-model:search-box-input="searchBoxInput"
+                @select-result="onFightEventSelect"
+                @input-box-defocus="onClickOutOfSearchBox"></SearchBox>
         </div>
         
         <table class="table table-bordered table-hover">
@@ -73,6 +89,11 @@ watch (searchBoxInput, (inputValue,_) => {
 </template>
 
 <style lang="scss" scoped>
+
+.title-container{
+    min-height: 42px;
+    max-height: 42px;
+}
 table {
     font-size: 14px;
 }

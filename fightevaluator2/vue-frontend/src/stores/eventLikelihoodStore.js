@@ -5,8 +5,6 @@ export const useEventLikelihoodStore = defineStore("eventLikelihood",()=>{
     const fightEvent = ref({});
     const eventTypes = ref([]);
     const eventLikelihoods = ref([]);
-    
-    const suggestionList = ref([]);
 
     const server = inject('server');
 
@@ -21,13 +19,15 @@ export const useEventLikelihoodStore = defineStore("eventLikelihood",()=>{
 
     async function fetchEventLikelihoods(eventId){
         //grab likelihoods for specific event or latest event
-        let id = eventId;
+        let id = eventId;        
         const reIsInt = /^\d+$/; 
-        if (typeof(id) !== 'string' || !reIsInt.test(eventId)){
-            id = "";
+        if (typeof(id) !== 'number'){
+            if (typeof(id) !== 'string' || !reIsInt.test(eventId)){
+                id = "";
+            }
         }
         
-        console.log(`id = ${id}`);
+        console.log(`filtered.id = ${id}, received.id = ${eventId}`);
         server.get_event_likelihoods(id,onReceiveEventLikelihoods);
     }
 

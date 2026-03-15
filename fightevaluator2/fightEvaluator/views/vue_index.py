@@ -417,7 +417,7 @@ def makePick(request,matchupId):
 @cache_page(FIGHT_EVENT_SEARCH_CACHE_DURATION)
 @require_GET
 def fightEventSearch(request,query):
-    rprint(f'searched for {query}')
+    # rprint(f'searched for {query}')
     searchStrings = query.split("-")
     searchQuery = Q(title__icontains=searchStrings[0])
     for i in range(1,len(searchStrings)):
