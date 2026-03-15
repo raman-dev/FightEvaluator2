@@ -418,7 +418,11 @@ def makePick(request,matchupId):
 @require_GET
 def fightEventSearch(request,query):
     rprint(f'searched for {query}')
-    search = query.replace("-"," ")
-    results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(title__icontains=search)[:5]]
-    return JsonResponse({'search':search,'result':results})
+    searchStrings = query.split("-")
+    searchQuery = Q(title__icontains=searchStrings[0])
+    for i in range(1,len(searchStrings)):
+        searchQuery = searchQuery & Q(title__icontains=searchStrings[i])
+    
+    results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(searchQuery)[:5]]
+    return JsonResponse({'search':searchStrings,'result':results})
     
