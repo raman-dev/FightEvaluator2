@@ -12,6 +12,8 @@ const resultList = defineModel('resultList', {
 });
 
 
+const props = defineProps({placeholder:{default:''}})
+
 const emits = defineEmits(['selectResult'])
 
 function onClickSearchResult(searchResult) {
@@ -28,14 +30,14 @@ function onClickSearchResult(searchResult) {
             <div class="input-group">
                 <input class="form-control" type="search"
                 aria-label="Search" id="search-box" 
-                
+                :placeholder="placeholder"
                 v-model="searchBoxInput" 
                 @blur="$emit('inputBoxDefocus')" />
                 <button  class="btn btn-outline-danger" type="button" @click.prevent="submit">Clear</button>
             </div>
         </form>
         <div class="result-list">
-            <ul class="list-group hover">
+            <ul class="list`-group hover">
                 <li v-for="(result, index) in resultList" :key="result.id" class="list-group-item list-group-item-action"
                     @click="onClickSearchResult(resultList[index])">
                     {{ result.title }}

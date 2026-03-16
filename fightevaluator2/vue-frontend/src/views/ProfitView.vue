@@ -51,10 +51,11 @@ watch (searchBoxInput, (inputValue,_) => {
 <template>
     <div class="main-container container-fluid">
         <div class="title-container d-flex justify-content-between">
-            <h2 class="my-0">Profit</h2>
+            <h5 class="my-0">{{fightEvent.title}} Prediction Table</h5>
             <SearchBox 
                 v-model:result-list="searchResults" 
                 v-model:search-box-input="searchBoxInput"
+                placeholder="Find Event..."
                 @select-result="onFightEventSelect"
                 @input-box-defocus="onClickOutOfSearchBox"></SearchBox>
         </div>
