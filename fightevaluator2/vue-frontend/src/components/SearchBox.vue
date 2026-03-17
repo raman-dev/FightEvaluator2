@@ -37,7 +37,7 @@ function onClickSearchResult(searchResult) {
             </div>
         </form>
         <div class="result-list">
-            <ul class="list`-group hover">
+            <ul class="list-group hover">
                 <li v-for="(result, index) in resultList" :key="result.id" class="list-group-item list-group-item-action"
                     @click="onClickSearchResult(resultList[index])">
                     {{ result.title }}
@@ -49,6 +49,7 @@ function onClickSearchResult(searchResult) {
 
 <style lang="scss" scoped>
 .wrapper {
+    // display: flex;
     form {
         margin: 0px;
     }

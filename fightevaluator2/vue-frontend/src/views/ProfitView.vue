@@ -50,7 +50,7 @@ watch (searchBoxInput, (inputValue,_) => {
 </script>
 <template>
     <div class="main-container container-fluid">
-        <div class="title-container d-flex justify-content-between">
+        <div class="title-container d-flex justify-content-between mb-2">
             <h5 class="my-0">{{fightEvent.title}} Prediction Table</h5>
             <SearchBox 
                 v-model:result-list="searchResults" 
