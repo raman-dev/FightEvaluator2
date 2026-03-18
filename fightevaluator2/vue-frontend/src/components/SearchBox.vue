@@ -49,7 +49,7 @@ function onClickSearchResult(searchResult) {
 
 <style lang="scss" scoped>
 .wrapper {
-    // display: flex;
+    
     form {
         margin: 0px;
     }
