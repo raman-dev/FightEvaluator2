@@ -34,7 +34,6 @@ function onFightEventSelect(fightEvent) {
 
 function onClickOutOfSearchBox() {
     console.log("onClickOutOfSearchBox");
-    // searchBoxInput.value ="";
 }
 
 watch (searchBoxInput, (inputValue,_) => {
@@ -56,6 +55,7 @@ watch (searchBoxInput, (inputValue,_) => {
                 v-model:result-list="searchResults" 
                 v-model:search-box-input="searchBoxInput"
                 placeholder="Find Event..."
+                :disabled-text="fightEvent.title"
                 @select-result="onFightEventSelect"
                 @input-box-defocus="onClickOutOfSearchBox"></SearchBox>
         </div>

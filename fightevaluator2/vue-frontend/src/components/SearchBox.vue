@@ -12,8 +12,9 @@ const resultList = defineModel('resultList', {
 });
 
 
-const props = defineProps({placeholder:{default:''}})
+const props = defineProps({placeholder:{default:''},disabledText:{default:''}})
 
+const editModeEnabled = ref(false);
 const emits = defineEmits(['selectResult'])
 
 function onClickSearchResult(searchResult) {
@@ -22,19 +23,33 @@ function onClickSearchResult(searchResult) {
     emits("selectResult", searchResult);
 }
 
+function toggleEditMode() {
+    editModeEnabled.value  = !editModeEnabled.value
+}
+
 
 </script>
 <template>
     <div class="wrapper">
         <form class="d-flex" role="search">
             <div class="input-group">
+                <span class="input-group-text">Current Event</span>
+                <template v-if="editModeEnabled">
+                    
                 <input class="form-control" type="search"
                 aria-label="Search" id="search-box" 
                 :placeholder="placeholder"
                 v-model="searchBoxInput" 
-                @blur="$emit('inputBoxDefocus')" />
-                <button  class="btn btn-outline-danger" type="button" @click.prevent="submit">Clear</button>
+                @blur="$emit('inputBoxDefocus')"/>
+                </template>
+                <template v-else>
+                    
+                    <div class="search-box-disabled-text form-control">{{ disabledText }}</div>
+                </template>
+
+                <button  class="btn btn-outline-secondary" type="button" @click="toggleEditMode">edit</button>
             </div>
+                
         </form>
         <div class="result-list">
             <ul class="list-group hover">
