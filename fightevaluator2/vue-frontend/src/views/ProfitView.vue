@@ -1,6 +1,7 @@
 <script setup>
 import PredictionRow from '@/components/prediction-table/PredictionRow.vue';
-import SearchBox from '@/components/SearchBox.vue';
+
+import SearchFilterBox from '@/components/SearchFilterBox.vue';
 import { useEventLikelihoodStore } from '@/stores/eventLikelihoodStore';
 import { storeToRefs } from 'pinia';
 import { onMounted,ref,watch,inject } from 'vue';
@@ -49,15 +50,13 @@ watch (searchBoxInput, (inputValue,_) => {
 </script>
 <template>
     <div class="main-container container-fluid">
-        <div class="title-container d-flex justify-content-between mb-2">
+        <div class="title-container">
             <h5 class="my-0">{{fightEvent.title}} Prediction Table</h5>
-            <SearchBox 
-                v-model:result-list="searchResults" 
-                v-model:search-box-input="searchBoxInput"
-                placeholder="Find Event..."
-                :disabled-text="fightEvent.title"
-                @select-result="onFightEventSelect"
-                @input-box-defocus="onClickOutOfSearchBox"></SearchBox>
+            
+            
+            <SearchFilterBox>
+
+            </SearchFilterBox>
         </div>
         
         <table class="table table-bordered table-hover">
@@ -91,10 +90,7 @@ watch (searchBoxInput, (inputValue,_) => {
 
 <style lang="scss" scoped>
 
-.title-container{
-    min-height: 42px;
-    max-height: 42px;
-}
+
 table {
     font-size: 14px;
 }
