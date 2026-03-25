@@ -173,6 +173,21 @@ class MatchUpEventLikelihoodForm(forms.Form):
                 return False
         return isValidType
 
+class EventSearchForm(forms.Form):
+    query = forms.CharField(label='Search Query',max_length=128,required=False)
+    year = forms.IntegerField(label='Year',required=False,min_value=2023,max_value=2026)
+    month = forms.IntegerField(label='Month',required=False,min_value=1,max_value=12)
+    
+    def is_valid(self) -> bool:
+        #invalid if all values are None
+        if not super().is_valid():
+            return False
+        #values are always present event if not passed by request
+        if self.changed_data == []:#only works if empty permitted == false
+            return False
+        #otherwise we good ish
+        return True 
+
 class EventPredictionForm(forms.Form):
     eventType = forms.CharField(label='Event Type',max_length=100)
     fighterId = forms.IntegerField(label='Fighter Id',required=False)

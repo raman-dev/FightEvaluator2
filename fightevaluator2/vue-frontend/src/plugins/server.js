@@ -6,6 +6,7 @@ class Server {
       UPDATE_FIGHTER :'/fighters/update-fighter2/',
       SEARCH_FIGHTERS : '/fighters/search/?search=',
       SEARCH_FIGHT_EVENTS: '/events/search/',
+      SEARCH_FIGHT_EVENTS2: '/events/search2/?',
 
       MATCHUP_ROOT : '/matchup',
       CREATE_MATCHUP : '/matchup/create-matchup',
@@ -33,6 +34,13 @@ class Server {
     //provide
     static headers = {
 
+    }
+
+    static get_test(url,callback){
+      fetch (url,{
+        method:"GET",
+        headers: Server.headers
+      }).then(response => response.json()).then(callback);
     }
 
     static async search_events(callback,query_string){

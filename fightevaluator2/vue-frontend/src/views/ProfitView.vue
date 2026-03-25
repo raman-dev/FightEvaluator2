@@ -17,9 +17,20 @@ const searchBoxInput = ref('');
 const searchResults = ref([]);
 const server = inject('server');
 
+
+function testCallback(data) {
+    console.log(data);
+    
+}
 onMounted(() => {
     //if no eventid we get empty string
     fetchEventLikelihoods(route.params.eventId);
+    const queryParams = new URLSearchParams();
+    // queryParams.append('query',"pounding your girl");
+    // queryParams.append('month',1);
+    queryParams.append('year',2023);
+
+    server.get_test(server.URLS.SEARCH_FIGHT_EVENTS2 + queryParams.toString(),testCallback);
 })
 
 function onReceiveFightEventSearchResults(results){

@@ -418,6 +418,11 @@ def makePick(request,matchupId):
 @require_GET
 def fightEventSearch(request,query):
     # rprint(f'searched for {query}')
+    """
+            too much validation in non body arguements
+            events/search/?query=string&month=12&year=2023
+
+    """
     searchStrings = query.split("-")
     searchQuery = Q(title__icontains=searchStrings[0])
     for i in range(1,len(searchStrings)):
@@ -425,4 +430,37 @@ def fightEventSearch(request,query):
     
     results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(searchQuery)[:5]]
     return JsonResponse({'search':searchStrings,'result':results})
-    
+
+
+@require_GET
+def fightEventSearch2(request):
+    #requires body arguments
+    #form validation still works for query params
+    print(request.GET)
+    searchForm = EventSearchForm(request.GET,empty_permitted=False)
+    if searchForm.is_valid():
+        query = None
+        year,month = None,None
+        # print(searchForm.cleaned_data)
+        searchQuery = Q()
+        if searchForm.cleaned_data['year']:
+            year = searchForm.cleaned_data['year']
+            searchQuery = searchQuery | Q(date__year=year) 
+        if searchForm.cleaned_data['month']:
+            month = searchForm.cleaned_data['month']
+            searchQuery = searchQuery | Q(date__month=month) 
+
+        if searchForm.cleaned_data['query'] != "":
+            query = searchForm.cleaned_data['query']
+            for term in query.split(' '):
+                searchQuery = searchQuery | Q(title__icontains=term)
+        print(searchQuery)
+        results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(searchQuery)[:5]]
+        
+        return JsonResponse({'msg':'valid','params':{
+            'year':year,
+            'month':month,
+            'query':query,
+            'results':results
+        }})
+    return JsonResponse({'msg':'invalid'})
