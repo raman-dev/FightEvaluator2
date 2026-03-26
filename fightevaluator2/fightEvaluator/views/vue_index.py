@@ -454,8 +454,8 @@ def fightEventSearch2(request):
             query = searchForm.cleaned_data['query']
             for term in query.split(' '):
                 searchQuery = searchQuery & Q(title__icontains=term)
-        print(searchQuery)
-        results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(searchQuery)[:5]]
+        # print(searchQuery)
+        results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(searchQuery)[:12]]
         
         return JsonResponse({
             'msg':'valid','params':{

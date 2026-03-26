@@ -70,12 +70,11 @@ watch (searchResults,(newValue,oldValue) => {
                 paginate
             -->
             <div class="border search-results-wrapper">
-                result-box
-                <ul>
-                    <li v-for="result in searchResults">
-                        {{ result }}
-                    </li>
-                </ul>
+                <div class="event-container p-2">
+                    <div class="fight-event-item p-2 rounded-2 m-1" v-for="result in searchResults">
+                        <span class="title">{{ result.title }}</span>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -110,7 +109,15 @@ watch (searchResults,(newValue,oldValue) => {
 </template>
 
 <style lang="scss" scoped>
+.event-container {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
 
+    .fight-event-item{
+        max-width: 15rem;
+        background-color: #12161a;
+    }
+}
 
 table {
     font-size: 14px;

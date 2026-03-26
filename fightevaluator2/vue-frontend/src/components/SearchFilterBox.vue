@@ -17,7 +17,7 @@ const server = inject('server');
 const year = ref(null)
 const month = ref(null);
 
-// const sampleSearchResult = {"msg": "valid", "params": {"year": null, "month": null, "query": "hollow"}, "results": [{"title": "UFC 326: Holloway vs. Oliveira 2", "id": 156, "data": "2026-03-07"}, {"title": "UFC 318: Holloway vs. Poirier 3", "id": 117, "data": "2025-07-19"}, {"title": "UFC 308: Topuria vs. Holloway", "id": 65, "data": "2024-10-26"}]};
+const sampleSearchResult = {"msg": "valid", "params": {"year": null, "month": null, "query": "u"}, "results": [{"title": "UFC Fight Night: Adesanya vs. Pyfer", "id": 159, "data": "2026-03-28"}, {"title": "UFC Fight Night: Evloev vs. Murphy", "id": 158, "data": "2026-03-21"}, {"title": "UFC Fight Night: Emmett vs. Vallejos", "id": 157, "data": "2026-03-14"}, {"title": "UFC 326: Holloway vs. Oliveira 2", "id": 156, "data": "2026-03-07"}, {"title": "UFC Fight Night: Moreno vs. Kavanagh", "id": 155, "data": "2026-02-28"}, {"title": "UFC Fight Night: Strickland vs. Hernandez", "id": 154, "data": "2026-02-21"}, {"title": "UFC Fight Night: Bautista vs. Oliveira", "id": 153, "data": "2026-02-07"}, {"title": "UFC 325: Volkanovski vs. Lopes 2", "id": 152, "data": "2026-01-31"}, {"title": "UFC 324: Gaethje vs. Pimblett", "id": 151, "data": "2026-01-24"}, {"title": "UFC Fight Night: Royval vs. Kape", "id": 144, "data": "2025-12-13"}, {"title": "UFC 323: Dvalishvili vs. Yan 2", "id": 141, "data": "2025-12-06"}, {"title": "UFC Fight Night: Tsarukyan vs. Hooker", "id": 140, "data": "2025-11-22"}]};
 onMounted(() => {
     //if no eventid we get empty string
     eventLikelihoodStore.fetchEventLikelihoods(route.params.eventId);
@@ -46,12 +46,12 @@ function onClickSearch() {
     // grab month val
     const monthIn = month.value;
 
-    // if (query.trim().length == 0 && yearIn === null && monthIn === null){
-    //     return;//don't search nothing to search
-    // }
-    // server.search_events2(query,yearIn,monthIn,onReceiveFightEventSearchResults)
+    if (query.trim().length == 0 && yearIn === null && monthIn === null){
+        return;//don't search nothing to search
+    }
+    server.search_events2(query,yearIn,monthIn,onReceiveFightEventSearchResults)
     
-    onReceiveFightEventSearchResults(sampleSearchResult);
+    // onReceiveFightEventSearchResults(sampleSearchResult);
 
 }
 
