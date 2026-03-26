@@ -445,22 +445,23 @@ def fightEventSearch2(request):
         searchQuery = Q()
         if searchForm.cleaned_data['year']:
             year = searchForm.cleaned_data['year']
-            searchQuery = searchQuery | Q(date__year=year) 
+            searchQuery = searchQuery & Q(date__year=year) 
         if searchForm.cleaned_data['month']:
             month = searchForm.cleaned_data['month']
-            searchQuery = searchQuery | Q(date__month=month) 
+            searchQuery = searchQuery & Q(date__month=month) 
 
         if searchForm.cleaned_data['query'] != "":
             query = searchForm.cleaned_data['query']
             for term in query.split(' '):
-                searchQuery = searchQuery | Q(title__icontains=term)
+                searchQuery = searchQuery & Q(title__icontains=term)
         print(searchQuery)
         results = [ {'title':e.title,'id':e.id,'data':e.date} for e in FightEvent.objects.filter(searchQuery)[:5]]
         
-        return JsonResponse({'msg':'valid','params':{
+        return JsonResponse({
+            'msg':'valid','params':{
             'year':year,
             'month':month,
-            'query':query,
+            'query':query,},
             'results':results
-        }})
+        })
     return JsonResponse({'msg':'invalid'})

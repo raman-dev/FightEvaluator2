@@ -25,12 +25,6 @@ function testCallback(data) {
 onMounted(() => {
     //if no eventid we get empty string
     fetchEventLikelihoods(route.params.eventId);
-    const queryParams = new URLSearchParams();
-    // queryParams.append('query',"pounding your girl");
-    // queryParams.append('month',1);
-    queryParams.append('year',2023);
-
-    server.get_test(server.URLS.SEARCH_FIGHT_EVENTS2 + queryParams.toString(),testCallback);
 })
 
 function onReceiveFightEventSearchResults(results){
@@ -55,7 +49,11 @@ watch (searchBoxInput, (inputValue,_) => {
         return;
     }
     // console.log(`searchBoxInput: ${queryString}`);
-    server.search_events(onReceiveFightEventSearchResults,queryString)
+    server.search_events(onReceiveFightEventSearchResults,queryString);
+});
+
+watch (searchResults,(newValue,oldValue) => {
+    console.log ('changed',newValue,oldValue);
 });
 
 </script>
@@ -65,9 +63,21 @@ watch (searchBoxInput, (inputValue,_) => {
             <h5 class="my-0">{{fightEvent.title}} Prediction Table</h5>
             
             
-            <SearchFilterBox>
+            <SearchFilterBox v-model:search-results="searchResults"></SearchFilterBox>
 
-            </SearchFilterBox>
+            <!--
+                render search results in a list 
+                paginate
+            -->
+            <div class="border search-results-wrapper">
+                result-box
+                <ul>
+                    <li v-for="result in searchResults">
+                        {{ result }}
+                    </li>
+                </ul>
+            </div>
+            
         </div>
         
         <table class="table table-bordered table-hover">

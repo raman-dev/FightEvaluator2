@@ -43,6 +43,21 @@ class Server {
       }).then(response => response.json()).then(callback);
     }
 
+    static async search_events2(query,year,month,callback){
+      const queryParams = new URLSearchParams();
+      if (query !== undefined && query !== null && query.trim() !==''){
+        queryParams.append('query',query.trim());
+      }
+      if (year !== undefined && year !== null && typeof(year) === 'number'){
+        queryParams.append('year',year);
+      }
+      if (month !== undefined && month !== null && typeof(month) === 'number'){
+        queryParams.append('month',month);
+      }
+
+      Server.get(Server.URLS.SEARCH_FIGHT_EVENTS2 + queryParams.toString(),callback);
+    }
+
     static async search_events(callback,query_string){
       fetch(Server.URLS.SEARCH_FIGHT_EVENTS + `${query_string}`)
       .then(response => response.json())
