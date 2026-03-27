@@ -49,7 +49,7 @@ function onClickSearch() {
     if (query.trim().length == 0 && yearIn === null && monthIn === null){
         return;//don't search nothing to search
     }
-    server.search_events2(query,yearIn,monthIn,onReceiveFightEventSearchResults)
+    server.search_events2(query,yearIn,monthIn,onReceiveFightEventSearchResults);
     
     // onReceiveFightEventSearchResults(sampleSearchResult);
 
@@ -57,13 +57,13 @@ function onClickSearch() {
 
 </script>
 <template>
-    <div class="border">
+    <div class="border my-2">
         <!--what does this have hear 
             year field select
             month field select 
             and search box for event name or fighter name
         -->
-        <div class="d-flex flex-column">
+        <div class="d-flex justify-content-between gap-2 p-1">
             <SearchBox 
                 v-model:search-box-input="searchBoxInput"
                 @search-click="onClickSearch"
@@ -71,16 +71,21 @@ function onClickSearch() {
             </SearchBox>
 
             <div class="filters d-flex gap-2">
-                <!--year select box-->
-                <select class="form-select form-select-sm" v-model="year" aria-label=".form-select-sm example">
-                    <option selected :value="null">Year</option>
-                    <option :value="2026">2026</option>
-                    <option :value="2025">2025</option>
-                    <option :value="2024">2024</option>
-                    <option :value="2023">2023</option>
-                </select>
-                <!--month select box-->
-                <select class="form-select form-select-sm" v-model="month" aria-label=".form-select-sm example">
+                <div class="filter">    
+                    <!--year select box-->
+                    <span>year:</span>
+                    <select name="year-select" class="form-select form-select-sm" v-model="year" aria-label=".form-select-sm example">
+                        <option selected :value="null">Year</option>
+                        <option :value="2026">2026</option>
+                        <option :value="2025">2025</option>
+                        <option :value="2024">2024</option>
+                        <option :value="2023">2023</option>
+                    </select>
+                </div>
+                <div class="filter">
+                    <!--month select box-->
+                    <span>month:</span>
+                    <select name="month-select" class="form-select form-select-sm" v-model="month" aria-label=".form-select-sm example">
                     <option selected :value="null">Month</option>
                     <option :value="1">January</option>
                     <option :value="2">February</option>
@@ -94,9 +99,26 @@ function onClickSearch() {
                     <option :value="10">October</option>
                     <option :value="11">November</option>
                     <option :value="12">December</option>
-                </select>
+                    </select>
+                </div>
+                
             </div>
         </div>
             
     </div>
 </template>
+
+<style scoped lang="scss">
+    .filters {
+        .filter {
+            display: flex;
+            align-items: center;
+            text-transform: capitalize;
+            max-width: 58rem;
+
+            span {
+                margin-right: 0.5rem;
+            }
+        }
+    }
+</style>

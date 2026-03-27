@@ -18,10 +18,6 @@ const searchResults = ref([]);
 const server = inject('server');
 
 
-function testCallback(data) {
-    console.log(data);
-    
-}
 onMounted(() => {
     //if no eventid we get empty string
     fetchEventLikelihoods(route.params.eventId);
@@ -69,7 +65,7 @@ watch (searchResults,(newValue,oldValue) => {
                 render search results in a list 
                 paginate
             -->
-            <div class="border search-results-wrapper">
+            <div class="border search-results-wrapper mb-2">
                 <div class="event-container p-2">
                     <div class="fight-event-item p-2 rounded-2 m-1" v-for="result in searchResults">
                         <span class="title">{{ result.title }}</span>

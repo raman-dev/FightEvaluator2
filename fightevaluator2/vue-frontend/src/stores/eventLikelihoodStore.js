@@ -21,6 +21,7 @@ export const useEventLikelihoodStore = defineStore("eventLikelihood",()=>{
 
     async function fetchEventLikelihoods(eventId){
         // onReceiveEventLikelihoods(sampleResult);
+        // return;
         //grab likelihoods for specific event or latest event
         let id = eventId;        
         const reIsInt = /^\d+$/; 
