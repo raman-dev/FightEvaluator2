@@ -127,17 +127,24 @@ table thead{
     }
 }
 
-@mixin width-lg {
+@mixin width-xl {
     > *{
         margin: auto;
         width: 58%;
     }
 }
 
+@mixin width-lg {
+    > *{
+        margin: auto;
+        width: 80%;
+    }
+}
+
 @mixin width-md {
     > *{
         margin: auto;
-        width: 85%;
+        width: 87%;
     }
 }
 
@@ -151,14 +158,14 @@ table thead{
 .main-container {
     // margin: auto;
     // max-width: 58%;
-    @include width-lg;
+    @include width-xl;
 }
 
-// @media (max-width: 1280px) {
-//     .main-container {
-//         max-width: 85%;
-//     }
-// }
+@media (max-width: 1480px) {
+    .main-container {
+        @include width-lg;
+    }
+}
 
 @media (max-width: 1024px) {
 
