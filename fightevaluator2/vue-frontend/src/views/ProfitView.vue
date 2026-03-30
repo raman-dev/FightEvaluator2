@@ -127,9 +127,31 @@ table thead{
     }
 }
 
+@mixin width-lg {
+    > *{
+        margin: auto;
+        width: 58%;
+    }
+}
+
+@mixin width-md {
+    > *{
+        margin: auto;
+        width: 85%;
+    }
+}
+
+@mixin width-sm {
+    > *{
+        margin: auto;
+        width: 100%;
+    }
+}
+
 .main-container {
-    margin: auto;
-    max-width: 85%;
+    // margin: auto;
+    // max-width: 58%;
+    @include width-lg;
 }
 
 // @media (max-width: 1280px) {
@@ -140,17 +162,14 @@ table thead{
 
 @media (max-width: 1024px) {
 
-    
     .main-container {
-        max-width: 100%;
+        @include width-md;
     }
 }
 
 @media (max-width: 768px) {
-
-    
     .main-container {
-        max-width: 100%;
+        @include width-sm;
     }
 }
 </style>
