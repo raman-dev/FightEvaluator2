@@ -63,7 +63,7 @@ function onClickSearch() {
             month field select 
             and search box for event name or fighter name
         -->
-        <div class="d-flex justify-content-between gap-2 p-1">
+        <div class="d-flex flex-column gap-2 p-1 align-items-end">
             <SearchBox 
                 v-model:search-box-input="searchBoxInput"
                 @search-click="onClickSearch"

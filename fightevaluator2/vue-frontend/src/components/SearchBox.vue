@@ -30,7 +30,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .wrapper {
-
+    max-width: 26rem;
     form {
         margin: 0px;
     }
