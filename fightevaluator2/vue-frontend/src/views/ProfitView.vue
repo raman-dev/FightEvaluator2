@@ -55,7 +55,7 @@ watch (searchResults,(newValue,oldValue) => {
 </script>
 <template>
     <div class="main-container container-fluid">
-        <div class="title-container">
+        <div class="title-container d-flex justify-content-between">
             <h5 class="my-0">{{fightEvent.title}} Prediction Table</h5>
             
             
@@ -65,14 +65,13 @@ watch (searchResults,(newValue,oldValue) => {
                 render search results in a list 
                 paginate
             -->
-            <div class="border search-results-wrapper mb-2">
-                <div class="event-container p-2">
-                    <div class="fight-event-item p-2 rounded-2 m-1" v-for="result in searchResults">
-                        <span class="title">{{ result.title }}</span>
-                    </div>
+        </div>
+        <div class="search-results-wrapper mb-2" :class="{border:searchResults.length !== 0}">
+            <div class="event-container p-2">
+                <div class="fight-event-item p-2 rounded-2 m-1" v-for="result in searchResults">
+                    <span class="title">{{ result.title }}</span>
                 </div>
             </div>
-            
         </div>
         
         <table class="table table-bordered table-hover">

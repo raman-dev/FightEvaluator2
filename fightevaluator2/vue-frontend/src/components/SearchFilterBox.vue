@@ -57,13 +57,12 @@ function onClickSearch() {
 
 </script>
 <template>
-    <div class="border my-2">
+    <div class="wrapper my-2 border rounded-2 p-2">
         <!--what does this have hear 
             year field select
             month field select 
             and search box for event name or fighter name
         -->
-        <div class="d-flex flex-column gap-2 p-1 align-items-end">
             <SearchBox 
                 v-model:search-box-input="searchBoxInput"
                 @search-click="onClickSearch"
@@ -103,22 +102,27 @@ function onClickSearch() {
                 </div>
                 
             </div>
-        </div>
             
     </div>
 </template>
 
 <style scoped lang="scss">
-    .filters {
-        .filter {
-            display: flex;
-            align-items: center;
-            text-transform: capitalize;
-            max-width: 58rem;
+.wrapper{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+.filters {
+    .filter {
+        display: flex;
+        align-items: center;
+        text-transform: capitalize;
+        // max-width: 58rem;
+        min-width: 10rem;
 
-            span {
-                margin-right: 0.5rem;
-            }
+        span {
+            margin-right: 0.5rem;
         }
     }
+}
 </style>
