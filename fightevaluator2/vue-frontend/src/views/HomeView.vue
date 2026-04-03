@@ -213,6 +213,9 @@ function resultsAvailable(eventDateString){
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
+
+        margin-top: 1rem;
+        padding-bottom: 1rem;
         width: 100%;
 
         table {

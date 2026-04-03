@@ -111,23 +111,28 @@ function setMenuPosition(event) {
 <style lang="scss">
 .table-container {
     position: relative;
+    padding: 1rem;
+    border: 2px solid rgb(17, 21, 25) !important;
+    border-radius: 0.6rem;
 }
 
 .table-container table {
     width: 100%;
     transition: all 0.3s ease-out;
-    background-color: #111519 !important;
+    background-color: rgb(17, 21, 25) !important;
+    // border: 1px solid lavender;
 
     thead {
-        border: 1px solid lavender;
+        border-bottom: 1px solid rgb(151, 151, 161);
+        // background-color: rgb(25,29,33);
         text-transform: capitalize;
     }
 
     ;
 
-    tbody {
-        border: 1px solid lavender;
-    }
+    // tbody {
+    //     border: 1px solid lavender;
+    // }
 
     th, td {
         text-align: center;
