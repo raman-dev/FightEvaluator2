@@ -128,13 +128,6 @@ class MatchUpAnalysis(models.Model):
      
 
 """
-# class Prediction2(models.Model):
-#      matchup = models.ForeignKey("MatchUp",on_delete=models.CASCADE) 
-#      event = models.CharField(choices=Event.choices,max_length=128)
-#      likelihood = models.IntegerField(default=Likelihood.NEUTRAL,choices=Likelihood.choices)
-#      justification = models.CharField(max_length=1024)
-
-#      correct = models.BooleanField(default=False)
      
 # class WinPrediction(Prediction2):
 #      fighter = models.ForeignKey("Fighter",on_delete=models.CASCADE)
