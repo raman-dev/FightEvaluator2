@@ -3,7 +3,6 @@ from .models import *
 # Register your models here.
 
 
-
 @admin.register(Pick)
 class PickAdmin(admin.ModelAdmin):
     list_display = ["event","matchup","isCorrect","isGamble","matchup__event"]
@@ -74,17 +73,6 @@ class MatchUpAdmin(admin.ModelAdmin):
                      "fighter_a__last_name",
                      "fighter_b__first_name",
                      "fighter_b__last_name"]
-
-@admin.register(MatchUp2)
-class MatchUpAdmin2(admin.ModelAdmin):
-    @admin.display(description="Fighter A")
-    def fighterA(obj):
-        return obj.fighter_a.first_name.capitalize() + " " + obj.fighter_a.last_name.capitalize()
-    @admin.display(description="Fighter B")
-    def fighterB(obj):
-        return obj.fighter_b.first_name.capitalize() + " " + obj.fighter_b.last_name.capitalize()
-
-    list_display = [fighterA,fighterB,"is_prelim","weight_class","analysis_complete","event__date","event"]
 
 
 @admin.register(Fighter)

@@ -48,19 +48,6 @@ class MatchUpResult(models.TextChoices):
      UPCOMING = "Upcoming"
      NA = "N/A"
 
-class MatchUp2(models.Model):
-     
-     event = models.ForeignKey('FightEvent',on_delete=models.CASCADE)
-     fighter_a = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighterA",null=True)
-     fighter_b = models.ForeignKey('Fighter',on_delete=models.SET_NULL,related_name="fighterB",null=True)
-
-     weight_class = models.CharField(default=WeightClass.NA,max_length=100,choices=WeightClass.choices)
-     rounds = models.IntegerField(default=3)
-     is_prelim = models.BooleanField(default=True) 
-
-     in_watchlist = models.BooleanField(default=False)
-     analysis_complete = models.BooleanField(default=False)
-
      
      def __str__(self) -> str:
           return self.fighter_a.last_name.capitalize() + " vs " + self.fighter_b.last_name.capitalize() + " | " + self.weight_class
