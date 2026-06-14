@@ -333,6 +333,7 @@ def collect_monthly_stats(year=None, month=None):
         year = year or today.year
         month = month or today.month
 
+    print(year,month)
     # filter events in the target month
     event_stats = EventStat.objects.filter(
         event__date__year=year,

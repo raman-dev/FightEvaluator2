@@ -17,7 +17,8 @@ from multiprocessing import Process
 from datetime import datetime
 from bs4 import BeautifulSoup
 from pyquery import PyQuery as pq
-    
+
+
 
 domain = "https://www.tapology.com"
 SPIDER_DOWNLOAD_DELAY_S = 15#wait 15 seconds between downlaod requests to same domain
@@ -27,13 +28,20 @@ def startCrawlerProcess(spider: scrapy.Spider):
         raise ValueError("Spider cannot be None")
 
     print("starting CrawlerProcess")
+    
+    # This establishes Scrapy's default logging behavior
+    # configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
+
+    settings = {
+        "DOWNLOAD_DELAY": SPIDER_DOWNLOAD_DELAY_S, #Delay between requests
+        "LOG_ENABLED":True,
+        "HTTPERROR_ALLOW_ALL": True,
+        "LOG_LEVEL": "DEBUG", #use this if scrapy itself didnt give correct response
+        # "LOG_LEVEL":"ERROR",
+        "USER_AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+    }
     process = CrawlerProcess(
-        settings={
-            "DOWNLOAD_DELAY": SPIDER_DOWNLOAD_DELAY_S, #Delay between requests
-            # "LOG_LEVEL": "DEBUG", use this if scrapy itself didnt give correct response
-            "LOG_LEVEL":"ERROR",
-            "USER_AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
-        }
+        settings=settings
     )
 
     def spiderOpenReciever(spider):
@@ -45,12 +53,12 @@ def startCrawlerProcess(spider: scrapy.Spider):
     crawler.signals.connect(spiderOpenReciever,signal=signals.spider_opened)
     crawler.signals.connect(spiderClosedReceiver,signal=signals.spider_closed)
     process.crawl(crawler)
-    # print("starting crawler process")
+    print("starting crawler process")
     process.start()
     process.join()
     
 
-    # print("waiting for process")
+    print("waiting for process")
     return spider.results
 
 class EventLinkSpider(scrapy.Spider):
@@ -58,10 +66,11 @@ class EventLinkSpider(scrapy.Spider):
     start_urls = [
         "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
     ]
+    handle_httpstatus_list = [403]
     results = []
 
     def parse(self, response: scrapy.http.HtmlResponse):
-        # print(response.text)
+        print(response.text)
         self.results.append(eventLinkParse(response.text))
 
 class EventResultsSpider(scrapy.Spider):
@@ -70,6 +79,7 @@ class EventResultsSpider(scrapy.Spider):
     results = []
 
     def parse(self, response: HtmlResponse):
+        print(response.text)
         result = scrapeResults(response.text)#self.scrapeResults(response.text)
         self.results.append(result)
     

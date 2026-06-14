@@ -155,6 +155,7 @@ class FightOutcomeAdmin(admin.ModelAdmin):
             return "No Winner"
         return obj.winner.name
     list_display = ["method","time","final_round",winnerName]
+    autocomplete_fields =["winner"]
     # search_fields = ["matchup__fighter_a__first_name","matchup__fighter_a__last_name","matchup__fighter_b__first_name","matchup__fighter_b__last_name"]
 
 @admin.register(OddsDataState)
