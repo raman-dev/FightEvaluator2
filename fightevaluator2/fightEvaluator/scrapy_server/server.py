@@ -114,6 +114,21 @@ class ZmqRepServer:
 
     # ------------------------------------------------------------------
 
+"""#need to break into more pieces
+    message-processor
+        worker
+           states 
+            working
+            done
+        append data to result_q
+    message-processor.on_receive_request
+        check result_q has data 
+            if has return 
+            else
+                
+"""
+   
+
 class ScraperServer(ZmqRepServer):
     
     class ServerResponse:
@@ -180,6 +195,8 @@ class ScraperServer(ZmqRepServer):
                 response = self.ServerResponse.build(ServerCommands.SERVER_STATE,self.state)
             case ServerCommands.FETCH_EVENT_LATEST:
                 response = self.handle_fetch_event(data)
+                #fetch_result = fetcher.fetch(data.url)
+                #parse_results = parser.parse(fetch_result)
             case ServerCommands.FETCH_EVENT_RESULTS:
                 response = self.handle_fetch_event_results(data)
             case ServerCommands.FETCH_FIGHTER: 
