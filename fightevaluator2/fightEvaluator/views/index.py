@@ -26,8 +26,8 @@ globalCounter = 0
 MAX_RETRIES = 15
 RETRY_DELAY_S = 3
 
-from ..scrapy_server.commands import ServerCommands
-from ..scrapy_server import scraper_client
+from ..scraper_funcs.commands import ServerCommands
+from ..scraper_funcs import scraper_client
 
 from rich import print as rprint
 

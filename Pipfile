@@ -19,6 +19,7 @@ django = "*"
 pymemcache = "*"
 scrapy = "*"
 pyzmq = "*"
+playwright = "*"
 
 [dev-packages]
 

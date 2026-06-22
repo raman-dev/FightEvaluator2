@@ -1,0 +1,5 @@
+{
+    "port":"42069",
+    "parser":"tapology",
+    "fetcher":"playwright"
+}

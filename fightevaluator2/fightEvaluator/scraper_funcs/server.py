@@ -40,7 +40,7 @@ class ZmqRepServer:
         self.poller = zmq.Poller()
         self.poller.register(self.socket, zmq.POLLIN)
 
-    def timeout(self,seconds):
+    def timeout_to_ms(self,seconds):
         return seconds * 1000
 
     def run(self):
@@ -50,7 +50,7 @@ class ZmqRepServer:
         #if you want to use keyboard interrupts need to run server in background thread 
         #and allow user to stop from main thread
         while self.running:
-            events = self.poller.poll(timeout(DEFAULT_SERVER_TIMEOUT_S))
+            events = self.poller.poll(self.timeout_to_ms(DEFAULT_SERVER_TIMEOUT_S))
             
             if events == []:
                 #no events
@@ -127,7 +127,12 @@ class ZmqRepServer:
             else
                 
 """
-   
+"""
+    what do i need to do really?
+    not much 
+    just have a config file where parser and fetcher can be chosen
+
+"""
 
 class ScraperServer(ZmqRepServer):
     
@@ -195,8 +200,6 @@ class ScraperServer(ZmqRepServer):
                 response = self.ServerResponse.build(ServerCommands.SERVER_STATE,self.state)
             case ServerCommands.FETCH_EVENT_LATEST:
                 response = self.handle_fetch_event(data)
-                #fetch_result = fetcher.fetch(data.url)
-                #parse_results = parser.parse(fetch_result)
             case ServerCommands.FETCH_EVENT_RESULTS:
                 response = self.handle_fetch_event_results(data)
             case ServerCommands.FETCH_FIGHTER: 

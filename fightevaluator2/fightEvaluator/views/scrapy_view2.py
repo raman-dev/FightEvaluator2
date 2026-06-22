@@ -6,8 +6,8 @@ from ..models import Fighter, Assessment, FightEventDataState, WeightClass
 
 from ..scraper2 import poundsToWeightClass
 
-from ..scrapy_server.commands import ServerCommands
-from ..scrapy_server import scraper_client
+from ..scraper_funcs.commands import ServerCommands
+from ..scraper_funcs import scraper_client
 
 from rich import print as rprint
 from django.db.models import Q
