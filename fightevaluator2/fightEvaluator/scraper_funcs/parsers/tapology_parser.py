@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from .parser import Parser
 from pyquery import PyQuery as pq
@@ -9,28 +10,70 @@ from rich import print as rprint
 
 class TapologyParser(Parser):
     DOMAIN = "https://www.tapology.com"
+
     class ParseType(Enum):
         PARSE_RESULTS = "parse_results"
         PARSE_MATCHUPS = "parse_matchups"
-        PARSE_EVENT_DATA = "parse_event_data"
+        PARSE_EVENT_LINK_DATA = "parse_event_link_data"
         PARSE_FIGHTER_DATA = "parse_fighter_data"
 
-
-    def parse(self, source ,parseType: ParseType):
-        if parseType == None:
+    def parse(self, source, parseType: ParseType):
+        if parseType is None:
             raise ValueError("parseType not specified")
         if type(parseType) != type(self.ParseType.PARSE_RESULTS):
             raise TypeError("parseType is not of type TapologyParser.ParseType")
 
         match parseType:
-            case self.ParseType.PARSE_RESULTS:
+            case TapologyParser.ParseType.PARSE_RESULTS:
                 return self.parse_results(source)
-            case self.ParseType.PARSE_MATCHUPS:
+            case TapologyParser.ParseType.PARSE_MATCHUPS:
                 return self.parse_matchups(source)
+            case TapologyParser.ParseType.PARSE_EVENT_LINK_DATA:
+                return self.parse_event_link(source)
+            case TapologyParser.ParseType.PARSE_FIGHTER_DATA:
+                return self.parse_fighter_data(source)
 
-        return {"results":[]}
+        return {"results": []}
 
-    def scrapeResults(self,source):
+    def parse_event_link(self,source):
+        return self.scrapeEventLink(source)
+
+    def parse_matchups(self, source):
+        return self.scrapeMatchups(source)
+    
+    def parse_fighter_data(self,source):
+        return self.scrapeFighter(source)
+
+    def scrapeEventLink(self,source: str):
+        soup = BeautifulSoup(source, "html.parser")
+        table = soup.find("table", class_="fcLeaderboard")
+        # print(table.tbody)
+        today = datetime.now().date()
+        rows = table.findAll("tr")
+        result = {"link": "", "date": None}
+        for i, row in enumerate(rows):
+            if i == 0:
+                continue
+            data = row.findAll("td")
+            # get href value from data object
+            data_event_title = data[0].a.text.strip()
+            # skip non fight nights and non ppvs
+            if re.search(r"(UFC\s+([0-9]+))|UFC\s+Fight\s+Night", data_event_title) is None:
+                # print(data_event_title,'not a ufc event')
+                continue
+            data_link = data[0].a["href"]
+            # get date from data object
+            data_date = datetime.strptime(data[2].text.strip(), "%Y.%m.%d").date()
+            # compare today and date when the distance from today and date increases break loop
+            # print(data_event_title,data_date)
+            if data_date < today:
+                break
+            result["link"] = self.DOMAIN + data_link
+            result["date"] = str(data_date)
+        # print(result)
+        return result
+
+    def scrapeResults(self, source):
         # d = pq(filename="results_test.html",encoding='utf-8')
         d = pq(source)
         ul = d("#sectionFightCard > ul")  # this returns pyquery object
@@ -96,7 +139,7 @@ class TapologyParser(Parser):
 
     def parse_results(self, source):
         return self.scrapeResults(source)
-    
+
     def normalizeString(self, string):
         return (
             unicodedata.normalize("NFD", string)
@@ -104,9 +147,8 @@ class TapologyParser(Parser):
             .decode("ascii")
             .lower()
         )
-    
 
-    def scrapeWeightlbs(self,s: str):
+    def scrapeWeightlbs(self, s: str):
         # grab a 3 digit number from string
         weightPattern = re.compile("(1|2)[0-9][0-9]")
         match = weightPattern.search(s)
@@ -114,22 +156,20 @@ class TapologyParser(Parser):
             return int(match.group(0))
         return None
 
-
-    def scrapePrelimStatus(self,s: str):
+    def scrapePrelimStatus(self, s: str):
         isPrelimPattern = re.compile("Prelim")
         if isPrelimPattern.search(s):
             return True
         return False
 
-
-    def scrapeRounds(self,s: str):
+    def scrapeRounds(self, s: str):
         roundsPattern = re.compile("(3|5) x 5")
         match = roundsPattern.search(s)
         if not match:
             return None
         return int(match.group(0).split()[0])
 
-    def scrapeFighterNameAndLink(self,element, result_only=False):
+    def scrapeFighterNameAndLink(self, element, result_only=False):
         fighterPQ = pq(element)
 
         atag = fighterPQ('[class*="link-primary-red"]').eq(0)
@@ -145,10 +185,12 @@ class TapologyParser(Parser):
 
         link = atag.attr("href")
         return {"name": name, "link": TapologyParser.DOMAIN + link}
-    
-    def scrapeMatchups(self,source):
+
+    def scrapeMatchups(self, source):
         # Writing the HTML content of the parsed soup to the file
+        
         d = pq(source)  # filename="test_0.html")
+        title = d("h2").text()
         # d -> $ in jquery
         ul = d("#sectionFightCard > ul")  # this returns pyquery object
 
@@ -192,8 +234,8 @@ class TapologyParser(Parser):
             rprint(matchup)
             matchups.append(matchup)
 
-        return matchups
-    
+        return {'title':title,'matchups':matchups}
+
     def scrapeFighter(self, source: str):
         soup = BeautifulSoup(source, "html.parser")
 
@@ -226,7 +268,6 @@ class TapologyParser(Parser):
         self.scrapeFighterDetails(str(fighterDetails), fighterData)
         return fighterData
 
-
     def scrapeFighterDetails(self, fighterDetailsDiv, fighterData) -> dict:
         data = []
         result = pq(fighterDetailsDiv)("span")
@@ -248,15 +289,15 @@ class TapologyParser(Parser):
             'September 09, 2023 in UFC'
             '$0 USD'
             'Telêmaco Borba, Paraná, Brazil' 
-            
+
             2025-08-10 new query result structure
             0 name
             1 nickname
             2 record
             3 streak
             4 
-            
-            
+
+
             """
         height_pattern = re.compile(r"(\d)'(\d{1,2})\"\s+\(\d{3}cm\)")
         dob_pattern = re.compile(r"(\d{4})\s+(\w{3})\s+(\d{1,2})")
@@ -313,7 +354,4 @@ class TapologyParser(Parser):
                 dob = datetime.strptime(d, "%Y %b %d").date()
                 fighterData["date_of_birth"] = dob
 
-
-    def parse_matchups(self, source):
-        return self.scrapeMatchups(source)
-    
+   

@@ -13,6 +13,7 @@ from datetime import datetime
 
 
 import scrapy_worker
+import scraper
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
 
@@ -292,7 +293,7 @@ class ScraperServer(ZmqRepServer):
         # if self.workerThread == None or not self.workerThread.is_alive():
         self.startWorker(
             serverCommand=ServerCommands.FETCH_FIGHTER,
-            workerFunc=scrapy_worker.runScrapyFetchFighter,
+            workerFunc=scraper.scrape_fighter_data,#scrapy_worker.runScrapyFetchFighter,
             workerArgs=[self.data_q,link]
         )
 
@@ -311,7 +312,7 @@ class ScraperServer(ZmqRepServer):
             # if self.workerThread == None or not self.workerThread.is_alive():
             self.startWorker(
                 ServerCommands.FETCH_EVENT_LATEST,
-                workerFunc=scrapy_worker.runScrapyFetchEvent,
+                workerFunc=scraper.scrape_event,#scrapy_worker.runScrapyFetchEvent,
                 workerArgs=[self.data_q])
             return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST,self.state,{"message":"Server starting scraper workers..."})
         
