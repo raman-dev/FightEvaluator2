@@ -1,9 +1,12 @@
-from fetchers import PlaywrightFetcher
-from parsers import TapologyParser
+from fightEvaluator.scraper_funcs.fetchers import PlaywrightFetcher
+from fightEvaluator.scraper_funcs.parsers import TapologyParser
+import multiprocessing
+import time
 
 tapology_events_url = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
-
-def scrape_event():
+DEFAULT_SCRAPE_DELAY = 15
+def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY):
+    time.sleep(delay)
     fetcher = PlaywrightFetcher()
     parser = TapologyParser()
 
@@ -12,22 +15,23 @@ def scrape_event():
 
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_EVENT_LINK_DATA)
     fight_event_link = parse_results['link']
-    fight_event_date = parse_results['event']
+    fight_event_date = parse_results['date']
 
     fetch_results = fetcher.fetch(url=fight_event_link)
     source = fetch_results['results']
 
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_MATCHUPS)
 
-    return {
+    queue.put( {
         'event':{'title':parse_results['title'],
                  'link':fight_event_link,   
                  'date':fight_event_date},
         'matchups':parse_results['matchups']
-    }
+    })
 
 
-def scrape_fighter_data(fighter_data_link):
+def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEFAULT_SCRAPE_DELAY):
+    time.sleep(15)
     fetcher = PlaywrightFetcher()
     parser = TapologyParser()
 
@@ -36,4 +40,4 @@ def scrape_fighter_data(fighter_data_link):
     
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHTER_DATA)
 
-    return {fighter_data_link:parse_results}
+    queue.put({fighter_data_link:parse_results})

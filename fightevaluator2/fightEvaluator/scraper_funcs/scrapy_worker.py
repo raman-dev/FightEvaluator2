@@ -2,7 +2,7 @@ import scrapy
 from scrapy import signals
 from scrapy.http import HtmlResponse
 from scrapy.crawler import CrawlerProcess
-from parser import eventLinkParse, scrapeFighterNameAndLink, scrapeMatchups, normalizeString, scrapeResults,scrapeFighter
+from .parser import eventLinkParse, scrapeFighterNameAndLink, scrapeMatchups, normalizeString, scrapeResults,scrapeFighter
 
 import re
 import unicodedata

@@ -7,12 +7,13 @@ import os
 from queue import Queue
 from rich import print as rprint
 from enum import Enum
-from commands import ServerCommands,ServerStates
+from fightEvaluator.scraper_funcs.commands import ServerCommands,ServerStates
 from pathlib import Path
 from datetime import datetime
 
 
-import scrapy_worker
+from fightEvaluator.scraper_funcs import scrapy_worker
+from . import scraper
 
 DEFAULT_SERVER_TIMEOUT_S = 60# seconds
 
@@ -40,7 +41,7 @@ class ZmqRepServer:
         self.poller = zmq.Poller()
         self.poller.register(self.socket, zmq.POLLIN)
 
-    def timeout(self,seconds):
+    def timeout_to_ms(self,seconds):
         return seconds * 1000
 
     def run(self):
@@ -50,7 +51,7 @@ class ZmqRepServer:
         #if you want to use keyboard interrupts need to run server in background thread 
         #and allow user to stop from main thread
         while self.running:
-            events = self.poller.poll(timeout(DEFAULT_SERVER_TIMEOUT_S))
+            events = self.poller.poll(self.timeout_to_ms(DEFAULT_SERVER_TIMEOUT_S))
             
             if events == []:
                 #no events
@@ -114,8 +115,7 @@ class ZmqRepServer:
 
     # ------------------------------------------------------------------
 
-"""
-    correct way would be to break into more pieces
+"""#need to break into more pieces
     message-processor
         worker
            states 
@@ -128,7 +128,12 @@ class ZmqRepServer:
             else
                 
 """
-   
+"""
+    what do i need to do really?
+    not much 
+    just have a config file where parser and fetcher can be chosen
+
+"""
 
 class ScraperServer(ZmqRepServer):
     
@@ -196,8 +201,6 @@ class ScraperServer(ZmqRepServer):
                 response = self.ServerResponse.build(ServerCommands.SERVER_STATE,self.state)
             case ServerCommands.FETCH_EVENT_LATEST:
                 response = self.handle_fetch_event(data)
-                #fetch_result = fetcher.fetch(data.url)
-                #parse_results = parser.parse(fetch_result)
             case ServerCommands.FETCH_EVENT_RESULTS:
                 response = self.handle_fetch_event_results(data)
             case ServerCommands.FETCH_FIGHTER: 
@@ -290,7 +293,7 @@ class ScraperServer(ZmqRepServer):
         # if self.workerThread == None or not self.workerThread.is_alive():
         self.startWorker(
             serverCommand=ServerCommands.FETCH_FIGHTER,
-            workerFunc=scrapy_worker.runScrapyFetchFighter,
+            workerFunc=scraper.scrape_fighter_data,#scrapy_worker.runScrapyFetchFighter,
             workerArgs=[self.data_q,link]
         )
 
@@ -309,7 +312,7 @@ class ScraperServer(ZmqRepServer):
             # if self.workerThread == None or not self.workerThread.is_alive():
             self.startWorker(
                 ServerCommands.FETCH_EVENT_LATEST,
-                workerFunc=scrapy_worker.runScrapyFetchEvent,
+                workerFunc=scraper.scrape_event,#scrapy_worker.runScrapyFetchEvent,
                 workerArgs=[self.data_q])
             return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST,self.state,{"message":"Server starting scraper workers..."})
         
