@@ -12,7 +12,7 @@ class TapologyParser(Parser):
     DOMAIN = "https://www.tapology.com"
 
     class ParseType(Enum):
-        PARSE_RESULTS = "parse_results"
+        PARSE_FIGHT_EVENT_RESULTS = "parse_fight_event_results"
         PARSE_MATCHUPS = "parse_matchups"
         PARSE_EVENT_LINK_DATA = "parse_event_link_data"
         PARSE_FIGHTER_DATA = "parse_fighter_data"
@@ -20,11 +20,11 @@ class TapologyParser(Parser):
     def parse(self, source, parseType: ParseType):
         if parseType is None:
             raise ValueError("parseType not specified")
-        if type(parseType) != type(self.ParseType.PARSE_RESULTS):
+        if type(parseType) != type(self.ParseType.PARSE_FIGHT_EVENT_RESULTS):
             raise TypeError("parseType is not of type TapologyParser.ParseType")
 
         match parseType:
-            case TapologyParser.ParseType.PARSE_RESULTS:
+            case TapologyParser.ParseType.PARSE_FIGHT_EVENT_RESULTS:
                 return self.parse_results(source)
             case TapologyParser.ParseType.PARSE_MATCHUPS:
                 return self.parse_matchups(source)

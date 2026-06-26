@@ -15,7 +15,7 @@ from datetime import datetime
 from fightEvaluator.scraper_funcs import scrapy_worker
 from . import scraper
 
-DEFAULT_SERVER_TIMEOUT_S = 60# seconds
+DEFAULT_SERVER_TIMEOUT_S = 300# seconds
 
 class ZmqRepServer:
     def __init__(self,serverPort: int,timeoutSeconds: int = DEFAULT_SERVER_TIMEOUT_S):
@@ -273,7 +273,7 @@ class ScraperServer(ZmqRepServer):
         #not in cache and server not busy
         self.startWorker(
                 ServerCommands.FETCH_EVENT_RESULTS,
-                workerFunc=scrapy_worker.runScrapyFetchResults,
+                workerFunc=scraper.scrape_fight_event_results,#scrapy_worker.runScrapyFetchResults,
                 workerArgs=[self.data_q,link])
         
         return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state,{"message":"Starting scrapy server"})

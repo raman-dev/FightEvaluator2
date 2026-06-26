@@ -89,7 +89,8 @@ def ScrapyFightEventControlFunction():
                             # response = fetcher.fetchFighter(link=fighter['link'])
                             response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighter['link']})
                             if response:
-                                fighterData = response['data']
+                                fighterData = response['data'][fighter['link']]
+                                rprint("RECEIVED FIGHTER DATA")
                                 rprint(fighterData)
                                 
                                 fighterData['data_api_link'] = fighter['link']

@@ -41,3 +41,16 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHTER_DATA)
 
     queue.put({fighter_data_link:parse_results})
+
+
+def scrape_fight_event_results(queue: multiprocessing.Queue,fight_event_results_link,delay=DEFAULT_SCRAPE_DELAY):
+    time.sleep(delay)
+    fetcher = PlaywrightFetcher()
+    parser = TapologyParser()
+
+    fetch_results = fetcher.fetch(url=fight_event_results_link)
+    source = fetch_results['results']
+    
+    parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHT_EVENT_RESULTS)
+
+    queue.put({fight_event_results_link:parse_results})

@@ -53,7 +53,8 @@ function RunWebServer {
 function RunScaper{
     write-host "Starting Scraper"
     # this is batch file so i can rename new process window
-    pipenv run "run-scraper.bat" 
+    # pipenv run "run-scraper.bat"
+    .\x.bat 
 }
 
 switch ($service){
