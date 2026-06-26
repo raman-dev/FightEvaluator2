@@ -12,7 +12,7 @@ from datetime import datetime
 from ..models import *
 from ..forms import *
 
-from .scrapy_view2 import ScrapyFightEventControlFunction
+from .scraper_view2 import ScraperFightEventControlFunction
 import json
 
 from threading import Thread
@@ -140,7 +140,7 @@ def vueNextFightEvent(request):
             if scrapyFightEventThread != None:
                 scrapyFightEventThread.join()
                 scrapyFightEventThread = None
-            scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
+            scrapyFightEventThread = Thread(target=ScraperFightEventControlFunction)
             scrapyFightEventThread.start()
     
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:

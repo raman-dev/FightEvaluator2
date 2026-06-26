@@ -5,17 +5,21 @@ import time
 
 tapology_events_url = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
 DEFAULT_SCRAPE_DELAY = 15
-def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY):
+def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=None,date=None):
     time.sleep(delay)
     fetcher = PlaywrightFetcher()
     parser = TapologyParser()
 
-    fetch_results = fetcher.fetch(url=tapology_events_url)
-    source = fetch_results['results']
+    if link is None:
+        fetch_results = fetcher.fetch(url=tapology_events_url)
+        source = fetch_results['results']
 
-    parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_EVENT_LINK_DATA)
-    fight_event_link = parse_results['link']
-    fight_event_date = parse_results['date']
+        parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_EVENT_LINK_DATA)
+        fight_event_link = parse_results['link']
+        fight_event_date = parse_results['date']
+    else:
+        fight_event_link = link
+        fight_event_date = date
 
     fetch_results = fetcher.fetch(url=fight_event_link)
     source = fetch_results['results']

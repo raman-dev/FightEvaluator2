@@ -153,7 +153,6 @@ class ScraperServer(ZmqRepServer):
         super().__init__(serverPort, timeoutSeconds)
         
         self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
-        
         script_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(script_dir, f"{self.fightEventFileName}")
         
@@ -209,11 +208,16 @@ class ScraperServer(ZmqRepServer):
                 # response = self.handle_fetch_fighter_multi(data)
                 #untested
                 pass
+            case ServerCommands.FETCH_EVENT_ANY:
+                response = self.handle_fetch_event_any(data)
             case ServerCommands.KILL_SERVER:
                 self.running = False
                 response = self.ServerResponse.build(ServerCommands.KILL_SERVER,self.state, {"status": "Server shutting down"})
         super().send_response(response)
 
+    def write_to_file(self,fname,data):
+        with open(fname,"w",encoding="utf-8") as file:
+            json.dump(data,file,indent=4,default=str)
     def process_data_q(self):
         #process data in the q before processing new messages
         if not self.data_q.empty():
@@ -227,9 +231,7 @@ class ScraperServer(ZmqRepServer):
                 case ServerCommands.FETCH_EVENT_LATEST:
 
                     self.cache[ServerCommands.FETCH_EVENT_LATEST] = data
-
-                    with open(self.fightEventFileNameAbs,"w",encoding="utf-8") as file:
-                        json.dump(data,file,indent=4,default=str)
+                    self.write_to_file(self.fightEventFileNameAbs,data)
                     
                     """
                      fight-event-data.json
@@ -254,12 +256,30 @@ class ScraperServer(ZmqRepServer):
 
                 case ServerCommands.FETCH_FIGHTER_MULTI:
                     self.cache[ServerCommands.FETCH_FIGHTER_MULTI] = data
+                case ServerCommands.FETCH_EVENT_ANY:
+                    self.cache[ServerCommands.FETCH_EVENT_ANY] = data
             self.working_on = None
             if self.workerThread != None:
                 self.workerThread.join()
                 self.workerThread = None
             self.state = ServerStates.IDLE
     
+    def handle_fetch_event_any(self,data: dict):
+        if self.state == ServerStates.BUSY:
+            #return its busy working
+            return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST,self.state)
+        
+        if ServerCommands.FETCH_EVENT_ANY in self.cache:
+            return self.ServerResponse.build(ServerCommands.FETCH_EVENT_ANY,self.state,
+                self.cache.pop(ServerCommands.FETCH_EVENT_ANY))
+        
+        self.startWorker(
+            ServerCommands.FETCH_EVENT_ANY,
+            workerFunc=scraper.scrape_event,#scrapy_worker.runScrapyFetchEvent,
+            workerArgs=[self.data_q,15,data['link'],data['date']])
+        return self.ServerResponse.build(ServerCommands.FETCH_EVENT_LATEST,self.state,{"message":"Server starting scraper workers..."})
+    
+
     def handle_fetch_event_results(self,data: dict) -> dict:
         if self.state == ServerStates.BUSY:
             return self.ServerResponse.build(ServerCommands.FETCH_EVENT_RESULTS,self.state)

@@ -15,7 +15,7 @@ from django.db import transaction
 
 PORT = 42069
 
-def ScrapyFightEventControlFunction():
+def ScraperFightEventControlFunction(link=None,date=None):
     #this function is launched when the newest event has not been fetched or created
     """
         do what here
@@ -44,9 +44,12 @@ def ScrapyFightEventControlFunction():
     # attempts = 0
     with transaction.atomic():
         fightEventDataState = FightEventDataState.objects.select_for_update().first()
-        with scraper_client.ZmqReqClient(serverPort=PORT) as client:
+        with scraper_client.ZmqReqClient(serverPort=PORT,retryDelaySeconds=15) as client:
             #response = fetcher.nextEvent()
-            response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_LATEST)
+            if link is None:
+                response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_LATEST)
+            else:
+                response = client.sendCommandRetryLoop(command=ServerCommands.FETCH_EVENT_ANY,data={'link':link,'date':date})
             fighterData = response['data']
             
             fightEventData = fighterData['event']

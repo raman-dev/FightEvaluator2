@@ -35,7 +35,7 @@ PORT = 42069
 scrapyFightEventThread = None
 scrapyEventResultsThread = None
 
-from .scrapy_view2 import ScrapyFightEventControlFunction
+from .scraper_view2 import ScraperFightEventControlFunction
 
 def ScrapyEventResultsControlFunction(eventId: int):
     with transaction.atomic():
@@ -171,9 +171,9 @@ def index_endpoint(request):
     if fightEventDataState.staleOrEmpty:
         global scrapyFightEventThread
         #means was updating then interrupted 
-        if scrapyFightEventThread == None and fightEventDataState.updating or not fightEventDataState.updating:
+        if scrapyFightEventThread is None and fightEventDataState.updating or not fightEventDataState.updating:
             #invalid state start worker 
-            scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
+            scrapyFightEventThread = Thread(target=ScraperFightEventControlFunction)
             scrapyFightEventThread.start()
     #in an invalid state
     if fightEventDataState.updating or fightEventDataState.staleOrEmpty:
@@ -207,7 +207,7 @@ def index(request):
         #event is stale if the latest event has a date before today
         today = datetime.today().date()
         nextEvent = FightEvent.objects.filter(date__gte=today).order_by('date').first()
-        if nextEvent == None:
+        if nextEvent is None:
             try:
                 fightEventDataState.staleOrEmpty = True
                 fightEventDataState.save()
@@ -217,8 +217,8 @@ def index(request):
     if fightEventDataState.staleOrEmpty == True:
         print('EVENT IS STALE OR EMPTY')
         #compare current date and next event date
-        if scrapyFightEventThread == None or not scrapyFightEventThread.is_alive():
-            scrapyFightEventThread = Thread(target=ScrapyFightEventControlFunction)
+        if scrapyFightEventThread is None or not scrapyFightEventThread.is_alive():
+            scrapyFightEventThread = Thread(target=ScraperFightEventControlFunction)
             scrapyFightEventThread.start()
             print("Starting scraper thread...")
         print('Currently updating from site.....')
@@ -240,6 +240,22 @@ def index(request):
     }
 
     return render(request, "fightEvaluator/index.html",context)
+
+
+@require_GET
+def fetch_event_x(request):
+    global scrapyFightEventThread
+    print('EVENT IS STALE OR EMPTY')
+    link = "https://www.tapology.com/fightcenter/events/141144-ufc-fight-night"
+    date=datetime.strptime("2026-06-20","%Y-%m-%d")
+    #compare current date and next event date
+    if scrapyFightEventThread is None or not scrapyFightEventThread.is_alive():
+        scrapyFightEventThread = Thread(target=ScraperFightEventControlFunction,args=[link,date])
+        scrapyFightEventThread.start()
+        print("Starting scraper thread...")
+    print('Currently updating from site.....')
+    #show next upcoming fight event
+    return  JsonResponse({"stuff":"happening"})
 
 @method_decorator(cache_page(60 * 2), name="dispatch")
 class FightEventListView(ListView):

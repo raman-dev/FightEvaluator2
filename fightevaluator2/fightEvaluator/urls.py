@@ -9,6 +9,7 @@ urlpatterns = [
     # path('', views.index, name='index'),
     path('',views.vueIndex,name='old-index-redirect'),
     path('index-endpoint',views.index_endpoint,name='index_endpoint'),
+    # path('fetch-x',views.fetch_event_x,name='fetch-x-event'),
     # path('mf-test',views.modelformfactory_test)
 
     # path('profit/',views.profit_calculator,name="profit-x"),
