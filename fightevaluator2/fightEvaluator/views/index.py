@@ -55,7 +55,7 @@ def ScrapyEventResultsControlFunction(eventId: int):
                 if m.fighter_a.name_unmod not in nameMatchUpMap:
                     nameMatchUpMap[m.fighter_a.name_unmod] = m
                     nameMatchUpMap[m.fighter_b.name_unmod] = m
-            for mr in matchupResults:
+            for mr in matchupResults[fightEvent.link]:
                 #find corresponding matchup from matchups
                 fighters = mr['fighters']
                 method = mr['method']
