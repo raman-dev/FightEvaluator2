@@ -3,11 +3,15 @@ from fightEvaluator.scraper_funcs.parsers import TapologyParser
 import multiprocessing
 import time
 
+
+fetcher = PlaywrightFetcher()
+
 tapology_events_url = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
 DEFAULT_SCRAPE_DELAY = 15
 def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=None,date=None):
     time.sleep(delay)
-    fetcher = PlaywrightFetcher()
+    # fetcher = PlaywrightFetcher()
+    global fetcher
     parser = TapologyParser()
 
     if link is None:
@@ -36,7 +40,8 @@ def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=No
 
 def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEFAULT_SCRAPE_DELAY):
     time.sleep(15)
-    fetcher = PlaywrightFetcher()
+    # fetcher = PlaywrightFetcher()
+    global fetcher
     parser = TapologyParser()
 
     fetch_results = fetcher.fetch(url=fighter_data_link)
@@ -49,7 +54,8 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
 
 def scrape_fight_event_results(queue: multiprocessing.Queue,fight_event_results_link,delay=DEFAULT_SCRAPE_DELAY):
     time.sleep(delay)
-    fetcher = PlaywrightFetcher()
+    # fetcher = PlaywrightFetcher()
+    global fetcher
     parser = TapologyParser()
 
     fetch_results = fetcher.fetch(url=fight_event_results_link)
