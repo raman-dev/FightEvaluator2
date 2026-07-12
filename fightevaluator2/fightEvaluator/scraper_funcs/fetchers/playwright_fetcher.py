@@ -61,14 +61,14 @@ class PlaywrightFetcher(Fetcher):
             browser = p.chromium.launch(headless=False)
             page = browser.new_page()
             try:
-                self.current_page.goto(
+                page.goto(
                     url=url,
                     timeout=self.DEFAULT_TIMEOUT,
                     wait_until="domcontentloaded")
-                html_source = self.current_page.content()
+                html_source = page.content()
             except TimeoutError as e:
                 print(f'playwright.fetch2 timeout error for {url}')
-                html_source = self.current_page.content()
+                html_source = page.content()
             html_source = page.content()
             browser.close()
 
