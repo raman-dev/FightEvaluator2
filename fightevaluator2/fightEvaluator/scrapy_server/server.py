@@ -317,6 +317,18 @@ class ScraperServer(ZmqRepServer):
             workerArgs=[self.data_q,link]
         )
 
+        """
+            how to make this be step based so same fighter is not fetched multiple times 
+
+            event_fighter.json
+            event 
+                fighter_link 
+                    data | None if some error 
+                fighter_link 
+                    data | None if some error
+                
+        """
+
         return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,{"message" : "Server starting scraper workers..."})
 
     def handle_fetch_event(self, data: dict = {}) -> dict: 

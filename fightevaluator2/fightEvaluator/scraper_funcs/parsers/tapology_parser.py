@@ -42,7 +42,14 @@ class TapologyParser(Parser):
         return self.scrapeMatchups(source)
     
     def parse_fighter_data(self,source):
-        return self.scrapeFighter(source)
+        result = None 
+        try : 
+            result = self.scrapeFighter(source)
+        except Exception as e:
+            print(e)
+            result = None 
+
+        return result 
 
     def scrapeEventLink(self,source: str):
         soup = BeautifulSoup(source, "html.parser")
