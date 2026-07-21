@@ -153,10 +153,12 @@ class ScraperServer(ZmqRepServer):
         super().__init__(serverPort, timeoutSeconds)
         
         self.fightEventFileName = "fight-event-data.json"#use one file for event and matchups
+        self.fighterDataFileName = "fighter-data.json"
         script_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(script_dir, f"{self.fightEventFileName}")
         
         self.fightEventFileNameAbs = file_path
+        self.fighterDataFileNameAbs = os.path.join(script_dir,f"{self.fighterDataFileName}")
         self.data_q = Queue()#thread safe queue for data from worker to server
         self.workerThread = None
 
@@ -218,6 +220,7 @@ class ScraperServer(ZmqRepServer):
     def write_to_file(self,fname,data):
         with open(fname,"w",encoding="utf-8") as file:
             json.dump(data,file,indent=4,default=str)
+
     def process_data_q(self):
         #process data in the q before processing new messages
         if not self.data_q.empty():
@@ -232,7 +235,8 @@ class ScraperServer(ZmqRepServer):
 
                     self.cache[ServerCommands.FETCH_EVENT_LATEST] = data
                     self.write_to_file(self.fightEventFileNameAbs,data)
-                    
+                    #clear the fighter-data.json file 
+                    self.write_to_file(self.fighterDataFileNameAbs,{})
                     """
                      fight-event-data.json
                         title:
@@ -252,6 +256,8 @@ class ScraperServer(ZmqRepServer):
 
                     """
                 case ServerCommands.FETCH_FIGHTER:
+                    #update fighter-data file here 
+                    # self.update_fighter_data_file(data)
                     self.cache[ServerCommands.FETCH_FIGHTER] = data
 
                 case ServerCommands.FETCH_FIGHTER_MULTI:
