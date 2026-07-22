@@ -3,6 +3,7 @@ import zmq
 import threading 
 import json
 import os
+import copy
 
 from queue import Queue
 from rich import print as rprint
@@ -161,6 +162,12 @@ class ScraperServer(ZmqRepServer):
         self.fighterDataFileNameAbs = os.path.join(script_dir,f"{self.fighterDataFileName}")
         self.data_q = Queue()#thread safe queue for data from worker to server
         self.workerThread = None
+        
+
+        self.fighter_data_cache = {}
+
+        with open(self.fighterDataFileNameAbs,"r",encoding="utf-8") as f:
+            self.fighter_data_cache = json.load(f)
 
     def handle_message(self, message):
 
@@ -220,6 +227,21 @@ class ScraperServer(ZmqRepServer):
     def write_to_file(self,fname,data):
         with open(fname,"w",encoding="utf-8") as file:
             json.dump(data,file,indent=4,default=str)
+        
+    
+    def update_fighter_data_file(self,data):
+        with open(self.fighterDataFileNameAbs,"r+",encoding="utf-8") as fighter_data_file:
+            fighter_data = json.load(fighter_data_file)
+            #update fighter_data map 
+            for k,v in data.items():
+                fighter_data[k] = v 
+                self.fighter_data_cache[k] = v
+
+            fighter_data_file.seek(0)#move to start
+            fighter_data_file.truncate(0)#0 bytes remain in the file after truncating
+
+
+            json.dump(self.fighter_data_cache,fighter_data_file,default=str)
 
     def process_data_q(self):
         #process data in the q before processing new messages
@@ -237,6 +259,7 @@ class ScraperServer(ZmqRepServer):
                     self.write_to_file(self.fightEventFileNameAbs,data)
                     #clear the fighter-data.json file 
                     self.write_to_file(self.fighterDataFileNameAbs,{})
+                    self.fighter_data_cache = {}#clear fighter data cache
                     """
                      fight-event-data.json
                         title:
@@ -257,7 +280,8 @@ class ScraperServer(ZmqRepServer):
                     """
                 case ServerCommands.FETCH_FIGHTER:
                     #update fighter-data file here 
-                    # self.update_fighter_data_file(data)
+                    # self.fighter_data_cache[]
+                    self.update_fighter_data_file(data)
                     self.cache[ServerCommands.FETCH_FIGHTER] = data
 
                 case ServerCommands.FETCH_FIGHTER_MULTI:
@@ -308,15 +332,29 @@ class ScraperServer(ZmqRepServer):
         if self.state == ServerStates.BUSY:
             return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state)
         
+        
+        link = data["link"]
         #check cache for data
+        if link in self.fighter_data_cache:
+            return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,
+                self.fighter_data_cache[link])
         #return last fighter fetch, could be wrong not my issue
         if ServerCommands.FETCH_FIGHTER in self.cache:
             return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,
                 self.cache.pop(ServerCommands.FETCH_FIGHTER))
         
-        link = data["link"]
 
         # if self.workerThread == None or not self.workerThread.is_alive():
+        #returns in format 
+        """ 
+            link:{
+                k0:val_0
+                k1:val_1
+                ...
+                kn:val_n
+            }
+                
+        """
         self.startWorker(
             serverCommand=ServerCommands.FETCH_FIGHTER,
             workerFunc=scraper.scrape_fighter_data,#scrapy_worker.runScrapyFetchFighter,

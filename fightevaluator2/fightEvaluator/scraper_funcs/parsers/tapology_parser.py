@@ -283,7 +283,7 @@ class TapologyParser(Parser):
             data.append(pq(result[i]).text())
         """
         0 'Gabriel Miranda' : name 
-        1 'Fly' : nickname
+        1 'Fly' : nickname  
         2 '17-6-0 (Win-Loss-Draw)' : record
         3 '1 Win': streak
         4 '34'   : age
