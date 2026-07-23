@@ -55,6 +55,7 @@ def ScraperFightEventControlFunction(link=None,date=None):
             fightEventData = fighterData['event']
             matchupsRaw = fighterData['matchups']
             matchups = []
+            skipped = []
             rprint(matchupsRaw)
             
             fightEventForm = FightEventForm(fightEventData)
@@ -87,9 +88,9 @@ def ScraperFightEventControlFunction(link=None,date=None):
                     first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
                     query_a = first_name_and_last_name_contains
                     fighterModel = Fighter.objects.filter(name_index=name_index).first()
-                    if not fighterModel:            
+                    if fighterModel is None:            
                         fighterModel = Fighter.objects.filter(query_a).first()
-                        if fighterModel == None:
+                        if fighterModel is None:
                             rprint("No fighter object found")
                             # response = fetcher.fetchFighter(link=fighter['link'])
                             response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighterDataPartial['link']})
@@ -104,14 +105,13 @@ def ScraperFightEventControlFunction(link=None,date=None):
                             fighterForm = FighterForm(fighterData)#validate fighter data
                             
                             if fighterForm.is_valid():
-                                fighterModel = fighterForm.save()
+                                fighterModel = fighterForm.save()#save model
 
                                 rprint('Valid fighter',fighterModel)
                                 assessment = Assessment(fighter=fighterModel)
                                 assessment.save()
                                 
                                 fighterModel.assessment = assessment
-                                # fighterObj.save()
                             else:
                                 rprint(fighterForm.errors)
                                 fighterDataError = True
@@ -126,8 +126,14 @@ def ScraperFightEventControlFunction(link=None,date=None):
                 if not fighterDataError:
                     matchups.append(matchup) 
                     rprint(matchup)
+                else:
+                    skipped.append(matchup + matchupData)
             
             fightEvent = fightEventForm.save()
+            
+            for m in skipped:
+                rprint(f'skipped:\n\t{m}')
+
             for m in matchups:
                 m['event'] = fightEvent
                 m['scheduled'] = fightEvent.date
