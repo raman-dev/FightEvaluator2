@@ -70,6 +70,8 @@ def ScraperFightEventControlFunction(link=None,date=None):
                     'rounds':matchupData['rounds'],
                     'isprelim':matchupData['isprelim']
                 }
+                
+                fighterDataError = False
                 for i,fighterDataPartial in enumerate(matchupData['fighters_raw']):
                     #check if fighter is in database
                     name = fighterDataPartial['name']
@@ -97,7 +99,8 @@ def ScraperFightEventControlFunction(link=None,date=None):
                                 rprint(e)
                                 rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
                                 time.sleep(10)
-                                continue #ignore this matchup
+                                fighterDataError = True
+                                break #does not ignore this matchup
                             # if response:
                             #     rprint(f'response received => {response}')
                             #     fighterData = response['data'][fighter['link']]
@@ -124,6 +127,7 @@ def ScraperFightEventControlFunction(link=None,date=None):
                                 # fighterObj.save()
                             else:
                                 rprint(fighterForm.errors)
+                                fighterDataError = True
                                 break
                             # else:
                             #     rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
@@ -135,8 +139,9 @@ def ScraperFightEventControlFunction(link=None,date=None):
                         matchup['fighter_a'] = fighterModel
                     else:
                         matchup['fighter_b'] = fighterModel
-                matchups.append(matchup) 
-                rprint(matchup)
+                if not fighterDataError:
+                    matchups.append(matchup) 
+                    rprint(matchup)
             
             fightEvent = fightEventForm.save()
             for m in matchups:

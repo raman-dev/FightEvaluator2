@@ -60,7 +60,14 @@ class ZmqRepServer:
                 break
 
             message = self.socket.recv_pyobj()
-            rprint(f"[bold yellow]Received message: {message}[/bold yellow]")
+            if type(message) == type({}):
+                log_msg = ""
+                for k,v in message.items():
+                    log_msg += f'\n\t{k}:{v}'
+            else:
+                log_msg = str(message)
+            rprint(f"[bold yellow]Received message: {log_msg}[/bold yellow]")
+            
             validationResult = self.is_valid(message)
             if "error" not in validationResult:
                 self.handle_message(message)
@@ -246,10 +253,9 @@ class ScraperServer(ZmqRepServer):
     def process_data_q(self):
         #process data in the q before processing new messages
         if not self.data_q.empty():
-            print("data q non empty")
             data = self.data_q.get()
             #add to in memory cache
-            rprint(f"Processing data from worker thread for [bold magenta]command: {self.working_on}[/bold magenta]")
+            rprint(f"Processing data queue for: \n\t[bold magenta]command: {self.working_on}[/bold magenta]")
             match self.working_on:
                 case ServerCommands.FETCH_EVENT_RESULTS:
                     self.cache[ServerCommands.FETCH_EVENT_RESULTS] = data
@@ -336,7 +342,7 @@ class ScraperServer(ZmqRepServer):
         link = data["link"]
         #check cache for data
         if link in self.fighter_data_cache:
-            rprint(f'{link}\n \t found in fighter_data_cache')
+            rprint(f'Found in fighter_data_cache for link: \n\t{link}')
             return self.ServerResponse.build(
                 command=ServerCommands.FETCH_FIGHTER,
                 state=self.state,
