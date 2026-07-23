@@ -33,8 +33,6 @@ class TapologyParser(Parser):
             case TapologyParser.ParseType.PARSE_FIGHTER_DATA:
                 return self.parse_fighter_data(source)
 
-        return {"results": []}
-
     def parse_event_link(self,source):
         return self.scrapeEventLink(source)
 
@@ -258,7 +256,7 @@ class TapologyParser(Parser):
 
         names = list(map(lambda x: x.lower(), full_name.split(" ")))
         name_index = "-".join(names)
-        print("parsing => ", full_name, name_index)
+        print(f"Parsing: \n\t{full_name, name_index}\n")
 
         first_name = names[0]
         last_name = " ".join(names[1:])  # full_name.split(' ')[-1]
@@ -273,6 +271,13 @@ class TapologyParser(Parser):
 
         fighterDetails = soup.find("div", id="standardDetails")
         self.scrapeFighterDetails(str(fighterDetails), fighterData)
+        
+        log_msg = "parsed: {"
+        for k,v in fighterData.items():
+            log_msg += f'\n\t{k}: {v}'
+        log_msg += "}\n"
+        rprint(log_msg)
+
         return fighterData
 
     def scrapeFighterDetails(self, fighterDetailsDiv, fighterData) -> dict:
@@ -310,7 +315,7 @@ class TapologyParser(Parser):
         dob_pattern = re.compile(r"(\d{4})\s+(\w{3})\s+(\d{1,2})")
         reach_pattern = re.compile(r"((\d{2}\.\d+)|(\d{2}))\"\s+\(\d{3}cm\)")
 
-        print(data)
+        # print(data)
         weightClassSet = set(
             [
                 "n/a",

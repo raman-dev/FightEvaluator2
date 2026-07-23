@@ -97,23 +97,10 @@ def ScraperFightEventControlFunction(link=None,date=None):
                                 fighterData = process_server_response(response,fighterDataPartial)
                             except ValueError as e:
                                 rprint(e)
-                                rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
+                                rprint(f"[bold red]No response for fighter:\n\t{first_name} {last_name} fetch[/bold red]")
                                 time.sleep(10)
                                 fighterDataError = True
                                 break #does not ignore this matchup
-                            # if response:
-                            #     rprint(f'response received => {response}')
-                            #     fighterData = response['data'][fighter['link']]
-                            #     rprint("RECEIVED FIGHTER DATA")
-                            #     rprint(fighterData)
-                                
-                            #     fighterData['data_api_link'] = fighter['link']
-                                
-                            #     if fighterData['date_of_birth'] == 'N/A':
-                            #         fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
-                                
-                            #     weight_class = WeightClass[fighterData['weight_class']]
-                            #     fighterData['weight_class'] = weight_class
                             fighterForm = FighterForm(fighterData)#validate fighter data
                             
                             if fighterForm.is_valid():
@@ -129,10 +116,7 @@ def ScraperFightEventControlFunction(link=None,date=None):
                                 rprint(fighterForm.errors)
                                 fighterDataError = True
                                 break
-                            # else:
-                            #     rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
-                            #     time.sleep(10)
-                            #     continue #ignore this matchup
+                           
                             time.sleep(10)#need to sleep before fetching again if we have to
                     
                     if i == 0:
@@ -188,7 +172,7 @@ def process_server_response(response,fighterDataPartial):
     rprint(f'response received => {response}')
 
     if response['data'][fighterDataPartial['link']] is None:
-        raise ValueError("response['data'] is None")
+        raise ValueError("response.data is None")
 
     fighterData = response['data'][fighterDataPartial['link']]
     rprint("RECEIVED FIGHTER DATA")
