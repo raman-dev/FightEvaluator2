@@ -70,9 +70,9 @@ def ScraperFightEventControlFunction(link=None,date=None):
                     'rounds':matchupData['rounds'],
                     'isprelim':matchupData['isprelim']
                 }
-                for i,fighter in enumerate(matchupData['fighters_raw']):
+                for i,fighterDataPartial in enumerate(matchupData['fighters_raw']):
                     #check if fighter is in database
-                    name = fighter['name']
+                    name = fighterDataPartial['name']
                     names = list(map(lambda x: x.lower(), name.split(' ')))
                     name_index = "-".join(names)#search using this
                     first_name = names[0]#try only first name
@@ -84,50 +84,57 @@ def ScraperFightEventControlFunction(link=None,date=None):
 
                     first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
                     query_a = first_name_and_last_name_contains
-                    fighterObj = Fighter.objects.filter(name_index=name_index).first()
-                    if not fighterObj:            
-                        fighterObj = Fighter.objects.filter(query_a).first()
-                        if fighterObj == None:
+                    fighterModel = Fighter.objects.filter(name_index=name_index).first()
+                    if not fighterModel:            
+                        fighterModel = Fighter.objects.filter(query_a).first()
+                        if fighterModel == None:
                             rprint("No fighter object found")
                             # response = fetcher.fetchFighter(link=fighter['link'])
-                            response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighter['link']})
-                            if response:
-                                #TODO
-                                fighterData = response['data'][fighter['link']]
-                                rprint("RECEIVED FIGHTER DATA")
-                                rprint(fighterData)
-                                
-                                fighterData['data_api_link'] = fighter['link']
-                                
-                                if fighterData['date_of_birth'] == 'N/A':
-                                    fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
-                                
-                                weight_class = WeightClass[fighterData['weight_class']]
-                                fighterData['weight_class'] = weight_class
-                                fighterForm = FighterForm(fighterData)#validate fighter data
-                                
-                                if fighterForm.is_valid():
-                                    fighterObj = fighterForm.save()
-
-                                    rprint('Valid fighter',fighterObj)
-                                    assessment = Assessment(fighter=fighterObj)
-                                    assessment.save()
-                                    
-                                    fighterObj.assessment = assessment
-                                    # fighterObj.save()
-                                else:
-                                    rprint(fighterForm.errors)
-                                    break
-                            else:
+                            response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighterDataPartial['link']})
+                            try:
+                                fighterData = process_server_response(response,fighterDataPartial)
+                            except ValueError as e:
+                                rprint(e)
                                 rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
                                 time.sleep(10)
                                 continue #ignore this matchup
+                            # if response:
+                            #     rprint(f'response received => {response}')
+                            #     fighterData = response['data'][fighter['link']]
+                            #     rprint("RECEIVED FIGHTER DATA")
+                            #     rprint(fighterData)
+                                
+                            #     fighterData['data_api_link'] = fighter['link']
+                                
+                            #     if fighterData['date_of_birth'] == 'N/A':
+                            #         fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
+                                
+                            #     weight_class = WeightClass[fighterData['weight_class']]
+                            #     fighterData['weight_class'] = weight_class
+                            fighterForm = FighterForm(fighterData)#validate fighter data
+                            
+                            if fighterForm.is_valid():
+                                fighterModel = fighterForm.save()
+
+                                rprint('Valid fighter',fighterModel)
+                                assessment = Assessment(fighter=fighterModel)
+                                assessment.save()
+                                
+                                fighterModel.assessment = assessment
+                                # fighterObj.save()
+                            else:
+                                rprint(fighterForm.errors)
+                                break
+                            # else:
+                            #     rprint(f"[bold red]No response for fighter:{first_name} {last_name} fetch[/bold red]")
+                            #     time.sleep(10)
+                            #     continue #ignore this matchup
                             time.sleep(10)#need to sleep before fetching again if we have to
                     
                     if i == 0:
-                        matchup['fighter_a'] = fighterObj
+                        matchup['fighter_a'] = fighterModel
                     else:
-                        matchup['fighter_b'] = fighterObj
+                        matchup['fighter_b'] = fighterModel
                 matchups.append(matchup) 
                 rprint(matchup)
             
@@ -168,3 +175,27 @@ def ScraperFightEventControlFunction(link=None,date=None):
         fightEventDataState.updating = False
         # fightEventDataState.date = datetime.today().date()
         fightEventDataState.save()
+
+
+def process_server_response(response,fighterDataPartial):
+    if response is None:
+        raise ValueError("response is None")
+    rprint(f'response received => {response}')
+
+    if response['data'][fighterDataPartial['link']] is None:
+        raise ValueError("response['data'] is None")
+
+    fighterData = response['data'][fighterDataPartial['link']]
+    rprint("RECEIVED FIGHTER DATA")
+    rprint(fighterData)
+    
+    fighterData['data_api_link'] = fighterDataPartial['link']
+    
+    if fighterData['date_of_birth'] == 'N/A':
+        fighterData['date_of_birth'] = None#datetime.strptime("2001-01-01","%Y-%m-%d").date()
+    
+    weight_class = WeightClass[fighterData['weight_class']]
+    fighterData['weight_class'] = weight_class
+
+    return fighterData
+    

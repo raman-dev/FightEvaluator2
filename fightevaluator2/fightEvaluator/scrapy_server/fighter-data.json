@@ -1,14 +1,1 @@
-{
-    "https://www.tapology.com/fightcenter/fighters/272652-damian-rzepecki": {
-        "first_name": "damian",
-        "last_name": "rzepecki",
-        "wins": 10,
-        "losses": 0,
-        "draws": 0,
-        "name_index": "damian-rzepecki",
-        "height": 70,
-        "reach": 74,
-        "date_of_birth": "2001-11-23",
-        "weight_class": "LIGHTWEIGHT"
-    }
-}
+{"https://www.tapology.com/fightcenter/fighters/272652-damian-rzepecki": {"first_name": "damian", "last_name": "rzepecki", "wins": 10, "losses": 0, "draws": 0, "name_index": "damian-rzepecki", "height": 70, "reach": 74, "date_of_birth": "2001-11-23", "weight_class": "LIGHTWEIGHT"}, "https://www.tapology.com/fightcenter/fighters/286665-magomed-zaynukov": {"first_name": "magomed", "last_name": "zaynukov", "wins": 8, "losses": 0, "draws": 0, "name_index": "magomed-zaynukov", "height": 70, "reach": 68, "date_of_birth": "1995-01-02", "weight_class": "LIGHTWEIGHT"}, "https://www.tapology.com/fightcenter/fighters/72240-abubakar-babaev": {"first_name": "abubakar", "last_name": "vagaev", "wins": 24, "losses": 4, "draws": 0, "name_index": "abubakar-vagaev", "height": 72, "reach": 0, "date_of_birth": "1993-04-14", "weight_class": "WELTERWEIGHT"}, "https://www.tapology.com/fightcenter/fighters/182873-magomed-saidov": null, "https://www.tapology.com/fightcenter/fighters/219695-magomed-tuchalov": {"first_name": "magomed", "last_name": "tuchalov", "wins": 6, "losses": 0, "draws": 0, "name_index": "magomed-tuchalov", "height": 75, "reach": 0, "date_of_birth": "1999-12-30", "weight_class": "LIGHT_HEAVYWEIGHT"}}

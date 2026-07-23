@@ -41,7 +41,7 @@ class ZmqReqClient:
     def disconnect(self):
         self.poller.unregister(self.socket)
         self.socket.close()
-        self.context.term()
+        self.context.term() 
 
         self.poller = None
         self.socket = None  

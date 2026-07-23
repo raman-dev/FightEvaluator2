@@ -229,19 +229,19 @@ class ScraperServer(ZmqRepServer):
             json.dump(data,file,indent=4,default=str)
         
     
-    def update_fighter_data_file(self,data):
-        with open(self.fighterDataFileNameAbs,"r+",encoding="utf-8") as fighter_data_file:
-            fighter_data = json.load(fighter_data_file)
+    def update_fighter_data_file(self,new_data):
+        with open(self.fighterDataFileNameAbs,"r+",encoding="utf-8") as file:
+            fighter_data = json.load(file)
             #update fighter_data map 
-            for k,v in data.items():
+            for k,v in new_data.items():
                 fighter_data[k] = v 
                 self.fighter_data_cache[k] = v
 
-            fighter_data_file.seek(0)#move to start
-            fighter_data_file.truncate(0)#0 bytes remain in the file after truncating
+            file.seek(0)#move to start
+            file.truncate(0)#0 bytes remain in the file after truncating
 
 
-            json.dump(self.fighter_data_cache,fighter_data_file,default=str)
+            json.dump(self.fighter_data_cache,file,default=str)
 
     def process_data_q(self):
         #process data in the q before processing new messages
@@ -336,12 +336,22 @@ class ScraperServer(ZmqRepServer):
         link = data["link"]
         #check cache for data
         if link in self.fighter_data_cache:
-            return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,
-                self.fighter_data_cache[link])
+            rprint(f'{link}\n \t found in fighter_data_cache')
+            return self.ServerResponse.build(
+                command=ServerCommands.FETCH_FIGHTER,
+                state=self.state,
+                data={
+                        link:self.fighter_data_cache[link]
+                    }
+                )
+        
         #return last fighter fetch, could be wrong not my issue
         if ServerCommands.FETCH_FIGHTER in self.cache:
-            return self.ServerResponse.build(ServerCommands.FETCH_FIGHTER,self.state,
-                self.cache.pop(ServerCommands.FETCH_FIGHTER))
+            return self.ServerResponse.build(
+                command=ServerCommands.FETCH_FIGHTER,
+                state=self.state,
+                data=self.cache.pop(ServerCommands.FETCH_FIGHTER)
+            )
         
 
         # if self.workerThread == None or not self.workerThread.is_alive():
