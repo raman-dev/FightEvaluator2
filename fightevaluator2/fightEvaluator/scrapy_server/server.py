@@ -356,12 +356,13 @@ class ScraperServer(ZmqRepServer):
                 )
         
         #return last fighter fetch, could be wrong not my issue
-        if ServerCommands.FETCH_FIGHTER in self.cache:
-            return self.ServerResponse.build(
-                command=ServerCommands.FETCH_FIGHTER,
-                state=self.state,
-                data=self.cache.pop(ServerCommands.FETCH_FIGHTER)
-            )
+        #use file cache instead
+        # if ServerCommands.FETCH_FIGHTER in self.cache:
+        #     return self.ServerResponse.build(
+        #         command=ServerCommands.FETCH_FIGHTER,
+        #         state=self.state,
+        #         data=self.cache.pop(ServerCommands.FETCH_FIGHTER)
+        #     )
         
 
         # if self.workerThread == None or not self.workerThread.is_alive():
