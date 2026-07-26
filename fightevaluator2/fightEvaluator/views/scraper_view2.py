@@ -88,17 +88,17 @@ def ScraperFightEventControlFunction(link=None,date=None):
                     first_name_and_last_name_contains=Q(first_name=first_name) & Q(last_name__contains=last_name)
                     query_a = first_name_and_last_name_contains
                     fighterModel = Fighter.objects.filter(name_index=name_index).first()
-                    if fighterModel is None:            
+                    if fighterModel is None:#db query returned nothing            
                         fighterModel = Fighter.objects.filter(query_a).first()
-                        if fighterModel is None:
-                            rprint("No fighter object found")
+                        if fighterModel is None:#second db query returned nothing
+                            rprint("No fighter model found, fetching...")
                             # response = fetcher.fetchFighter(link=fighter['link'])
                             response = client.sendCommandRetryLoop(ServerCommands.FETCH_FIGHTER,data={'link':fighterDataPartial['link']})
                             try:
                                 fighterData = process_server_response(response,fighterDataPartial)
                             except ValueError as e:
-                                rprint(e)
-                                rprint(f"[bold red]No response for fighter:\n\t{first_name} {last_name} fetch[/bold red]")
+                                rprint(f'ValueError: {e}')
+                                rprint(f"[bold red]No response on fetch[/bold red] for Fighter:\n\t{first_name.capitalize()} {last_name.capitalize()}")
                                 time.sleep(10)
                                 fighterDataError = True
                                 break #does not ignore this matchup
@@ -117,17 +117,17 @@ def ScraperFightEventControlFunction(link=None,date=None):
                                 fighterDataError = True
                                 break
                            
-                            time.sleep(10)#need to sleep before fetching again if we have to
+                            # time.sleep(10)#need to sleep before fetching again if we have to
                     
                     if i == 0:
                         matchup['fighter_a'] = fighterModel
                     else:
                         matchup['fighter_b'] = fighterModel
-                if not fighterDataError:
+                if fighterDataError == False:
                     matchups.append(matchup) 
                     rprint(matchup)
                 else:
-                    skipped.append(matchup + matchupData)
+                    skipped.append(matchup | matchupData)
             
             fightEvent = fightEventForm.save()
             

@@ -152,7 +152,7 @@ class ScraperServer(ZmqRepServer):
                 "result":command.value,
                 "state" : state.value,
             }
-            if data != None:
+            if not data is None:
                 response['data'] = data
             
             return response
@@ -175,6 +175,27 @@ class ScraperServer(ZmqRepServer):
 
         with open(self.fighterDataFileNameAbs,"r",encoding="utf-8") as f:
             self.fighter_data_cache = json.load(f)
+
+
+    def write_to_file(self,fname,data):
+            with open(fname,"w",encoding="utf-8") as file:
+                json.dump(data,file,indent=4,default=str)
+            
+        
+    def update_fighter_data_file(self,new_data):
+        with open(self.fighterDataFileNameAbs,"r+",encoding="utf-8") as file:
+            fighter_data = json.load(file)
+            #update fighter_data map 
+            for k,v in new_data.items():
+                fighter_data[k] = v 
+                self.fighter_data_cache[k] = v
+
+            file.seek(0)#move to start
+            file.truncate(0)#0 bytes remain in the file after truncating
+
+
+            json.dump(self.fighter_data_cache,file,default=str)
+
 
     def handle_message(self, message):
 
@@ -231,31 +252,13 @@ class ScraperServer(ZmqRepServer):
                 response = self.ServerResponse.build(ServerCommands.KILL_SERVER,self.state, {"status": "Server shutting down"})
         super().send_response(response)
 
-    def write_to_file(self,fname,data):
-        with open(fname,"w",encoding="utf-8") as file:
-            json.dump(data,file,indent=4,default=str)
-        
-    
-    def update_fighter_data_file(self,new_data):
-        with open(self.fighterDataFileNameAbs,"r+",encoding="utf-8") as file:
-            fighter_data = json.load(file)
-            #update fighter_data map 
-            for k,v in new_data.items():
-                fighter_data[k] = v 
-                self.fighter_data_cache[k] = v
-
-            file.seek(0)#move to start
-            file.truncate(0)#0 bytes remain in the file after truncating
-
-
-            json.dump(self.fighter_data_cache,file,default=str)
-
     def process_data_q(self):
         #process data in the q before processing new messages
         if not self.data_q.empty():
             data = self.data_q.get()
             #add to in memory cache
             rprint(f"Processing data queue for: \n\t[bold magenta]command: {self.working_on}[/bold magenta]")
+            rprint(data)
             match self.working_on:
                 case ServerCommands.FETCH_EVENT_RESULTS:
                     self.cache[ServerCommands.FETCH_EVENT_RESULTS] = data
@@ -288,7 +291,8 @@ class ScraperServer(ZmqRepServer):
                     #update fighter-data file here 
                     # self.fighter_data_cache[]
                     self.update_fighter_data_file(data)
-                    self.cache[ServerCommands.FETCH_FIGHTER] = data
+                    
+                    # self.cache[ServerCommands.FETCH_FIGHTER] = data
 
                 case ServerCommands.FETCH_FIGHTER_MULTI:
                     self.cache[ServerCommands.FETCH_FIGHTER_MULTI] = data

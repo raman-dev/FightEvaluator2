@@ -42,6 +42,9 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
     time.sleep(15)
     # fetcher = PlaywrightFetcher()
     global fetcher
+    if fetcher is None:
+        fetcher = PlaywrightFetcher()
+        
     parser = TapologyParser()
 
     fetch_results = fetcher.fetch(url=fighter_data_link)
