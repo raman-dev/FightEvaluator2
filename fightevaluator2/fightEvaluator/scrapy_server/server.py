@@ -60,16 +60,14 @@ class ZmqRepServer:
                 break
 
             message = self.socket.recv_pyobj()
-            if type(message) == type({}):
-                log_msg = ""
-                for k,v in message.items():
-                    log_msg += f'\n\t{k}:{v}'
-            else:
-                log_msg = str(message)
-            rprint(f"[bold yellow]Received message: {log_msg}[/bold yellow]")
             
             validationResult = self.is_valid(message)
             if "error" not in validationResult:
+                log_msg = ""
+                for k,v in message.items():
+                    log_msg += f'\n\t{k}:{v}'
+                
+                rprint(f"[bold yellow]Received message: {log_msg}[/bold yellow]")
                 self.handle_message(message)
             else:
                 self.send_response(validationResult)
