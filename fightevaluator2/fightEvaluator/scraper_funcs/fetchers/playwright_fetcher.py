@@ -1,6 +1,7 @@
 from .fetcher import Fetcher
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import TimeoutError
+import time
 
 class PlaywrightFetcher(Fetcher):
     DEFAULT_TIMEOUT = 60000
@@ -70,6 +71,7 @@ class PlaywrightFetcher(Fetcher):
                 print(f'playwright.fetch2 timeout error for {url}')
                 html_source = page.content()
             html_source = page.content()
+            time.sleep(60)
             browser.close()
 
         return Fetcher.get_result_dict(html_source, Fetcher.DICT, url)
