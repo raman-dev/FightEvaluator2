@@ -1,5 +1,6 @@
 from .fetcher import Fetcher
 
+
 class SeleniumFetcher(Fetcher):
     def fetch(self,url) -> dict:
         print(f'selenium.fetching {url}')
