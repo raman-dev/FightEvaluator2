@@ -1,10 +1,11 @@
-from fightEvaluator.scraper_funcs.fetchers import PlaywrightFetcher
+from fightEvaluator.scraper_funcs.fetchers import PlaywrightFetcher,SeleniumFetcher
 from fightEvaluator.scraper_funcs.parsers import TapologyParser
 import multiprocessing
 import time
 
 
-fetcher = PlaywrightFetcher()
+# fetcher = PlaywrightFetcher()
+fetcher = SeleniumFetcher()
 
 tapology_events_url = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
 DEFAULT_SCRAPE_DELAY = 15
@@ -12,6 +13,7 @@ def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=No
     time.sleep(delay)
     # fetcher = PlaywrightFetcher()
     global fetcher
+    fetcher.start()
     parser = TapologyParser()
 
     if link is None:
@@ -26,6 +28,7 @@ def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=No
         fight_event_date = date
 
     fetch_results = fetcher.fetch(url=fight_event_link)
+    fetcher.stop()
     source = fetch_results['results']
 
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_MATCHUPS)
@@ -44,12 +47,14 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
     global fetcher
     if fetcher is None:
         fetcher = PlaywrightFetcher()
-        
+
+    fetcher.start()
     parser = TapologyParser()
 
     fetch_results = fetcher.fetch(url=fighter_data_link)
+    fetcher.stop()
     source = fetch_results['results']
-    
+
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHTER_DATA)
 
     queue.put({fighter_data_link:parse_results})
@@ -59,9 +64,11 @@ def scrape_fight_event_results(queue: multiprocessing.Queue,fight_event_results_
     time.sleep(delay)
     # fetcher = PlaywrightFetcher()
     global fetcher
+    fetcher.start()
     parser = TapologyParser()
 
     fetch_results = fetcher.fetch(url=fight_event_results_link)
+    fetcher.stop()
     source = fetch_results['results']
     
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHT_EVENT_RESULTS)
