@@ -2,6 +2,8 @@ from .fetcher import Fetcher
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from urllib3.exceptions import ReadTimeoutError
+
 
 import time
 import random
@@ -35,7 +37,10 @@ class SeleniumFetcher(Fetcher):
 
     def fetch(self,url) -> dict:
         print(f'selenium.fetching {url}')
-        self.driver.get(url) 
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f"Timeout loading {url}: {e}")
         time.sleep(random.randrange(50,65))
         return Fetcher.get_result_dict(results=self.driver.page_source, 
                                        format=Fetcher.JSON, 
