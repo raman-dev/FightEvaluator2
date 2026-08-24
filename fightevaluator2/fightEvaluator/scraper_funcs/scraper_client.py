@@ -1,6 +1,6 @@
-from .commands import ServerCommands,ServerStates
+# from .commands import ServerCommands,ServerStates
 #uncomment when useing testClient
-# from commands import ServerCommands,ServerStates 
+from commands import ServerCommands,ServerStates 
 import zmq
 from rich import print as rprint
 import time
@@ -9,7 +9,9 @@ from django.db import models
 # from ..models import  WeightClass,Assessment
 # from ..forms import FighterForm
 
-DEFAULT_CLIENT_TIMEOUT_SECONDS = 15
+DEFAULT_CLIENT_TIMEOUT_SECONDS = 45
+DEFAULT_CLIENT_RETRY_DELAY = 5
+DEFAULT_CLIENT_MAX_RETRIES = 25
 #NOTE ZMQ request socket wrapper
 class ZmqReqClient:
     """
@@ -17,7 +19,11 @@ class ZmqReqClient:
          - send commands to server
          - receive responses from server
     """
-    def __init__(self,serverPort: int, serverAddress: str = "localhost", clientTimeoutSeconds: int = DEFAULT_CLIENT_TIMEOUT_SECONDS,maxRetries: int=15,retryDelaySeconds: int=3):
+    def __init__(self,serverPort: int, serverAddress: str = "localhost", 
+                 clientTimeoutSeconds: int = DEFAULT_CLIENT_TIMEOUT_SECONDS,
+                 maxRetries: int=DEFAULT_CLIENT_MAX_RETRIES,
+                 retryDelaySeconds: int=DEFAULT_CLIENT_RETRY_DELAY):
+        
         self.port = serverPort
         self.address = serverAddress
         self.context = None
@@ -76,7 +82,7 @@ class ZmqReqClient:
                 attempts += 1
                 time.sleep(self.RETRY_DELAY_S)
             except TimeoutError as te:
-                rprint("[bold red]Client timed out.[/bold red] Check server")
+                rprint(f"[bold red]Client timed out.[/bold red] {te}")
                 break
         if attempts >= self.MAX_RETRIES:
             rprint("[bold cyan] Client MAX_RETRIES reached![/bold cyan]")

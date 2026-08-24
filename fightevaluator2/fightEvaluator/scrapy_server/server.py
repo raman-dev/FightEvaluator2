@@ -452,7 +452,7 @@ class ScraperServer(ZmqRepServer):
 
     def isFightEventDataAvailable(self,abs_filepath: str):
         filePath = Path(abs_filepath)
-        # rprint(f"Checking for fight event data file at [bold magenta]<{filePath}>[/bold magenta]\n{filename}")
+        # rprint(f"Checking for fight event data file at [bold magenta]<{file`Path}>[/bold magenta]\n{filename}")
         #check if file exists
         if filePath.is_file():
             #if exists check if is stale

@@ -5,30 +5,29 @@ import time
 
 
 # fetcher = PlaywrightFetcher()
-fetcher = SeleniumFetcher()
+# fetcher = SeleniumFetcher() cannot use global loses connection with webdriver
 
 tapology_events_url = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
 DEFAULT_SCRAPE_DELAY = 15
 def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=None,date=None):
     time.sleep(delay)
-    # fetcher = PlaywrightFetcher()
-    global fetcher
-    fetcher.start()
+
     parser = TapologyParser()
+    with SeleniumFetcher() as fetcher:
+        
+        if link is None:
+            fetch_results = fetcher.fetch(url=tapology_events_url)
+            source = fetch_results['results']
 
-    if link is None:
-        fetch_results = fetcher.fetch(url=tapology_events_url)
-        source = fetch_results['results']
+            parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_EVENT_LINK_DATA)
+            fight_event_link = parse_results['link']
+            fight_event_date = parse_results['date']
+        else:
+            fight_event_link = link
+            fight_event_date = date
 
-        parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_EVENT_LINK_DATA)
-        fight_event_link = parse_results['link']
-        fight_event_date = parse_results['date']
-    else:
-        fight_event_link = link
-        fight_event_date = date
+        fetch_results = fetcher.fetch(url=fight_event_link)
 
-    fetch_results = fetcher.fetch(url=fight_event_link)
-    fetcher.stop()
     source = fetch_results['results']
 
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_MATCHUPS)
@@ -43,18 +42,13 @@ def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=No
 
 def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEFAULT_SCRAPE_DELAY):
     time.sleep(15)
-    # fetcher = PlaywrightFetcher()
-    global fetcher
-    if fetcher is None:
-        fetcher = PlaywrightFetcher()
 
-    fetcher.start()
-    parser = TapologyParser()
+    with SeleniumFetcher() as fetcher:
+        fetch_results = fetcher.fetch(url=fighter_data_link)
 
-    fetch_results = fetcher.fetch(url=fighter_data_link)
-    fetcher.stop()
     source = fetch_results['results']
 
+    parser = TapologyParser()
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHTER_DATA)
 
     queue.put({fighter_data_link:parse_results})
@@ -62,15 +56,13 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
 
 def scrape_fight_event_results(queue: multiprocessing.Queue,fight_event_results_link,delay=DEFAULT_SCRAPE_DELAY):
     time.sleep(delay)
-    # fetcher = PlaywrightFetcher()
-    global fetcher
-    fetcher.start()
-    parser = TapologyParser()
 
-    fetch_results = fetcher.fetch(url=fight_event_results_link)
-    fetcher.stop()
+    with SeleniumFetcher() as fetcher:
+        fetch_results = fetcher.fetch(url=fight_event_results_link)
+
     source = fetch_results['results']
     
+    parser = TapologyParser()
     parse_results = parser.parse(source,TapologyParser.ParseType.PARSE_FIGHT_EVENT_RESULTS)
 
     queue.put({fight_event_results_link:parse_results})
