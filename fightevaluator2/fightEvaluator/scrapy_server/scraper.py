@@ -2,18 +2,28 @@ from fightEvaluator.scraper_funcs.fetchers import PlaywrightFetcher,SeleniumFetc
 from fightEvaluator.scraper_funcs.parsers import TapologyParser
 import multiprocessing
 import time
+import os
 
 
 # fetcher = PlaywrightFetcher()
-# fetcher = SeleniumFetcher() cannot use global loses connection with webdriver
+# fetcher = SeleniumFetcher(path_to_adblock=path_to_adblock) cannot use global loses connection with webdriver
+def delay(func):
+    def wrapper(*args,**kwargs):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        print(f'Current path: \n\t{current_dir}')
+        time.sleep(15)
+        func(*args,**kwargs)
+    return wrapper
 
 tapology_events_url = "https://www.tapology.com/search?term=ufc&search=Submit&mainSearchFilter=events"
 DEFAULT_SCRAPE_DELAY = 15
+path_to_adblock= os.path.dirname(os.path.abspath(__file__)) + "\\adblock-crx\\chromium.crx"
+@delay
 def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=None,date=None):
-    time.sleep(delay)
+    # time.sleep(delay)
 
     parser = TapologyParser()
-    with SeleniumFetcher() as fetcher:
+    with SeleniumFetcher(path_to_adblock=path_to_adblock) as fetcher:
         
         if link is None:
             fetch_results = fetcher.fetch(url=tapology_events_url)
@@ -39,11 +49,11 @@ def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=No
         'matchups':parse_results['matchups']
     })
 
-
+@delay
 def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEFAULT_SCRAPE_DELAY):
-    time.sleep(15)
+    # time.sleep(delay)
 
-    with SeleniumFetcher() as fetcher:
+    with SeleniumFetcher(path_to_adblock=path_to_adblock) as fetcher:
         fetch_results = fetcher.fetch(url=fighter_data_link)
 
     source = fetch_results['results']
@@ -53,11 +63,11 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
 
     queue.put({fighter_data_link:parse_results})
 
-
+@delay
 def scrape_fight_event_results(queue: multiprocessing.Queue,fight_event_results_link,delay=DEFAULT_SCRAPE_DELAY):
-    time.sleep(delay)
+    # time.sleep(delay)
 
-    with SeleniumFetcher() as fetcher:
+    with SeleniumFetcher(path_to_adblock=path_to_adblock) as fetcher:
         fetch_results = fetcher.fetch(url=fight_event_results_link)
 
     source = fetch_results['results']
