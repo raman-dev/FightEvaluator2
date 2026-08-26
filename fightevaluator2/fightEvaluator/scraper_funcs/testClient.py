@@ -143,8 +143,7 @@ def runTestClient():
                     data = {
                         # 'link':"https://www.tapology.com/fightcenter/events/130635-ufc-fight-night" 2025 link
                         # 'link':"https://www.tapology.com/fightcenter/events/136549-ufc-325-volkanovski-vs-lopes-2"#2026 link
-                        # 'link':"https://www.tapology.com/fightcenter/events/142341-ufc-330"
-                        'link':"https://www.google.ca"
+                        'link':"https://www.tapology.com/fightcenter/events/142341-ufc-330"
                     }
                 case ServerCommands.FETCH_FIGHTER:
                     data = {
