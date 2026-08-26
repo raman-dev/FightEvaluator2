@@ -10,8 +10,8 @@ import os
 
 def delay(func):
     def wrapper(*args,**kwargs):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        print(f'Current path: \n\t{current_dir}')
+        # current_dir = os.path.dirname(os.path.abspath(__file__))
+        # print(f'Current path: \n\t{current_dir}')
         time.sleep(15)
         func(*args,**kwargs)
     return wrapper
