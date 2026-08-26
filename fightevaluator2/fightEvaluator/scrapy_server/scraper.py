@@ -22,14 +22,15 @@ DEFAULT_SCRAPE_DELAY = 15
 script_path = os.path.dirname(os.path.abspath(__file__)) 
 path_to_adblock= script_path + "\\adblock-crx\\chromium.crx"
 # path_to_adblock = script_path + "\\adblock-crx\\ublock_crx_extract"
-path_to_binary = "C:\\Users\\Ramandeep\\Documents\\chrome-win64\\chrome.exe"#
-# path_to_driver = "C:\\Users\\Ramandeep\\Documents\\chromedriver-win64\\chromedriver.exe"
+path_to_binary = script_path + "\\chrome-win64\\chrome.exe"#
+path_to_driver = script_path + "\\chromedriver-win64\\chromedriver.exe"
 @delay
 def scrape_event(queue: multiprocessing.Queue,delay=DEFAULT_SCRAPE_DELAY,link=None,date=None):
     # time.sleep(delay)
 
     parser = TapologyParser()
     with SeleniumFetcher(path_to_binary=path_to_binary,
+                         path_to_driver=path_to_driver,
                          path_to_adblock=path_to_adblock) as fetcher:
         
         if link is None:
@@ -61,6 +62,7 @@ def scrape_fighter_data(queue: multiprocessing.Queue,fighter_data_link,delay=DEF
     # time.sleep(delay)
 
     with SeleniumFetcher(path_to_binary=path_to_binary,
+                         path_to_driver=path_to_driver,
                          path_to_adblock=path_to_adblock) as fetcher:
         fetch_results = fetcher.fetch(url=fighter_data_link)
 
@@ -76,6 +78,7 @@ def scrape_fight_event_results(queue: multiprocessing.Queue,fight_event_results_
     # time.sleep(delay)
 
     with SeleniumFetcher(path_to_binary=path_to_binary,
+                         path_to_driver=path_to_driver,
                          path_to_adblock=path_to_adblock) as fetcher:
         fetch_results = fetcher.fetch(url=fight_event_results_link)
 

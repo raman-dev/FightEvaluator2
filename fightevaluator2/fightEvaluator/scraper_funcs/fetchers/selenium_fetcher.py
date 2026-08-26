@@ -17,11 +17,14 @@ class SeleniumFetcher(Fetcher):
 
             CANNOT USE ADBLOCK WITHOUT CHROME_FOR_TESTING
     """
-    def __init__(self,path_to_binary,path_to_adblock=None,path_to_driver=None,options=None):
-        self.path_to_driver = path_to_driver
+    def __init__(self,path_to_binary,path_to_driver,path_to_adblock=None,options=None):
+        if path_to_driver is None:
+            raise ValueError("MUST SPECIFY PATH TO CHROME WEB_DRIVER BINARY !!!")
+        
         if path_to_binary is None:
             raise ValueError("MUST SPECIFY PATH TO CHROME_FOR_TESTING(not normal chrome) BINARY !!!")
-        
+
+        self.path_to_driver = path_to_driver
         if options is None:
             # self.options.add_argument("--headless=new")            # modern headless mode
             self.options = Options()
@@ -47,9 +50,9 @@ class SeleniumFetcher(Fetcher):
         #     log_output="chromedriver.log",
         #     service_args=["--verbose"]
         # )
-
+        service = Service(executable_path=self.path_to_driver)
         self.driver = webdriver.Chrome(
-            # service=service,
+            service=service,
             options=self.options)
         
         print(f"Chrome started: {self.driver.service.service_url}")
