@@ -20,7 +20,7 @@ class SeleniumFetcher(Fetcher):
                 print(f"Adding extension at: \n\t: {path_to_adblock}")
                 self.options.add_extension(path_to_adblock)
             # self.options.page_load_strategy="none"
-            # self.options.add_argument("--no-sandbox")              # needed in many containers
+            self.options.add_argument("--no-sandbox")              # needed in many containers
             # self.options.add_argument("--disable-dev-shm-usage")   # avoid /dev/shm crashes in Docker
         self.driver = None
 
