@@ -19,7 +19,7 @@ class SeleniumFetcher(Fetcher):
     """
     def __init__(self,path_to_binary,path_to_driver,path_to_adblock=None,options=None):
         if path_to_driver is None:
-            raise ValueError("MUST SPECIFY PATH TO CHROME WEB_DRIVER BINARY !!!")
+            raise ValueError("MUST SPECIFY PATH TO CHROME_WEB_DRIVER(for testing version) BINARY !!!")
         
         if path_to_binary is None:
             raise ValueError("MUST SPECIFY PATH TO CHROME_FOR_TESTING(not normal chrome) BINARY !!!")
@@ -86,7 +86,7 @@ class SeleniumFetcher(Fetcher):
                 print("DRIVER IS DEAD:", type(e2).__name__, e2)
                 return Fetcher.get_result_dict(results=None,format=Fetcher.JSON,url=url)
 
-        t_sleep = random.randrange(20,35)
+        t_sleep = random.randrange(20,45)
         print(f'Selenium.fetcher sleeping for {t_sleep} seconds.')
         time.sleep(t_sleep)
 

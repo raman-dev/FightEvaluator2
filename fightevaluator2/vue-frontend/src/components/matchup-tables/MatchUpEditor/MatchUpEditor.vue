@@ -6,6 +6,7 @@ import SuggestionBox from './SuggestionBox.vue';
 import WeightClassSelector from './WeightClassSelector.vue';
 import RoundsSelector from './RoundsSelector.vue';
 import PrelimSelector from './PrelimSelector.vue';
+import ExpressFighterCreator from '@/components/fighter-creator/ExpressFighterCreator.vue';
 import { storeToRefs } from 'pinia';
 import { useMatchupStore } from '@/stores/matchupStore';
 
@@ -13,6 +14,7 @@ import { useMatchupStore } from '@/stores/matchupStore';
 const emits = defineEmits(['editorClosing','editorClose']);
 const open = defineModel('open', { default: false });
 const inEditMode = defineModel('inEditMode', { default: false });
+const fighterEditorShow = defineModel('fighterEditorShow',{default: false});
 
 
 const selectedFighterA = ref(null);
@@ -213,6 +215,9 @@ watch(open, (isOpen, _) => {
           </div>
         </form>
         <div class="editor-actions mt-3">
+          <div class="flex-grow-1">
+            <button type="button" class="btn btn-primary mx-2 close-btn" @click="fighterEditorShow = !fighterEditorShow">Add Fighter</button>
+          </div>
           <button type="button" class="btn btn-secondary mx-2 close-btn" @click="open = !open">Close</button>
           <button type="button" class="btn btn-primary create-btn current-action submit-btn" @click="commitChanges(true)">
             <span v-if="inEditMode === true">
@@ -227,6 +232,8 @@ watch(open, (isOpen, _) => {
 
     </div>
   </div>
+  <ExpressFighterCreator v-model:visible="fighterEditorShow"/>
+  
   <!-- </Transition> -->
 
 

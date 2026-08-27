@@ -2,7 +2,6 @@
 
 import NavBar from './components/NavBar.vue';
 
-
 const links = [
     {
         name: "home",
@@ -87,6 +86,7 @@ body {
 
     .main-container{
         padding-top: 0.5rem;
+        overflow: auto;
     }
 }
 </style>
