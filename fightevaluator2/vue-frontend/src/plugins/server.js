@@ -3,8 +3,10 @@ class Server {
       CREATE_NOTE : '/notes/create-note',
       DELETE_NOTE : '/notes/delete-note/',
       
+      CREATE_FIGHTER :'/fighters/create-fighter',
       UPDATE_FIGHTER :'/fighters/update-fighter2/',
       SEARCH_FIGHTERS : '/fighters/search/?search=',
+
       SEARCH_FIGHT_EVENTS: '/events/search/',
       SEARCH_FIGHT_EVENTS2: '/events/search2/?',
 
@@ -162,6 +164,10 @@ class Server {
       });
     }
 
+    static async create_fighter(data,callback){
+      Server.post(Server.URLS.CREATE_FIGHTER,data,callback);
+    }
+
     static async send_note(requestData,callback){
       fetch(Server.URLS.CREATE_NOTE,{
         method:"POST",
@@ -230,16 +236,16 @@ class Server {
       });
     }
 
-    // post(url,requestData,callback){
-    //   fetch(url,{
-    //     method:"POST",
-    //     body: JSON.stringify(requestData),
-    //     headers:this.headers
-    //   }).then(response => response.json())
-    //   .then((data) => {
-    //     callback(data);
-    //   });
-    // }
+    static async post(url,requestData,callback){
+      fetch(url,{
+        method:"POST",
+        body: JSON.stringify(requestData),
+        headers:this.headers
+      }).then(response => response.json())
+      .then((data) => {
+        callback(data);
+      });
+    }
 
     // patch(url,requestData,callback){
 

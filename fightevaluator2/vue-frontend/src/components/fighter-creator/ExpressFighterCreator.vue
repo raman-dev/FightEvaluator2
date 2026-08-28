@@ -15,16 +15,26 @@ const fighter = defineModel('fighter',{default : {
     'data_api_link':"",
 }})
 
+const emit = defineEmits(['saveFighter']);
+
 function saveFighter(){
   //grab details makesure something has changed though 
   //all required elements are present
-  const data = fighter.value;
+  const fighterData = fighter.value;
   // console.log(`Fighter data: ${data}`);
-  for (const key in data) {
-    console.log(`${key}: ${data[key]}`);
+  for (const key in fighterData) {
+    console.log(`${key}: ${fighterData[key]}`);
+  }
+  
+  //check if first name and last name and dob is not empty
+  if (fighterData.first_name.length === 0 || 
+      fighterData.last_name.length === 0 || 
+      fighterData.date_of_birth.length === 0){
+    return;
   }
   
 }
+
 </script>
 <template>
     <!--

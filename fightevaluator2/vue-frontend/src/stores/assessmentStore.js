@@ -70,6 +70,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
     async function updateFighter(changes){
         server.update_fighter(changes,fighter.value.id,updateModel.bind({model:fighter}));
     }
+    
     /*
     
         data
