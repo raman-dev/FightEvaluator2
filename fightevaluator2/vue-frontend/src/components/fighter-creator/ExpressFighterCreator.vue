@@ -1,5 +1,7 @@
 <script setup>
 
+import { inject } from 'vue';
+
 const visible = defineModel('visible',{default:false}); 
 const fighter = defineModel('fighter',{default : {
     'first_name':"",
@@ -15,9 +17,10 @@ const fighter = defineModel('fighter',{default : {
     'data_api_link':"",
 }})
 
+const server = inject('server');
 const emit = defineEmits(['saveFighter']);
 
-function saveFighter(){
+function createFighter(){
   //grab details makesure something has changed though 
   //all required elements are present
   const fighterData = fighter.value;
@@ -33,6 +36,11 @@ function saveFighter(){
     return;
   }
   
+  server.create_fighter(fighterData,onCreateFighterResult);
+}
+
+function onCreateFighterResult(result){
+  console.log(result);
 }
 
 </script>
@@ -46,7 +54,7 @@ function saveFighter(){
     <div class="modal-background" v-if="visible" @click.self="visible=!visible">
         <div class="fighter-creator p-3">
           <h3 class="text-start mb-2">Quick Add Fighter</h3>
-          <form class="border rounded p-2" @submit.prevent="saveFighter">
+          <form class="border rounded p-2" @submit.prevent="createFighter">
             <div class="row">
               <div class="col">
                 <label for="first_name" class="form-label">First Name</label>
