@@ -36,6 +36,8 @@ def create_fighter(request):
     #get query params from request object
     fighterInput = json.loads(request.body)
     fighterInput['weight_class'] = fighterInput['weight_class'].lower()
+    
+    fighterInput["name_index"] =f"{fighterInput['first_name']}-{fighterInput['last_name']}"
     fighterForm = FighterForm(fighterInput)#validate data
     # print(fighterForm)
     if fighterForm.is_valid():
@@ -44,7 +46,9 @@ def create_fighter(request):
         fighterForm.save()#save fighter
     else:
         print('invalid fighter input')
-    return JsonResponse({'fighter':model_to_dict(fighterForm.instance)})
+        print(fighterForm.errors)
+        return JsonResponse({'fighter':None,'errors':fighterForm.errors})
+    return JsonResponse({'fighter':model_to_dict(fighterForm.instance),'success':True})
 
 # @require_http_methods(["PATCH"])
 def update_fighter2(request,fighterId):

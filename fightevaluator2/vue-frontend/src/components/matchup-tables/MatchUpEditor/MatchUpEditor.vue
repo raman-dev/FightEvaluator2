@@ -161,7 +161,7 @@ watch(open, (isOpen, _) => {
 </script>
 
 <template>
-  <!-- <Transition> -->
+  <Transition>
   <div class="vmodal-container" @click="onClickBackground" v-if="open">
     <div class="vmodal-content">
       <div class="matchup-editor border rounded-2 bg-dark" data-event-id="118">
@@ -233,9 +233,9 @@ watch(open, (isOpen, _) => {
 
     </div>
   </div>
-  <ExpressFighterCreator v-model:visible="fighterEditorShow"/>
   
-  <!-- </Transition> -->
+  </Transition>
+  <ExpressFighterCreator v-model:visible="fighterEditorShow"/>
 
 
 </template>
@@ -348,62 +348,25 @@ watch(open, (isOpen, _) => {
   }
 }
 
-// .r-modal {
-//   position: absolute;
+.v-enter-active,
+.v-leave-active {
 
-//   display: flex;
-//   justify-content: center;
-//   width: 100%;
-//   height: 100%;
-//   left: 0px;
-//   top: 0px;
+  transition: opacity 0.3s ease;
+  
+  .matchup-editor {
+    transition: transform 0.2s ease;
+    transform: translateY(0%);
+  }
 
-//   background-color: rgba($color: #000000, $alpha: 0);
-//   // opacity: 0;
-//   pointer-events: none;
-//   z-index: 1000;
+}
 
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 
-//   transition: background-color 0.2s ease-in-out;
+  .matchup-editor{
+    transform: translateY(-25%);
+  }
+}
 
-//   .r-modal-content {
-//     position: absolute;
-//     // display: none;
-
-//     background-color: #212529;
-//     width: fit-content;
-
-//     top: 0px;
-//     border: 1px solid black;
-
-//     // opacity: 0;
-//     transition: all 0.2s ease-out !important;
-
-//     pointer-events: none;
-//     user-select: none;
-
-//     * {
-//       pointer-events: initial;
-//       user-select: initial;
-//     }
-//   }
-
-// }
-
-// .r-modal.r-show {
-//   background-color: rgba($color: #000000, $alpha: 0.5);
-//   pointer-events: initial;
-
-//   .r-modal-content {
-//     opacity: 1 !important;
-//     top: 15%;
-
-//     pointer-events: initial;
-//     user-select: initial;
-
-//     * {
-//       pointer-events: initial;
-//       user-select: initial;
-//     }
-//   }
-// }</style>
+</style>

@@ -95,6 +95,7 @@ class Fighter(models.Model):
     
     def __save__(self,**kwargs):
         self.name_index = self.first_name + '-'+self.last_name
+        #create an assessment object for this fighter
         super.save(**kwargs)
 
     def getDataMini(self):
