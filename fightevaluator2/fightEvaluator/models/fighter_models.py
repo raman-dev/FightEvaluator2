@@ -93,10 +93,17 @@ class Fighter(models.Model):
             Index(fields=["name_index"],name="full_name_index")
         ]
     
-    def __save__(self,**kwargs):
+    def save(self,*args,**kwargs):
         self.name_index = self.first_name + '-'+self.last_name
         #create an assessment object for this fighter
-        super.save(**kwargs)
+        #using a signal for this
+        is_new = self.pk is None
+        super().save(*args,**kwargs)
+
+        if is_new:
+            print(f'Creating Assessment for:\n\t{self.first_name} {self.last_name}')
+            t = Assessment(fighter=self)
+            t.save()
 
     def getDataMini(self):
         return {

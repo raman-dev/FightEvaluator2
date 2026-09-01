@@ -1,9 +1,5 @@
-<script setup>
-
-import { ref,inject } from 'vue';
-
-const visible = defineModel('visible',{default:false}); 
-const fighter = defineModel('fighter',{default : {
+<script>
+export const defaultFighterData = {
     'first_name':"",
     'last_name':"",
     'date_of_birth':"",
@@ -15,7 +11,14 @@ const fighter = defineModel('fighter',{default : {
     'weight_class':0,
     'img_link':"",
     'data_api_link':"",
-}})
+};
+</script>
+<script setup>
+
+import { ref,inject, watch } from 'vue';
+
+const visible = defineModel('visible',{default:false}); 
+const fighter = defineModel('fighter',{default : structuredClone(defaultFighterData)})
 
 const server = inject('server');
 const emit = defineEmits(['saveFighter']);
@@ -40,6 +43,13 @@ function createFighter(){
   
   server.create_fighter(fighterData,onCreateFighterResult);
 }
+
+watch(visible,(newVal,oldVal) => {
+  if (visible.value === true){
+    //clear 
+    fighter.value = structuredClone(defaultFighterData);
+  }
+});
 
 function onCreateFighterResult(result){
   console.log(`create_fighter.result => \n${JSON.stringify(result)} `);

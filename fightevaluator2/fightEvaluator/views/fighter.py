@@ -41,11 +41,11 @@ def create_fighter(request):
     fighterForm = FighterForm(fighterInput)#validate data
     # print(fighterForm)
     if fighterForm.is_valid():
-        print('fighter valid input')
+        print('Valid FighterForm input')
         print(fighterForm.cleaned_data)
         fighterForm.save()#save fighter
     else:
-        print('invalid fighter input')
+        print('Invalid FighterForm input')
         print(fighterForm.errors)
         return JsonResponse({'fighter':None,'errors':fighterForm.errors})
     return JsonResponse({'fighter':model_to_dict(fighterForm.instance),'success':True})
@@ -63,7 +63,7 @@ def update_fighter2(request,fighterId):
         NOTE 
             ABOUT FORMS
             - WHEN PROVIDING DATA IF THE FIELD IS A REQUIRED FIELD IN THE MODEL
-              THEN IT MUST BE PRESENT IN THE DATA
+              THEN IT MUST BE PRESENT IN THE UPDATE DATA
             - IF THE FIELD IS NOT A REQUIRED FIELD IN THE MODEL THEN IT IS OPTIONAL TO
               PROVIDE IN THE DATA
     """

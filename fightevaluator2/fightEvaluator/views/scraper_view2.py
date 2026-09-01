@@ -106,12 +106,7 @@ def ScraperFightEventControlFunction(link=None,date=None):
                             
                             if fighterForm.is_valid():
                                 fighterModel = fighterForm.save()#save model
-
                                 rprint('Valid fighter',fighterModel)
-                                assessment = Assessment(fighter=fighterModel)
-                                assessment.save()
-                                
-                                fighterModel.assessment = assessment
                             else:
                                 rprint(fighterForm.errors)
                                 fighterDataError = True
