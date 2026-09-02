@@ -32,7 +32,7 @@ const resultClass = (isCorrect) => {
     return "data-tbd";
 };
 
-const resultText = (isCorrect) => {
+function resultText(isCorrect) {
     if (isCorrect === null || isCorrect === undefined) return "tbd";
     return isCorrect ? "True" : "False";
 };
@@ -94,14 +94,21 @@ function toOrderedKeyList(object) {
                             <tbody>
                                 <tr v-for="(prediction, index) in data.picks">
                                     <td><span>{{ prediction.matchup }}</span></td>
-                                    <td><span>{{ prediction.type_label }}</span></td>
-                                    <td><span class="data-result" :class="resultClass(prediction.correct)">{{resultText(prediction.correct) }}</span></td>
                                     <td>
-                                        <div class="d-flex w-100 justify-content-end">
+                                        <span v-if="prediction.type !== 'WIN'">{{ prediction.type_label }}</span>
+                                        <span v-else>{{ prediction.fighter }} Wins</span>
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex w-100">
                                             <span class="likelihood" :class="'likely-' + prediction.likelihood">
                                                 {{ likelihoodLabelMap[prediction.likelihood] }}
                                             </span>
                                         </div>
+                                    </td>
+
+                                    <td><span class="data-result justify-content-end" :class="resultClass(prediction.correct)">
+                                        {{resultText(prediction.correct) }}</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -187,6 +194,7 @@ function toOrderedKeyList(object) {
             .data-result{
                 display: block;
                 width: 6ch !important;
+                margin-left: auto;
             }
 
             .data-correct {

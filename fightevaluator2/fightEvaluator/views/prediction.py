@@ -207,7 +207,7 @@ def getPicks(request):
                     'type':p.event,
                     'type_label': Event[p.event].label,
                     'likelihood':prediction.likelihood if prediction else Likelihood.NOT_PREDICTED,
-                    'fighter': prediction.fighter.name if prediction and prediction.fighter else None,
+                    'fighter': p.fighter.name if not p.fighter is None else None,
                     'correct':p.isCorrect
                 })
             results.append(eventPicks)
