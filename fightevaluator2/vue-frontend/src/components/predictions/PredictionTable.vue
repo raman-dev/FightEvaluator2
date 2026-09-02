@@ -83,10 +83,10 @@ function toOrderedKeyList(object) {
                                 <tr >
                                     <td><span>matchup</span></td>
                                     <td><span>prediction</span></td>
-                                    <td><span>result</span></td>
+                                    <td><span>likelihood</span></td>
                                     <td>
                                         <div class="d-flex justify-content-end">
-                                            <span>likelihood</span>
+                                            <span>result</span>
                                         </div>
                                     </td>
                                 </tr>
