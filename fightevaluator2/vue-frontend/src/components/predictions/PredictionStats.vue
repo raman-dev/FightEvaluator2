@@ -48,6 +48,20 @@ const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
         </div>
       </div>
     </div>
+    <div class="d-flex flex-column">
+      <!-- <div c`lass="d-flex flex-column border">
+        <span>CORRECT RATIO Predicted : Unpredicted</span>
+        <span>{{ stats.pick_details.predicted }} : {{ stats.pick_details.unpredicted }}, Total: {{ stats.pick_details.total }}</span>
+      </div>` -->
+      <!--
+        display sorted from most correct amount to least correct amount
+      -->
+      <!-- <ul class="list-group">
+        <li class="list-group-item" v-for="value,key in stats.pick_details">
+          {{ key }} : {{ value }}
+        </li>
+      </ul> -->
+    </div>
   </div>
 </template>
 

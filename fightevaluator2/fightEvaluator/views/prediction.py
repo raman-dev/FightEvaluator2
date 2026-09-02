@@ -248,16 +248,69 @@ def getStats():
     stats = {}
     stats['general'] = Stat.objects.filter(type=Stat.StatTypes.general)
     stats['fight_outcome'] = Stat.objects.filter(type=Stat.StatTypes.fight_outcome).order_by("-ratio")
-    
+
+    #count not_predicted
+    #count and all predicted
+    correctPickDetails = Pick.objects.aggregate(
+        total=Count("id",filter=Q(isCorrect=True)),
+
+        predicted=Count(
+            "id",
+            filter=Q(prediction__likelihood__gt=Likelihood.NOT_PREDICTED) & Q(isCorrect=True),
+        ),
+
+        unpredicted=Count(
+            "id",
+            filter=(
+                (Q(prediction__likelihood=Likelihood.NOT_PREDICTED) |
+                Q(prediction__isnull=True)) & Q(isCorrect=True)
+            ),
+        ),
+
+        very_likely=Count(
+            "id",
+            filter=Q(prediction__likelihood=Likelihood.VERY_LIKELY) & Q(isCorrect=True),
+        ),
+
+        likely=Count(
+            "id",
+            filter=Q(prediction__likelihood=Likelihood.LIKELY) & Q(isCorrect=True),
+        ),
+
+        neutral=Count(
+            "id",
+            filter=Q(prediction__likelihood=Likelihood.NEUTRAL) & Q(isCorrect=True),
+        ),
+
+        unlikely=Count(
+            "id",
+            filter=Q(prediction__likelihood=Likelihood.POSSIBLE) & Q(isCorrect=True),
+        ),
+
+        very_unlikely=Count(
+            "id",
+            filter=Q(prediction__likelihood=Likelihood.UNLIKELY) & Q(isCorrect=True),
+        ),
+
+        not_predicted=Count(
+            "id",
+            filter=(
+                (Q(prediction__likelihood=Likelihood.NOT_PREDICTED) |
+                Q(prediction__isnull=True)) & Q(isCorrect=True)
+            ),
+        ),
+    )
+    stats['pick_details'] = correctPickDetails
     return stats
 
 @cache_page(CACHE_DURATION)
 @require_GET
-def getStatsJson(request):
+def getStatsJson(request):  
     stats = getStats()
     general  = [model_to_dict(s) for s in stats['general']]
     fight_outcome = [model_to_dict(s) for s in stats['fight_outcome']]
-    return JsonResponse({'general': general,'fight_outcome':fight_outcome})
+
+    return JsonResponse({'general': general,'fight_outcome':fight_outcome,'pick_details':stats['pick_details']})
 
 def calculate_stats(year=None,month=None):
     """

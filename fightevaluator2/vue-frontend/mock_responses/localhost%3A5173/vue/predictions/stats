@@ -1,1 +1,53 @@
-{"general": [{"id": 1, "name": "total", "label": "Overall", "type": "general", "ratio": 0.6983122362869199, "count": 331, "total": 474}], "fight_outcome": [{"id": 4, "name": "ROUNDS_GEQ_ONE_AND_HALF", "label": "Fight Lasts More Than 1.5 Rounds", "type": "fight_outcome", "ratio": 0.7798165137614679, "count": 85, "total": 109}, {"id": 2, "name": "WIN", "label": "Fighter Wins", "type": "fight_outcome", "ratio": 0.6875, "count": 187, "total": 272}, {"id": 3, "name": "DOES_NOT_GO_THE_DISTANCE", "label": "Fight Does Not Go The Distance", "type": "fight_outcome", "ratio": 0.6344086021505376, "count": 59, "total": 93}]}
+{
+  "general": [
+    {
+      "id": 1,
+      "name": "total",
+      "label": "Overall",
+      "type": "general",
+      "ratio": 0.69831223628692,
+      "count": 331,
+      "total": 474
+    }
+  ],
+  "fight_outcome": [
+    {
+      "id": 4,
+      "name": "ROUNDS_GEQ_ONE_AND_HALF",
+      "label": "Fight Lasts More Than 1.5 Rounds",
+      "type": "fight_outcome",
+      "ratio": 0.779816513761468,
+      "count": 85,
+      "total": 109
+    },
+    {
+      "id": 2,
+      "name": "WIN",
+      "label": "Fighter Wins",
+      "type": "fight_outcome",
+      "ratio": 0.6875,
+      "count": 187,
+      "total": 272
+    },
+    {
+      "id": 3,
+      "name": "DOES_NOT_GO_THE_DISTANCE",
+      "label": "Fight Does Not Go The Distance",
+      "type": "fight_outcome",
+      "ratio": 0.634408602150538,
+      "count": 59,
+      "total": 93
+    }
+  ],
+  "pick_details": {
+    "total": 331,
+    "predicted": 257,
+    "unpredicted": 74,
+    "very_likely": 31,
+    "likely": 106,
+    "neutral": 120,
+    "unlikely": 0,
+    "very_unlikely": 0,
+    "not_predicted": 74
+  }
+}
