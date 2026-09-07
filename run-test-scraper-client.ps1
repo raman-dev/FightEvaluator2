@@ -1,1 +1,1 @@
-python fightevaluator2\fightEvaluator\scraper_funcs\testClient.py
+python fightevaluator2\fightEvaluator\scraper_funcs\scraperTestClient.py
