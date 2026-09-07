@@ -201,7 +201,7 @@ class Prediction2(models.Model):
           return self.get_event_display()
 
 class Pick(models.Model):
-    matchup = models.ForeignKey('MatchUp',on_delete=models.CASCADE,unique=True)
+    matchup = models.OneToOneField('MatchUp',on_delete=models.CASCADE)
     fighter = models.ForeignKey('Fighter',default=None,null=True,blank=True,on_delete=models.CASCADE)#why nullable because a prediction can be non fighter related
     prediction = models.ForeignKey('Prediction2',on_delete=models.SET_NULL,default=None,null=True,blank=True)
     
