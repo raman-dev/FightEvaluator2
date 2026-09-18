@@ -11,3 +11,4 @@ app/
 ff13_songs.json
 infected_npm_check
 **/chrome-win64
+.idea
