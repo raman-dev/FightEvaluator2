@@ -1,109 +1,124 @@
 {
     "event": {
-        "title": "UFC 331: Van vs. Pantoja 2",
-        "link": "https://www.tapology.com/fightcenter/events/145652-ufc-331",
-        "date": "2026-09-19"
+        "title": "UFC Fight Night: Rosas Jr. vs. Barcelos",
+        "link": "https://www.tapology.com/fightcenter/events/145961-ufc-fight-night",
+        "date": "2026-09-26"
     },
     "matchups": [
         {
             "fighters_raw": [
                 {
-                    "name": "joshua van",
-                    "link": "https://www.tapology.com/fightcenter/fighters/254261-joshua-thawng"
+                    "name": "raul rosas jr.",
+                    "link": "https://www.tapology.com/fightcenter/fighters/94654-raul-rosas"
                 },
                 {
-                    "name": "alexandre pantoja",
-                    "link": "https://www.tapology.com/fightcenter/fighters/12767-alexandre-pantoja"
+                    "name": "raoni barcelos",
+                    "link": "https://www.tapology.com/fightcenter/fighters/30448-raoni-barcellos"
                 }
             ],
-            "weight_class": 125,
+            "weight_class": 135,
             "rounds": 5,
             "isprelim": false
         },
         {
             "fighters_raw": [
                 {
-                    "name": "arman tsarukyan",
-                    "link": "https://www.tapology.com/fightcenter/fighters/115752-arman-tsarukyan"
+                    "name": "rodolfo vieira",
+                    "link": "https://www.tapology.com/fightcenter/fighters/148791-rodolfo-vieira-srour-the-black-belt-hunter"
                 },
                 {
-                    "name": "mauricio ruffy",
-                    "link": "https://www.tapology.com/fightcenter/fighters/99747-mauricio-rufy"
+                    "name": "robert bryczek",
+                    "link": "https://www.tapology.com/fightcenter/fighters/26244-robert-bryczek"
                 }
             ],
-            "weight_class": 155,
-            "rounds": 5,
-            "isprelim": false
-        },
-        {
-            "fighters_raw": [
-                {
-                    "name": "patricio pitbull",
-                    "link": "https://www.tapology.com/fightcenter/fighters/patricio-freire-pitbull"
-                },
-                {
-                    "name": "doo ho choi",
-                    "link": "https://www.tapology.com/fightcenter/fighters/doo-ho-choi"
-                }
-            ],
-            "weight_class": 145,
+            "weight_class": 185,
             "rounds": 3,
             "isprelim": false
         },
         {
             "fighters_raw": [
                 {
-                    "name": "renato moicano",
-                    "link": "https://www.tapology.com/fightcenter/fighters/16950-renato-carneiro-moicano"
+                    "name": "rinya nakamura",
+                    "link": "https://www.tapology.com/fightcenter/fighters/296781-tomoya-nakamura"
                 },
                 {
-                    "name": "brian ortega",
-                    "link": "https://www.tapology.com/fightcenter/fighters/40994-brian-ortega"
+                    "name": "brady hiestand",
+                    "link": "https://www.tapology.com/fightcenter/fighters/158649-brady-hiestand"
                 }
             ],
-            "weight_class": 155,
+            "weight_class": 135,
             "rounds": 3,
             "isprelim": false
         },
         {
             "fighters_raw": [
                 {
-                    "name": "iwo baraniewski",
-                    "link": "https://www.tapology.com/fightcenter/fighters/272653-filip-bartoszewicki"
+                    "name": "ilimbek akylbek",
+                    "link": "https://www.tapology.com/fightcenter/fighters/296124-ilimbek-akylbek-uulu"
                 },
                 {
-                    "name": "alonzo menifield",
-                    "link": "https://www.tapology.com/fightcenter/fighters/69032-alonzo-menifield"
+                    "name": "mehemmedeli osmanli",
+                    "link": "https://www.tapology.com/fightcenter/fighters/382346-mehemmedeli-osmanali"
+                }
+            ],
+            "weight_class": 135,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "tina black",
+                    "link": "https://www.tapology.com/fightcenter/fighters/124041-valesca-machado"
+                },
+                {
+                    "name": "melissa amaya",
+                    "link": "https://www.tapology.com/fightcenter/fighters/312982-melissa-amaya"
+                }
+            ],
+            "weight_class": 115,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "elves brener",
+                    "link": "https://www.tapology.com/fightcenter/fighters/131388-elvis-brenner"
+                },
+                {
+                    "name": "josiah harrell",
+                    "link": "https://www.tapology.com/fightcenter/fighters/199898-josiah-harrell"
+                }
+            ],
+            "weight_class": 170,
+            "rounds": 3,
+            "isprelim": false
+        },
+        {
+            "fighters_raw": [
+                {
+                    "name": "rodolfo bellato",
+                    "link": "https://www.tapology.com/fightcenter/fighters/76570-rodolfo-bellato"
+                },
+                {
+                    "name": "christian edwards",
+                    "link": "https://www.tapology.com/fightcenter/fighters/173353-christian-edwards"
                 }
             ],
             "weight_class": 205,
-            "rounds": 3,
-            "isprelim": false
-        },
-        {
-            "fighters_raw": [
-                {
-                    "name": "gable steveson",
-                    "link": "https://www.tapology.com/fightcenter/fighters/510724-gable-steveson"
-                },
-                {
-                    "name": "sean sharaf",
-                    "link": "https://www.tapology.com/fightcenter/fighters/229173-sean-sharaf"
-                }
-            ],
-            "weight_class": 265,
             "rounds": 3,
             "isprelim": true
         },
         {
             "fighters_raw": [
                 {
-                    "name": "charles jourdain",
-                    "link": "https://www.tapology.com/fightcenter/fighters/36724-charles-jourdain"
+                    "name": "montel jackson",
+                    "link": "https://www.tapology.com/fightcenter/fighters/89335-montel-jackson"
                 },
                 {
-                    "name": "marlon vera",
-                    "link": "https://www.tapology.com/fightcenter/fighters/48144-marlon-vera-chito"
+                    "name": "ricky simon",
+                    "link": "https://www.tapology.com/fightcenter/fighters/33229-ricky-simon"
                 }
             ],
             "weight_class": 135,
@@ -113,90 +128,60 @@
         {
             "fighters_raw": [
                 {
-                    "name": "tai tuivasa",
-                    "link": "https://www.tapology.com/fightcenter/fighters/120884-tai-tuivasa-bam-bam"
+                    "name": "john castaneda",
+                    "link": "https://www.tapology.com/fightcenter/fighters/20125-john-castaneda"
                 },
                 {
-                    "name": "robelis despaigne",
-                    "link": "https://www.tapology.com/fightcenter/fighters/339509-robelis-despaigne"
+                    "name": "alatengheili",
+                    "link": "https://www.tapology.com/fightcenter/fighters/57170-ala-tengheili"
                 }
             ],
-            "weight_class": 265,
+            "weight_class": 135,
             "rounds": 3,
             "isprelim": true
         },
         {
             "fighters_raw": [
                 {
-                    "name": "michael aswell jr.",
-                    "link": "https://www.tapology.com/fightcenter/fighters/187792-michael-aswell"
+                    "name": "norma dumont",
+                    "link": "https://www.tapology.com/fightcenter/fighters/139271-norma-dumont-viana"
                 },
                 {
-                    "name": "joo sang yoo",
-                    "link": "https://www.tapology.com/fightcenter/fighters/157789-joo-sang-yoo"
+                    "name": "ailin perez",
+                    "link": "https://www.tapology.com/fightcenter/fighters/143238-ailin-luciana-perez"
                 }
             ],
-            "weight_class": 145,
+            "weight_class": 135,
             "rounds": 3,
             "isprelim": true
         },
         {
             "fighters_raw": [
                 {
-                    "name": "ryan gandra",
-                    "link": "https://www.tapology.com/fightcenter/fighters/305914-ryan-gandra"
+                    "name": "mickey gall",
+                    "link": "https://www.tapology.com/fightcenter/fighters/63731-mickey-gall"
                 },
                 {
-                    "name": "ozzy diaz",
-                    "link": "https://www.tapology.com/fightcenter/fighters/61676-ozzy-diaz"
+                    "name": "sedriques dumas",
+                    "link": "https://www.tapology.com/fightcenter/fighters/188574-sedriques-dumas"
                 }
             ],
-            "weight_class": 185,
+            "weight_class": 170,
             "rounds": 3,
             "isprelim": true
         },
         {
             "fighters_raw": [
                 {
-                    "name": "edmen shahbazyan",
-                    "link": "https://www.tapology.com/fightcenter/fighters/142325-edmen-shahbazyan"
+                    "name": "yazmin jauregui",
+                    "link": "https://www.tapology.com/fightcenter/fighters/207769-yasmine-jauregui"
                 },
                 {
-                    "name": "brunno ferreira",
-                    "link": "https://www.tapology.com/fightcenter/fighters/218790-bruno-the-hulk"
+                    "name": "vanessa demopoulos",
+                    "link": "https://www.tapology.com/fightcenter/fighters/35907-vanessa-demopoulos"
                 }
             ],
-            "weight_class": 185,
-            "rounds": 3,
-            "isprelim": true
-        },
-        {
-            "fighters_raw": [
-                {
-                    "name": "casey o'neill",
-                    "link": "https://www.tapology.com/fightcenter/fighters/74768-casey-oneill"
-                },
-                {
-                    "name": "eduarda moura",
-                    "link": "https://www.tapology.com/fightcenter/fighters/292626-eduarda-moura"
-                }
-            ],
-            "weight_class": 125,
-            "rounds": 3,
-            "isprelim": true
-        },
-        {
-            "fighters_raw": [
-                {
-                    "name": "giga chikadze",
-                    "link": "https://www.tapology.com/fightcenter/fighters/121253-giga-chikadze"
-                },
-                {
-                    "name": "joanderson brito",
-                    "link": "https://www.tapology.com/fightcenter/fighters/98539-joanderson-brito-tubarao"
-                }
-            ],
-            "weight_class": 145,
+            "weight_class": 115,
             "rounds": 3,
             "isprelim": true
         }
