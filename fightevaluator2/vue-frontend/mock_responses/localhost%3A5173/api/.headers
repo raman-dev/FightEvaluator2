@@ -1,0 +1,39 @@
+[
+  {
+    "applyTo": "login",
+    "headers": [
+      {
+        "name": "set-cookie",
+        "value": "JSESSIONID=2E3549D48C1AB7AB503C217DDF5B2D16; Path=/; HttpOnly"
+      },
+      {
+        "name": "keep-alive",
+        "value": "timeout=600"
+      },
+      {
+        "name": "expires",
+        "value": "0"
+      },
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "transfer-encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "cache-control",
+        "value": "no-cache, no-store, max-age=0, must-revalidate"
+      },
+      {
+        "name": "vary",
+        "value": ""
+      },
+      {
+        "name": "content-length",
+        "value": ""
+      }
+    ]
+  }
+]

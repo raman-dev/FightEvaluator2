@@ -1,0 +1,27 @@
+{
+"activities":[
+{"endTimeStamp": "2026-10-13T10:00:00Z", "entityId": 100, "name": "coding", "startTimeStamp": "2026-10-13T08:00:00Z"},
+{"endTimeStamp": "2026-10-13T19:00:00Z", "entityId": 101, "name": "exercising", "startTimeStamp": "2026-10-13T18:00:00Z"},
+{"endTimeStamp": "2026-10-13T22:00:00Z", "entityId": 102, "name": "watching youtube", "startTimeStamp": "2026-10-13T21:00:00Z"},
+{"endTimeStamp": "2026-10-14T11:30:00Z", "entityId": 103, "name": "coding", "startTimeStamp": "2026-10-14T09:00:00Z"},
+{"endTimeStamp": "2026-10-14T21:30:00Z", "entityId": 104, "name": "watching baseball", "startTimeStamp": "2026-10-14T19:00:00Z"},
+{"endTimeStamp": "2026-10-15T10:00:00Z", "entityId": 105, "name": "coding", "startTimeStamp": "2026-10-15T08:30:00Z"},
+{"endTimeStamp": "2026-10-15T19:30:00Z", "entityId": 106, "name": "exercising", "startTimeStamp": "2026-10-15T18:30:00Z"},
+{"endTimeStamp": "2026-10-15T22:30:00Z", "entityId": 107, "name": "watching youtube", "startTimeStamp": "2026-10-15T21:00:00Z"},
+{"endTimeStamp": "2026-10-16T12:00:00Z", "entityId": 108, "name": "coding", "startTimeStamp": "2026-10-16T08:00:00Z"},
+{"endTimeStamp": "2026-10-16T21:00:00Z", "entityId": 109, "name": "watching baseball", "startTimeStamp": "2026-10-16T19:00:00Z"},
+{"endTimeStamp": "2026-10-17T11:00:00Z", "entityId": 110, "name": "coding", "startTimeStamp": "2026-10-17T09:00:00Z"},
+{"endTimeStamp": "2026-10-17T16:30:00Z", "entityId": 111, "name": "exercising", "startTimeStamp": "2026-10-17T15:00:00Z"},
+{"endTimeStamp": "2026-10-17T21:30:00Z", "entityId": 112, "name": "watching youtube", "startTimeStamp": "2026-10-17T20:00:00Z"},
+{"endTimeStamp": "2026-10-18T12:00:00Z", "entityId": 113, "name": "coding", "startTimeStamp": "2026-10-18T10:00:00Z"},
+{"endTimeStamp": "2026-10-18T20:30:00Z", "entityId": 114, "name": "watching baseball", "startTimeStamp": "2026-10-18T18:00:00Z"},
+{"endTimeStamp": "2026-10-19T09:30:00Z", "entityId": 115, "name": "coding", "startTimeStamp": "2026-10-19T08:00:00Z"}
+],
+
+    ],
+    "user": {
+        "displayName": "raman@example.com",
+        "email": "raman@example.com"
+    }
+}
+
